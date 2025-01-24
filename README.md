@@ -34,7 +34,7 @@
 ## 프로젝트 소개
 [기획 및 디자인 피그마 링크](https://www.figma.com/design/2D7utdIUkYPOjnXxGHXy1x/%EC%97%94%EB%8F%8C%ED%95%80%3C%EC%96%B8%EC%A0%9C%EB%A7%8C%EB%82%98%3E-Hand-off?node-id=1-6&t=ZlmNYgy9jYgJXV93-1)
 
-<image src="https://github.com/user-attachments/assets/03a5cf65-900c-4a3b-a449-30beea7264e1" width="400" />
+<image src="https://github.com/user-attachments/assets/03a5cf65-900c-4a3b-a449-30beea7264e1" width="100%" />
 
 ## 협업 전략
 ### 브랜치 구조
