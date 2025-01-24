@@ -1,19 +1,11 @@
 ---
-name: Feature request
-about: Suggest an idea for this project
-title: ''
+name: Feature issue template
+about: 기능 구현
+title: "[Feature] "
 labels: ''
 assignees: ''
 
 ---
-
---- 
-name: Feature issue template
-about: 기능 구현
-title: "[Feature]"
-labels: feature
-assignees: ""
---- 
 
 ## 배경
 이게 왜 필요한지에 대한 설명.
