@@ -6,7 +6,7 @@
     <td width="25%" align="center"><b>이현영</b></td>
     <td width="25%" align="center"><b>이재영</b></td>
     <td width="25%" align="center"><b>김동권</b></td>
-    <td width="25%" align="center"><b>김동현</b></td>
+    <td width="25%" align="center"><b>김동현 👑</b></td>
 </tr>
 <tr>
     <td align="center"><a href="https://github.com/hamo-o"><img src="https://github.com/hamo-o.png" width="100" height="100" style="max-width: 100%;"></a></td>
@@ -24,7 +24,7 @@
     <td align="center">FE</td>
     <td align="center">FE</td>
     <td align="center">BE</td>
-    <td align="center">BE</td>
+    <td align="center">BE(팀장)</td>
 </tr>
 </tbody></table>
 
@@ -46,7 +46,6 @@
 
 ## 그라운드룰
 ### 목표
-
 📖 **근거있는 프로젝트**
 - 근거있는 기술스택 선정
 
