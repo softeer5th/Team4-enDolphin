@@ -7,6 +7,14 @@ assignees: ''
 
 ---
 
+--- 
+name: Feature issue template
+about: 기능 구현
+title: "[Feature]"
+labels: feature
+assignees: ""
+--- 
+
 ## 배경
 이게 왜 필요한지에 대한 설명.
 예를 들어서 기능 구현의 경우 어떤 라이브러리를 썼을 때 
