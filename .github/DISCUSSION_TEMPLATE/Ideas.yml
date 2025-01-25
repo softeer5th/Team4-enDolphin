@@ -1,35 +1,22 @@
 title: "[Idea]  "
 body:
-- type: dropdown
+- type: input
   attributes:
-    label: 카테고리
-    multiple: false
-    options:
-      - 전체 공지
-      - 통신 관련
-      - 코드 관련
-      - 기타
-    default: 0
+    label: 안건
+    placeholder: 안건을 입력하세요
   validations:
     required: true
 - type: textarea
   attributes:
-    label: 전달 사항
+    label: 세부 내용
     value: |
-      * text
-      * text
-      * text
+      * 자세한 내용을 여기에 작성하세요.
+      * 필요한 모든 정보를 포함해주세요.
+  validations:
+    required: true
 - type: textarea
   attributes:
-    label: 요청 사항
+    label: 관련 링크
     value: |
-      - [ ] text
-      - [ ] text
-      - [ ] text
-- type: textarea
-  attributes:
-    label: 첨부 코드
-    value: |
-      ```cs
-      code
-      ```
+      * [링크 설명](https://example.com)
+      * [링크 설명](https://example.com)
