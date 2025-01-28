@@ -71,7 +71,7 @@ fi
 # 모든 검사 통과 여부 확인
 if [ "$is_valid" = false ]; then
   echo "[commit-msg] ❗ Commit message format is invalid. aborting commit."
-  echo "[commit-msg] commit message must match the pattern:"
+  echo "[commit-msg] commit message must match the following pattern:"
   echo "[commit-msg] <type>: <message>"
   exit 1
 fi
