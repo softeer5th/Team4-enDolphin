@@ -1,1 +1,8 @@
-spring.application.name=backend
+# ?? ?? ?? ?? : application-local.yml
+# ?? ?? ?? ?? : application-dev.yml
+# ?? ?? ?? ?? : application-prod.yml
+
+spring.application.name: backend
+spring:
+  profiles:
+    default: local

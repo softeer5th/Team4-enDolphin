@@ -37,3 +37,10 @@ out/
 .vscode/
 
 .DS_Store
+
+#환경 설정 파일
+application-*.yml
+
+# H2 데이터베이스 파일
+*.mv.db
+*.h2.db
