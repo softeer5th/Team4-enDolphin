@@ -1,16 +1,44 @@
 #!/bin/sh
 
-# 푸시를 실행한 원격 이름과 URL
+# 푸시를 실행한 원격 이름과 URL 읽어오기
 remote_name=$1
 remote_url=$2
 
+# 정규식 - 브랜치 네이밍 검사
+branch_name_regex="^(feature|refactor|hotfix)/(fe|be)/[a-z0-9-]+$"
+
 echo "[pre-push] ⏳ Running build before pushing to $remote_name ($remote_url)..."
 
-# pnpm run build 실행
+# pnpm 실행을 위해 frontend 폴더로 이동
+cd frontend
+
+# pnpm run build 성공 여부 검사
 if ! pnpm run build; then
   echo "[pre-push] ❌ Error: Build failed. Push aborted."
   exit 1
 fi
+
+# 브랜치 네이밍 검사
+branch_name=$(git rev-parse --abbrev-ref HEAD)
+if ! echo "$branch_name" | grep -Eq "$branch_name_regex"; then
+  echo "[pre-push] ❌ Invalid branch name: $branch_name"
+  echo "[pre-push] Branch name must match the pattern: "
+  echo "[pre-push] <tag>/<fe|be>/..."
+  exit 1
+fi
+
+# # pnpm run test 성공 여부 검사
+# if ! pnpm run test; then
+#   echo "[pre-push] ❌ Tests failed. Push aborted."
+#   exit 1
+# fi
+
+# # 민감한 정보 패턴 검사 (credentials, API keys, etc.)
+# sensitive_patterns="(AWS_ACCESS_KEY_ID|SECRET|PASSWORD)"
+# if git diff --cached | grep -E "$sensitive_patterns"; then
+#   echo "[pre-push] ❌ Sensitive information detected in changes. Push aborted."
+#   exit 1
+# fi
 
 echo "[pre-push] ✅ Build succeeded. Proceeding with push."
 echo ""
