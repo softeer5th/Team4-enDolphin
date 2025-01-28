@@ -1,10 +1,36 @@
 #!/bin/sh
 
+#################### 공통 스크립트 ####################
+
 # 커밋 메시지 파일 경로
 commit_msg_file=$1
 
 # 커밋 메시지 읽어오기
 commit_msg=$(cat "$commit_msg_file")
+
+# 현재 브랜치 확인 (현재 브랜치 이름으로 merge 여부 판단 가능)
+current_branch=$(git rev-parse --abbrev-ref HEAD)
+
+
+#################### dev | main 브랜치에 squash merge하는 경우 ####################
+
+# merge commit 여부 확인
+if [ -f ".git/MERGE_MSG" ]; then
+  echo "[commit-msg] Detected a merge commit."
+
+  # 커밋 메시지 검증 (FE/BE/ALL 형식 확인)
+  if ! grep -qE "^\[(FE|BE|ALL)-[A-Za-z]+\]" "$commit_msg_file"; then
+    echo "[commit-msg] ❌ Invalid merge commit message format."
+    echo "[commit-msg] Expected format: [FE-Feat], [BE-Fix], [ALL-Refactor], etc."
+    exit 1
+  fi
+
+  exit 0
+fi
+
+
+
+#################### 일반적인 fe | be 브랜치에 커밋하는 경우 ####################
 
 # 정규식 - 메시지 태그 검사
 tag_regex="^(feat|fix|docs|refactor|test|chore)"
@@ -18,7 +44,7 @@ min_length=1
 # 커밋 메시지의 validity
 is_valid=true
 
-echo "[commit-msg] ⏳ Running commit message validation..."
+echo "[commit-msg] ⏳ Executing commit message validation..."
 
 # 메시지 태그 검사
 if ! echo "$commit_msg" | grep -Eq "$tag_regex"; then
@@ -42,7 +68,7 @@ fi
 # 모든 검사 통과 여부 확인
 if [ "$is_valid" = false ]; then
   echo "[commit-msg] ❗ Commit message format is invalid. aborting commit."
-  echo "[commit-msg] Please use the following format:"
+  echo "[commit-msg] commit message must match the pattern:"
   echo "[commit-msg] <type>: <message>"
   exit 1
 fi
