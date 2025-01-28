@@ -1,30 +1,51 @@
 #!/bin/sh
 
+#################### 공통 스크립트 ####################
+
+# 변경된 파일 리스트 읽어오기
+files=$(git diff --cached --name-only --diff-filter=ACM)
+
+# 프론트엔드 파일 필터링
+# info) grep ... : js, ts, jsx, tsx 확장자 파일만 선택
+# info) sed ... : 파일 경로에서 frontend/ 제거 (git 루트와 eslint 루트가 다르기 때문)
+frontend_files=$(echo "$files" | grep -E "^frontend/.*\.(js|ts|jsx|tsx)$") | sed 's|^frontend/||'
+# 백엔드 파일 필터링
+# !!! 확장자 수정해 주세요(문법 검사할 파일들) !!!
+backend_files=$(echo "$files" | grep -E "^backend/.*\.(java|xml|properties)$") | sed 's|^backend/||'
+
+
+#################### 프론트엔드 스크립트 ####################
+
 # eslint 실행을 위해 frontend 폴더로 이동
 cd frontend
 
-# 변경된 파일 리스트 읽어오기
-# grep ... : js, ts, jsx, tsx 확장자 파일만 선택
-# sed ... : 파일 경로에서 frontend/ 제거 (git 루트와 eslint 루트가 다르기 때문)
-files=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.(js|ts|jsx|tsx)$') | sed 's|^frontend/||'
+echo "[pre-commit] ⏳ Checking lint for staged files..."
 
-echo "[pre-commit] ⏳ checking lint for staged files..."
-
-# Lint 실행
-if [ -n "$files" ]; then
+# Lint fix 실행
+if [ -n "$frontend_files" ]; then
   echo "[pre-commit] Running Lint..."
-  pnpm exec eslint --fix $files
+  pnpm exec eslint --fix $frontend_files
 
-  # Lint로 fix된 파일 다시 스테이징
+  # Lint로 fix된 파일들을 다시 스테이징
   echo "[pre-commit] Staging fixed files..."
-  echo "$files" | xargs git add
+  echo "$frontend_files" | xargs git add
 fi
 
-# 모든 파일 검사 통과 여부 확인
-if ! pnpm exec eslint $files; then
+# Lint 검사
+if ! pnpm exec eslint $frontend_files; then
   echo "[pre-commit] ❌ Lint check failed. Commit aborted."
   exit 1
 fi
+
+
+#################### 백엔드 스크립트 ####################
+
+cd backend
+
+
+
+
+#################### 성공 분기 ####################
 
 echo "[pre-commit] ✅ Lint passed. Proceeding with commit."
 echo ""

@@ -1,22 +1,25 @@
 #!/bin/sh
 
+#################### 공통 스크립트 ####################
+
 # 푸시를 실행한 원격 이름과 URL 읽어오기
 remote_name=$1
 remote_url=$2
+
+# 변경된 파일 리스트 읽어오기
+files=$(git diff --name-only origin/$(git rev-parse --abbrev-ref HEAD))
+
+# 프론트엔드 파일 필터링
+# info) grep ... : js, ts, jsx, tsx 확장자 파일만 선택
+# info) sed ... : 파일 경로에서 frontend/ 제거 (git 루트와 eslint 루트가 다르기 때문)
+frontend_files=$(echo "$files" | grep -E "^frontend/.*\.(js|ts|jsx|tsx)$")
+# 백엔드 파일 필터링
+backend_files=$(echo "$files" | grep -E "^backend/.*\.(java|xml|properties)$")
 
 # 정규식 - 브랜치 네이밍 검사
 branch_name_regex="^(feature|refactor|hotfix)/(fe|be)/[a-z0-9-]+$"
 
 echo "[pre-push] ⏳ Running build before pushing to $remote_name ($remote_url)..."
-
-# pnpm 실행을 위해 frontend 폴더로 이동
-cd frontend
-
-# pnpm run build 성공 여부 검사
-if ! pnpm run build; then
-  echo "[pre-push] ❌ Error: Build failed. Push aborted."
-  exit 1
-fi
 
 # 브랜치 네이밍 검사
 branch_name=$(git rev-parse --abbrev-ref HEAD)
@@ -24,6 +27,18 @@ if ! echo "$branch_name" | grep -Eq "$branch_name_regex"; then
   echo "[pre-push] ❌ Invalid branch name: $branch_name"
   echo "[pre-push] Branch name must match the pattern: "
   echo "[pre-push] <tag>/<fe|be>/..."
+  exit 1
+fi
+
+
+#################### 프론트엔드 스크립트 ####################
+
+# pnpm 실행을 위해 frontend 폴더로 이동
+cd frontend
+
+# pnpm run build 성공 여부 검사
+if ! pnpm run build; then
+  echo "[pre-push] ❌ Error: Build failed. Push aborted."
   exit 1
 fi
 
@@ -39,6 +54,14 @@ fi
 #   echo "[pre-push] ❌ Sensitive information detected in changes. Push aborted."
 #   exit 1
 # fi
+
+#################### 백엔드 스크립트 ####################
+
+cd backend
+
+
+
+#################### 성공 분기 ####################
 
 echo "[pre-push] ✅ Build succeeded. Proceeding with push."
 echo ""
