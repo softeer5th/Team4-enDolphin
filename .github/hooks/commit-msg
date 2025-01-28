@@ -6,15 +6,16 @@ commit_msg_file=$1
 # 커밋 메시지 읽어오기
 commit_msg=$(cat "$commit_msg_file")
 
-# 정규식으로 메시지 태그 검사
+# 정규식 - 메시지 태그 검사
 tag_regex="^(feat|fix|docs|refactor|test|chore)"
 
+# 정규식 - `:` 뒤 공백이 정확히 1개 존재하는지 검사
 colon_with_space_regex=": [^ ]"
 
 # 메시지 본문의 최소 길이
 min_length=1
 
-# 초기 상태
+# 커밋 메시지의 validity
 is_valid=true
 
 echo "[commit-msg] ⏳ Running commit message validation..."

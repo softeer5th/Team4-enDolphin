@@ -1,8 +1,11 @@
 #!/bin/sh
 
+# eslint 실행을 위해 frontend 폴더로 이동
 cd frontend
 
 # 변경된 파일 리스트 읽어오기
+# grep ... : js, ts, jsx, tsx 확장자 파일만 선택
+# sed ... : 파일 경로에서 frontend/ 제거 (git 루트와 eslint 루트가 다르기 때문)
 files=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.(js|ts|jsx|tsx)$') | sed 's|^frontend/||'
 
 echo "[pre-commit] ⏳ checking lint for staged files..."
