@@ -12,10 +12,10 @@ export const lineHeights = {
   7: '1.375rem',
 };
 export const fontWeights = {
-  'pretendard-0': 'SemiBold',
-  'pretendard-1': 'Bold',
-  'pretendard-2': 'Medium',
-  'pretendard-3': 'Regular',
+  'pretendard-0': 600,
+  'pretendard-1': 500,
+  'pretendard-2': 400,
+  'pretendard-3': 300,
 };
 export const fontSize = {
   0: '0.75rem',

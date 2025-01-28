@@ -114,4 +114,4 @@ const createGlobalTheme = (tokens) => {
 };
 
 formatThemeData();
-createGlobalTheme(tokenList.filter((key) => key !== 'typo'));
+createGlobalTheme(tokenList.filter((key) => key !== 'typo' && key !== 'font'));

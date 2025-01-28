@@ -1,4 +1,14 @@
-import { fontFamilies, fontSize, fontWeights, letterSpacing, lineHeights, paragraphIndent, paragraphSpacing, textCase, textDecoration } from './typo';
+import { 
+  fontFamilies, 
+  fontSize, 
+  fontWeights, 
+  letterSpacing, 
+  lineHeights, 
+  paragraphIndent, 
+  paragraphSpacing, 
+  textCase, 
+  textDecoration, 
+} from './typo';
 
 export const font = {
   H1: {
