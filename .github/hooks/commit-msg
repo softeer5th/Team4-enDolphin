@@ -25,6 +25,9 @@ if [ -f ".git/MERGE_MSG" ]; then
     exit 1
   fi
 
+  echo "[commit-msg] ✅ Commit message format is valid. Proceeding with commit."
+  echo ""
+
   exit 0
 fi
 
