@@ -16,33 +16,35 @@ backend_files=$(echo "$files" | grep -E "^backend/.*\.(java|xml|properties)$") |
 
 #################### 프론트엔드 스크립트 ####################
 
-# eslint 실행을 위해 frontend 폴더로 이동
-cd frontend
-
-echo "[pre-commit] ⏳ Checking lint for staged files..."
-
-# Lint fix 실행
 if [ -n "$frontend_files" ]; then
+  # eslint 실행을 위해 frontend 폴더로 이동
+  cd frontend
+
+  echo "[pre-commit] ⏳ Checking lint for staged files..."
+  # Lint fix 실행
   echo "[pre-commit] Running Lint..."
   pnpm exec eslint --fix $frontend_files
 
   # Lint로 fix된 파일들을 다시 스테이징
   echo "[pre-commit] Staging fixed files..."
   echo "$frontend_files" | xargs git add
+
+  # Lint 검사
+  if ! pnpm exec eslint $frontend_files; then
+    echo "[pre-commit] ❌ Lint check failed. Commit aborted."
+    exit 1
+  fi
 fi
 
-# Lint 검사
-if ! pnpm exec eslint $frontend_files; then
-  echo "[pre-commit] ❌ Lint check failed. Commit aborted."
-  exit 1
-fi
 
 
 #################### 백엔드 스크립트 ####################
 
-cd backend
+if [ -n "$backend_files" ]; then
+  cd backend
 
-
+  # Do something
+fi
 
 
 #################### 성공 분기 ####################

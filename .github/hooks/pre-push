@@ -33,32 +33,36 @@ fi
 
 #################### 프론트엔드 스크립트 ####################
 
-# pnpm 실행을 위해 frontend 폴더로 이동
-cd frontend
+if [ -n "$frontend_files" ]; then
+  # pnpm 실행을 위해 frontend 폴더로 이동
+  cd frontend
 
-# pnpm run build 성공 여부 검사
-if ! pnpm run build; then
-  echo "[pre-push] ❌ Error: Build failed. Push aborted."
-  exit 1
+  # pnpm run build 성공 여부 검사
+  if ! pnpm run build; then
+    echo "[pre-push] ❌ Error: Build failed. Push aborted."
+    exit 1
+  fi
+  # # pnpm run test 성공 여부 검사
+  # if ! pnpm run test; then
+  #   echo "[pre-push] ❌ Tests failed. Push aborted."
+  #   exit 1
+  # fi
+  
+  # # 민감한 정보 패턴 검사 (credentials, API keys, etc.)
+  # sensitive_patterns="(AWS_ACCESS_KEY_ID|SECRET|PASSWORD)"
+  # if git diff --cached | grep -E "$sensitive_patterns"; then
+  #   echo "[pre-push] ❌ Sensitive information detected in changes. Push aborted."
+  #   exit 1
+  # fi
 fi
-
-# # pnpm run test 성공 여부 검사
-# if ! pnpm run test; then
-#   echo "[pre-push] ❌ Tests failed. Push aborted."
-#   exit 1
-# fi
-
-# # 민감한 정보 패턴 검사 (credentials, API keys, etc.)
-# sensitive_patterns="(AWS_ACCESS_KEY_ID|SECRET|PASSWORD)"
-# if git diff --cached | grep -E "$sensitive_patterns"; then
-#   echo "[pre-push] ❌ Sensitive information detected in changes. Push aborted."
-#   exit 1
-# fi
 
 #################### 백엔드 스크립트 ####################
 
-cd backend
+if [ -n "$backend_files" ]; then
+  cd backend
 
+  # Do something
+fi
 
 
 #################### 성공 분기 ####################
