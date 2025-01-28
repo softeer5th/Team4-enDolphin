@@ -39,7 +39,7 @@ tag_regex="^(feat|fix|docs|refactor|test|chore)"
 colon_with_space_regex=": [^ ]"
 
 # 메시지 본문의 최소 길이
-min_length=1
+min_body_length=1
 
 # 커밋 메시지의 validity
 is_valid=true
@@ -60,8 +60,8 @@ fi
 
 # 메시지 본문 길이 검사
 message_body=$(echo "$commit_msg" | sed -E "s/$tag_regex//")
-if [ ${#message_body} -lt $min_length ]; then
-  echo "[commit-msg] ❌ Invalid format: Commit message body must be at least $min_length character long."
+if [ ${#message_body} -lt $min_body_length ]; then
+  echo "[commit-msg] ❌ Invalid format: Commit message body must be at least $min_body_length character long."
   is_valid=false
 fi
 
