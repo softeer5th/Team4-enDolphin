@@ -1,0 +1,18 @@
+#!/bin/sh
+
+# 푸시를 실행한 원격 이름과 URL
+remote_name=$1
+remote_url=$2
+
+echo "[pre-push] ⏳ Running build before pushing to $remote_name ($remote_url)..."
+
+# pnpm run build 실행
+if ! pnpm run build; then
+  echo "[pre-push] ❌ Error: Build failed. Push aborted."
+  exit 1
+fi
+
+echo "[pre-push] ✅ Build succeeded. Proceeding with push."
+echo ""
+
+exit 0

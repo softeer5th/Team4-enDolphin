@@ -1,0 +1,29 @@
+#!/bin/sh
+
+cd frontend
+
+# 변경된 파일 리스트 읽어오기
+files=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.(js|ts|jsx|tsx)$') | sed 's|^frontend/||'
+
+echo "[pre-commit] ⏳ checking lint for staged files..."
+
+# Lint 실행
+if [ -n "$files" ]; then
+  echo "[pre-commit] Running Lint..."
+  pnpm exec eslint --fix $files
+
+  # Lint로 fix된 파일 다시 스테이징
+  echo "[pre-commit] Staging fixed files..."
+  echo "$files" | xargs git add
+fi
+
+# 모든 파일 검사 통과 여부 확인
+if ! pnpm exec eslint $files; then
+  echo "[pre-commit] ❌ Lint check failed. Commit aborted."
+  exit 1
+fi
+
+echo "[pre-commit] ✅ Lint passed. Proceeding with commit."
+echo ""
+
+exit 0
