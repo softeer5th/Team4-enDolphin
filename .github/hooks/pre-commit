@@ -22,18 +22,14 @@ if [ -n "$frontend_files" ]; then
 
   echo "[pre-commit] ⏳ Checking lint for staged files..."
   # Lint fix 실행
-  echo "[pre-commit] Running Lint..."
-  pnpm exec eslint --fix $frontend_files
+if ! pnpm exec eslint --fix $frontend_files; then
+  echo "[pre-commit] ❌ Lint errors remain after fixing. Commit aborted."
+  exit 1
+fi
 
   # Lint로 fix된 파일들을 다시 스테이징
   echo "[pre-commit] Staging fixed files..."
   echo "$frontend_files" | xargs git add
-
-  # Lint 검사
-  if ! pnpm exec eslint $frontend_files; then
-    echo "[pre-commit] ❌ Lint check failed. Commit aborted."
-    exit 1
-  fi
 
   echo "[pre-commit] ✅ Lint passed. Proceeding with commit."
   echo ""
