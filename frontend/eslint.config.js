@@ -9,7 +9,7 @@ import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
-  { ignores: ['dist'] },
+  { ignores: ['dist', 'src/components/Icon/component'] },
   {
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
     files: ['**/*.{ts,tsx,js}'],
@@ -67,6 +67,7 @@ export default tseslint.config(
       '@stylistic/jsx-sort-props': 'error',
       '@stylistic/array-bracket-newline': 'error',
       'react/jsx-no-duplicate-props': 'error',
+      'react/jsx-max-props-per-line': ['error', { maximum: 1, when: 'multiline' }],
 
       // Possible Problems
       'array-callback-return': ['error', { checkForEach: true }],
