@@ -11,6 +11,15 @@ interface ChipProps extends PropsWithChildren {
   size: 'sm' | 'md' | 'lg';
 }
 
+/**
+ * @description Chip 컴포넌트.
+ *
+ * @param color - Chip의 색상.
+ * @param style - Chip의 스타일.
+ * @param radius - Chip의 모서리 둥글기.
+ * @param size - Chip의 크기.
+ * @param children - Chip의 내용.
+ */
 export const Chip = ({ color, style, radius, size, children }: ChipProps) => {
   const fontMap: Record<typeof size, Typo> = {
     sm: 'b3M',
