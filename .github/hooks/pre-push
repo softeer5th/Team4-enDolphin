@@ -18,7 +18,6 @@ backend_files=$(echo "$files" | grep -E "^backend/" | sed 's|^backend/||')
 # 정규식 - 브랜치 네이밍 검사
 branch_name_regex="^(feature|refactor|hotfix)/(fe|be)/[a-z0-9-]+$"
 
-echo "[pre-push] ⏳ Running build before pushing to $remote_name ... ($remote_url)"
 
 # 브랜치 네이밍 검사
 branch_name=$(git rev-parse --abbrev-ref HEAD)
@@ -38,6 +37,7 @@ if [ -n "$frontend_files" ]; then
 
   # pnpm run build 성공 여부 검사
   if ! pnpm run build; then
+    echo "[pre-push] ⏳ Running build before pushing to $remote_name ... ($remote_url)"
     echo "[pre-push] ❌ Error: Build failed. Push aborted."
     exit 1
   fi
