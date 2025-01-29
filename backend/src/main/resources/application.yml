@@ -1,4 +1,6 @@
-spring.application.name: backend
 spring:
+  application:
+    name: backend
+
   profiles:
     default: local
