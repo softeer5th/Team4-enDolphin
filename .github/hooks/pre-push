@@ -10,11 +10,10 @@ remote_url=$2
 files=$(git diff --name-only origin/$(git rev-parse --abbrev-ref HEAD))
 
 # 프론트엔드 파일 필터링
-# info) grep ... : js, ts, jsx, tsx 확장자 파일만 선택
-# info) sed ... : 파일 경로에서 frontend/ 제거 (git 루트와 eslint 루트가 다르기 때문)
-frontend_files=$(echo "$files" | grep -E "^frontend/.*\.(js|ts|jsx|tsx)$")
+# info) sed ... : 파일 경로에서 frontend/ 제거
+frontend_files=$(echo "$files" | grep -E "^frontend/" | sed 's|^frontend/||')
 # 백엔드 파일 필터링
-backend_files=$(echo "$files" | grep -E "^backend/.*\.(java|xml|properties)$")
+backend_files=$(echo "$files" | grep -E "^backend/" | sed 's|^backend/||')
 
 # 정규식 - 브랜치 네이밍 검사
 branch_name_regex="^(feature|refactor|hotfix)/(fe|be)/[a-z0-9-]+$"

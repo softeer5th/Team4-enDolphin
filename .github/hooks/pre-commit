@@ -7,11 +7,11 @@ files=$(git diff --cached --name-only --diff-filter=ACM)
 
 # 프론트엔드 파일 필터링
 # info) grep ... : js, ts, jsx, tsx 확장자 파일만 선택
-# info) sed ... : 파일 경로에서 frontend/ 제거 (git 루트와 eslint 루트가 다르기 때문)
-frontend_files=$(echo "$files" | grep -E "^frontend/.*\.(js|ts|jsx|tsx)$") | sed 's|^frontend/||'
+# info) sed ... : 파일 경로에서 frontend/ 제거
+frontend_files=$(echo "$files" | grep -E "^frontend/.*\.(js|ts|jsx|tsx)$" | sed 's|^frontend/||')
 # 백엔드 파일 필터링
 # !!! 확장자 수정해 주세요(문법 검사할 파일들) !!!
-backend_files=$(echo "$files" | grep -E "^backend/.*\.(java|xml|properties)$") | sed 's|^backend/||'
+backend_files=$(echo "$files" | grep -E "^backend/.*\.(java|xml|properties)$" | sed 's|^backend/||')
 
 
 #################### 프론트엔드 스크립트 ####################
@@ -34,6 +34,9 @@ if [ -n "$frontend_files" ]; then
     echo "[pre-commit] ❌ Lint check failed. Commit aborted."
     exit 1
   fi
+
+  echo "[pre-commit] ✅ Lint passed. Proceeding with commit."
+  echo ""
 fi
 
 
@@ -48,8 +51,5 @@ fi
 
 
 #################### 성공 분기 ####################
-
-echo "[pre-commit] ✅ Lint passed. Proceeding with commit."
-echo ""
 
 exit 0
