@@ -53,8 +53,8 @@ const createComponentContent = (
   const propsString = `{ className, width = 24${hasStroke || hasFill ? ` ${hasStroke ? ', stroke = "white"' : ""}${hasFill ? ', fill = "white"' : ""}` : ""}, ...rest }`;
   const modifiedSvgContent = svgContent
     .replace(/-(\w)/g, (_, letter) => letter.toUpperCase())
-    .replace(/width="(\d+)"/g, `width={width}`)
-    .replace(/height="(\d+)"/g, `height={width}`)
+    .replace(/<svg([^>]*)width="(\d+)"/g, `<svg$1width={width}`)
+    .replace(/<svg([^>]*)height="(\d+)"/g, `<svg$1height={width}`)
     .replace(/<svg([^>]*)fill="[^"]*"([^>]*)>/, "<svg$1$2>")
     .replace(/fill="([^"]+)"/g, `fill={fill}`)
     .replace(/stroke="([^"]+)"/g, `stroke={stroke}`)
