@@ -1,4 +1,5 @@
 import '../src/theme/index.css';
+import '../src/theme/reset.css';
 
 import type { Preview } from '@storybook/react';
 
