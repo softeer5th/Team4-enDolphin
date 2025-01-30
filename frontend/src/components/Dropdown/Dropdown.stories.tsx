@@ -8,7 +8,11 @@ const meta: Meta = {
   title: 'Dropdown',
   component: Dropdown,
   argTypes: {
-
+    onChange: {
+      table: {
+        type: { summary: 'function' },
+      },
+    },
   },
 } satisfies Meta<typeof Dropdown>;
 
@@ -23,7 +27,7 @@ export const Primary = () => {
       height={200}
       onChange={handleChange} 
       selectedValue={selectedValue} 
-      trigger={<input type='text' value={selectedValue} width={100} />}
+      trigger={<input readOnly type='text' value={selectedValue} width={100}/>}
     >
       <DropdownItem value='Item 1'>Item 1</DropdownItem>
       <DropdownItem value='Item 2'>Item 2</DropdownItem>
