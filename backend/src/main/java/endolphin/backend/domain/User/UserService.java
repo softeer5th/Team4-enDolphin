@@ -4,6 +4,7 @@ import endolphin.backend.domain.User.dto.GoogleUserInfo;
 import endolphin.backend.domain.User.dto.GoogleTokens;
 import endolphin.backend.domain.User.dto.OAuthResponse;
 import endolphin.backend.domain.User.dto.UrlResponse;
+import endolphin.backend.domain.User.entity.User;
 import endolphin.backend.global.config.GoogleOAuthProperties;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -14,18 +15,20 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 @Slf4j
 public class UserService {
 
     private final GoogleOAuthProperties googleOAuthProperties;
+    private final UserRepository userRepository;
     private final RestTemplate restTemplate = new RestTemplate();
-
 
     public UrlResponse getGoogleLoginUrl() {
         return new UrlResponse(String.format(
@@ -37,7 +40,23 @@ public class UserService {
     public OAuthResponse oauth2Callback(String code) {
         GoogleTokens tokenResponse = getAccessToken(code);
         GoogleUserInfo userInfo = getUserInfo(tokenResponse.accessToken());
+        User user = createUser(userInfo, tokenResponse);
         return new OAuthResponse(userInfo);
+    }
+
+    private User createUser(GoogleUserInfo userInfo, GoogleTokens tokenResponse) {
+        User user = userRepository.findByEmail(userInfo.email())
+            .orElseGet(() -> {
+                return User.builder()
+                    .email(userInfo.email())
+                    .name(userInfo.name())
+                    .picture(userInfo.pictureUrl())
+                    .access_token(tokenResponse.accessToken())
+                    .refresh_token(tokenResponse.refreshToken())
+                    .build();
+            });
+        userRepository.save(user);
+        return user;
     }
 
     private GoogleTokens getAccessToken(String code) {
