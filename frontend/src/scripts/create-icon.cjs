@@ -56,8 +56,8 @@ const createComponentContent = (
     .replace(/<svg([^>]*)width="(\d+)"/g, `<svg$1width={width}`)
     .replace(/<svg([^>]*)height="(\d+)"/g, `<svg$1height={width}`)
     .replace(/<svg([^>]*)fill="[^"]*"([^>]*)>/, "<svg$1$2>")
-    .replace(/fill="([^"]+)"/g, `fill={fill}`)
-    .replace(/stroke="([^"]+)"/g, `stroke={stroke}`)
+    .replace(/(<(?!rect)[^>]+)fill="([^"]+)"/g, `$1fill={fill}`)
+    .replace(/(<(?!rect)[^>]+)stroke="([^"]+)"/g, `$1stroke={stroke}`)
     .replace(
       /<svg([^>]*)>/,
       `<svg$1 aria-label="${iconName} icon" fill="none" className={className} {...rest}>`
