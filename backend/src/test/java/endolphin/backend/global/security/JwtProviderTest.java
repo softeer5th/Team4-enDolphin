@@ -1,6 +1,5 @@
-package endolphin.backend.global.backend;
+package endolphin.backend.global.security;
 
-import endolphin.backend.global.security.JwtProvider;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Claims;
 import org.junit.jupiter.api.BeforeEach;
