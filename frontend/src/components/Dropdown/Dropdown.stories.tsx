@@ -2,7 +2,6 @@ import type { Meta } from '@storybook/react';
 import { useState } from 'react';
 
 import { Dropdown } from '.';
-import { DropdownItem } from './DropdownItem';
 
 const meta: Meta = {
   title: 'Dropdown',
@@ -29,11 +28,11 @@ export const Primary = () => {
       selectedValue={selectedValue} 
       trigger={<input readOnly type='text' value={selectedValue} width={100}/>}
     >
-      <DropdownItem value='Item 1'>Item 1</DropdownItem>
-      <DropdownItem value='Item 2'>Item 2</DropdownItem>
-      <DropdownItem value='Item 3'>Item 3</DropdownItem>
-      <DropdownItem value='Item 4'>Item 4</DropdownItem>
-      <DropdownItem value='Item 5'>Item 5</DropdownItem>
+      <Dropdown.Item value='Item 1'>Item 1</Dropdown.Item>
+      <Dropdown.Item value='Item 2'>Item 2</Dropdown.Item>
+      <Dropdown.Item value='Item 3'>Item 3</Dropdown.Item>
+      <Dropdown.Item value='Item 4'>Item 4</Dropdown.Item>
+      <Dropdown.Item value='Item 5'>Item 5</Dropdown.Item>
     </Dropdown>
   );
 };

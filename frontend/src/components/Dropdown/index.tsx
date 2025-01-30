@@ -1,6 +1,7 @@
 import { type PropsWithChildren, type ReactNode, useId } from 'react';
 
 import { DropdownContext } from './DropdownContext';
+import { DropdownItem } from './DropdownItem';
 import { dropdownContainerStyle, dropdownContentStyle } from './index.css';
 
 interface DropdownProps extends PropsWithChildren {
@@ -34,3 +35,5 @@ export const Dropdown = ({
     </DropdownContext.Provider>
   );
 };
+
+Dropdown.Item = DropdownItem;
