@@ -67,7 +67,6 @@ export default tseslint.config(
       '@stylistic/jsx-sort-props': 'error',
       '@stylistic/array-bracket-newline': 'error',
       'react/jsx-no-duplicate-props': 'error',
-      'react/jsx-max-props-per-line': ['error', { maximum: 1, when: 'multiline' }],
 
       // Possible Problems
       'array-callback-return': ['error', { checkForEach: true }],
