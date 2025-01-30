@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
+import { useState } from 'react';
 
 import { useGroup } from '../../hooks/useGroup';
 import { Group } from '../Group';
@@ -11,14 +12,26 @@ const meta: Meta = {
     size: {
       control: { type: 'radio', options: ['sm', 'md'] },
     },
+    children: {
+      control: { type: 'text' },
+    },
+    value: {
+      control: false,
+    },
+    isChecked: {
+      control: false,
+    },
+    onToggleCheck: {
+      control: false,
+    },
+    type: {
+      control: false,
+    },
     defaultChecked: {
-      control: { type: 'boolean' },
+      control: false,
     },
     inputProps: {
       control: false,
-    },
-    children: {
-      control: { type: 'text' },
     },
   },
 } satisfies Meta<typeof Checkbox>;
@@ -33,7 +46,15 @@ export const SingleCheck: Story = {
   },
 };
 
-export const GroupCheck = () => {
+export const ControlledCheck = () => {
+  const [checked, setChecked] = useState(false);
+
+  return(
+    <Checkbox isChecked={checked} onToggleCheck={setChecked}>라벨</Checkbox>
+  );
+};
+
+export const ControlledGroupCheck = () => {
   type Member = {
     id: number;
     name: string;

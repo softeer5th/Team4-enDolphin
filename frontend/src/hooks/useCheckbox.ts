@@ -1,4 +1,5 @@
 
+import type { SetStateAction } from 'react';
 import { useContext, useState } from 'react';
 
 import { GroupContext } from '../components/Group/GroupContext';
@@ -6,13 +7,21 @@ import { GroupContext } from '../components/Group/GroupContext';
 interface CheckedStateProps {
   defaultChecked?: boolean;
   value?: number;
+  isChecked?: boolean;
+  onToggleCheck?: (prev: SetStateAction<boolean>) => void;
   type: 'all' | 'single';
 }
 
-export const useCheckbox = ({ value, defaultChecked, type }: CheckedStateProps) => {
+export const useCheckbox = ({ 
+  value, 
+  defaultChecked, 
+  isChecked, 
+  onToggleCheck, 
+  type, 
+}: CheckedStateProps) => {
   const group = useContext(GroupContext);
   const [checked, setChecked] = useState(defaultChecked || false);
-
+  
   const handleClickCheck = () => {
     if (group) {
       if (type === 'all') {
@@ -20,16 +29,17 @@ export const useCheckbox = ({ value, defaultChecked, type }: CheckedStateProps) 
       } else if (value) {
         group.onToggleCheck(value);
       }
-      return;
-    }
-    setChecked((checked) => !checked);
+    } else if (onToggleCheck) {
+      onToggleCheck((prev) => !prev);
+    } else setChecked((checked) => !checked);
   };
 
-  const isChecked = () => {
+  const findIsChecked = () => {
     if (type === 'all') return group?.isAllChecked;
     if (value) return group?.checkedList.has(value);
+    if (isChecked) return isChecked;
     return checked;
   };
 
-  return { handleClickCheck, checked: isChecked() };
+  return { handleClickCheck, checked: findIsChecked() };
 };
