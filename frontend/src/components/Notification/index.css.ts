@@ -1,5 +1,4 @@
 
-import { style } from '@vanilla-extract/css';
 import { recipe } from '@vanilla-extract/recipes';
 
 import { vars } from '../../theme/index.css';
@@ -28,8 +27,18 @@ export const containerStyle = recipe({
   },
 });
 
-export const contentsStyle = style({
-  display: 'flex',
-  flexDirection: 'column',
-  gap: vars.spacing[100],
+export const contentsStyle = recipe({
+  base: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: vars.spacing[100],
+  },
+  variants: {
+    style: {
+      default: {},
+      noDescription: {
+        alignSelf: 'center',
+      },
+    },
+  },
 });

@@ -10,7 +10,7 @@ type NotiType = 'succes' | 'error';
 interface NotificationProps {
   type: NotiType;
   title: string;
-  description: string;
+  description?: string;
 }
 
 export const Notification = ({
@@ -26,9 +26,9 @@ export const Notification = ({
   return (
     <div className={containerStyle({ type })} role='alert'>
       {typeIconMap[type]}
-      <div className={contentsStyle}>
+      <div className={contentsStyle({ style: description ? 'default' : 'noDescription' })}>
         <Text color={vars.color.Ref.Netural[800]} typo='t2'>{title}</Text>
-        <Text color={vars.color.Ref.Netural[500]} typo='b2R'>{description}</Text>
+        { description && <Text color={vars.color.Ref.Netural[500]} typo='b2R'>{description}</Text> }
       </div>
     </div>
   );

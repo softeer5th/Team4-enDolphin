@@ -28,3 +28,10 @@ export const Error: Story = {
     description: 'description',
   },
 };
+
+export const NoDescription: Story = {
+  args: {
+    type: 'succes',
+    title: '일정 조율 삭제가 완료됐어요',
+  },
+};
