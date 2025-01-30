@@ -37,7 +37,17 @@ interface GroupStateProps {
   itemIds: number[];
 }
 
-export const useGroup = ({ defaultCheckedList = new Set(), itemIds }: GroupStateProps) => {  
+export interface GroupStateReturn {
+  checkedList: Set<number>;
+  handleToggleCheck: (id: number) => void;
+  isAllChecked: boolean;
+  handleToggleAllCheck: () => void;
+}
+
+export const useGroup = ({ 
+  defaultCheckedList = new Set(), 
+  itemIds, 
+}: GroupStateProps): GroupStateReturn => {  
   const isAllChecked = defaultCheckedList.size === itemIds.length;
 
   const [state, dispatch] = useReducer(reducer, { checkedList: defaultCheckedList, isAllChecked });

@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
+import { useGroup } from '../../hooks/useGroup';
 import { Group } from '../Group';
 import { Checkbox } from '.';
 
@@ -43,12 +44,14 @@ export const GroupCheck = () => {
     { id: 2, name: '윤아' },
     { id: 3, name: '진솔' },
   ];
+
+  const groupInfos = useGroup({
+    defaultCheckedList: new Set([1, 2]),
+    itemIds: members.map(({ id }) => id ),
+  });
   
   return(
-    <Group 
-      defaultCheckedList={new Set([1, 2])}
-      itemIds={members.map(({ id }) => id )}
-    >
+    <Group groupInfos={groupInfos}>
       <Checkbox type='all'>전체</Checkbox>
       {members.map(({ id, name }) => (
         <Checkbox key={id} value={id}>{name}</Checkbox>
@@ -56,3 +59,4 @@ export const GroupCheck = () => {
     </Group>
   );
 };
+
