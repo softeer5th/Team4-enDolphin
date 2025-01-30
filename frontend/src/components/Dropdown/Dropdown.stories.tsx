@@ -1,4 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta } from '@storybook/react';
+import { useState } from 'react';
 
 import { Dropdown } from '.';
 import { DropdownItem } from './DropdownItem';
@@ -13,18 +14,22 @@ const meta: Meta = {
 
 export default meta;
 
-type Story = StoryObj<typeof meta>;
-
-export const Primary: Story = {
-  args: {
-    trigger: <input type='text' width={100} />,
-    height: 200,
-    children: [
-      <DropdownItem selected={false}>Item 1</DropdownItem>,
-      <DropdownItem selected={true}>Item 2</DropdownItem>,
-      <DropdownItem selected={false}>Item 3</DropdownItem>,
-      <DropdownItem selected={false}>Item 4</DropdownItem>,
-      <DropdownItem selected={false}>Item 5</DropdownItem>,
-    ],
-  },
+export const Primary = () => {
+  const [selectedValue, setSelectedValue] = useState('Item 1');
+  const handleChange = (value: string) => setSelectedValue(value);
+  
+  return (
+    <Dropdown 
+      height={200}
+      onChange={handleChange} 
+      selectedValue={selectedValue} 
+      trigger={<input type='text' value={selectedValue} width={100} />}
+    >
+      <DropdownItem value='Item 1'>Item 1</DropdownItem>
+      <DropdownItem value='Item 2'>Item 2</DropdownItem>
+      <DropdownItem value='Item 3'>Item 3</DropdownItem>
+      <DropdownItem value='Item 4'>Item 4</DropdownItem>
+      <DropdownItem value='Item 5'>Item 5</DropdownItem>
+    </Dropdown>
+  );
 };
