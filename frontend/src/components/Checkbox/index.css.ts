@@ -23,13 +23,13 @@ export const checkboxStyle = recipe({
   variants: {
     size: {
       sm: {
-        width: 12,
-        height: 12,
+        width: 16,
+        height: 16,
         borderRadius: 6,
       },
       md: {
-        width: 16,
-        height: 16,
+        width: 20,
+        height: 20,
         borderRadius: vars.radius[200],
       },
     },
