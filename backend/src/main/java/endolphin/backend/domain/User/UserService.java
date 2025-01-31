@@ -6,6 +6,7 @@ import endolphin.backend.domain.User.dto.OAuthResponse;
 import endolphin.backend.domain.User.dto.UrlResponse;
 import endolphin.backend.domain.User.entity.User;
 import endolphin.backend.global.config.GoogleOAuthProperties;
+import endolphin.backend.global.security.JwtProvider;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +29,7 @@ public class UserService {
 
     private final GoogleOAuthProperties googleOAuthProperties;
     private final UserRepository userRepository;
+    private final JwtProvider jwtProvider;
     private final RestTemplate restTemplate = new RestTemplate();
 
     public UrlResponse getGoogleLoginUrl() {
@@ -41,7 +43,8 @@ public class UserService {
         GoogleTokens tokenResponse = getAccessToken(code);
         GoogleUserInfo userInfo = getUserInfo(tokenResponse.accessToken());
         User user = createUser(userInfo, tokenResponse);
-        return new OAuthResponse(userInfo);
+        String accessToken = jwtProvider.createToken(user.getId(), user.getEmail());
+        return new OAuthResponse(accessToken);
     }
 
     private User createUser(GoogleUserInfo userInfo, GoogleTokens tokenResponse) {
