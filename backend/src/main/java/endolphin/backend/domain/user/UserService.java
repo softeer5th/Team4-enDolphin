@@ -86,7 +86,7 @@ public class UserService {
 
     private GoogleUserInfo getUserInfo(String accessToken) {
         HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Bearer " + accessToken);
+        headers.setBearerAuth(accessToken);
 
         HttpEntity<String> entity = new HttpEntity<>(headers);
 
