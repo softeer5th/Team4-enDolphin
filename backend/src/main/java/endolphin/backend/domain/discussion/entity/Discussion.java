@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import org.hibernate.annotations.ColumnDefault;
 
 @Getter
 @NoArgsConstructor
@@ -46,7 +47,8 @@ public class Discussion extends BaseTimeEntity {
     @Column(nullable = false)
     private LocalDate deadline;
 
-    @Column(name = "is_modifiable", nullable = false, columnDefinition = "TINYINT(1) default 1")
+    @ColumnDefault("1")
+    @Column(name = "is_modifiable", nullable = false)
     private Boolean isModifiable;
 
     @Builder
