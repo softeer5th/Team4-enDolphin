@@ -1,5 +1,11 @@
 package endolphin.backend.domain.user.dto;
 
-public record GoogleTokens(String accessToken, String refreshToken) {
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+public record GoogleTokens(
+    @JsonProperty("access_token")
+    String accessToken,
+    @JsonProperty("refresh_token")
+    String refreshToken) {
 
 }

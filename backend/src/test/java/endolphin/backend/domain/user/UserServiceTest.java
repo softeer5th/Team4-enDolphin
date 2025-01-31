@@ -82,21 +82,17 @@ class UserServiceTest {
         User user = User.builder()
             .email(googleUserInfo.email())
             .name(googleUserInfo.name())
-            .picture(googleUserInfo.pictureUrl())
+            .picture(googleUserInfo.picture())
             .access_token(googleTokens.accessToken())
             .refresh_token(googleTokens.refreshToken())
             .build();
 
-        given(restTemplate.postForEntity(eq(testTokenUrl), any(HttpEntity.class), eq(Map.class)))
-            .willReturn(ResponseEntity.ok(
-                Map.of("access_token", googleTokens.accessToken(), "refresh_token",
-                    googleTokens.refreshToken())));
+        given(restTemplate.postForEntity(eq(testTokenUrl), any(HttpEntity.class), eq(GoogleTokens.class)))
+            .willReturn(ResponseEntity.ok(googleTokens));
 
         given(restTemplate.exchange(eq(googleOAuthProperties.userInfoUrl()), eq(HttpMethod.GET),
-            any(), eq(Map.class)))
-            .willReturn(ResponseEntity.ok(
-                Map.of("email", googleUserInfo.email(), "name", googleUserInfo.name(), "sub",
-                    googleUserInfo.sub(), "picture", googleUserInfo.pictureUrl())));
+            any(), eq(GoogleUserInfo.class)))
+            .willReturn(ResponseEntity.ok(googleUserInfo));
 
         given(userRepository.findByEmail(googleUserInfo.email())).willReturn(Optional.empty());
         given(userRepository.save(any(User.class))).willReturn(user);

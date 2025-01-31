@@ -53,7 +53,7 @@ public class UserService {
                 return User.builder()
                     .email(userInfo.email())
                     .name(userInfo.name())
-                    .picture(userInfo.pictureUrl())
+                    .picture(userInfo.picture())
                     .access_token(tokenResponse.accessToken())
                     .refresh_token(tokenResponse.refreshToken())
                     .build();
@@ -66,6 +66,17 @@ public class UserService {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
+        HttpEntity<MultiValueMap<String, String>> request = getHttpEntity(
+            code, headers);
+        ResponseEntity<GoogleTokens> response = restTemplate.postForEntity(
+            googleOAuthProperties.tokenUrl(), request,
+            GoogleTokens.class);
+
+        return response.getBody();
+    }
+
+    private HttpEntity<MultiValueMap<String, String>> getHttpEntity(String code,
+        HttpHeaders headers) {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("client_id", googleOAuthProperties.clientId());
         params.add("client_secret", googleOAuthProperties.clientSecret());
@@ -75,13 +86,7 @@ public class UserService {
         params.add("access_type", "offline");
 
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
-        ResponseEntity<Map> response = restTemplate.postForEntity(
-            googleOAuthProperties.tokenUrl(), request,
-            Map.class);
-
-        String accessToken = (String) response.getBody().get("access_token");
-        String refreshToken = (String) response.getBody().get("refresh_token");
-        return new GoogleTokens(accessToken, refreshToken);
+        return request;
     }
 
     private GoogleUserInfo getUserInfo(String accessToken) {
@@ -90,14 +95,9 @@ public class UserService {
 
         HttpEntity<String> entity = new HttpEntity<>(headers);
 
-        ResponseEntity<Map> result = restTemplate.exchange(googleOAuthProperties.userInfoUrl(),
-            HttpMethod.GET, entity, Map.class);
+        ResponseEntity<GoogleUserInfo> result = restTemplate.exchange(googleOAuthProperties.userInfoUrl(),
+            HttpMethod.GET, entity, GoogleUserInfo.class);
 
-        Map<String, Object> map = result.getBody();
-        String email = (String) map.get("email");
-        String name = (String) map.get("name");
-        String sub = (String) map.get("sub");
-        String pic = (String) map.get("picture");
-        return new GoogleUserInfo(sub, name, email, pic);
+        return result.getBody();
     }
 }
