@@ -9,6 +9,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "create-theme": "node src/scripts/create-theme.cjs & pnpm eslint --fix",
+    "create-icon": "node src/scripts/create-icon.cjs",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
