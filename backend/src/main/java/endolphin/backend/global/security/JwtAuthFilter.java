@@ -1,18 +1,16 @@
 package endolphin.backend.global.security;
 
-import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.ServletRequest;
-import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 @Component
-public class JwtAuthFilter implements Filter {
+public class JwtAuthFilter extends OncePerRequestFilter {
 
     private final JwtProvider jwtProvider;
 
@@ -21,15 +19,9 @@ public class JwtAuthFilter implements Filter {
     }
 
     @Override
-    public void doFilter(ServletRequest request,
-        ServletResponse response,
-        FilterChain chain)
-        throws IOException, ServletException {
-
-        HttpServletRequest httpReq = (HttpServletRequest) request;
-        HttpServletResponse httpRes = (HttpServletResponse) response;
-
-        String authHeader = httpReq.getHeader("Authorization");
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
+        FilterChain filterChain) throws ServletException, IOException {
+        String authHeader = request.getHeader("Authorization");
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7);
 
@@ -46,18 +38,24 @@ public class JwtAuthFilter implements Filter {
 
             } catch (RuntimeException e) {
                 // 만료, 서명위조 -> 401
-                httpRes.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid token");
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid token");
                 return;
             }
         } else {
             // Authorization 헤더가 없거나 형식 불일치 -> 401
-            httpRes.sendError(HttpServletResponse.SC_UNAUTHORIZED, "No token");
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "No token");
             return;
         }
 
-        chain.doFilter(request, response);
+        filterChain.doFilter(request, response);
 
         // 요청 끝나면 ThreadLocal 정리
         UserContext.clear();
+    }
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        String path = request.getRequestURI();
+        return path.startsWith("/google") || path.startsWith("/oauth2/callback");
     }
 }
