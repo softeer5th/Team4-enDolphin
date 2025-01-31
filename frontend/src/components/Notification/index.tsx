@@ -5,9 +5,9 @@ import { CircleCheck, TriangleWarning } from '../Icon';
 import { Text } from '../Text';
 import { containerStyle, contentsStyle } from './index.css';
 
-type NotiType = 'succes' | 'error';
+type NotiType = 'success' | 'error';
 
-interface NotificationProps {
+export interface NotificationProps {
   type: NotiType;
   title: string;
   description?: string;
@@ -19,7 +19,7 @@ export const Notification = ({
   description,
 }: NotificationProps) => {
   const typeIconMap: Record<NotiType, ReactNode> = {
-    succes: <CircleCheck fill={vars.color.Ref.Primary[500]} />,
+    success: <CircleCheck fill={vars.color.Ref.Primary[500]} />,
     error: <TriangleWarning fill={vars.color.Ref.Red[500]} />,
   };
 

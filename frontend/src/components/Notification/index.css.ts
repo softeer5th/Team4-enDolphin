@@ -1,4 +1,5 @@
 
+import { style } from '@vanilla-extract/css';
 import { recipe } from '@vanilla-extract/recipes';
 
 import { vars } from '../../theme/index.css';
@@ -15,7 +16,7 @@ export const containerStyle = recipe({
   },
   variants: {
     type: {
-      succes: {
+      success: {
         background: vars.color.Ref.Netural.White,
         border: `1px solid ${vars.color.Ref.Netural[200]}`,
       },
@@ -41,4 +42,15 @@ export const contentsStyle = recipe({
       },
     },
   },
+});
+
+export const notificationsStyle = style({
+  width: '100vw',
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  gap: vars.spacing[200],
+
+  position: 'fixed',
+  top: '3rem',
 });
