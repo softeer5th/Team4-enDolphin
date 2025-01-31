@@ -1,4 +1,4 @@
-package endolphin.backend.domain.User.entity;
+package endolphin.backend.domain.user.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

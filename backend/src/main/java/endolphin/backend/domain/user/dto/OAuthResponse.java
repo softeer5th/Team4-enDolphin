@@ -1,4 +1,4 @@
-package endolphin.backend.domain.User.dto;
+package endolphin.backend.domain.user.dto;
 
 public record OAuthResponse(String accessToken) {
 

@@ -1,15 +1,15 @@
-package endolphin.backend.domain.User;
+package endolphin.backend.domain.user;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.*;
 
-import endolphin.backend.domain.User.dto.GoogleTokens;
-import endolphin.backend.domain.User.dto.GoogleUserInfo;
-import endolphin.backend.domain.User.dto.OAuthResponse;
-import endolphin.backend.domain.User.dto.UrlResponse;
-import endolphin.backend.domain.User.entity.User;
+import endolphin.backend.domain.user.dto.GoogleTokens;
+import endolphin.backend.domain.user.dto.GoogleUserInfo;
+import endolphin.backend.domain.user.dto.OAuthResponse;
+import endolphin.backend.domain.user.dto.UrlResponse;
+import endolphin.backend.domain.user.entity.User;
 import endolphin.backend.global.config.GoogleOAuthProperties;
 import endolphin.backend.global.security.JwtProvider;
 import java.util.Map;

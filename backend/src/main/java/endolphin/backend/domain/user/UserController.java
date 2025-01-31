@@ -1,7 +1,7 @@
-package endolphin.backend.domain.User;
+package endolphin.backend.domain.user;
 
-import endolphin.backend.domain.User.dto.OAuthResponse;
-import endolphin.backend.domain.User.dto.UrlResponse;
+import endolphin.backend.domain.user.dto.OAuthResponse;
+import endolphin.backend.domain.user.dto.UrlResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

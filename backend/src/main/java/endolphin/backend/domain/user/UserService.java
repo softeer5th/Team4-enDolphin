@@ -1,10 +1,10 @@
-package endolphin.backend.domain.User;
+package endolphin.backend.domain.user;
 
-import endolphin.backend.domain.User.dto.GoogleUserInfo;
-import endolphin.backend.domain.User.dto.GoogleTokens;
-import endolphin.backend.domain.User.dto.OAuthResponse;
-import endolphin.backend.domain.User.dto.UrlResponse;
-import endolphin.backend.domain.User.entity.User;
+import endolphin.backend.domain.user.dto.GoogleUserInfo;
+import endolphin.backend.domain.user.dto.GoogleTokens;
+import endolphin.backend.domain.user.dto.OAuthResponse;
+import endolphin.backend.domain.user.dto.UrlResponse;
+import endolphin.backend.domain.user.entity.User;
 import endolphin.backend.global.config.GoogleOAuthProperties;
 import endolphin.backend.global.security.JwtProvider;
 import java.util.Map;
@@ -30,7 +30,7 @@ public class UserService {
     private final GoogleOAuthProperties googleOAuthProperties;
     private final UserRepository userRepository;
     private final JwtProvider jwtProvider;
-    private final RestTemplate restTemplate = new RestTemplate();
+    private final RestTemplate restTemplate;
 
     public UrlResponse getGoogleLoginUrl() {
         return new UrlResponse(String.format(
