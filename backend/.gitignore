@@ -37,3 +37,9 @@ out/
 .vscode/
 
 .DS_Store
+
+#환경 설정 파일
+application-*.yml
+
+# 데이터베이스 파일
+*.db
