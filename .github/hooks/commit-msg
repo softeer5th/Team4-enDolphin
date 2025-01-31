@@ -1,0 +1,82 @@
+#!/bin/sh
+
+#################### 공통 스크립트 ####################
+
+# 커밋 메시지 파일 경로
+commit_msg_file=$1
+
+# 커밋 메시지 읽어오기
+commit_msg=$(cat "$commit_msg_file")
+
+# 현재 브랜치 확인 (현재 브랜치 이름으로 merge 여부 판단 가능)
+current_branch=$(git rev-parse --abbrev-ref HEAD)
+
+
+#################### dev | main 브랜치에 squash merge하는 경우 ####################
+
+# merge commit 여부 확인
+if [ -f ".git/MERGE_MSG" ]; then
+  echo "[commit-msg] Detected a merge commit."
+
+  # 커밋 메시지 검증 (FE/BE/ALL 형식 확인)
+  if ! grep -qE "^\[(FE|BE|ALL)-[A-Za-z]+\]" "$commit_msg_file"; then
+    echo "[commit-msg] ❌ Invalid merge commit message format."
+    echo "[commit-msg] Expected format: [FE-Feat], [BE-Fix], [ALL-Refactor], etc."
+    exit 1
+  fi
+
+  echo "[commit-msg] ✅ Commit message format is valid. Proceeding with commit."
+  echo ""
+
+  exit 0
+fi
+
+
+
+#################### 일반적인 fe | be 브랜치에 커밋하는 경우 ####################
+
+# 정규식 - 메시지 태그 검사
+tag_regex="^(feat|fix|docs|refactor|test|chore)"
+
+# 정규식 - `:` 뒤 공백이 정확히 1개 존재하는지 검사
+colon_with_space_regex=": [^ ]"
+
+# 메시지 본문의 최소 길이
+min_body_length=1
+
+# 커밋 메시지의 validity
+is_valid=true
+
+echo "[commit-msg] ⏳ Executing commit message validation..."
+
+# 메시지 태그 검사
+if ! echo "$commit_msg" | grep -Eq "$tag_regex"; then
+  echo "[commit-msg] ❌ Invalid format: Commit message must start with a valid tag (e.g., feat, fix, docs) followed by a colon (:)."
+  is_valid=false
+fi
+
+# `:` 뒤 공백 존재 여부 검사
+if ! echo "$commit_msg" | grep -Eq "$colon_with_space_regex"; then
+  echo "[commit-msg] ❌ Invalid format: There must be exactly one space after the colon (:)."
+  is_valid=false
+fi
+
+# 메시지 본문 길이 검사
+message_body=$(echo "$commit_msg" | sed -E "s/$tag_regex//")
+if [ ${#message_body} -lt $min_body_length ]; then
+  echo "[commit-msg] ❌ Invalid format: Commit message body must be at least $min_body_length character long."
+  is_valid=false
+fi
+
+# 모든 검사 통과 여부 확인
+if [ "$is_valid" = false ]; then
+  echo "[commit-msg] ❗ Commit message format is invalid. aborting commit."
+  echo "[commit-msg] commit message must match the following pattern:"
+  echo "[commit-msg] <type>: <message>"
+  exit 1
+fi
+
+echo "[commit-msg] ✅ Commit message format is valid. Proceeding with commit."
+echo ""
+
+exit 0
