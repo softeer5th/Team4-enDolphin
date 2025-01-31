@@ -56,6 +56,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getRequestURI();
-        return path.startsWith("/google") || path.startsWith("/oauth2/callback");
+        return path.startsWith("/api/v1/google") || path.startsWith("/api/v1/oauth2/callback");
     }
 }
