@@ -3,6 +3,10 @@ import { useCallback, useReducer } from 'react';
 
 import type { NotificationProps } from '../components/Notification';
 
+export type NotificationWithOptionalId = NotificationProps & {
+  id?: number;
+};
+
 export type NotificationWithId = NotificationProps & {
   id: number;
 };
@@ -32,10 +36,13 @@ export const notificationReducer = (state: NotificationState, action: Notificati
 export const useNotification = () => {
   const [state, dispatch] = useReducer(notificationReducer, { notifications: [] });
 
-  const addNoti = (notification: NotificationWithId) => {
-    dispatch({ type: 'ADD_NOTIFICATION', notification });
+  const addNoti = (notification: NotificationWithOptionalId) => {
+    // TODO: 유니크한 id 생성하기. (따닥 이슈)
+    const defaultId = notification.id || new Date().getTime();
+    
+    dispatch({ type: 'ADD_NOTIFICATION', notification: { ...notification, id: defaultId } });
     setTimeout(() => {
-      dispatch({ type: 'REMOVE_NOTIFICATION', id: notification.id });
+      dispatch({ type: 'REMOVE_NOTIFICATION', id: defaultId });
     }, 3000);
   };
 
