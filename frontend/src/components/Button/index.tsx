@@ -1,27 +1,27 @@
-import type { PropsWithChildren } from 'react';
+import type { MouseEventHandler, PropsWithChildren } from 'react';
 
-import type { Typo } from '../Text';
-import { Text } from '../Text';
+import { ButtonContext } from './ButtonContext';
+import ButtonIcon from './ButtonIcon';
+import ButtonText from './ButtonText';
 import { ContainerStyle } from './index.css';
 
-interface ButtonProps extends PropsWithChildren {
+export interface ButtonProps extends PropsWithChildren {
   type: 'primary' | 'secondary' | 'destructive' | 're';
   style: 'weak' | 'filled' | 'outline' | 'borderless';
   radius: 'max' | 'roundCorner';
   size: 'sm' | 'md' | 'lg' | 'xl';
+  onClick?: MouseEventHandler<HTMLButtonElement>;
 }
 
-const Button = ({ type, style, radius, size, children }: ButtonProps) => {
-  const fontMap: Record<ButtonProps['size'], Typo> = {
-    sm: 'caption',
-    md: 't2',
-    lg: 't2',
-    xl: 't2',
-  };
-  
-  return (<button className={ContainerStyle({ type, style, radius, size })}>
-    <Text typo={fontMap[size]}>{children}</Text>
-  </button>);
-};
+const Button = ({ type, style, radius, size, onClick, children }: ButtonProps) => (
+  <ButtonContext.Provider value={{ size }}>
+    <button className={ContainerStyle({ type, style, radius, size })} onClick={onClick}>
+      {children}
+    </button>
+  </ButtonContext.Provider>
+);
+
+Button.Text = ButtonText;
+Button.Icon = ButtonIcon;
 
 export default Button;
