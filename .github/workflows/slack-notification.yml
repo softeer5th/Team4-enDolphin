@@ -2,7 +2,7 @@ name: PR Slack Notification
 
 on:
     pull_request:
-        types: [review_requested]
+        types: [opened, review_requested]
 
 jobs:
     notify_slack:
@@ -54,3 +54,5 @@ jobs:
                   )
 
                   curl -X POST -H 'Content-type: application/json' --data "$PAYLOAD" "$SLACK_WEBHOOK_URL"
+            - name: Debug Event
+              run: cat $GITHUB_EVENT_PATH
