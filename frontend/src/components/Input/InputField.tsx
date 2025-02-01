@@ -1,13 +1,12 @@
-import type { HtmlHTMLAttributes, InputHTMLAttributes, PropsWithChildren } from 'react';
+import type { InputHTMLAttributes } from 'react';
 
 import { useSafeContext } from '../../hooks/useSafeContext';
-import type { InputProps } from '.';
 import { InputContext } from './InputContext';
 import { inputFieldContainerStyle, inputFieldStyle } from './inputField.css';
 
 const InputField = (props: InputHTMLAttributes<HTMLInputElement>) => {
-  const { size, state, multiInput } = useSafeContext(InputContext);
   // TODO: multiInput 구현
+  const { size, state } = useSafeContext(InputContext);
   
   return (
     <div className={inputFieldContainerStyle({ size, state })}>

@@ -1,5 +1,4 @@
 import type { PropsWithChildren } from 'react';
-import React from 'react';
 
 import { useSafeContext } from '../../hooks/useSafeContext';
 import { Text } from '../Text';

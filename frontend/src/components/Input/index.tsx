@@ -1,7 +1,5 @@
 import type { PropsWithChildren } from 'react';
-import { useState } from 'react';
 
-import type { Typo } from '../Text';
 import HelperText from './HelperText';
 import { containerStyle } from './index.css';
 import { InputContext } from './InputContext';
@@ -15,9 +13,6 @@ export interface InputProps extends PropsWithChildren {
 }
 
 export const Input = ({ state, multiInput, size, children }: InputProps) => 
-// const fontMap: Record<typeof size, Typo> = {
-//   md: 'b3R',
-// };
   (
     <InputContext.Provider value={{ size, state, multiInput }}>
       <div className={containerStyle}>

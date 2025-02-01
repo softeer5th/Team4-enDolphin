@@ -48,7 +48,7 @@ export const Error = () => {
       size='md'
       state='error'
     >
-      <Input.Label required={true}>이메일</Input.Label>
+      <Input.Label required={false}>이메일</Input.Label>
       <Input.InputField 
         onChange={handleChange}
         placeholder='이메일을 입력하세요'
