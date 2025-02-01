@@ -23,13 +23,15 @@ export const Group = ({
   const { checkedList, isAllChecked, handleToggleCheck, handleToggleAllCheck } = groupInfos;
 
   return (
-    <GroupContext.Provider value={{ 
-      controlId: controlId || defaultId,
-      checkedList,
-      onToggleCheck: handleToggleCheck,
-      onToggleAllCheck: handleToggleAllCheck,
-      isAllChecked,
-    }}>
+    <GroupContext.Provider 
+      value={{ 
+        controlId: controlId || defaultId,
+        checkedList,
+        onToggleCheck: handleToggleCheck,
+        onToggleAllCheck: handleToggleAllCheck,
+        isAllChecked,
+      }}
+    >
       {children}
     </GroupContext.Provider>
   ); 

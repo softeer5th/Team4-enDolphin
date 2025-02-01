@@ -26,7 +26,14 @@ export const Primary = () => {
       height={200}
       onChange={handleChange} 
       selectedValue={selectedValue} 
-      trigger={<input readOnly type='text' value={selectedValue} width={100}/>}
+      trigger={
+        <input
+          readOnly
+          type='text'
+          value={selectedValue}
+          width={100}
+        />
+      }
     >
       <Dropdown.Item value='Item 1'>Item 1</Dropdown.Item>
       <Dropdown.Item value='Item 2'>Item 2</Dropdown.Item>

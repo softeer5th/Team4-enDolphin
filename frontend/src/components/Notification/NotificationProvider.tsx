@@ -10,7 +10,7 @@ export const NotificationProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <NotificationContext.Provider value={{ addNoti }}>
-      {state.notifications.length > 0 && <GlobalNotification notifications={state.notifications}/>}
+      {state.notifications.length > 0 && <GlobalNotification notifications={state.notifications} />}
       {children}
     </NotificationContext.Provider>
   );

@@ -23,7 +23,7 @@ export const TabContent = ({ value, children }: TabContentProps) => {
   if (!isSelected) return null;
   return (
     <section 
-      className={tabContentStyle} 
+      className={tabContentStyle}
       id={defaultId}
       onClick={handleClick}
     >

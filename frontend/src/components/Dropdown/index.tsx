@@ -21,11 +21,13 @@ export const Dropdown = ({
   const defaultId = `dropdown-${useId()}`;
 
   return (
-    <DropdownContext.Provider value={{ 
-      controlId: defaultId, 
-      selectedValue,
-      onChange,
-    }}>
+    <DropdownContext.Provider 
+      value={{ 
+        controlId: defaultId, 
+        selectedValue,
+        onChange,
+      }}
+    >
       <div className={dropdownContainerStyle} id={defaultId}>
         {trigger}
         <ul className={dropdownContentStyle} style={{ height }}>

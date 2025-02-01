@@ -64,9 +64,25 @@ export default tseslint.config(
       '@stylistic/space-infix-ops': 'error',
       '@stylistic/type-annotation-spacing': 'error',
       '@stylistic/max-len': ['error', { code: 100, ignoreUrls: true }],
+      '@stylistic/newline-per-chained-call': 'error',
+      '@stylistic/operator-linebreak': 'error',
+
       '@stylistic/jsx-sort-props': 'error',
       '@stylistic/array-bracket-newline': 'error',
       'react/jsx-no-duplicate-props': 'error',
+      '@stylistic/jsx-curly-newline': ['error', { multiline: 'consistent', singleline: 'forbid' }],
+      '@stylistic/jsx-curly-spacing': ['error', { when: 'never', children: true }],
+      '@stylistic/jsx-first-prop-new-line': 'error',
+      '@stylistic/jsx-closing-bracket-location': 'error',
+      '@stylistic/jsx-newline': ['error', { prevent: true }],
+      '@stylistic/jsx-wrap-multilines': ['error', { return: 'parens-new-line', arrow: 'ignore' }],
+      '@stylistic/jsx-closing-tag-location': 'error',
+      '@stylistic/jsx-max-props-per-line': ['error', { maximum: { single: 2, multi: 1 } }],
+      '@stylistic/jsx-tag-spacing': 'error',
+      '@stylistic/jsx-one-expression-per-line': [
+        'error',
+        { allow: 'single-child' },
+      ],
 
       // Possible Problems
       'array-callback-return': ['error', { checkForEach: true }],
