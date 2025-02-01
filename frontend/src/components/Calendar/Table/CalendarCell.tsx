@@ -1,5 +1,5 @@
-import { cellStyle } from '../index.css';
 import type { Time } from '../types';
+import { cellStyle } from './index.css';
 
 interface CalendarCellProps {
   holiday?: boolean;

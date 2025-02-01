@@ -1,5 +1,5 @@
-import { sideStyle } from '../index.css';
 import type { Time } from '../types';
+import { sideStyle } from './index.css';
 import { SideCell } from './SideCell';
 
 export const CalendarSide = () => {

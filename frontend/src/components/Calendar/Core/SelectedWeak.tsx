@@ -1,7 +1,7 @@
-import { vars } from '../../../theme/index.css';
 import { formatDateToWeek } from '../../../utils/date';
 import { Text } from '../../Text';
-import { sideCellStyle, weekCellBoxStyle, weekCellStyle, weekStyle } from '../index.css';
+import { weekCellBoxStyle, weekCellStyle, weekStyle } from '../index.css';
+import { sideCellStyle } from '../Table/index.css';
 import { useCalendarContext } from './CalendarContext';
 
 export const SelectedWeak = () => {

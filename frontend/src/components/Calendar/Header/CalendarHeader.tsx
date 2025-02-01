@@ -1,5 +1,5 @@
-import { CalendarCell } from '../Day/CalendarCell';
-import { SideCell } from '../Side/SideCell';
+import { CalendarCell } from '../Table/CalendarCell';
+import { SideCell } from '../Table/SideCell';
 import { containerStyle } from './index.css';
 
 export const CalendarHeader = () => {

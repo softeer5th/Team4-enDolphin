@@ -1,6 +1,6 @@
 import { Text } from '../../Text';
-import { sideCellStyle } from '../index.css';
 import type { Time } from '../types';
+import { sideCellStyle } from './index.css';
 
 export const SideCell = ({ time }: { time: Time }) => {
   if (time === 'empty') return <div className={sideCellStyle({ time: 'empty' })} />;
