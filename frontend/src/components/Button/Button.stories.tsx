@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
+import { Check, CircleCheck } from '../Icon';
 import Button from './index';
 
 const meta: Meta<typeof Button> = {
@@ -28,7 +29,6 @@ const meta: Meta<typeof Button> = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-// ✅ 기본 버튼 (라디오 버튼으로 `type` 변경 가능)
 export const Default: Story = {
   args: {
     type: 'primary',
@@ -38,3 +38,11 @@ export const Default: Story = {
     children: '라벨',
   },
 };
+
+export const IconAdded = () => (
+  <Button radius='max' size='md' style='filled' type='primary'>
+    <Button.Icon><CircleCheck /></Button.Icon>
+    <Button.Text>버튼</Button.Text>
+    <Button.Icon><Check /></Button.Icon>
+  </Button>
+);
