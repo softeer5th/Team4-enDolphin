@@ -1,7 +1,6 @@
 import React from 'react';
 
 import { useSafeContext } from '../../hooks/useSafeContext';
-import { vars } from '../../theme/index.css';
 import { ButtonContext } from './ButtonContext';
 import { ButtonIconContainerStyle } from './buttonIcon.css';
 
