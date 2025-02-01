@@ -1,6 +1,6 @@
-import { sideStyle } from './index.css';
+import { sideStyle } from '../index.css';
+import type { Time } from '../types';
 import { SideCell } from './SideCell';
-import type { Time } from './types';
 
 export const CalendarSide = () => {
   const TIMES: Time[] = new Array(24).fill(0).map((_, i) => i);

@@ -1,7 +1,7 @@
 import { CalendarDay } from './CalendarDay';
-import { CalendarSide } from './CalendarSide';
 import { CalendarHeader } from './Header/CalendarHeader';
 import { containerStyle, contentsStyle, wrapperStyle } from './index.css';
+import { CalendarSide } from './Side/CalendarSide';
 
 export const Calendar = () => {
   const DAYS = new Array(7).fill(0).map((_, i) => i);
