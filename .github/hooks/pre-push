@@ -6,8 +6,16 @@
 remote_name=$1
 remote_url=$2
 
-# 변경된 파일 리스트 읽어오기
-files=$(git diff --name-only origin/$(git rev-parse --abbrev-ref HEAD))
+# 현재 브랜치 확인
+current_branch=$(git rev-parse --abbrev-ref HEAD)
+
+# 원격 브랜치 존재 여부 확인
+if git rev-parse --verify origin/$current_branch > /dev/null 2>&1; then
+  files=$(git diff --name-only origin/$current_branch)
+else
+  echo "[pre-push] ⚠️ No remote branch found. Comparing with 'origin/dev'."
+  files=$(git diff --name-only origin/dev)
+fi
 
 # 프론트엔드 파일 필터링
 # info) sed ... : 파일 경로에서 frontend/ 제거
