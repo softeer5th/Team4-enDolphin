@@ -1,26 +1,33 @@
-import type { InputHTMLAttributes, PropsWithChildren } from 'react';
+import type { PropsWithChildren } from 'react';
+import { useState } from 'react';
+
 import type { Typo } from '../Text';
-import { Text } from '../Text';
-
+import HelperText from './HelperText';
 import { containerStyle } from './index.css';
+import { InputContext } from './InputContext';
+import InputField from './InputField';
+import Label from './Label';
 
-interface InputProps extends PropsWithChildren {
-  type: 'text' | 'select';
-  state: 'placeholder' | 'focus' | 'typing' | 'filled' | 'error';
+export interface InputProps extends PropsWithChildren {
+  state: 'neutral' | 'error';
   multiInput: boolean;
   size: 'md';
-  required: boolean;
 }
 
-export const Input = ({ type, state, multiInput, size, children }: InputProps) => {
-  const fontMap: Record<typeof size, Typo> = {
-    md: 't3',
-  }
-  return (
-    <div className={containerStyle({
-      
-    })}>
+export const Input = ({ state, multiInput, size, children }: InputProps) => 
+// const fontMap: Record<typeof size, Typo> = {
+//   md: 'b3R',
+// };
+  (
+    <InputContext.Provider value={{ size, state, multiInput }}>
+      <div className={containerStyle}>
+        {children}
+      </div>
+    </InputContext.Provider>
+  );
 
-    </div>
-  )
-};
+Input.Label = Label;
+Input.InputField = InputField;
+Input.HelperText = HelperText;
+
+export default Input;
