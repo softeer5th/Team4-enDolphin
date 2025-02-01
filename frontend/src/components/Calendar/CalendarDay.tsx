@@ -7,9 +7,14 @@ export const CalendarDay = ({ holiday = false }: { holiday?: boolean }) => {
   return (
     <div className={dayStyle}>
       <CalendarCell holiday={holiday} time='all' />
-      {TIMES.map((time) => (
-        <CalendarCell holiday={holiday} key={time} time={time} />
-      ))}
+      <CalendarCell holiday={holiday} time='empty' />
+      {TIMES.map((time) => 
+        <CalendarCell
+          holiday={holiday}
+          key={time}
+          time={time}
+        />,
+      )}
     </div>
   );
 };
