@@ -1,4 +1,4 @@
-import { CalendarDay } from './CalendarDay';
+import { CalendarDay } from './Day/CalendarDay';
 import { CalendarHeader } from './Header/CalendarHeader';
 import { containerStyle, contentsStyle, wrapperStyle } from './index.css';
 import { CalendarSide } from './Side/CalendarSide';

@@ -1,4 +1,4 @@
-import { CalendarCell } from '../CalendarCell';
+import { CalendarCell } from '../Day/CalendarCell';
 import { SideCell } from '../Side/SideCell';
 import { containerStyle } from './index.css';
 
