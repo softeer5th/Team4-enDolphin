@@ -1,6 +1,15 @@
 import { useState } from 'react';
 
-export const useCalendar = () => {
+export interface CalendarInfo {
+  selected: Date;
+  setSelected: (date: Date) => void;
+  handleClickToday: () => void;
+  handleClickPrevWeek: () => void;
+  handleClickNextWeek: () => void;
+  handleChangeWeek: (date: Date) => void;
+}
+
+export const useCalendar = (): CalendarInfo => {
   const [selected, setSelected] = useState(new Date());
 
   const handleClickToday = () => {
