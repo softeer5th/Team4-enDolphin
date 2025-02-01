@@ -11,7 +11,7 @@ files=$(git diff --cached --name-only --diff-filter=ACM)
 frontend_files=$(echo "$files" | grep -E "^frontend/.*\.(js|ts|jsx|tsx)$" | sed 's|^frontend/||')
 # 백엔드 파일 필터링
 # !!! 확장자 수정해 주세요(문법 검사할 파일들) !!!
-backend_files=$(echo "$files" | grep -E "^backend/.*\.(java|xml|properties)$" | sed 's|^backend/||')
+backend_files=$(echo "$files" | grep -E "^backend/.*\.(java|yml)$" | sed 's|^backend/||')
 
 
 #################### 프론트엔드 스크립트 ####################
