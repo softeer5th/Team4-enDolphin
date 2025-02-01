@@ -52,3 +52,31 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+tasks.register("installLocalGitHook", Copy) {
+	def rootDir = file("${rootProject.rootDir}/..")
+	def hooksDir = file("${rootDir}/.github/hooks")   // .github/hooks 위치
+	def gitHooksDir = file("${rootDir}/.git/hooks")   // .git/hooks 위치
+
+	if (!hooksDir.exists() || hooksDir.list().length == 0) {
+		println "[installLocalGitHook] ⚠️ No hook files found in .github/hooks. Skipping task."
+		return
+	}
+
+	from hooksDir
+	into gitHooksDir
+
+    eachFile {
+        it.mode = 0755
+    }
+
+	outputs.upToDateWhen { false }
+
+	doLast {
+		println "[installLocalGitHook] ✅ Git hooks installed successfully."
+	}
+}
+
+tasks.named("build") {
+	dependsOn tasks.named("installLocalGitHook")
+}
