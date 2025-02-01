@@ -34,6 +34,20 @@ export const sideStyle = style({
   flexDirection: 'column',
 });
 
+export const weekStyle = style({
+  display: 'flex',
+});
+
+export const weekCellStyle = style({
+  width: '100%',
+  height: 66,
+  flexGrow: 1,
+
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+});
+
 export const cellStyle = recipe({
   base: {
     width: '100%',
