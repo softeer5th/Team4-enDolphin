@@ -57,6 +57,16 @@ export const cellStyle = recipe({
         height: 66,
       },
     },
+    state: {
+      selected: {
+        backgroundColor: vars.color.Ref.Primary[50],
+        borderColor: vars.color.Ref.Primary[100],
+      },
+      default: {
+        backgroundColor: vars.color.Ref.Netural.White,
+        borderColor: vars.color.Ref.Netural[200],
+      },
+    },
   },
 });
   
