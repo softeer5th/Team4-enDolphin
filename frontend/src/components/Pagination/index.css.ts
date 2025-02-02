@@ -26,7 +26,7 @@ export const paginationItemStyle = recipe({
     },
   },
   variants: {
-    active: {
+    selected: {
       true: {
         backgroundColor: '#F3F6FC', // 토큰으로 정의되지 않음
       },
@@ -34,7 +34,7 @@ export const paginationItemStyle = recipe({
     },
   },
   defaultVariants: {
-    active: false,
+    selected: false,
   },
 });
 

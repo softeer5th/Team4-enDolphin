@@ -28,25 +28,24 @@ const Pagination: React.FC<PaginationProps> = ({
   return (
     <div className={paginationContainerStyle}>
       {pages.map((item, index) => {
-        const isActive = item === currentPage;
-
         if (item === SEPARATOR) {
           return (
-            <span className={dotContainerStyle} key={index}>
+            <span className={dotContainerStyle} key={`separator-${index}`}>
               <IconDotsMono fill={vars.color.Ref.Netural[800]} width={20} />
             </span>
           );
-        } else {
-          return (
-            <button
-              className={paginationItemStyle({ active: isActive })}
-              key={index}
-              onClick={() => onPageChange(item)}
-            >
-              <Text typo={isActive ? 't2' : 'b2M'}>{item}</Text>
-            </button>
-          );
         }
+        
+        const isSelected = item === currentPage;
+        return (
+          <button
+            className={paginationItemStyle({ selected: isSelected })}
+            key={`page-${item}`}
+            onClick={() => onPageChange(item)}
+          >
+            <Text typo={isSelected ? 't2' : 'b2M'}>{item}</Text>
+          </button>
+        );
       })}
     </div>
   );
