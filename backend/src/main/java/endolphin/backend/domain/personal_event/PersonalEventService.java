@@ -29,4 +29,21 @@ public class PersonalEventService {
         return new PersonalEventResponse(result.getId(), result.getTitle(), result.getStartTime(),
             result.getEndTime(), result.getIsAdjustable());
     }
+
+    public PersonalEventResponse updatePersonalEvent(PersonalEventRequest request,
+        Long personalEventId) {
+        PersonalEvent personalEvent = personalEventRepository.findById(personalEventId)
+            .orElseThrow(() -> new RuntimeException("Personal event not found"));
+        User user = userService.getUser();
+
+        if (!personalEvent.getUser().equals(user)) {
+            throw new RuntimeException("You are not allowed to update this personal event");
+        }
+
+        PersonalEvent updatedPersonalEvent = personalEvent.update(request);
+        personalEventRepository.save(updatedPersonalEvent);
+        return new PersonalEventResponse(updatedPersonalEvent.getId(),
+            updatedPersonalEvent.getTitle(), updatedPersonalEvent.getStartTime(),
+            updatedPersonalEvent.getEndTime(), updatedPersonalEvent.getIsAdjustable());
+    }
 }

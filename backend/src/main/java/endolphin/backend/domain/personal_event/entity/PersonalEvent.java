@@ -1,5 +1,6 @@
 package endolphin.backend.domain.personal_event.entity;
 
+import endolphin.backend.domain.personal_event.dto.PersonalEventRequest;
 import endolphin.backend.domain.user.entity.User;
 import endolphin.backend.global.base_entity.BaseTimeEntity;
 import jakarta.persistence.*;
@@ -54,5 +55,13 @@ public class PersonalEvent extends BaseTimeEntity {
         this.endTime = endTime;
         this.calendarId = calendarId;
         this.googleEventId = googleEventId;
+    }
+
+    public PersonalEvent update(PersonalEventRequest personalEventRequest) {
+        this.startTime = personalEventRequest.startTime();
+        this.endTime = personalEventRequest.endTime();
+        this.title = personalEventRequest.title();
+        this.isAdjustable = personalEventRequest.isAdjustable();
+        return this;
     }
 }
