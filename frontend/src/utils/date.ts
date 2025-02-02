@@ -27,7 +27,7 @@ const calcWeekNum = (date: Date) => {
   const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
   const firstWeekfirstDay = 
     isStartWithFirstWeek(date) ? firstDay.getDate() : firstDay.getDate() + 1;
-  const week = Math.ceil((date.getDate() - firstWeekfirstDay + 7) / 7);
+  const week = Math.floor((date.getDate() - firstWeekfirstDay + 7) / 7);
 
   return weekMap[week];
 };
