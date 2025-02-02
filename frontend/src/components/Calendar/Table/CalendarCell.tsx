@@ -1,5 +1,5 @@
 
-import type { Time } from '../types';
+import type { Time } from '../../../constants/date';
 import { cellStyle } from './index.css';
 
 interface CalendarCellProps {

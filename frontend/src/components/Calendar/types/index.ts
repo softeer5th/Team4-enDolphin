@@ -1,1 +1,0 @@
-export type Time = number | 'all' | 'empty';
