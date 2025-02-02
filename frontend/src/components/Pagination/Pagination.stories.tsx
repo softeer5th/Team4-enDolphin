@@ -1,16 +1,12 @@
 import type { Meta } from '@storybook/react';
-import { useState } from 'react';
+import React from 'react';
 
-import { Pagination } from './index';
+import Pagination from './index';
 
 const meta: Meta = {
   title: 'Components/Pagination',
   component: Pagination,
   argTypes: {
-    currentPage: {
-      control: { type: 'number', min: 1 },
-      defaultValue: 3,
-    },
     totalPages: {
       control: { type: 'number', min: 1 },
       defaultValue: 10,
@@ -21,15 +17,18 @@ const meta: Meta = {
 
 export default meta;
 
-export const Primary = () => {
-  const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = 10;
+export const Default = (args: React.ComponentProps<typeof Pagination>) => {
+  const [currentPage, setCurrentPage] = React.useState(1);
+
   return (
     <Pagination
+      {...args}
       currentPage={currentPage}
-      onPageChange={setCurrentPage}
-      totalPages={totalPages}
+      onPageChange={(page) => setCurrentPage(page)}
     />
   );
+};
 
+Default.args = {
+  totalPages: 10,
 };
