@@ -22,7 +22,7 @@ public class PersonalEventService {
 
     @Transactional(readOnly = true)
     public ListPersonalEventResponse listPersonalEvents(PersonalEventSearchRequest request) {
-        User user = userService.getUser();
+        User user = userService.getCurrentUser();
 
         List<PersonalEventResponse> personalEventResponseList = personalEventRepository.findByUserAndStartTimeBetween(
                 user, request.startTime(), request.endTime())
@@ -31,7 +31,7 @@ public class PersonalEventService {
     }
 
     public PersonalEventResponse createPersonalEvent(PersonalEventRequest request) {
-        User user = userService.getUser();
+        User user = userService.getCurrentUser();
         PersonalEvent personalEvent = PersonalEvent.builder()
             .title(request.title())
             .endTime(request.endTime())
@@ -46,7 +46,7 @@ public class PersonalEventService {
         Long personalEventId) {
         PersonalEvent personalEvent = personalEventRepository.findById(personalEventId)
             .orElseThrow(() -> new RuntimeException("Personal event not found"));
-        User user = userService.getUser();
+        User user = userService.getCurrentUser();
 
         if (!personalEvent.getUser().equals(user)) {
             throw new RuntimeException("You are not allowed to update this personal event");
@@ -60,7 +60,7 @@ public class PersonalEventService {
     public void deletePersonalEvent(Long personalEventId) {
         PersonalEvent personalEvent = personalEventRepository.findById(personalEventId)
             .orElseThrow(() -> new RuntimeException("Personal event not found"));
-        User user = userService.getUser();
+        User user = userService.getCurrentUser();
         if (!personalEvent.getUser().equals(user)) {
             throw new RuntimeException("You are not allowed to delete this personal event");
         }

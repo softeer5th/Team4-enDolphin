@@ -9,7 +9,6 @@ import endolphin.backend.global.config.GoogleOAuthProperties;
 import endolphin.backend.global.security.JwtProvider;
 import endolphin.backend.global.security.UserContext;
 import endolphin.backend.global.security.UserInfo;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
@@ -49,9 +48,9 @@ public class UserService {
         return new OAuthResponse(accessToken);
     }
 
-    public User getUser() {
+    public User getCurrentUser() {
         UserInfo userInfo = UserContext.get();
-        return userRepository.findByEmail(userInfo.email())
+        return userRepository.findById(userInfo.userId())
             .orElseThrow(() -> new RuntimeException("User not found"));
     }
 

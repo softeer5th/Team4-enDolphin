@@ -52,7 +52,7 @@ class PersonalEventServiceTest {
     @DisplayName("개인 일정 검색 테스트")
     void listPersonalEvents_Success() {
         // Given
-        given(userService.getUser()).willReturn(testUser);
+        given(userService.getCurrentUser()).willReturn(testUser);
 
         PersonalEventSearchRequest request = new PersonalEventSearchRequest(
             LocalDateTime.of(2025, 2, 2, 10, 0),
@@ -90,7 +90,7 @@ class PersonalEventServiceTest {
     @DisplayName("개인 일정 생성 테스트")
     void testCreatePersonalEvent() {
         // given
-        given(userService.getUser()).willReturn(testUser);
+        given(userService.getCurrentUser()).willReturn(testUser);
 
         PersonalEvent savedEvent = PersonalEvent.builder()
             .title(request.title())
@@ -109,7 +109,7 @@ class PersonalEventServiceTest {
         assertThat(response.title()).isEqualTo(request.title());
         assertThat(response.startTime()).isEqualTo(startTime);
 
-        verify(userService, times(1)).getUser();
+        verify(userService, times(1)).getCurrentUser();
         verify(personalEventRepository, times(1)).save(any(PersonalEvent.class));
     }
 
@@ -125,7 +125,7 @@ class PersonalEventServiceTest {
             .build();
 
         given(personalEventRepository.findById(anyLong())).willReturn(Optional.of(existingEvent));
-        given(userService.getUser()).willReturn(testUser);
+        given(userService.getCurrentUser()).willReturn(testUser);
 
         // when
         PersonalEventResponse response = personalEventService.updatePersonalEvent(request, anyLong());
@@ -135,7 +135,7 @@ class PersonalEventServiceTest {
         assertThat(response.title()).isEqualTo(request.title());
 
         then(personalEventRepository).should(times(1)).findById(anyLong());
-        then(userService).should(times(1)).getUser();
+        then(userService).should(times(1)).getCurrentUser();
         then(personalEventRepository).should(times(1)).save(any(PersonalEvent.class));
     }
 
@@ -150,7 +150,7 @@ class PersonalEventServiceTest {
             .isInstanceOf(RuntimeException.class);
 
         then(personalEventRepository).should(times(1)).findById(anyLong());
-        then(userService).should(never()).getUser();
+        then(userService).should(never()).getCurrentUser();
     }
 
     @Test
@@ -168,14 +168,14 @@ class PersonalEventServiceTest {
             .build();
 
         given(personalEventRepository.findById(anyLong())).willReturn(Optional.of(existingEvent));
-        given(userService.getUser()).willReturn(testUser);
+        given(userService.getCurrentUser()).willReturn(testUser);
 
         // when & then
         assertThatThrownBy(() -> personalEventService.updatePersonalEvent(request, anyLong()))
             .isInstanceOf(RuntimeException.class);
 
         then(personalEventRepository).should(times(1)).findById(anyLong());
-        then(userService).should(times(1)).getUser();
+        then(userService).should(times(1)).getCurrentUser();
         then(personalEventRepository).should(never()).save(any(PersonalEvent.class));
     }
 
@@ -192,13 +192,13 @@ class PersonalEventServiceTest {
             .user(anotherUser)
             .build();
         given(personalEventRepository.findById(anyLong())).willReturn(Optional.of(existingEvent));
-        given(userService.getUser()).willReturn(testUser);
+        given(userService.getCurrentUser()).willReturn(testUser);
 
         assertThatThrownBy(() -> personalEventService.deletePersonalEvent(anyLong()))
             .isInstanceOf(RuntimeException.class);
 
         then(personalEventRepository).should(times(1)).findById(anyLong());
-        then(userService).should(times(1)).getUser();
+        then(userService).should(times(1)).getCurrentUser();
         then(personalEventRepository).should(never()).save(any(PersonalEvent.class));
     }
 }
