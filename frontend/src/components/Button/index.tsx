@@ -1,17 +1,18 @@
-import type { JSX, MouseEventHandler, PropsWithChildren } from 'react';
+import type { JSX, MouseEventHandler } from 'react';
 
 import ButtonIcon from './ButtonIcon';
 import ButtonText from './ButtonText';
 import { containerStyle } from './index.css';
 
-export interface ButtonProps extends PropsWithChildren {
-  type: 'primary' | 'secondary' | 'destructive' | 're';
-  style: 'weak' | 'filled' | 'outline' | 'borderless';
-  radius: 'max' | 'roundCorner';
-  size: 'sm' | 'md' | 'lg' | 'xl';
+export interface ButtonProps {
+  type?: 'primary' | 'secondary' | 'destructive' | 're';
+  style?: 'weak' | 'filled' | 'outline' | 'borderless';
+  radius?: 'max' | 'roundCorner';
+  size?: 'sm' | 'md' | 'lg' | 'xl';
   leftIcon?: JSX.Element;
   rightIcon?: JSX.Element;
   onClick?: MouseEventHandler<HTMLButtonElement>;
+  children?: string;
 }
 
 const Button = ({

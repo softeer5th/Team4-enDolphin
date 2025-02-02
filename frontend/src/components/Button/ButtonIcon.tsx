@@ -16,7 +16,7 @@ const ButtonIcon = ({ size, children }: ButtonIconProps) => {
   };
   return (
     <div className={ButtonIconContainerStyle({ size })}>
-      <children.type {...children.props} width={widthMap[size]}/>
+      <children.type {...children.props} width={widthMap[size ?? 'md']}/>
     </div>
   );
 };
