@@ -27,20 +27,17 @@ const meta: Meta<typeof Button> = {
 } satisfies Meta<typeof Button>;
 
 export default meta;
-type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
+export const Default: StoryObj<typeof Button> = {
   args: {
-    type: 'primary',
-    style: 'filled',
-    radius: 'max',
-    size: 'md',
-    children: '라벨',
+    children: '버튼',
   },
 };
 
-export const IconAdded = () => (
-  <Button leftIcon={<Check />} rightIcon={<CircleCheck/>}>
-    버튼
-  </Button>
-);
+export const WithIcon: StoryObj<typeof Button> = {
+  args: {
+    leftIcon: <Check />,
+    rightIcon: <CircleCheck />,
+    children: '버튼',
+  },
+};
