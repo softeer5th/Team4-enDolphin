@@ -1,10 +1,13 @@
 package endolphin.backend.domain.personal_event;
 
+import endolphin.backend.domain.personal_event.dto.ListPersonalEventResponse;
 import endolphin.backend.domain.personal_event.dto.PersonalEventRequest;
 import endolphin.backend.domain.personal_event.dto.PersonalEventResponse;
+import endolphin.backend.domain.personal_event.dto.PersonalEventSearchRequest;
 import endolphin.backend.domain.personal_event.entity.PersonalEvent;
 import endolphin.backend.domain.user.UserService;
 import endolphin.backend.domain.user.entity.User;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +19,16 @@ public class PersonalEventService {
 
     private final PersonalEventRepository personalEventRepository;
     private final UserService userService;
+
+    @Transactional(readOnly = true)
+    public ListPersonalEventResponse listPersonalEvents(PersonalEventSearchRequest request) {
+        User user = userService.getUser();
+
+        List<PersonalEventResponse> personalEventResponseList = personalEventRepository.findByUserAndStartTimeBetween(
+                user, request.startTime(), request.endTime())
+            .stream().map(PersonalEventResponse::fromEntity).toList();
+        return new ListPersonalEventResponse(personalEventResponseList);
+    }
 
     public PersonalEventResponse createPersonalEvent(PersonalEventRequest request) {
         User user = userService.getUser();
@@ -46,7 +59,7 @@ public class PersonalEventService {
 
     public void deletePersonalEvent(Long personalEventId) {
         PersonalEvent personalEvent = personalEventRepository.findById(personalEventId)
-                .orElseThrow(() -> new RuntimeException("Personal event not found"));
+            .orElseThrow(() -> new RuntimeException("Personal event not found"));
         User user = userService.getUser();
         if (!personalEvent.getUser().equals(user)) {
             throw new RuntimeException("You are not allowed to delete this personal event");
