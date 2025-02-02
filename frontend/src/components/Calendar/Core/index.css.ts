@@ -3,6 +3,12 @@ import { recipe } from '@vanilla-extract/recipes';
 
 import { vars } from '../../../theme/index.css';
 
+export const containerStyle = style({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: vars.spacing[400],
+});
+
 export const weekStyle = style({
   display: 'flex',
   alignItems: 'stretch',

@@ -58,7 +58,7 @@ export const cellStyle = recipe({
         boxShadow: `inset 0 0 0 0.5px ${vars.color.Ref.Primary[100]}`,
       },
       default: {
-        boxShadow: `inset 0 0 0 0.5px ${vars.color.Ref.Netural[100]}`,
+        boxShadow: `inset 0 0 0 0.5px ${vars.color.Ref.Netural[200]}`,
       },
     },
   },
