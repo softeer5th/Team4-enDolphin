@@ -46,4 +46,14 @@ public class PersonalEventService {
             updatedPersonalEvent.getTitle(), updatedPersonalEvent.getStartTime(),
             updatedPersonalEvent.getEndTime(), updatedPersonalEvent.getIsAdjustable());
     }
+
+    public void deletePersonalEvent(Long personalEventId) {
+        PersonalEvent personalEvent = personalEventRepository.findById(personalEventId)
+                .orElseThrow(() -> new RuntimeException("Personal event not found"));
+        User user = userService.getUser();
+        if (!personalEvent.getUser().equals(user)) {
+            throw new RuntimeException("You are not allowed to delete this personal event");
+        }
+        personalEventRepository.delete(personalEvent);
+    }
 }
