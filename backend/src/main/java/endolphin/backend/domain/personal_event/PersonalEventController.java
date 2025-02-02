@@ -47,7 +47,7 @@ public class PersonalEventController {
     }
 
     @DeleteMapping("/{personalEventId}")
-    public ResponseEntity<PersonalEventResponse> deletePersonalEvent(
+    public ResponseEntity<Void> deletePersonalEvent(
         @PathVariable("personalEventId") Long personalEventId) {
         personalEventService.deletePersonalEvent(personalEventId);
         return ResponseEntity.noContent().build();
