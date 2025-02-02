@@ -3,6 +3,10 @@ name: PR Slack Notification
 on:
     pull_request:
         types: [opened, review_requested]
+        
+concurrency:
+    group: slack-notification
+    cancel-in-progress: false
 
 jobs:
     notify_slack:
