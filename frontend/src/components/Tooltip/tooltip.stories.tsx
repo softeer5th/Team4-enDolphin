@@ -6,7 +6,7 @@ const meta: Meta = {
   title: 'Tooltip',
   component: Tooltip,
   argTypes: {
-    arrowPlacement: {
+    tailDirection: {
       control: {
         type: 'select',
         options: ['top', 'bottom', 'left', 'right'],
@@ -24,16 +24,16 @@ const meta: Meta = {
 export default meta;
 
 export const Primary = () => (<>
-  <Tooltip arrowPlacement='top' color='blue'>
+  <Tooltip color='blue' tailDirection='up'>
     Tooltip content1
   </Tooltip>
-  <Tooltip arrowPlacement='left' color='blue'>
+  <Tooltip color='blue' tailDirection='left'>
     Tooltip content2
   </Tooltip>
-  <Tooltip arrowPlacement='bottom' color='blue'>
+  <Tooltip color='blue' tailDirection='down'>
     Tooltip content3
   </Tooltip>
-  <Tooltip arrowPlacement='right' color='blue'>
+  <Tooltip color='blue' tailDirection='right'>
     Tooltip content4
   </Tooltip>
 </>

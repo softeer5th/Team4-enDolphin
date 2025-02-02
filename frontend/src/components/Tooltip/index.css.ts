@@ -12,9 +12,9 @@ export const tooltipContainerStyle = recipe({
     zIndex: 100,
   },
   variants: {
-    arrowPlacement: {
-      top: { flexDirection: 'column' },
-      bottom: { flexDirection: 'column' },
+    tailDirection: {
+      up: { flexDirection: 'column' },
+      down: { flexDirection: 'column' },
       left: { flexDirection: 'row' },
       right: { flexDirection: 'row' },
     },
@@ -48,9 +48,9 @@ export const tooltipContentStyle = recipe({
 export const tooltipArrowStyle = recipe({
   base: {},
   variants: {
-    arrowPlacement: {
-      top: { transform: 'rotate(180def)' },
-      bottom: { },
+    tailDirection: {
+      up: { transform: 'rotate(180def)' },
+      down: { },
       left: { },
       right: { transform: 'rotate(180deg)' },
     },

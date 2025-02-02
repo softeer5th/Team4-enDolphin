@@ -11,31 +11,31 @@ import { TooltipArrowRight } from './TooltipArrowRight';
 import { TooltipArrowUp } from './TooltipArrowUp';
 
 interface TooltipProps extends PropsWithChildren {
-  arrowPlacement: 'top' | 'bottom' | 'left' | 'right';
+  tailDirection: 'up' | 'down' | 'left' | 'right';
   color: 'blue' | 'black';
   isVisible?: boolean;
 }
 
-const Tooltip = ({ arrowPlacement, color = 'blue', isVisible = true, children }: TooltipProps) => {
+const Tooltip = ({ tailDirection, color = 'blue', isVisible = true, children }: TooltipProps) => {
   const colorMap = {
     blue: vars.color.Ref.Primary[50],
     black: vars.color.Ref.Netural[800],
   };
   return (
-    <div className={tooltipContainerStyle({ arrowPlacement })}>
-      { arrowPlacement === 'top' &&
+    <div className={tooltipContainerStyle({ tailDirection })}>
+      { tailDirection === 'up' &&
       <TooltipArrowUp fill={colorMap[color]} />
       }
-      { arrowPlacement === 'left' &&
+      { tailDirection === 'left' &&
       <TooltipArrowLeft fill={colorMap[color]} />
       }
       <div className={tooltipContentStyle({ color })}>
         {children}
       </div>
-      { arrowPlacement === 'bottom' &&
+      { tailDirection === 'down' &&
       <TooltipArrowDown fill={colorMap[color]} />
       }
-      { arrowPlacement === 'right' &&
+      { tailDirection === 'right' &&
       <TooltipArrowRight fill={colorMap[color]}/>
       }
     </div>
