@@ -5,7 +5,7 @@ on:
     types: [opened, review_requested]
 
 concurrency:
-  group: slack-notification
+  group: slack-notification-${{ github.event.pull_request.number }}
   cancel-in-progress: false
 
 jobs:
