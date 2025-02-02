@@ -1,12 +1,12 @@
 package endolphin.backend.domain.personal_event;
 
-import endolphin.backend.domain.personal_event.dto.ListPersonalEventResponse;
 import endolphin.backend.domain.personal_event.dto.PersonalEventRequest;
 import endolphin.backend.domain.personal_event.dto.PersonalEventResponse;
 import endolphin.backend.domain.personal_event.dto.PersonalEventSearchRequest;
 import endolphin.backend.domain.personal_event.entity.PersonalEvent;
 import endolphin.backend.domain.user.UserService;
 import endolphin.backend.domain.user.entity.User;
+import endolphin.backend.global.dto.ListResponse;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,13 +21,13 @@ public class PersonalEventService {
     private final UserService userService;
 
     @Transactional(readOnly = true)
-    public ListPersonalEventResponse listPersonalEvents(PersonalEventSearchRequest request) {
+    public ListResponse<PersonalEventResponse> listPersonalEvents(PersonalEventSearchRequest request) {
         User user = userService.getCurrentUser();
 
         List<PersonalEventResponse> personalEventResponseList = personalEventRepository.findByUserAndStartTimeBetween(
                 user, request.startTime(), request.endTime())
             .stream().map(PersonalEventResponse::fromEntity).toList();
-        return new ListPersonalEventResponse(personalEventResponseList);
+        return new ListResponse<>(personalEventResponseList);
     }
 
     public PersonalEventResponse createPersonalEvent(PersonalEventRequest request) {

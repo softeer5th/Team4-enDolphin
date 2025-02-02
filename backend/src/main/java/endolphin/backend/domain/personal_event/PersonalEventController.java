@@ -1,9 +1,9 @@
 package endolphin.backend.domain.personal_event;
 
-import endolphin.backend.domain.personal_event.dto.ListPersonalEventResponse;
 import endolphin.backend.domain.personal_event.dto.PersonalEventRequest;
 import endolphin.backend.domain.personal_event.dto.PersonalEventResponse;
 import endolphin.backend.domain.personal_event.dto.PersonalEventSearchRequest;
+import endolphin.backend.global.dto.ListResponse;
 import jakarta.validation.Valid;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
@@ -26,9 +26,9 @@ public class PersonalEventController {
     private final PersonalEventService personalEventService;
 
     @GetMapping("/")
-    public ResponseEntity<ListPersonalEventResponse> getPersonalEvents(@Valid @RequestBody
+    public ResponseEntity<ListResponse<PersonalEventResponse>> getPersonalEvents(@Valid @RequestBody
         PersonalEventSearchRequest request) {
-        ListPersonalEventResponse response = personalEventService.listPersonalEvents(request);
+        ListResponse<PersonalEventResponse> response = personalEventService.listPersonalEvents(request);
         return ResponseEntity.ok(response);
     }
 

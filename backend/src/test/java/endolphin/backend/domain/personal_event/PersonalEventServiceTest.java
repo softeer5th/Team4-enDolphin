@@ -1,12 +1,12 @@
 package endolphin.backend.domain.personal_event;
 
-import endolphin.backend.domain.personal_event.dto.ListPersonalEventResponse;
 import endolphin.backend.domain.personal_event.dto.PersonalEventRequest;
 import endolphin.backend.domain.personal_event.dto.PersonalEventResponse;
 import endolphin.backend.domain.personal_event.dto.PersonalEventSearchRequest;
 import endolphin.backend.domain.personal_event.entity.PersonalEvent;
 import endolphin.backend.domain.user.UserService;
 import endolphin.backend.domain.user.entity.User;
+import endolphin.backend.global.dto.ListResponse;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -80,7 +80,7 @@ class PersonalEventServiceTest {
             request.endTime())).willReturn(eventList);
 
         // When
-        ListPersonalEventResponse response = personalEventService.listPersonalEvents(request);
+        ListResponse<PersonalEventResponse> response = personalEventService.listPersonalEvents(request);
 
         // Then
         assertThat(response.data().size()).isEqualTo(2);
