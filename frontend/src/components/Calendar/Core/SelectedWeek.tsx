@@ -1,4 +1,4 @@
-import { formatDateToWeek } from '../../../utils/date';
+import { formatDateToWeek, isSameDate } from '../../../utils/date';
 import { useCalendarContext } from '../context/CalendarContext';
 import { sideCellStyle } from '../Table/index.css';
 import { weekStyle } from './index.css';
@@ -6,9 +6,13 @@ import { WeekCell } from './WeekCell';
 
 export const SelectedWeek = () => {
   const WEEK = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
-  const { selected } = useCalendarContext();
-  const { days } = formatDateToWeek(selected);
-  const today = new Date().getDate();
+  const { selected, setSelected } = useCalendarContext();
+  const { dates } = formatDateToWeek(selected);
+  const today = new Date();
+
+  const handleClickCell = (date: Date) => {
+    setSelected(date);
+  };
 
   return (
     <div className={weekStyle}>
@@ -18,12 +22,12 @@ export const SelectedWeek = () => {
       />
       {WEEK.map((day, i) => 
         <WeekCell
-          date={days[i]}
+          date={dates[i]}
           day={day}
-          // TODO: today 비교하는 로직 수정
-          isToday={days[i] === today}
+          isToday={isSameDate(dates[i], today)}
           key={`${day}${i}`}
-          selected={selected.getDate() === days[i]}
+          onClick={() => handleClickCell(dates[i])}
+          selected={isSameDate(dates[i], selected)}
         />)}
     </div>
   );

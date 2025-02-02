@@ -37,17 +37,23 @@ export const formatDateToWeek = (date: Date) => {
   const firstDateOfWeek = new Date(selected.setDate(selected.getDate() - selected.getDay())); 
   const year = date.getFullYear().toString();
 
-  const days = new Array(7).fill(0)
+  const dates = new Array(7).fill(0)
     .map((_, i)=>{
       const DAY = 60 * 60 * 24 * 1000;
       const date = new Date(firstDateOfWeek.getTime() + i * DAY);
-      return date.getDate();
+      return date;
     });
 
   return {
     year: year.slice(2),
     month: date.getMonth() + 1,
     week: calcWeekNum(date),
-    days,
+    dates,
   };
 };
+
+export const isSameDate = (date1: Date, date2: Date): boolean => (
+  date1.getFullYear() === date2.getFullYear() &&
+    date1.getMonth() === date2.getMonth() &&
+    date1.getDate() === date2.getDate()
+);
