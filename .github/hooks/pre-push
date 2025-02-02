@@ -6,8 +6,16 @@
 remote_name=$1
 remote_url=$2
 
-# 변경된 파일 리스트 읽어오기
-files=$(git diff --name-only origin/$(git rev-parse --abbrev-ref HEAD))
+# 현재 브랜치 확인
+current_branch=$(git rev-parse --abbrev-ref HEAD)
+
+# 원격 브랜치 존재 여부 확인
+if git rev-parse --verify origin/$current_branch > /dev/null 2>&1; then
+  files=$(git diff --name-only origin/$current_branch)
+else
+  echo "[pre-push] ⚠️ No remote branch found. Comparing with 'origin/dev'."
+  files=$(git diff --name-only origin/dev)
+fi
 
 # 프론트엔드 파일 필터링
 # info) sed ... : 파일 경로에서 frontend/ 제거
@@ -57,11 +65,40 @@ fi
 
 #################### 백엔드 스크립트 ####################
 
+#################### 백엔드 스크립트 ####################
+
 if [ -n "$backend_files" ]; then
   cd backend
 
-  # Do something
+  echo "[pre-push] ⏳ Running backend build with Spring Profile '$SPRING_PROFILE'..."
+
+  # 기본 프로파일 설정 (환경변수 SPRING_PROFILE이 설정되지 않은 경우 local 로 설정)
+  SPRING_PROFILE=${SPRING_PROFILE:local}
+
+  # Gradle 빌드 실행 (테스트 제외)
+  if ! ./gradlew build -x test -P spring.profiles.active=$SPRING_PROFILE; then
+    echo "[pre-push] ❌ Backend build failed with profile '$SPRING_PROFILE'. Push aborted."
+    exit 1
+  fi
+
+  echo "[pre-push] ✅ Backend build succeeded with profile '$SPRING_PROFILE'."
+
+  # 테스트 실행
+  if ! ./gradlew test -P spring.profiles.active=$SPRING_PROFILE; then
+    echo "[pre-push] ❌ Backend tests failed with profile '$SPRING_PROFILE'. Push aborted."
+    exit 1
+  fi
+
+  echo "[pre-push] ✅ Backend tests passed with profile '$SPRING_PROFILE'."
+
+  # # 민감한 정보 패턴 검사 (AWS 키, 비밀번호, 토큰 등)
+  # sensitive_patterns="(AWS_ACCESS_KEY_ID|SECRET|PASSWORD|TOKEN)"
+  # if git diff --cached | grep -E "$sensitive_patterns"; then
+  #   echo "[pre-push] ❌ Sensitive information detected in changes. Push aborted."
+  #   exit 1
+  # fi
 fi
+
 
 
 #################### 성공 분기 ####################
