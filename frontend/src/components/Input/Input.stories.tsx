@@ -1,93 +1,115 @@
-import type { Meta } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react';
 import React, { useState } from 'react';
 
+import { vars } from '../../theme/index.css';
+import { Check } from '../Icon';
 import { Input } from './index';
 
-const meta: Meta = {
-  title: 'Input',
+const meta: Meta<typeof Input> = {
+  title: 'Components/Input',
   component: Input,
   argTypes: {
     state: {
       control: 'radio',
       options: ['neutral', 'error'],
+      description: 'Input 상태 설정',
+    },
+    label: {
+      control: 'text',
+      description: '입력 필드 라벨',
+    },
+    required: {
+      control: 'boolean',
+      description: '필수 입력 여부',
+    },
+    separator: {
+      control: 'text',
+      description: '입력 필드 사이 구분자',
+    },
+    hint: {
+      control: 'text',
+      description: '힌트 메시지',
+    },
+    error: {
+      control: 'text',
+      description: '에러 메시지 (state가 "error"일 때 표시)',
     },
   },
 } satisfies Meta<typeof Input>;
 
 export default meta;
 
-export const Primary = () => {
-  const [value, setValue] = useState('');
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => setValue(e.target.value);
+export const Default: StoryObj<typeof Input> = {
+  args: {
+    state: 'neutral',
+    label: '이메일',
+    required: true,
+    hint: '이메일을 입력하세요',
+    error: '이메일 형식이 아닙니다',
+  },
+  render: (args) => (
+    <Input {...args}>
+      <Input.InputField
+        placeholder='이메일을 입력하세요'
+      />
+    </Input>
+  ),
+};
+
+export const MultiInput = () => {
+  const [firstValue, setFirstValue] = useState('');
+  const [secondValue, setSecondValue] = useState('');
+  const handleFirstChange = (e: React.ChangeEvent<HTMLInputElement>) => 
+    setFirstValue(e.target.value);
+  const handleSecondChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    setSecondValue(e.target.value);
 
   return (
     <Input 
-      multiInput={false}
-      size='md'
+      label='시간'
+      required={true}
+      separator='~'
       state='neutral'
     >
-      <Input.Label required={true}>이메일</Input.Label>
       <Input.InputField 
-        onChange={handleChange}
-        placeholder='이메일을 입력하세요'
-        value={value}
+        onChange={handleFirstChange}
+        placeholder='시작 시간을 입력하세요'
+        value={firstValue}
       />
-      <Input.HelperText.Hint>힌트</Input.HelperText.Hint>
-      <Input.HelperText.Error>에러</Input.HelperText.Error>
+      <Input.InputField 
+        onChange={handleSecondChange}
+        placeholder='종료 시간을 입력하세요'
+        value={secondValue}
+      />
     </Input>
   );
 };
 
-export const Error = () => {
-  const [value, setValue] = useState('');
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => setValue(e.target.value);
+export const CustomSeparatorIcon = () => {
+  const [firstValue, setFirstValue] = useState('');
+  const [secondValue, setSecondValue] = useState('');
+  const handleFirstChange = (e: React.ChangeEvent<HTMLInputElement>) => 
+    setFirstValue(e.target.value);
+  const handleSecondChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    setSecondValue(e.target.value);
 
   return (
     <Input 
-      multiInput={false}
-      size='md'
-      state='error'
+      label='이메일'
+      required={true}
+      separator={<Check fill={vars.color.Ref.Netural[500]}/>}
+      state='neutral'
     >
-      <Input.Label required={false}>이메일</Input.Label>
       <Input.InputField 
-        onChange={handleChange}
+        onChange={handleFirstChange}
         placeholder='이메일을 입력하세요'
-        value={value}
+        value={firstValue}
       />
-      <Input.HelperText.Hint>힌트</Input.HelperText.Hint>
-      <Input.HelperText.Error>에러</Input.HelperText.Error>
+      <Input.InputField 
+        onChange={handleSecondChange}
+        placeholder='이메일을 입력하세요'
+        value={secondValue}
+      />
     </Input>
   );
 };
-
-// export const ErrorState = () => {
-//   const [value, setValue] = useState('');
-//   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => setValue(e.target.value);
-
-//   return (
-//     <Input 
-//       onChange={handleChange}
-//       placeholder='이메일을 입력하세요'
-//       required={true}
-//       state='error'
-//       value={value}
-//     />
-//   );
-// };
-
-// export const WithHelperText = () => {
-//   const [value, setValue] = useState('');
-//   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => setValue(e.target.value);
-
-//   return (
-//     <Input 
-//       onChange={handleChange}
-//       placeholder='이메일을 입력하세요'
-//       required={false}
-//       state='neutral'
-//       value={value}
-//     >
-//       <Input.HelperText>이메일을 입력해주세요.</Input.HelperText>
-//     </Input>
-//   );
-// };
