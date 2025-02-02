@@ -1,6 +1,6 @@
 import { recipe } from '@vanilla-extract/recipes';
 
-export const ButtonIconContainerStyle = recipe({
+export const buttonIconContainerStyle = recipe({
   base: {
     display: 'flex',
     alignItems: 'center',

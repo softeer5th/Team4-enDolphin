@@ -2,7 +2,7 @@ import { recipe } from '@vanilla-extract/recipes';
 
 import { vars } from '../../theme/index.css';
 
-export const ContainerStyle = recipe({
+export const containerStyle = recipe({
   base: {
     display: 'flex',
     alignItems: 'center',
