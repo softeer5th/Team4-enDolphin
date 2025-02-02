@@ -5,6 +5,7 @@ import endolphin.backend.domain.personal_event.dto.PersonalEventRequest;
 import endolphin.backend.domain.personal_event.dto.PersonalEventResponse;
 import endolphin.backend.domain.personal_event.dto.PersonalEventSearchRequest;
 import jakarta.validation.Valid;
+import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RestController
 @RequiredArgsConstructor
@@ -30,11 +32,12 @@ public class PersonalEventController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<PersonalEventResponse> createPersonalEvent(
         @Valid @RequestBody PersonalEventRequest request) {
         PersonalEventResponse response = personalEventService.createPersonalEvent(request);
-        return ResponseEntity.ok(response);
+        URI location = buildResourceUri(response.id());
+        return ResponseEntity.created(location).body(response);
     }
 
     @PutMapping("/{personalEventId}")
@@ -51,5 +54,13 @@ public class PersonalEventController {
         @PathVariable("personalEventId") Long personalEventId) {
         personalEventService.deletePersonalEvent(personalEventId);
         return ResponseEntity.noContent().build();
+    }
+
+    private URI buildResourceUri(Object resourceId) {
+        return ServletUriComponentsBuilder
+            .fromCurrentRequest()
+            .path("/{id}")
+            .buildAndExpand(resourceId)
+            .toUri();
     }
 }
