@@ -1,4 +1,3 @@
-   
 export const TooltipArrowLeft = ({ fill }: { fill: string }) => (
   <svg fill='none' height='15' viewBox='0 0 9 15' width='9' xmlns='http://www.w3.org/2000/svg'>
     <g filter='url(#filter0_b_765_1124)'>
