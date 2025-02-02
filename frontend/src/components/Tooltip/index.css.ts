@@ -3,7 +3,7 @@ import { recipe } from '@vanilla-extract/recipes';
 
 import { vars } from '../../theme/index.css';
 
-export const tooltipContainerStyle = recipe({
+export const containerStyle = recipe({
   base: {
     width: 'fit-content',
     height: 'fit-content',
@@ -21,7 +21,7 @@ export const tooltipContainerStyle = recipe({
   },
 });
 
-export const tooltipContentStyle = recipe({
+export const contentContainerStyle = recipe({
   base: {
     padding: `${vars.spacing[200]} ${vars.spacing[300]}`,
     borderRadius: 10,
