@@ -1,7 +1,14 @@
+import { vars } from '../../../theme/index.css';
 import { formatDateToWeek } from '../../../utils/date';
 import Button from '../../Button';
+import { ChevronLeft, ChevronRight } from '../../Icon';
+import { Text } from '../../Text';
 import { useCalendarContext } from '../context/CalendarContext';
-import { timeControlStyle } from './index.css';
+import { 
+  timeConrolButtonStyle, 
+  timeControlButtonWrapperStyle, 
+  timeControlStyle,
+} from './index.css';
 
 export const TimeControl = () => {
   const { 
@@ -15,10 +22,23 @@ export const TimeControl = () => {
 
   return  (
     <div className={timeControlStyle}>
-      {/* TODO: 캘린더 버튼 컴포넌트 완성 시 교체 */}
-      <button onClick={handleClickPrevWeek}>{'<'}</button>
-      <span>{weekString}</span>
-      <button onClick={handleClickNextWeek}>{'>'}</button>
+      <div className={timeControlButtonWrapperStyle}>
+        <button
+          className={timeConrolButtonStyle({ order: 'first' })} 
+          onClick={handleClickPrevWeek}
+        >
+          <ChevronLeft fill={vars.color.Ref.Netural[600]} />
+        </button>
+        <span className={timeConrolButtonStyle({ order: 'mid' })}>
+          <Text>{weekString}</Text>
+        </span>
+        <button
+          className={timeConrolButtonStyle({ order: 'last' })} 
+          onClick={handleClickNextWeek}
+        >
+          <ChevronRight fill={vars.color.Ref.Netural[600]} />
+        </button>
+      </div>
       <Button
         onClick={handleClickToday}
         style='outline'

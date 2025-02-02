@@ -13,6 +13,41 @@ export const timeControlStyle = style({
   alignItems: 'center',
   gap: vars.spacing[200],
 });
+
+export const timeControlButtonWrapperStyle = style({
+  display: 'flex',
+  alignItems: 'center',
+});
+
+export const timeConrolButtonStyle = recipe({
+  base: {
+    height: 36,
+
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+
+    border: `1px solid ${vars.color.Ref.Netural[200]}`,
+    color: vars.color.Ref.Netural[700],
+  },
+  variants: {
+    order: {
+      first: {
+        padding: `0 ${vars.spacing[200]}`,
+        borderRadius: `${vars.spacing[300]} 0 0 ${vars.spacing[300]}`,
+      },
+      mid: {
+        padding: `0 ${vars.spacing[300]}`,
+        borderLeft: 'none',
+      },
+      last: {
+        padding: `0 ${vars.spacing[200]}`,
+        borderLeft: 'none',
+        borderRadius: `0 ${vars.spacing[300]} ${vars.spacing[300]} 0`,
+      },
+    },
+  },
+});
   
 export const weekCellStyle = recipe({
   base: {
