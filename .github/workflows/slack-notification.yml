@@ -48,12 +48,15 @@ jobs:
         run: |
           if [ "${{ steps.read_old.outputs.old_reviewers }}" = "${{ steps.prepare_new.outputs.new_reviewers }}" ]; then
             echo "⚠️ Same reviewer set -> skip notification"
+            echo "skip=true" >> $GITHUB_OUTPUT
             exit 0
           fi
           echo "✅ New/different reviewer set -> proceed"
+          echo "skip=false" >> $GITHUB_OUTPUT
 
       # 5) github - slack 아이디 매핑을 Load
       - name: Load Slack User Mapping
+        if: ${{ steps.check_diff.outputs.skip == 'false' }}
         id: load_mapping
         env:
           SLACK_USER_MAPPING: ${{ secrets.SLACK_USER_MAPPING }}
@@ -76,6 +79,7 @@ jobs:
 
       # 6) Slack 알림 전송
       - name: Send Slack Notification
+        if: ${{ steps.check_diff.outputs.skip == 'false' }}
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
           PR_TITLE: ${{ github.event.pull_request.title }}
@@ -102,13 +106,13 @@ jobs:
 
       # 7) 새 reviewer list를 임시 파일로 생성 및 캐시에 업데이트
       - name: Save new reviewer list
-        if: always()
+        if: ${{ steps.check_diff.outputs.skip == 'false' }}
         run: |
           mkdir -p .reviewer-state
           echo "${{ steps.prepare_new.outputs.new_reviewers }}" > .reviewer-state/old_reviewers.txt
 
       - name: Save cache
-        if: always()
+        if: ${{ steps.check_diff.outputs.skip == 'false' }}
         uses: actions/cache@v3
         with:
           path: ./.reviewer-state
