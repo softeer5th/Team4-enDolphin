@@ -28,10 +28,8 @@ branch_name_regex="^(feature|refactor|hotfix)/(fe|be)/[a-z0-9-]+$"
 
 echo "[pre-push] ⏳ Validating changes before pushing to $remote_name ... ($remote_url)"
 
-# 브랜치 네이밍 검사
-current_branch_name=$(git rev-parse --abbrev-ref HEAD)
-if ! echo "$current_branch_name" | grep -Eq "$branch_name_regex"; then
-  echo "[pre-push] ❌ Invalid branch name: $current_branch_name"
+if ! echo "$current_branch" | grep -Eq "$branch_name_regex"; then
+  echo "[pre-push] ❌ Invalid branch name: $current_branch"
   echo "[pre-push] Branch name must match the following pattern: "
   echo "[pre-push] <tag>/<fe|be>/..."
   exit 1
