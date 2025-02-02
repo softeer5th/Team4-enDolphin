@@ -26,8 +26,7 @@ public class PersonalEventService {
             .user(user)
             .build();
         PersonalEvent result = personalEventRepository.save(personalEvent);
-        return new PersonalEventResponse(result.getId(), result.getTitle(), result.getStartTime(),
-            result.getEndTime(), result.getIsAdjustable());
+        return PersonalEventResponse.fromEntity(result);
     }
 
     public PersonalEventResponse updatePersonalEvent(PersonalEventRequest request,
@@ -42,9 +41,7 @@ public class PersonalEventService {
 
         PersonalEvent updatedPersonalEvent = personalEvent.update(request);
         personalEventRepository.save(updatedPersonalEvent);
-        return new PersonalEventResponse(updatedPersonalEvent.getId(),
-            updatedPersonalEvent.getTitle(), updatedPersonalEvent.getStartTime(),
-            updatedPersonalEvent.getEndTime(), updatedPersonalEvent.getIsAdjustable());
+        return PersonalEventResponse.fromEntity(updatedPersonalEvent);
     }
 
     public void deletePersonalEvent(Long personalEventId) {
