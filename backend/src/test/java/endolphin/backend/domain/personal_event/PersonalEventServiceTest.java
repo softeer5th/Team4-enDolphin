@@ -1,10 +1,13 @@
 package endolphin.backend.domain.personal_event;
 
+import endolphin.backend.domain.personal_event.dto.ListPersonalEventResponse;
 import endolphin.backend.domain.personal_event.dto.PersonalEventRequest;
 import endolphin.backend.domain.personal_event.dto.PersonalEventResponse;
+import endolphin.backend.domain.personal_event.dto.PersonalEventSearchRequest;
 import endolphin.backend.domain.personal_event.entity.PersonalEvent;
 import endolphin.backend.domain.user.UserService;
 import endolphin.backend.domain.user.entity.User;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -43,6 +46,44 @@ class PersonalEventServiceTest {
         startTime = LocalDateTime.now();
         endTime = startTime.plusHours(1);
         request = new PersonalEventRequest("Test Event", startTime, endTime, true);
+    }
+
+    @Test
+    @DisplayName("개인 일정 검색 테스트")
+    void listPersonalEvents_Success() {
+        // Given
+        given(userService.getUser()).willReturn(testUser);
+
+        PersonalEventSearchRequest request = new PersonalEventSearchRequest(
+            LocalDateTime.of(2025, 2, 2, 10, 0),
+            LocalDateTime.of(2025, 2, 9, 10, 0)
+        );
+
+        PersonalEvent personalEvent1 = PersonalEvent.builder()
+            .title("Meeting")
+            .user(testUser)
+            .startTime(LocalDateTime.of(2025, 2, 3, 16, 0))
+            .endTime(LocalDateTime.of(2025, 2, 3, 18, 0))
+            .build();
+
+        PersonalEvent personalEvent2 = PersonalEvent.builder()
+            .title("Meeting2")
+            .user(testUser)
+            .startTime(LocalDateTime.of(2025, 2, 5, 8, 0))
+            .endTime(LocalDateTime.of(2025, 2, 5, 20, 0))
+            .build();
+        List<PersonalEvent> eventList = List.of(
+            personalEvent1, personalEvent2
+        );
+
+        given(personalEventRepository.findByUserAndStartTimeBetween(testUser, request.startTime(),
+            request.endTime())).willReturn(eventList);
+
+        // When
+        ListPersonalEventResponse response = personalEventService.listPersonalEvents(request);
+
+        // Then
+        assertThat(response.data().size()).isEqualTo(2);
     }
 
     @Test
