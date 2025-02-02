@@ -3,13 +3,13 @@ import { recipe } from '@vanilla-extract/recipes';
 
 import { vars } from '../../theme/index.css';
 
-export const paginationContainer = style({
+export const paginationContainerStyle = style({
   display: 'flex',
   alignItems: 'center',
   gap: vars.spacing[300],
 });
 
-export const paginationItem = recipe({
+export const paginationItemStyle = recipe({
   base: {
     display: 'flex',
     justifyContent: 'center',
@@ -36,4 +36,10 @@ export const paginationItem = recipe({
   defaultVariants: {
     active: false,
   },
+});
+
+export const dotContainerStyle = style({
+  display: 'flex',
+  alignItems: 'center',
+  padding: '6px',
 });

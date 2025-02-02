@@ -1,10 +1,16 @@
 import React from 'react';
 
+import { vars } from '../../theme/index.css';
+import { IconDotsMono } from '../Icon';
 import { Text } from '../Text';
 import {
-  paginationContainer,
-  paginationItem,
+  dotContainerStyle,
+  paginationContainerStyle,
+  paginationItemStyle,
 } from './index.css';
+
+const PAGE_LIMIT = 8;
+const SEPARATOR = 'separator';
 
 interface PaginationProps {
   currentPage: number;
@@ -12,23 +18,68 @@ interface PaginationProps {
   onPageChange: (page: number) => void;
 }
 
-export const Pagination: React.FC<PaginationProps> = ({
+const Pagination: React.FC<PaginationProps> = ({
   currentPage,
   totalPages,
   onPageChange,
 }) => {
-  const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
+  const pages = getPaginationItems(currentPage, totalPages);
+
   return (
-    <div className={paginationContainer}>
-      {pages.map((page) => (
-        <button
-          className={paginationItem({ active: page === currentPage })}
-          key={page}
-          onClick={() => onPageChange(page)}
-        >
-          <Text typo={page === currentPage ? 't2' : 'b2M'}>{page}</Text>
-        </button>
-      ))}
+    <div className={paginationContainerStyle}>
+      {pages.map((item, index) => {
+        const isActive = item === currentPage;
+
+        if (item === SEPARATOR) {
+          return (
+            <span className={dotContainerStyle} key={index}>
+              <IconDotsMono fill={vars.color.Ref.Netural[800]} width={20} />
+            </span>
+          );
+        } else {
+          return (
+            <button
+              className={paginationItemStyle({ active: isActive })}
+              key={index}
+              onClick={() => onPageChange(item)}
+            >
+              <Text typo={isActive ? 't2' : 'b2M'}>{item}</Text>
+            </button>
+          );
+        }
+      })}
     </div>
   );
 };
+
+const getPaginationItems = (
+  currentPage: number,
+  totalPages: number,
+): (number | 'separator')[] => {
+  // 총 페이지가 페이지 제한보다 작을 경우
+  if (totalPages <= PAGE_LIMIT) {
+    return Array.from({ length: totalPages }, (_, i) => i + 1);
+  }
+  // 현재 페이지가 첫 4페이지일 경우
+  if (currentPage <= 4) {
+    return [...Array.from({ length: 7 }, (_, i) => i + 1), SEPARATOR, totalPages];
+  }
+  // 현재 페이지가 마지막 4페이지일 경우
+  if (currentPage > totalPages - 4) {
+    return [1, SEPARATOR, ...Array.from({ length: 7 }, (_, i) => totalPages - 6 + i)];
+  }
+  // 페이지가 중간에 위치할 경우
+  return [
+    1, 
+    SEPARATOR,
+    currentPage - 2,
+    currentPage - 1,
+    currentPage,
+    currentPage + 1,
+    currentPage + 2,
+    SEPARATOR,
+    totalPages,
+  ];
+};
+
+export default Pagination;
