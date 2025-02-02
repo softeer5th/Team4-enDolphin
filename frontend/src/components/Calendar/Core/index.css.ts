@@ -6,6 +6,12 @@ import { vars } from '../../../theme/index.css';
 export const weekStyle = style({
   display: 'flex',
 });
+
+export const timeControlStyle = style({
+  display: 'flex',
+  alignItems: 'center',
+  gap: vars.spacing[200],
+});
   
 export const weekCellStyle = recipe({
   base: {
