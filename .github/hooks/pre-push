@@ -29,18 +29,21 @@ branch_name_regex="^(feature|refactor|hotfix)/(fe|be)/[a-z0-9-]+$"
 echo "[pre-push] ⏳ Validating changes before pushing to $remote_name ... ($remote_url)"
 
 # 브랜치 네이밍 검사
-branch_name=$(git rev-parse --abbrev-ref HEAD)
-if ! echo "$branch_name" | grep -Eq "$branch_name_regex"; then
-  echo "[pre-push] ❌ Invalid branch name: $branch_name"
+current_branch_name=$(git rev-parse --abbrev-ref HEAD)
+if ! echo "$current_branch_name" | grep -Eq "$branch_name_regex"; then
+  echo "[pre-push] ❌ Invalid branch name: $current_branch_name"
   echo "[pre-push] Branch name must match the following pattern: "
   echo "[pre-push] <tag>/<fe|be>/..."
   exit 1
 fi
 
+# 브랜치에서 fe|be 부분만 추출
+part=$(echo "$current_branch" | cut -d'/' -f2)
+
 
 #################### 프론트엔드 스크립트 ####################
 
-if [ -n "$frontend_files" ]; then
+if [ "$part" = "fe" ]; then
   # pnpm 실행을 위해 frontend 폴더로 이동
   cd frontend
 
@@ -65,9 +68,7 @@ fi
 
 #################### 백엔드 스크립트 ####################
 
-#################### 백엔드 스크립트 ####################
-
-if [ -n "$backend_files" ]; then
+if [ "$part" = "be" ]; then
   cd backend
 
   echo "[pre-push] ⏳ Running backend build with Spring Profile '$SPRING_PROFILE'..."
