@@ -1,5 +1,6 @@
 package endolphin.backend.domain.discussion.entity;
 
+import endolphin.backend.domain.discussion.enums.MeetingMethod;
 import endolphin.backend.global.base_entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -39,7 +40,8 @@ public class Discussion extends BaseTimeEntity {
     private Integer duration;
 
     @Column(name = "meeting_method")
-    private String meetingMethod;
+    @Enumerated(EnumType.STRING)
+    private MeetingMethod meetingMethod;
 
     @Column
     private String location;
