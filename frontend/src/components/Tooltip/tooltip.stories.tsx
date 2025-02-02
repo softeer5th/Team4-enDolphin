@@ -1,8 +1,8 @@
-import type { Meta } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react';
 
 import Tooltip from '.';
- 
-const meta: Meta = {
+
+const meta = {
   title: 'Tooltip',
   component: Tooltip,
   argTypes: {
@@ -22,19 +22,25 @@ const meta: Meta = {
 } satisfies Meta<typeof Tooltip>;
 
 export default meta;
+type Story = StoryObj<typeof meta>;
 
-export const Primary = () => (<>
-  <Tooltip color='blue' tailDirection='up'>
-    Tooltip content1
-  </Tooltip>
-  <Tooltip color='blue' tailDirection='left'>
-    Tooltip content2
-  </Tooltip>
-  <Tooltip color='blue' tailDirection='down'>
-    Tooltip content3
-  </Tooltip>
-  <Tooltip color='blue' tailDirection='right'>
-    Tooltip content4
-  </Tooltip>
-</>
-);
+export const WithoutButton: Story = {
+  args: {
+    color: 'blue',
+    tailDirection: 'up',
+  },
+  render: (args) => (
+    <Tooltip {...args} >label</Tooltip>
+  ),
+};
+
+export const WithButton: Story = {
+  args: {
+    button: 'btn',
+    color: 'blue',
+    tailDirection: 'up',
+  },
+  render: (args) => (
+    <Tooltip {...args} >type anything</Tooltip>
+  ),
+};
