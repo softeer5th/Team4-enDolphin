@@ -1,8 +1,6 @@
 
 import { recipe } from '@vanilla-extract/recipes';
 
-import { vars } from '../../theme/index.css';
-
 export const containerStyle = recipe({
   base: {
     width: 'fit-content',
@@ -21,30 +19,6 @@ export const containerStyle = recipe({
   },
 });
 
-export const contentContainerStyle = recipe({
-  base: {
-    padding: `${vars.spacing[200]} ${vars.spacing[300]}`,
-    borderRadius: 10,
-    fontSize: '14px',
-    whiteSpace: 'nowrap',
-    display: 'flex',
-    alignItems: 'center',
-    backgroundColor: 'black',
-  },
-  variants: {
-    color: {
-      blue: {
-        backgroundColor: vars.color.Ref.Primary[50],
-        color: vars.color.Ref.Primary[500],
-      },
-      black: {
-        backgroundColor: vars.color.Ref.Netural[800],
-        color: vars.color.Ref.Netural.White,
-      },
-    },
-  },
-});
-
 export const tooltipArrowStyle = recipe({
   base: {},
   variants: {
@@ -55,5 +29,4 @@ export const tooltipArrowStyle = recipe({
       right: { transform: 'rotate(180deg)' },
     },
   },
-
 });
