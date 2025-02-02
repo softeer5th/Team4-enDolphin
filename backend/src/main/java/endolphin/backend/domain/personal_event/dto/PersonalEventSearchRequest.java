@@ -1,10 +1,11 @@
 package endolphin.backend.domain.personal_event.dto;
 
+import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 public record PersonalEventSearchRequest(
-    LocalDateTime startTime,
-    LocalDateTime endTime
+    @NotNull LocalDateTime startTime,
+    @NotNull LocalDateTime endTime
 ) {
 
 }

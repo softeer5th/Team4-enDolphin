@@ -4,6 +4,7 @@ import endolphin.backend.domain.personal_event.dto.ListPersonalEventResponse;
 import endolphin.backend.domain.personal_event.dto.PersonalEventRequest;
 import endolphin.backend.domain.personal_event.dto.PersonalEventResponse;
 import endolphin.backend.domain.personal_event.dto.PersonalEventSearchRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,7 +24,7 @@ public class PersonalEventController {
     private final PersonalEventService personalEventService;
 
     @GetMapping("/")
-    public ResponseEntity<ListPersonalEventResponse> getPersonalEvents(@RequestBody
+    public ResponseEntity<ListPersonalEventResponse> getPersonalEvents(@Valid @RequestBody
         PersonalEventSearchRequest request) {
         ListPersonalEventResponse response = personalEventService.listPersonalEvents(request);
         return ResponseEntity.ok(response);
@@ -31,14 +32,14 @@ public class PersonalEventController {
 
     @PostMapping("/")
     public ResponseEntity<PersonalEventResponse> createPersonalEvent(
-        @RequestBody PersonalEventRequest request) {
+        @Valid @RequestBody PersonalEventRequest request) {
         PersonalEventResponse response = personalEventService.createPersonalEvent(request);
         return ResponseEntity.ok(response);
     }
 
     @PutMapping("/{personalEventId}")
     public ResponseEntity<PersonalEventResponse> updatePersonalEvent(
-        @RequestBody PersonalEventRequest request,
+        @Valid @RequestBody PersonalEventRequest request,
         @PathVariable("personalEventId") Long personalEventId) {
         PersonalEventResponse response = personalEventService.updatePersonalEvent(request,
             personalEventId);
