@@ -46,10 +46,10 @@ jobs:
       - name: Check if same as old
         id: check_diff
         run: |
-        echo "Comparing reviewers..."
-        echo "Old: [$OLD_REVIEWERS]"
-        echo "New: [$NEW_REVIEWERS]"
-        echo "compare: $OLD_REVIEWERS = $NEW_REVIEWERS"
+          echo "Comparing reviewers..."
+          echo "Old: [$OLD_REVIEWERS]"
+          echo "New: [$NEW_REVIEWERS]"
+          echo "compare: $OLD_REVIEWERS = $NEW_REVIEWERS"
           if [ "${{ steps.read_old.outputs.old_reviewers }}" = "${{ steps.prepare_new.outputs.new_reviewers }}" ]; then
             echo "⚠️ Same reviewer set -> skip notification"
             echo "skip=true" >> $GITHUB_OUTPUT
