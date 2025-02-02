@@ -40,9 +40,7 @@ export const Default: Story = {
 };
 
 export const IconAdded = () => (
-  <Button radius='max' size='md' style='filled' type='primary'>
-    <Button.Icon><CircleCheck /></Button.Icon>
-    <Button.Text>버튼</Button.Text>
-    <Button.Icon><Check /></Button.Icon>
+  <Button leftIcon={<Check />} rightIcon={<CircleCheck/>}>
+    버튼
   </Button>
 );
