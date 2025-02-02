@@ -1,60 +1,60 @@
 name: PR Slack Notification
 
 on:
-    pull_request:
-        types: [opened, review_requested]
-        
+  pull_request:
+    types: [opened, review_requested]
+
 concurrency:
-    group: slack-notification
-    cancel-in-progress: false
+  group: slack-notification
+  cancel-in-progress: false
 
 jobs:
-    notify_slack:
-        name: Send PR Notification to Reviewers
-        runs-on: ubuntu-latest
-        steps:
-            - name: Load Slack User Mapping
-              id: load_mapping
-              env:
-                  SLACK_USER_MAPPING: ${{ secrets.SLACK_USER_MAPPING }}
-              run: |
-                  declare -A USER_MAP
-                  while IFS="," read -r key value; do
-                    USER_MAP[$key]=$(echo $value | tr -d '"')
-                  done < <(echo "$SLACK_USER_MAPPING" | jq -r 'to_entries | map("\(.key),\(.value)") | .[]')
+  notify_slack:
+    name: Send PR Notification to Reviewers
+    runs-on: ubuntu-latest
+    steps:
+      - name: Load Slack User Mapping
+        id: load_mapping
+        env:
+          SLACK_USER_MAPPING: ${{ secrets.SLACK_USER_MAPPING }}
+        run: |
+          declare -A USER_MAP
+          while IFS="," read -r key value; do
+            USER_MAP[$key]=$(echo $value | tr -d '"')
+          done < <(echo "$SLACK_USER_MAPPING" | jq -r 'to_entries | map("\(.key),\(.value)") | .[]')
 
-                  REVIEWERS=$(jq -r '.pull_request.requested_reviewers | map(.login) | join(", ")' $GITHUB_EVENT_PATH)
-                  MENTION_LIST=""
+          REVIEWERS=$(jq -r '.pull_request.requested_reviewers | map(.login) | join(", ")' $GITHUB_EVENT_PATH)
+          MENTION_LIST=""
 
-                  for reviewer in ${REVIEWERS//,/ }; do
-                    if [[ -n "${USER_MAP[$reviewer]}" ]]; then
-                      MENTION_LIST+="<@${USER_MAP[$reviewer]}> "
-                    fi
-                  done
+          for reviewer in ${REVIEWERS//,/ }; do
+            if [[ -n "${USER_MAP[$reviewer]}" ]]; then
+              MENTION_LIST+="<@${USER_MAP[$reviewer]}> "
+            fi
+          done
 
-                  echo "mention_list=$MENTION_LIST" >> $GITHUB_ENV
+          echo "mention_list=$MENTION_LIST" >> $GITHUB_ENV
 
-            - name: Send Slack Notification
-              env:
-                  SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-                  PR_TITLE: ${{ github.event.pull_request.title }}
-                  PR_URL: ${{ github.event.pull_request.html_url }}
-                  PR_CREATOR: ${{ github.event.pull_request.user.login }}
-                  PR_REVIEWERS: ${{ env.mention_list }}
-              run: |
-                  if [ -z "$PR_REVIEWERS" ]; then
-                    echo "No reviewers, skipping Slack notification."
-                    exit 0
-                  fi
+      - name: Send Slack Notification
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          PR_CREATOR: ${{ github.event.pull_request.user.login }}
+          PR_REVIEWERS: ${{ env.mention_list }}
+        run: |
+          if [ -z "$PR_REVIEWERS" ]; then
+            echo "No reviewers, skipping Slack notification."
+            exit 0
+          fi
 
-                  PAYLOAD=$(jq -n \
-                    --arg prCreator "$PR_CREATOR" \
-                    --arg prTitle "$PR_TITLE" \
-                    --arg prUrl "$PR_URL" \
-                    --arg prReviewers "$PR_REVIEWERS" \
-                    '{
-                      text: "📢 *PR 리뷰 요청*\n👤 *작성자*: \($prCreator)\n🔗 *PR*: <\($prUrl)|\($prTitle)>\n🔍 *리뷰어*: \($prReviewers)"
-                    }'
-                  )
+          PAYLOAD=$(jq -n \
+            --arg prCreator "$PR_CREATOR" \
+            --arg prTitle "$PR_TITLE" \
+            --arg prUrl "$PR_URL" \
+            --arg prReviewers "$PR_REVIEWERS" \
+            '{
+              text: "📢 *PR 리뷰 요청*\n👤 *작성자*: \($prCreator)\n🔗 *PR*: <\($prUrl)|\($prTitle)>\n🔍 *리뷰어*: \($prReviewers)"
+            }'
+          )
 
-                  curl -X POST -H 'Content-type: application/json' --data "$PAYLOAD" "$SLACK_WEBHOOK_URL"
+          curl -X POST -H 'Content-type: application/json' --data "$PAYLOAD" "$SLACK_WEBHOOK_URL"
