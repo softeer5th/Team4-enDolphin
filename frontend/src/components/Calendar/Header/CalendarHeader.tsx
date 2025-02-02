@@ -1,22 +1,21 @@
+import { formatDateToWeek, isSameDate } from '../../../utils/date';
 import { useCalendarContext } from '../context/CalendarContext';
 import { CalendarCell } from '../Table/CalendarCell';
 import { SideCell } from '../Table/SideCell';
 import { containerStyle } from './index.css';
 
 export const CalendarHeader = () => {
-  const DAYS = new Array(7).fill(0)
-    .map((_, i) => i);
-
   const { selected } = useCalendarContext();
+  const { dates } = formatDateToWeek(selected);
 
   return (
     <div className={containerStyle}>
       <SideCell time='all' />
-      {DAYS.map((day) => 
+      {dates.map((date) => 
         <CalendarCell
-          holiday={day === 0 || day === 6}
-          key={day}
-          selected={selected.getDay() === day}
+          holiday={date.getDay() === 0 || date.getDay() === 6}
+          key={date.getTime()}
+          selected={isSameDate(selected, date)}
           time='all'
         />)}
     </div>
