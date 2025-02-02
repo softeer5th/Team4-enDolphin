@@ -1,6 +1,5 @@
-import type { JSX, MouseEventHandler, PropsWithChildren, ReactNode } from 'react';
+import type { JSX, MouseEventHandler, PropsWithChildren } from 'react';
 
-import { ButtonContext } from './ButtonContext';
 import ButtonIcon from './ButtonIcon';
 import ButtonText from './ButtonText';
 import { containerStyle } from './index.css';
@@ -25,13 +24,11 @@ const Button = ({
   onClick,
   children,
 }: ButtonProps) => (
-  <ButtonContext.Provider value={{ size }}>
-    <button className={containerStyle({ type, style, radius, size })} onClick={onClick}>
-      {leftIcon && <ButtonIcon>{leftIcon}</ButtonIcon>}
-      <ButtonText>{children}</ButtonText>
-      {rightIcon && <ButtonIcon>{rightIcon}</ButtonIcon>}
-    </button>
-  </ButtonContext.Provider>
+  <button className={containerStyle({ type, style, radius, size })} onClick={onClick}>
+    {leftIcon && <ButtonIcon size={size}>{leftIcon}</ButtonIcon>}
+    <ButtonText size={size}>{children}</ButtonText>
+    {rightIcon && <ButtonIcon size={size}>{rightIcon}</ButtonIcon>}
+  </button>
 );
 
 export default Button;

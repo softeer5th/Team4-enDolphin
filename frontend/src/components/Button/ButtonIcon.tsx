@@ -1,12 +1,13 @@
-import React from 'react';
+import type { JSX } from 'react';
 
-import { useSafeContext } from '../../hooks/useSafeContext';
-import { ButtonContext } from './ButtonContext';
+import type { ButtonProps } from '.';
 import { ButtonIconContainerStyle } from './buttonIcon.css';
 
-const ButtonIcon = ({ children }: { children: React.JSX.Element }) => {
-  // TODO: size='sm' 일 때 아이콘의 삽입 가능 여부와 그때의 크기 논의
-  const { size } = useSafeContext(ButtonContext);
+interface ButtonIconProps {
+  children: JSX.Element;
+  size: ButtonProps['size'];
+}
+const ButtonIcon = ({ size, children }: ButtonIconProps) => {
   const widthMap = {
     sm: 16,
     md: 16,
