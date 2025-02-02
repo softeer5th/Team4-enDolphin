@@ -6,7 +6,7 @@ export const segmentControlContainer = recipe({
   base: {
     display: 'inline-flex',
     borderRadius: vars.radius[600],
-    padding: '4px',
+    padding: vars.spacing[100],
   },
   variants: {
     style: {
@@ -21,5 +21,9 @@ export const segmentControlContainer = recipe({
       true: { boxShadow: '0px 4px 10px 0px rgba(0, 0, 0, 0.03)' }, 
       false: {},
     },
+  },
+  defaultVariants: {
+    style: 'filled',
+    shadow: true,
   },
 });
