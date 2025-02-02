@@ -15,6 +15,7 @@ export const containerStyle = style({
 export const contentsStyle = style({
   width: '100%',
   display: 'flex',
+  alignItems: 'stretch',
 });
   
 export const dayStyle = style({
@@ -30,12 +31,6 @@ export const sideStyle = style({
 export const cellStyle = recipe({
   base: {
     width: '100%',
-    flexGrow: 1,
-      
-    borderTop: 'none',
-    borderBottom: `1px solid ${vars.color.Ref.Netural[200]}`,
-    borderLeft: 'none',
-    borderRight: `1px solid ${vars.color.Ref.Netural[200]}`,
   },
   variants: {
     day: {
@@ -60,11 +55,11 @@ export const cellStyle = recipe({
     state: {
       selected: {
         backgroundColor: vars.color.Ref.Primary[50],
-        borderColor: vars.color.Ref.Primary[100],
+        boxShadow: `inset 0 0 0 0.5px ${vars.color.Ref.Primary[100]}`,
       },
       default: {
         backgroundColor: vars.color.Ref.Netural.White,
-        borderColor: vars.color.Ref.Netural[200],
+        boxShadow: `inset 0 0 0 0.5px ${vars.color.Ref.Netural[100]}`,
       },
     },
   },

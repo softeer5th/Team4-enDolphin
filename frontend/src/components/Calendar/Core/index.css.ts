@@ -5,6 +5,7 @@ import { vars } from '../../../theme/index.css';
 
 export const weekStyle = style({
   display: 'flex',
+  alignItems: 'stretch',
 });
 
 export const timeControlStyle = style({
@@ -17,12 +18,13 @@ export const weekCellStyle = recipe({
   base: {
     width: '100%',
     height: 66,
-    flexGrow: 1,
   
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
     gap: vars.spacing[100],
+
+    cursor: 'pointer',
   },
   variants: {
     day: {
@@ -39,7 +41,6 @@ export const weekCellStyle = recipe({
     state: {
       selected: {
         backgroundColor: vars.color.Ref.Primary[50],
-        // border: `1px solid ${vars.color.Ref.Primary[100]}`,
       },
       default: {
         backgroundColor: vars.color.Ref.Netural.White,
