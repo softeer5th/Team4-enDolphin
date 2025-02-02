@@ -8,7 +8,6 @@ interface LabelProps extends PropsWithChildren {
 }
 
 const Label = ({ required, children }: LabelProps) => 
-// const defaultId = `checkbox-${useId()}`;
   (
     // TODO: label에 htmlFor 속성 주입
     <label className={labelContainerStyle}>

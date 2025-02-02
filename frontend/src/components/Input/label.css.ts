@@ -4,8 +4,7 @@ import { style } from '@vanilla-extract/css';
 import { vars } from '../../theme/index.css';
 
 export const labelContainerStyle = style({
-  width: 'fit-content',
-  display: 'flex',
+  display: 'inline-flex',
   gap: vars.spacing[50],
   color: vars.color.Ref.Netural[600],
   // alignItems: 'center',

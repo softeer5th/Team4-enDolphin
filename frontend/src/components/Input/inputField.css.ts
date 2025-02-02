@@ -1,10 +1,12 @@
 import { style } from '@vanilla-extract/css';
 import { recipe } from '@vanilla-extract/recipes';
 
+import { font } from '../../theme/font';
 import { vars } from '../../theme/index.css';
 
-export const inputFieldContainerStyle = recipe({
+export const containerStyle = recipe({
   base: {
+    flex: 1,
     display: 'flex',
     alignItems: 'center',
     borderRadius: vars.radius[200],
@@ -12,7 +14,6 @@ export const inputFieldContainerStyle = recipe({
     borderWidth: 1.5,
     backgroundColor: vars.color.Ref.Netural.White,
     padding: vars.spacing[400],
-    transition: 'border-color 0.2s ease-in-out',
   },
   variants: {
     size: {
@@ -38,12 +39,14 @@ export const inputFieldContainerStyle = recipe({
   },
 });
 
+const inputTypo = font['B3 (R)'];
 export const inputFieldStyle = style({
   width: '100%',
   border: 'none',
   outline: 'none',
   backgroundColor: 'transparent',
   color: vars.color.Ref.Netural[700],
+  ...inputTypo,
   '::placeholder': {
     color: vars.color.Ref.Netural[400],
   },
