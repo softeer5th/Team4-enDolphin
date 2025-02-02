@@ -1,4 +1,4 @@
-import { useCalendarContext } from '../Core/CalendarContext';
+import { useCalendarContext } from '../context/CalendarContext';
 import { CalendarDay } from './CalendarDay';
 import { CalendarSide } from './CalendarSide';
 import { containerStyle, contentsStyle } from './index.css';

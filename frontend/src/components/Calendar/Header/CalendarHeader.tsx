@@ -1,4 +1,4 @@
-import { useCalendarContext } from '../Core/CalendarContext';
+import { useCalendarContext } from '../context/CalendarContext';
 import { CalendarCell } from '../Table/CalendarCell';
 import { SideCell } from '../Table/SideCell';
 import { containerStyle } from './index.css';

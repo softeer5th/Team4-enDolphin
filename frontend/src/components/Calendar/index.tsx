@@ -1,5 +1,5 @@
+import { CalendarProvider } from './context/CalendarProvider';
 import { Core } from './Core';
-import { CalendarProvider } from './Core/CalendarProvider';
 import { CalendarHeader } from './Header/CalendarHeader';
 import { wrapperStyle } from './index.css';
 import { CalendarTable } from './Table';

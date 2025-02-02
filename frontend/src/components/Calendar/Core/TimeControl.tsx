@@ -1,5 +1,5 @@
 import { formatDateToWeek } from '../../../utils/date';
-import { useCalendarContext } from './CalendarContext';
+import { useCalendarContext } from '../context/CalendarContext';
 
 export const TimeControl = () => {
   const { 
