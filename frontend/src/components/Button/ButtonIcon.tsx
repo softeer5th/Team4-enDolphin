@@ -3,22 +3,17 @@ import type { JSX } from 'react';
 import type { ButtonProps } from '.';
 import { ButtonIconContainerStyle } from './buttonIcon.css';
 
+const ICON_WIDTH = 16;
+
 interface ButtonIconProps {
   children: JSX.Element;
   size: ButtonProps['size'];
 }
-const ButtonIcon = ({ size, children }: ButtonIconProps) => {
-  const widthMap = {
-    sm: 16,
-    md: 16,
-    lg: 16,
-    xl: 16,
-  };
-  return (
-    <div className={ButtonIconContainerStyle({ size })}>
-      <children.type {...children.props} width={widthMap[size ?? 'md']}/>
-    </div>
-  );
-};
+
+const ButtonIcon = ({ size, children }: ButtonIconProps) => (
+  <div className={ButtonIconContainerStyle({ size })}>
+    <children.type {...children.props} width={ICON_WIDTH}/>
+  </div>
+);
 
 export default ButtonIcon;
