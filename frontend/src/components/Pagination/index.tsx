@@ -1,14 +1,10 @@
-import { vars } from '../../theme/index.css';
-import { IconDotsMono } from '../Icon';
-import { Text } from '../Text';
 import {
-  dotContainerStyle,
   paginationContainerStyle,
-  paginationItemStyle,
 } from './index.css';
+import PaginationItem from './PaginationItem';
 
 const PAGE_LIMIT = 8;
-const SEPARATOR = 'separator';
+export const SEPARATOR = 'separator';
 
 interface PaginationProps {
   currentPage: number;
@@ -25,26 +21,13 @@ const Pagination = ({
 
   return (
     <div className={paginationContainerStyle}>
-      {pages.map((item, index) => {
-        if (item === SEPARATOR) {
-          return (
-            <span className={dotContainerStyle} key={`separator-${index}`}>
-              <IconDotsMono fill={vars.color.Ref.Netural[800]} width={20} />
-            </span>
-          );
-        }
-        
-        const isSelected = item === currentPage;
-        return (
-          <button
-            className={paginationItemStyle({ selected: isSelected })}
-            key={`page-${item}`}
-            onClick={() => onPageChange(item)}
-          >
-            <Text typo={isSelected ? 't2' : 'b2M'}>{item}</Text>
-          </button>
-        );
-      })}
+      {pages.map((item, index) => 
+        <PaginationItem 
+          currentPage={currentPage} 
+          item={item} 
+          key={index}
+          onPageChange={onPageChange} />,
+      )}
     </div>
   );
 };
@@ -57,23 +40,29 @@ const getPaginationItems = (
   if (totalPages <= PAGE_LIMIT) {
     return Array.from({ length: totalPages }, (_, i) => i + 1);
   }
-  // 현재 페이지가 첫 4페이지일 경우
+  // 예시) 1 2 3 4 5 6 7 ... 10
   if (currentPage <= Math.floor(PAGE_LIMIT / 2) + 1) {
-    return [...Array.from({ length: PAGE_LIMIT - 1 }, (_, i) => i + 1), SEPARATOR, totalPages];
+    const frontPages = Array.from({ length: PAGE_LIMIT - 1 }, (_, i) => i + 1);
+    return [...frontPages, SEPARATOR, totalPages];
   }
-  // 현재 페이지가 마지막 4페이지일 경우
+  // 예시) 1 ... 4 5 6 7 8 9 10
   if (currentPage >= totalPages - Math.floor(PAGE_LIMIT / 2)) {
-    return [1, SEPARATOR, ...Array.from({ length: PAGE_LIMIT - 1 }, (_, i) => totalPages - 6 + i)];
+    const rearPages = Array.from(
+      { length: PAGE_LIMIT - 1 },
+      (_, i) => totalPages - PAGE_LIMIT + 2 + i,
+    );
+    return [1, SEPARATOR, ...rearPages];
   }
-  // 페이지가 중간에 위치할 경우
+  // 예시) 1 ... 3 4 5 6 7 ... 10
+  const middlePageCount = PAGE_LIMIT - 3;
+  const middlePages = Array.from(
+    { length: middlePageCount },
+    (_, i) => i + currentPage - Math.floor(middlePageCount / 2),
+  );
   return [
     1, 
     SEPARATOR,
-    currentPage - 2,
-    currentPage - 1,
-    currentPage,
-    currentPage + 1,
-    currentPage + 2,
+    ...middlePages,
     SEPARATOR,
     totalPages,
   ];
