@@ -5,9 +5,11 @@ import { WEEK_MAP } from '@/constants/date';
  * @param firstDay - 해당 달의 1일 날짜 객체.
  * @returns - 해당 달의 1일이 해당 달의 첫째주인지 여부.
  */
-const isStartWithFirstWeek = (firstDay: Date) => {
-  const day = firstDay.getDay();
-  if (day === 5 || day == 6 || day === 0) return false;
+const isStartWithFirstWeek = (date: Date) => {
+  const day = date.getDay();
+  if (date.getDate() === 1 && (day === 5 || day === 6 || day === 0)) return false;
+  if (date.getDate() === 2 && (day === 6 || day === 0)) return false;
+  if (date.getDate() === 3 && day === 0) return false;
   return true;
 };
 
@@ -19,8 +21,7 @@ const isStartWithFirstWeek = (firstDay: Date) => {
  * @returns - 해당 날짜가 몇 번째 주인지를 알리는 문자열 정보. ex) 첫째주, 둘째주, ...
  */
 const calcWeekNum = (date: Date): string => {
-  const isFirstDay = date.getDate() === 1;
-  if (isFirstDay && !isStartWithFirstWeek(date)) {
+  if (!isStartWithFirstWeek(date)) {
     const prevMonthLastDate = new Date(date.getFullYear(), date.getMonth(), 0);
     return calcWeekNum(prevMonthLastDate);
   }
