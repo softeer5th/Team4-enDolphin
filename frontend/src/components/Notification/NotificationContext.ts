@@ -1,6 +1,6 @@
 import { createContext } from 'react';
 
-import type { NotificationWithOptionalId } from '../../hooks/useNotification';
+import type { NotificationWithOptionalId } from '@/hooks/useNotification';
 
 interface NotificationContextProps {
   addNoti: (notification: NotificationWithOptionalId) => void;

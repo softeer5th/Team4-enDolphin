@@ -1,7 +1,8 @@
 import type { PropsWithChildren } from 'react';
 import { useId } from 'react';
 
-import { useSafeContext } from '../../hooks/useSafeContext';
+import { useSafeContext } from '@/hooks/useSafeContext';
+
 import { Text } from '../Text';
 import { DropdownContext } from './DropdownContext';
 import { dropdownStyle } from './dropdownItem.css';

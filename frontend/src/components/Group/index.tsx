@@ -1,7 +1,8 @@
 import type { PropsWithChildren } from 'react';
 import { useId } from 'react';
 
-import type { GroupStateReturn } from '../../hooks/useGroup';
+import type { GroupStateReturn } from '@/hooks/useGroup';
+
 import { GroupContext } from './GroupContext';
 
 export interface GroupProps extends PropsWithChildren {

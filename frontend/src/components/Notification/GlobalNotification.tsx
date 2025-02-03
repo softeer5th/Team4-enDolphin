@@ -1,7 +1,8 @@
 import { createPortal } from 'react-dom';
 
-import type { NotificationWithId } from '../../hooks/useNotification';
-import { fadeInAndOut } from '../../theme/animation.css';
+import type { NotificationWithId } from '@/hooks/useNotification';
+import { fadeInAndOut } from '@/theme/animation.css';
+
 import { Notification } from '.';
 import { notificationsStyle } from './index.css';
 

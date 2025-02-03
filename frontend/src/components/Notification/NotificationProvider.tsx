@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 
-import { useNotification } from '../../hooks/useNotification';
+import { useNotification } from '@/hooks/useNotification';
+
 import { GlobalNotification } from './GlobalNotification';
 import { NotificationContext } from './NotificationContext';
 
