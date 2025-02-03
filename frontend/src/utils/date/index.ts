@@ -22,18 +22,13 @@ const calcWeekNum = (date: Date): string => {
   const isFirstDay = date.getDate() === 1;
   if (isFirstDay && !isStartWithFirstWeek(date)) {
     const prevMonthLastDate = new Date(date.getFullYear(), date.getMonth(), 0);
-    const prevMonthLastDay = prevMonthLastDate.getDay();
-    const daysInPrevMonth = prevMonthLastDate.getDate();
-
-    const lastWeekDays = 7 - prevMonthLastDay;
-    const week = Math.ceil((daysInPrevMonth - lastWeekDays + 7) / 7);
-    return WEEK_MAP[week];
+    return calcWeekNum(prevMonthLastDate);
   }
 
   const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
-  const firstWeekfirstDay = 
+  const firstWeekFirstDay = 
     isStartWithFirstWeek(date) ? firstDay.getDate() : firstDay.getDate() + 1;
-  const week = Math.floor((date.getDate() - firstWeekfirstDay + 7) / 7);
+  const week = Math.floor((date.getDate() - firstWeekFirstDay + 7) / 7);
 
   return WEEK_MAP[week];
 };
