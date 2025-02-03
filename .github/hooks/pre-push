@@ -24,7 +24,7 @@ frontend_files=$(echo "$files" | grep -E "^frontend/" | sed 's|^frontend/||')
 backend_files=$(echo "$files" | grep -E "^backend/" | sed 's|^backend/||')
 
 # 정규식 - 브랜치 네이밍 검사
-branch_name_regex="^(feature|refactor|hotfix)/(fe|be)/[a-z0-9-]+$"
+branch_name_regex="^(feature|refactor|bugfix)/(fe|be)/[a-z0-9-]+$"
 
 echo "[pre-push] ⏳ Validating changes before pushing to $remote_name ... ($remote_url)"
 
