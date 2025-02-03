@@ -1,15 +1,30 @@
 import { WEEK_MAP } from '@/constants/date';
 
 /**
- * 해당 달의 1일이 첫째주에 포함되는지를 판단합니다.
- * @param firstDay - 해당 달의 1일 날짜 객체.
- * @returns - 해당 달의 1일이 해당 달의 첫째주인지 여부.
+ * 날짜가 해당 달의 첫째주에 포함되는지를 판단합니다.
+ * @param date - 날짜 객체.
+ * @returns - 해당 달의 첫째주인지 여부.
  */
 const isStartWithFirstWeek = (date: Date) => {
   const day = date.getDay();
   if (date.getDate() === 1 && (day === 5 || day === 6 || day === 0)) return false;
   if (date.getDate() === 2 && (day === 6 || day === 0)) return false;
   if (date.getDate() === 3 && day === 0) return false;
+  return true;
+};
+
+/**
+ * 해당 달의 마지막 주에 포함되는지를 판단합니다.
+ * @param date - 날짜 객체.
+ * @returns - 해당 달의 마지막 주인지 여부.
+ */
+const isEndWithLastWeek = (date: Date) => {
+  const lastDate = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+  const daysAfterWeekFirstDate = (lastDate.getDay() + 6) % 7;
+  const isLastWeek = lastDate.getDate() - daysAfterWeekFirstDate <= date.getDate();
+
+  const day = lastDate.getDay();
+  if (isLastWeek && (day === 1 || day === 2 || day === 3)) return false;
   return true;
 };
 
@@ -25,12 +40,11 @@ const calcWeekNum = (date: Date): string => {
     const prevMonthLastDate = new Date(date.getFullYear(), date.getMonth(), 0);
     return calcWeekNum(prevMonthLastDate);
   }
+  if (!isEndWithLastWeek(date)) return WEEK_MAP[1];
 
   const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
-  const firstWeekFirstDay = 
-    isStartWithFirstWeek(date) ? firstDay.getDate() : firstDay.getDate() + 1;
+  const firstWeekFirstDay = firstDay.getDate();
   const week = Math.floor((date.getDate() - firstWeekFirstDay + 7) / 7);
-
   return WEEK_MAP[week];
 };
 
