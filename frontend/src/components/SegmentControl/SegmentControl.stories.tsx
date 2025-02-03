@@ -25,5 +25,6 @@ export const Default: StoryObj<typeof SegmentControl> = {
       { label: '라벨3', value: 'label3' },
     ],
     defaultValue: 'label1',
+    onChange: () => { /* do nothing */ },
   },
 };
