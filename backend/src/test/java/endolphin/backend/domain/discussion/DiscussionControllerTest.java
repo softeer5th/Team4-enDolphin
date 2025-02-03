@@ -12,6 +12,7 @@ import endolphin.backend.domain.discussion.enums.MeetingMethod;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -41,6 +42,7 @@ public class DiscussionControllerTest {
         objectMapper.registerModule(new JavaTimeModule());
     }
 
+    @DisplayName("create discusison API 테스트")
     @Test
     public void testCreateDiscussionEndpoint() throws Exception {
         // given: 요청 DTO 생성
