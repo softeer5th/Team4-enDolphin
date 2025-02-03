@@ -1,13 +1,13 @@
 import type { PropsWithChildren, ReactNode } from 'react';
 
 import { vars } from '../../theme/index.css';
-import { 
-  TooltipArrowDown, 
-  TooltipArrowLeft, 
-  TooltipArrowRight, 
-  TooltipArrowUp, 
-} from './assets/index';
 import { containerStyle } from './index.css';
+import { 
+  TooltipArrowDown,
+  TooltipArrowLeft,
+  TooltipArrowRight,
+  TooltipArrowUp, 
+} from './TooltipArrow';
 import TooltipContent from './TooltipContent';
 
 export interface TooltipProps extends PropsWithChildren {

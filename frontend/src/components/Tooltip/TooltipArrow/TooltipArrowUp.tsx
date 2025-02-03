@@ -6,14 +6,14 @@ export const TooltipArrowUp = ({ fill }: { fill: string }) => (
     </g>
     <defs>
       <filter 
-        color-interpolation-filters='sRGB' 
+        colorInterpolationFilters='sRGB' 
         filterUnits='userSpaceOnUse' 
         height='18.5125' 
         id='filter0_b_765_1187' 
         width='24' 
         x='-4.5' 
         y='-4.51245'>
-        <feFlood flood-opacity='0' result='BackgroundImageFix'/>
+        <feFlood floodOpacity='0' result='BackgroundImageFix'/>
         <feGaussianBlur in='BackgroundImageFix' stdDeviation='2.5'/>
         <feComposite in2='SourceAlpha' operator='in' result='effect1_backgroundBlur_765_1187'/>
         <feBlend 
