@@ -11,8 +11,8 @@ import Label from './Label';
 const ICON_WIDTH = 20;
 
 export interface InputProps extends PropsWithChildren {
-  state: 'neutral' | 'error';
   label: string;
+  isValid?: boolean;
   required?: boolean;
   separator?: string | JSX.Element;
   hint?: string;
@@ -20,12 +20,12 @@ export interface InputProps extends PropsWithChildren {
 }
 
 export const Input = ({ 
-  state, 
   label, 
-  hint, 
-  error, 
+  isValid = true,
   required = false, 
   separator = '',
+  hint, 
+  error, 
   children,
 }: InputProps) => {
   const childElements = Children.toArray(children);
@@ -34,16 +34,16 @@ export const Input = ({
     childElements.length > 1 ? intersperse(childElements, separatorElement) : childElements;
 
   return (
-    <InputContext.Provider value={{ state }}>
+    <InputContext.Provider value={{ isValid }}>
       <div className={containerStyle}>
         <Label required={required}>{label}</Label>
         <div className={inputFieldsContainerStyle}>
           {childrenWithSeparators}
         </div>
-        {state === 'error' ? 
-          <HelperText type='error'>{error}</HelperText>
-          : 
+        {isValid ? 
           <HelperText type='hint'>{hint}</HelperText>
+          : 
+          <HelperText type='error'>{error}</HelperText>
         }
       </div>
     </InputContext.Provider>

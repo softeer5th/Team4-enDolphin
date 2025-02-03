@@ -19,8 +19,8 @@ export const containerStyle = recipe({
     size: {
       md: { height: 40 },
     },
-    state: {
-      neutral: {
+    isValid: {
+      true: {
         ':hover': {
           borderColor: vars.color.Ref.Primary[200],
         },
@@ -28,14 +28,14 @@ export const containerStyle = recipe({
           borderColor: vars.color.Ref.Primary[500],
         },
       },
-      error: {
+      false: {
         borderColor: vars.color.Ref.Red[500],
       },
     },
   },
   defaultVariants: {
     size: 'md',
-    state: 'neutral',
+    isValid: true,
   },
 });
 

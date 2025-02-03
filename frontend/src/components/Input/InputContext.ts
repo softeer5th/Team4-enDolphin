@@ -1,14 +1,12 @@
 import { createContext } from 'react';
 
 interface InputContextProps {
-  state: 'neutral' | 'error';
+  isValid: boolean;
 }
 
 /**
  * @description Input 컴포넌트의 Context.
  * 
- * @param size - Input 컴포넌트의 크기.
- * @param state - Input 컴포넌트의 상태.
+ * @Param {isValid} boolean - Input 컴포넌트가 Error 상태인지 여부.
  */
 export const InputContext = createContext<InputContextProps | null>(null);
-

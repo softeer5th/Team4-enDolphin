@@ -5,10 +5,10 @@ import { InputContext } from './InputContext';
 import { containerStyle, inputFieldStyle } from './inputField.css';
 
 const InputField = (props: InputHTMLAttributes<HTMLInputElement>) => {
-  const { state } = useSafeContext(InputContext);
+  const { isValid } = useSafeContext(InputContext);
   
   return (
-    <div className={containerStyle({ state })}>
+    <div className={containerStyle({ isValid })}>
       <input
         className={inputFieldStyle}
         {...props}
