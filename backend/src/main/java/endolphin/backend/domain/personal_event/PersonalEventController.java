@@ -25,7 +25,7 @@ public class PersonalEventController {
 
     private final PersonalEventService personalEventService;
 
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<ListResponse<PersonalEventResponse>> getPersonalEvents(@Valid @RequestBody
         PersonalEventSearchRequest request) {
         ListResponse<PersonalEventResponse> response = personalEventService.listPersonalEvents(request);
