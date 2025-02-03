@@ -12,6 +12,7 @@ const ICON_WIDTH = 20;
 
 export interface InputProps extends PropsWithChildren {
   label: string;
+  type: 'text' | 'select';
   isValid?: boolean;
   required?: boolean;
   separator?: string | JSX.Element;
@@ -20,7 +21,8 @@ export interface InputProps extends PropsWithChildren {
 }
 
 export const Input = ({ 
-  label, 
+  label,
+  type = 'text',
   isValid = true,
   required = false, 
   separator = '',
@@ -34,7 +36,7 @@ export const Input = ({
     childElements.length > 1 ? intersperse(childElements, separatorElement) : childElements;
 
   return (
-    <InputContext.Provider value={{ isValid }}>
+    <InputContext.Provider value={{ isValid, type }}>
       <div className={containerStyle}>
         <Label required={required}>{label}</Label>
         <div className={inputFieldsContainerStyle}>

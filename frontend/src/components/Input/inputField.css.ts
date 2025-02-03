@@ -9,16 +9,15 @@ export const containerStyle = recipe({
     flex: 1,
     display: 'flex',
     alignItems: 'center',
+    justifyContent: 'space-between',
     borderRadius: vars.radius[200],
     border: `1px solid ${vars.color.Ref.Netural[300]}`,
     borderWidth: 1.5,
     backgroundColor: vars.color.Ref.Netural.White,
     padding: vars.spacing[400],
+    height: 40, 
   },
   variants: {
-    size: {
-      md: { height: 40 },
-    },
     isValid: {
       true: {
         ':hover': {
@@ -32,11 +31,20 @@ export const containerStyle = recipe({
         borderColor: vars.color.Ref.Red[500],
       },
     },
+    type: {
+      text: { cursor: 'text' },
+      select: { cursor: 'pointer' },
+    },
   },
   defaultVariants: {
-    size: 'md',
     isValid: true,
   },
+});
+
+export const selectIconStyle = style({
+  width: '20px',
+  height: '20px',
+  // alignSelf: 'flex-end',
 });
 
 const inputTypo = font['B3 (R)'];
