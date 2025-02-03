@@ -17,6 +17,7 @@ import java.time.LocalTime;
 import java.util.Optional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -51,6 +52,7 @@ public class DiscussionServiceTest {
         UserContext.clear();
     }
 
+    @DisplayName("모든 필드가 채워진 논의 생성 request 테스트")
     @Test
     public void testCreateDiscussion_withDeadlineProvided() {
         // given: 모든 필드가 채워진 요청 (deadline 제공)
@@ -68,7 +70,6 @@ public class DiscussionServiceTest {
 
         given(discussionRepository.save(any(Discussion.class))).willAnswer(invocation -> {
             Discussion d = invocation.getArgument(0);
-            // Reflection을 사용해 private id 필드에 값을 주입
             ReflectionTestUtils.setField(d, "id", 100L);
             return d;
         });
