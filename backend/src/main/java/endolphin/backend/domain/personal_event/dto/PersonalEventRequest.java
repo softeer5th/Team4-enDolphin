@@ -9,7 +9,8 @@ public record PersonalEventRequest(
     @NotBlank @Size(max=255) String title,
     @NotNull LocalDateTime startDateTime,
     @NotNull LocalDateTime endDateTime,
-    Boolean isAdjustable
+    Boolean isAdjustable,
+    Boolean syncWithGoogleCalendar
 ) {
 
 }
