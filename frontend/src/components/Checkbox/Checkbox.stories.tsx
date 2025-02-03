@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
 
-import { useGroup } from '../../hooks/useGroup';
+import { useGroup } from '@/hooks/useGroup';
+
 import { Group } from '../Group';
 import { Checkbox } from '.';
 

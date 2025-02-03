@@ -1,7 +1,8 @@
 import type { PropsWithChildren } from 'react';
 import { useId } from 'react';
 
-import { useSafeContext } from '../../hooks/useSafeContext';
+import { useSafeContext } from '@/hooks/useSafeContext';
+
 import { tabContentStyle } from './index.css';
 import { TabContext } from './TabContext';
 

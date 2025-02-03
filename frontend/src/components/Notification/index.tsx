@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 
-import { vars } from '../../theme/index.css';
+import { vars } from '@/theme/index.css';
+
 import clsx from '../../utils/clsx';
 import { CircleCheck, TriangleWarning } from '../Icon';
 import { Text } from '../Text';

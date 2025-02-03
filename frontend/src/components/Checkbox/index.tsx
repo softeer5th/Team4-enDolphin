@@ -1,7 +1,8 @@
 import type { InputHTMLAttributes, PropsWithChildren, SetStateAction }  from 'react';
 import { useId } from 'react';
 
-import { useCheckbox } from '../../hooks/useCheckbox';
+import { useCheckbox } from '@/hooks/useCheckbox';
+
 import { Check } from '../Icon';
 import type { Typo } from '../Text';
 import { Text } from '../Text';
