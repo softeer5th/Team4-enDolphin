@@ -25,7 +25,7 @@ public class PersonalEventService {
         User user = userService.getCurrentUser();
 
         List<PersonalEventResponse> personalEventResponseList = personalEventRepository.findByUserAndStartTimeBetween(
-                user, request.startTime(), request.endTime())
+                user, request.startDateTime(), request.endDateTime())
             .stream().map(PersonalEventResponse::fromEntity).toList();
         return new ListResponse<>(personalEventResponseList);
     }
@@ -34,8 +34,8 @@ public class PersonalEventService {
         User user = userService.getCurrentUser();
         PersonalEvent personalEvent = PersonalEvent.builder()
             .title(request.title())
-            .endTime(request.endTime())
-            .startTime(request.startTime())
+            .endTime(request.endDateTime())
+            .startTime(request.startDateTime())
             .user(user)
             .build();
         PersonalEvent result = personalEventRepository.save(personalEvent);

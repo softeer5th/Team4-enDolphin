@@ -58,8 +58,8 @@ public class PersonalEvent extends BaseTimeEntity {
     }
 
     public PersonalEvent update(PersonalEventRequest personalEventRequest) {
-        this.startTime = personalEventRequest.startTime();
-        this.endTime = personalEventRequest.endTime();
+        this.startTime = personalEventRequest.startDateTime();
+        this.endTime = personalEventRequest.endDateTime();
         this.title = personalEventRequest.title();
         this.isAdjustable = personalEventRequest.isAdjustable();
         return this;

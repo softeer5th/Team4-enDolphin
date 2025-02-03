@@ -42,21 +42,24 @@ class PersonalEventControllerTest {
         String requestJson = """
             {
                 "title": "Title",
-                "startTime": "2025-02-02T10:00:00Z",
-                "endTime": "2025-02-02T12:00:00Z",
+                "startDateTime": "2025-02-02T10:00:00Z",
+                "endDateTime": "2025-02-02T12:00:00Z",
                 "isAdjustable": false
             }
             """;
         PersonalEventResponse personalEventResponse = new PersonalEventResponse(1L, "title",
-            LocalDateTime.of(2025, 2, 2, 10, 0), LocalDateTime.of(2025, 2, 2, 12, 0), false);
+            LocalDateTime.of(2025, 2, 2, 10, 0),
+            LocalDateTime.of(2025, 2, 2, 12, 0),
+            false, "testEventId", "testCalendarId");
         given(personalEventService.createPersonalEvent(any())).willReturn(personalEventResponse);
-        MvcResult result =  mockMvc.perform(post("/api/v1/personal-event").
-            contentType(MediaType.APPLICATION_JSON)
-            .content(requestJson))
+        MvcResult result = mockMvc.perform(post("/api/v1/personal-event").
+                contentType(MediaType.APPLICATION_JSON)
+                .content(requestJson))
             .andDo(print())
             .andReturn();
         String location = result.getResponse().getHeader("Location");
         assertThat(location).isNotNull();
-        assertThat(location).contains(String.format("/api/v1/personal-event/%d", personalEventResponse.id()));
+        assertThat(location).contains(
+            String.format("/api/v1/personal-event/%d", personalEventResponse.id()));
     }
 }

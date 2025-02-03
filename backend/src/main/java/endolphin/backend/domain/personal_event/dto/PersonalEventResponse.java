@@ -6,9 +6,11 @@ import java.time.LocalDateTime;
 public record PersonalEventResponse(
     Long id,
     String title,
-    LocalDateTime startTime,
-    LocalDateTime endTime,
-    Boolean isAdjustable
+    LocalDateTime startDateTime,
+    LocalDateTime endDateTime,
+    Boolean isAdjustable,
+    String googleEventId,
+    String calendarId
 ) {
     public static PersonalEventResponse fromEntity(PersonalEvent event) {
         return new PersonalEventResponse(
@@ -16,7 +18,9 @@ public record PersonalEventResponse(
             event.getTitle(),
             event.getStartTime(),
             event.getEndTime(),
-            event.getIsAdjustable()
+            event.getIsAdjustable(),
+            event.getGoogleEventId(),
+            event.getCalendarId()
         );
     }
 }

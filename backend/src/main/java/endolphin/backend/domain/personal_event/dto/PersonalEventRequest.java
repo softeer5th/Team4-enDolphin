@@ -7,8 +7,8 @@ import java.time.LocalDateTime;
 
 public record PersonalEventRequest(
     @NotBlank @Size(max=255) String title,
-    @NotNull LocalDateTime startTime,
-    @NotNull LocalDateTime endTime,
+    @NotNull LocalDateTime startDateTime,
+    @NotNull LocalDateTime endDateTime,
     Boolean isAdjustable
 ) {
 

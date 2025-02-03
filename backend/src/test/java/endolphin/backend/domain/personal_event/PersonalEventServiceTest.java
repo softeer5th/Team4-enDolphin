@@ -76,8 +76,8 @@ class PersonalEventServiceTest {
             personalEvent1, personalEvent2
         );
 
-        given(personalEventRepository.findByUserAndStartTimeBetween(testUser, request.startTime(),
-            request.endTime())).willReturn(eventList);
+        given(personalEventRepository.findByUserAndStartTimeBetween(testUser, request.startDateTime(),
+            request.endDateTime())).willReturn(eventList);
 
         // When
         ListResponse<PersonalEventResponse> response = personalEventService.listPersonalEvents(request);
@@ -94,8 +94,8 @@ class PersonalEventServiceTest {
 
         PersonalEvent savedEvent = PersonalEvent.builder()
             .title(request.title())
-            .startTime(request.startTime())
-            .endTime(request.endTime())
+            .startTime(request.startDateTime())
+            .endTime(request.endDateTime())
             .user(testUser)
             .build();
 
@@ -107,7 +107,7 @@ class PersonalEventServiceTest {
         // then
         assertThat(response).isNotNull();
         assertThat(response.title()).isEqualTo(request.title());
-        assertThat(response.startTime()).isEqualTo(startTime);
+        assertThat(response.startDateTime()).isEqualTo(startTime);
 
         verify(userService, times(1)).getCurrentUser();
         verify(personalEventRepository, times(1)).save(any(PersonalEvent.class));
