@@ -15,4 +15,20 @@ describe('formatDateToWeek 함수', ()=>{
       });
     });
   });
+  describe('1일이 월, 화, 수, 목요일인 경우', ()=>{
+    describe('1일이 목요일인 경우', ()=>{
+      test('전 달의 마지막 주차는 이번 달의 첫째주로 판단한다.', ()=>{
+        const { week } = formatDateToWeek(new Date('2024-07-31'));
+        expect(week).toBe(WEEK_MAP[1]);
+      });
+      test('1일은 첫째주로 판단한다.', ()=> {
+        const { week } = formatDateToWeek(new Date('2024-08-01'));
+        expect(week).toBe(WEEK_MAP[1]);
+      });
+      test('2일은 첫째주로 판단한다.', ()=> {
+        const { week } = formatDateToWeek(new Date('2024-08-02'));
+        expect(week).toBe(WEEK_MAP[1]);
+      });
+    });
+  });
 });
