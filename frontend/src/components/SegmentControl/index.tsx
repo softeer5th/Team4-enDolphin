@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 import type { ButtonProps } from '../Button';
 import Button from '../Button';
@@ -17,13 +17,13 @@ export interface SegmentControlProps {
   onChange: (value: string) => void;
 };
 
-const SegmentControl: React.FC<SegmentControlProps> = ({
+const SegmentControl = ({
   options,
   style = 'filled',
   shadow = true,
   defaultValue = options[0]?.value ?? '',
   onChange,
-}) => {
+}: SegmentControlProps) => {
   const [selectedValue, setSelectedValue] = useState(defaultValue);
 
   const handleSelect = (value: string) => {
