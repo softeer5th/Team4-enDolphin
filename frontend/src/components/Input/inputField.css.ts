@@ -4,7 +4,7 @@ import { recipe } from '@vanilla-extract/recipes';
 import { font } from '../../theme/font';
 import { vars } from '../../theme/index.css';
 
-export const containerStyle = recipe({
+export const inputFieldContainerStyle = recipe({
   base: {
     flex: 1,
     display: 'flex',
@@ -44,7 +44,7 @@ export const containerStyle = recipe({
 export const selectIconStyle = style({
   width: '20px',
   height: '20px',
-  // alignSelf: 'flex-end',
+  
 });
 
 const inputTypo = font['B3 (R)'];

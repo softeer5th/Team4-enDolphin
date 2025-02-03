@@ -13,6 +13,11 @@ const meta: Meta<typeof Input> = {
       control: 'boolean',
       description: '입력 필드 유효성',
     },
+    type: {
+      control: 'radio',
+      description: '입력 필드 타입',
+      options: ['text', 'select'],
+    },
     label: {
       control: 'text',
       description: '입력 필드 라벨',
@@ -45,6 +50,7 @@ export const Default: StoryObj<typeof Input> = {
     required: true,
     hint: '이메일을 입력하세요',
     error: '이메일 형식이 아닙니다',
+    type: 'text',
   },
   render: (args) => (
     <Input {...args}>
@@ -69,6 +75,7 @@ export const MultiInput = () => {
       label='시간'
       required={true}
       separator='~'
+      type='text'
     >
       <Input.InputField 
         onChange={handleFirstChange}
@@ -97,7 +104,9 @@ export const CustomSeparatorIcon = () => {
       isValid={true}
       label='이메일'
       required={true}
-      separator={<Check fill={vars.color.Ref.Netural[500]}/>}    >
+      separator={<Check fill={vars.color.Ref.Netural[500]}/>}
+      type='select'
+    >
       <Input.InputField 
         onChange={handleFirstChange}
         placeholder='이메일을 입력하세요'
