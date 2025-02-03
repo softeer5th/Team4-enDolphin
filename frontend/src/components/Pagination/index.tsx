@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { vars } from '../../theme/index.css';
 import { IconDotsMono } from '../Icon';
 import { Text } from '../Text';
@@ -18,11 +16,11 @@ interface PaginationProps {
   onPageChange: (page: number) => void;
 }
 
-const Pagination: React.FC<PaginationProps> = ({
+const Pagination = ({
   currentPage,
   totalPages,
   onPageChange,
-}) => {
+}: PaginationProps) => {
   const pages = getPaginationItems(currentPage, totalPages);
 
   return (
