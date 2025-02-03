@@ -1,4 +1,5 @@
-import { formatDateToWeek, isSameDate } from '../../../utils/date';
+import { formatDateToWeekDates, isSameDate } from '@/utils/date';
+
 import { useCalendarContext } from '../context/CalendarContext';
 import { CalendarCell } from '../Table/CalendarCell';
 import { SideCell } from '../Table/SideCell';
@@ -6,7 +7,7 @@ import { containerStyle } from './index.css';
 
 export const CalendarHeader = () => {
   const { selected } = useCalendarContext();
-  const { dates } = formatDateToWeek(selected);
+  const dates = formatDateToWeekDates(selected);
 
   return (
     <div className={containerStyle}>

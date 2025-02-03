@@ -1,5 +1,6 @@
-import { vars } from '../../../theme/index.css';
-import { formatDateToWeek } from '../../../utils/date';
+import { vars } from '@/theme/index.css';
+import { formatDateToWeek } from '@/utils/date';
+
 import Button from '../../Button';
 import { ChevronLeft, ChevronRight } from '../../Icon';
 import { Text } from '../../Text';

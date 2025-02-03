@@ -1,5 +1,6 @@
+import {  formatDateToWeekDates, isSameDate } from '@/utils/date';
+
 import { WEEK } from '../../../constants/date';
-import { formatDateToWeek, isSameDate } from '../../../utils/date';
 import { useCalendarContext } from '../context/CalendarContext';
 import { sideCellStyle } from '../Table/index.css';
 import { weekStyle } from './index.css';
@@ -7,7 +8,7 @@ import { WeekCell } from './WeekCell';
 
 export const SelectedWeek = () => {
   const { selected, setSelected } = useCalendarContext();
-  const { dates } = formatDateToWeek(selected);
+  const dates = formatDateToWeekDates(selected);
   const today = new Date();
 
   const handleClickCell = (date: Date) => {
