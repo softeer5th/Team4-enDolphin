@@ -56,8 +56,11 @@ export const formatDateToWeek = (date: Date): DateWeekType => {
   }
 
   const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
-  const firstWeekFirstDay = firstDay.getDate();
-  const week = Math.floor((date.getDate() - firstWeekFirstDay + 7) / 7);
+  const day = firstDay.getDay();
+  // TODO: 매직넘버 파티 수정..
+  const offset = (day === 0 ? -6 : 1 - day);
+  const week = Math.ceil((date.getDate() - offset) / 7);
+
   return {
     year: String(date.getFullYear()).slice(2),
     month: date.getMonth() + 1,
