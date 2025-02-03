@@ -35,9 +35,15 @@ const SegmentControl: React.FC<SegmentControlProps> = ({
     <div className={segmentControlContainer({ style, shadow })}>
       {options.map((option) => {
         const isSelected = option.value === selectedValue;
+        const buttonStyles: ButtonProps = {
+          type: 'secondary',
+          radius: 'max',
+          size: 'lg',
+          style: getButtonStyle(isSelected, style), 
+        };
         return (
           <Button 
-            {...getButtonStyles(isSelected, style)}
+            {...buttonStyles}
             key={option.value}
             onClick={() => handleSelect(option.value)} 
           >
@@ -49,25 +55,10 @@ const SegmentControl: React.FC<SegmentControlProps> = ({
   );
 };
 
-const getButtonStyles = (isSelected: boolean, style: SegmentControlProps['style']) => {
-  const buttonStyles: ButtonProps = {
-    type: 'secondary',
-    radius: 'max',
-    size: 'lg',
-  };
-
-  if (!isSelected) {
-    buttonStyles.style = 'borderless';
-    return buttonStyles;
-  }
-
-  if (style === 'filled') {
-    buttonStyles.style = 'filled';
-    return buttonStyles;
-  }
-  
-  buttonStyles.style = 'weak';
-  return buttonStyles;
+const getButtonStyle = (isSelected: boolean, style: SegmentControlProps['style']) => {
+  if (!isSelected) return 'borderless';
+  if (style === 'filled') return 'filled';
+  return 'weak';
 };
 
 export default SegmentControl;
