@@ -58,12 +58,12 @@ const getPaginationItems = (
     return Array.from({ length: totalPages }, (_, i) => i + 1);
   }
   // 현재 페이지가 첫 4페이지일 경우
-  if (currentPage <= 4) {
-    return [...Array.from({ length: 7 }, (_, i) => i + 1), SEPARATOR, totalPages];
+  if (currentPage <= Math.floor(PAGE_LIMIT / 2) + 1) {
+    return [...Array.from({ length: PAGE_LIMIT - 1 }, (_, i) => i + 1), SEPARATOR, totalPages];
   }
   // 현재 페이지가 마지막 4페이지일 경우
-  if (currentPage > totalPages - 4) {
-    return [1, SEPARATOR, ...Array.from({ length: 7 }, (_, i) => totalPages - 6 + i)];
+  if (currentPage >= totalPages - Math.floor(PAGE_LIMIT / 2)) {
+    return [1, SEPARATOR, ...Array.from({ length: PAGE_LIMIT - 1 }, (_, i) => totalPages - 6 + i)];
   }
   // 페이지가 중간에 위치할 경우
   return [
