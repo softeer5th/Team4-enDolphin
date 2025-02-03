@@ -17,6 +17,11 @@ describe('formatDateToWeek 함수', ()=>{
         expect(month).toBe(1);
         expect(week).toBe(WEEK_MAP[5]);
       });
+      test('3일은 이번 달 첫번쨰 주차로 판단한다.', ()=> {
+        const { month, week } = formatDateToWeek(new Date('2025-02-03'));
+        expect(month).toBe(2);
+        expect(week).toBe(WEEK_MAP[1]);
+      });
       test.each(['27', '28', '29', '30', '31'])(
         '전 달의 마지막 주차는 그대로 판단한다.', (date)=> {
           const { month, week } = formatDateToWeek(new Date(`2025-01-${date}`));
