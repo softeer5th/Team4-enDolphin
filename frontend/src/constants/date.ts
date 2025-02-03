@@ -5,3 +5,11 @@ export const TIMES: readonly Time[] = Object.freeze(
     .map((_, i) => i));
 
 export const WEEK = Object.freeze(['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT']);
+
+export const WEEK_MAP: Record<string, string> = Object.freeze({
+  1: '첫째주',
+  2: '둘째주',
+  3: '셋째주',
+  4: '넷째주',
+  5: '다섯째주',
+});
