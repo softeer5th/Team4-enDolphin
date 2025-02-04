@@ -17,22 +17,31 @@ export const SingleInput = ({
   isValid = true,
   required = false, 
   hint, 
-  error, 
+  error,
+  placeholder,
+  onClick,
   inputProps = {},
 }: SingleInputProps) => (
   <InputContext.Provider value={{ isValid, type }}>
     <div className={containerStyle}>
       <Label required={required}>{label}</Label>
       <div className={inputFieldsContainerStyle}>
-        <InputField {...inputProps} />
+        <InputField 
+          inputProps={inputProps} 
+          onClick={onClick} 
+          placeholder={placeholder} 
+        />
       </div>
-      {isValid ? 
-        <HelperText type='hint'>{hint}</HelperText>
-        : 
-        <HelperText type='error'>{error}</HelperText>
-      }
+      {renderHelperText(isValid, hint, error)}
     </div>
   </InputContext.Provider>
 );
+
+const renderHelperText = (isValid: boolean, hint?: string, error?: string) => {
+  if (!isValid) {
+    return error && <HelperText type='error'>{error}</HelperText>;
+  }
+  return hint && <HelperText type='hint'>{hint}</HelperText>;
+};
 
 export default SingleInput;
