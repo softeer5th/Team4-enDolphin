@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 @Getter
 public enum ErrorCode {
     // Common
+    INTERNAL_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "C001", "Internal Server Error"),
 
     // User
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "U001", "User not found"),
