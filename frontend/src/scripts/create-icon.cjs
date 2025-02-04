@@ -50,9 +50,11 @@ const createComponentContent = (
   const hasFill = fillAttributes.length;
   const propsString = `{ className, width = 24${hasStroke || hasFill ? ` ${hasStroke ? ', stroke = "white"' : ""}${hasFill ? ', fill = "white"' : ""}` : ""}, ...rest }`;
   const modifiedSvgContent = svgContent
-    .replace(/style="mask-type:luminance"/g, "PLACEHOLDER") 
+    .replace(/style="mask-type:luminance"/g, "MASK_TYPE_PLACEHOLDER")
+    .replace(/data:image/g, "DATA_IMAGE_PLACEHOLDER") 
     .replace(/[-:](\w)/g, (_, letter) => letter.toUpperCase())
-    .replace(/PLACEHOLDER/g, "mask-type='luminance'")
+    .replace(/MASK_TYPE_PLACEHOLDER/g, "mask-type='luminance'")
+    .replace(/DATA_IMAGE_PLACEHOLDER/g, "data:image")
     .replace(/<svg([^>]*)width="(\d+)"/g, `<svg$1width={width}`)
     .replace(/<svg([^>]*)height="(\d+)"/g, `<svg$1height={width}`)
     .replace(/<svg([^>]*)fill="[^"]*"([^>]*)>/, "<svg$1$2>")
