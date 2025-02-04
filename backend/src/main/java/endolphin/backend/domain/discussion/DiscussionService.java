@@ -4,9 +4,8 @@ import endolphin.backend.domain.discussion.dto.CreateDiscussionRequest;
 import endolphin.backend.domain.discussion.dto.CreateDiscussionResponse;
 import endolphin.backend.domain.discussion.entity.Discussion;
 import endolphin.backend.domain.discussion.entity.DiscussionParticipant;
-import endolphin.backend.domain.user.UserRepository;
+import endolphin.backend.domain.user.UserService;
 import endolphin.backend.domain.user.entity.User;
-import endolphin.backend.global.security.UserContext;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -21,7 +20,7 @@ public class DiscussionService {
 
     private final DiscussionRepository discussionRepository;
     private final DiscussionParticipantRepository discussionParticipantRepository;
-    private final UserRepository userRepository;
+    private final UserService userService;
 
     public CreateDiscussionResponse createDiscussion(CreateDiscussionRequest request) {
 
@@ -39,7 +38,7 @@ public class DiscussionService {
 
         discussionRepository.save(discussion);
 
-        User currentUser = getCurrentUser();
+        User currentUser = userService.getCurrentUser();
         DiscussionParticipant participant = DiscussionParticipant.builder()
             .discussion(discussion)
             .user(currentUser)
@@ -61,12 +60,6 @@ public class DiscussionService {
             shareableLink,
             calculateTimeLeft(discussion.getDeadline())
         );
-    }
-    //TODO: 삭제 예정
-    private User getCurrentUser() {
-        Long userId = UserContext.get().userId();
-        return userRepository.findById(userId)
-            .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
     }
 
     private String calculateTimeLeft(LocalDate deadline) {

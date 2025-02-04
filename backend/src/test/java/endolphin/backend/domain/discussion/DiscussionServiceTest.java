@@ -8,15 +8,10 @@ import endolphin.backend.domain.discussion.dto.CreateDiscussionRequest;
 import endolphin.backend.domain.discussion.dto.CreateDiscussionResponse;
 import endolphin.backend.domain.discussion.entity.Discussion;
 import endolphin.backend.domain.discussion.enums.MeetingMethod;
-import endolphin.backend.domain.user.UserRepository;
+import endolphin.backend.domain.user.UserService;
 import endolphin.backend.domain.user.entity.User;
-import endolphin.backend.global.security.UserContext;
-import endolphin.backend.global.security.UserInfo;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Optional;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -35,49 +30,35 @@ public class DiscussionServiceTest {
     private DiscussionParticipantRepository discussionParticipantRepository;
 
     @Mock
-    private UserRepository userRepository;
+    private UserService userService;
 
     @InjectMocks
     private DiscussionService discussionService;
 
-    @BeforeEach
-    public void setUp() {
-        // JWT 필터 등에서 설정하는 현재 사용자 정보를 UserContext에 등록
-        UserInfo dummyUser = new UserInfo(1L, "dummy@example.com");
-        UserContext.set(dummyUser);
-    }
-
-    @AfterEach
-    public void tearDown() {
-        UserContext.clear();
-    }
-
-    @DisplayName("모든 필드가 채워진 논의 생성 request 테스트")
+    @DisplayName("필드값이 다 채워진 Discussion create 테스트")
     @Test
-    public void testCreateDiscussion_withDeadlineProvided() {
-        // given: 모든 필드가 채워진 요청 (deadline 제공)
+    public void createDiscussion_withValidRequest_returnsExpectedResponse() {
         CreateDiscussionRequest request = new CreateDiscussionRequest(
-            "Test Discussion",
+            "팀 회의",
             LocalDate.of(2025, 2, 10),
             LocalDate.of(2025, 2, 15),
             LocalTime.of(9, 0),
             LocalTime.of(18, 0),
             60,
             MeetingMethod.OFFLINE,
-            "Test Location",
-            LocalDate.of(2025, 2, 20)
+            "회의실 1",
+            LocalDate.now().plusDays(10)
         );
 
         given(discussionRepository.save(any(Discussion.class))).willAnswer(invocation -> {
-            Discussion d = invocation.getArgument(0);
-            ReflectionTestUtils.setField(d, "id", 100L);
-            return d;
+            Discussion disc = invocation.getArgument(0);
+            ReflectionTestUtils.setField(disc, "id", 100L);
+            return disc;
         });
 
-        User user = new User();
-        ReflectionTestUtils.setField(user, "id", 1L);
-
-        given(userRepository.findById(1L)).willReturn(Optional.of(user));
+        User dummyUser = new User();
+        ReflectionTestUtils.setField(dummyUser, "id", 1L);
+        given(userService.getCurrentUser()).willReturn(dummyUser);
 
         // when
         CreateDiscussionResponse response = discussionService.createDiscussion(request);
@@ -85,14 +66,15 @@ public class DiscussionServiceTest {
         // then
         assertThat(response).isNotNull();
         assertThat(response.id()).isEqualTo(100L);
-        assertThat(response.title()).isEqualTo("Test Discussion");
+        assertThat(response.title()).isEqualTo("팀 회의");
         assertThat(response.dateRangeStart()).isEqualTo(LocalDate.of(2025, 2, 10));
         assertThat(response.dateRangeEnd()).isEqualTo(LocalDate.of(2025, 2, 15));
         assertThat(response.meetingMethod()).isEqualTo(MeetingMethod.OFFLINE);
-        assertThat(response.location()).isEqualTo("Test Location");
+        assertThat(response.location()).isEqualTo("회의실 1");
         assertThat(response.duration()).isEqualTo(60);
-        assertThat(response.shareableLink()).isEqualTo(
-            "localhost:8080/api/v1/discussion/invite/100");
+        assertThat(response.shareableLink())
+            .isEqualTo("localhost:8080/api/v1/discussion/invite/100");
         assertThat(response.timeLeft()).isNotNull();
+        assertThat(response.timeLeft()).isEqualTo("마감까지 10일");
     }
 }
