@@ -51,8 +51,7 @@ public class PersonalEventService {
 
     public PersonalEventResponse updatePersonalEvent(PersonalEventRequest request,
         Long personalEventId) {
-        PersonalEvent personalEvent = personalEventRepository.findById(personalEventId)
-            .orElseThrow(() -> new RuntimeException("Personal event not found"));
+        PersonalEvent personalEvent = getPersonalEvent(personalEventId);
         User user = userService.getCurrentUser();
 
         Validator.validateDateTimeRange(request.startDateTime(), request.endDateTime());
@@ -67,12 +66,16 @@ public class PersonalEventService {
     }
 
     public void deletePersonalEvent(Long personalEventId) {
-        PersonalEvent personalEvent = personalEventRepository.findById(personalEventId)
-            .orElseThrow(() -> new RuntimeException("Personal event not found"));
+        PersonalEvent personalEvent = getPersonalEvent(personalEventId);
         User user = userService.getCurrentUser();
         if (!personalEvent.getUser().equals(user)) {
             throw new RuntimeException("You are not allowed to delete this personal event");
         }
         personalEventRepository.delete(personalEvent);
+    }
+
+    public PersonalEvent getPersonalEvent(Long personalEventId) {
+        return personalEventRepository.findById(personalEventId)
+            .orElseThrow(() -> new RuntimeException("Personal event not found"));
     }
 }
