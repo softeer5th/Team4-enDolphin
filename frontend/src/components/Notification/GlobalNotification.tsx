@@ -12,7 +12,12 @@ export const GlobalNotification = ({ notifications }: { notifications: Notificat
   return createPortal(
     <div className={notificationsStyle}>
       {notifications
-        .map((noti) => <Notification className={fadeInAndOut} key={noti.id} {...noti} />)}
+        .map((noti) => 
+          <Notification
+            className={fadeInAndOut}
+            key={noti.id}
+            {...noti}
+          />)}
     </div>
     , MODAL_ROOT);
 };

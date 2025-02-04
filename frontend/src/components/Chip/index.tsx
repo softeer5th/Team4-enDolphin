@@ -28,14 +28,7 @@ export const Chip = ({ color, style, radius, size, children }: ChipProps) => {
   };
 
   return (
-    <div
-      className={chipStyle({
-        color,
-        style,
-        radius,
-        size,
-      })}
-    >
+    <div className={chipStyle({ color, style, radius, size })}>
       <Text typo={fontMap[size]}>{children}</Text>
     </div>
   );

@@ -12,7 +12,7 @@ interface ButtonIconProps {
 
 const ButtonIcon = ({ size, children }: ButtonIconProps) => (
   <div className={ButtonIconContainerStyle({ size })}>
-    <children.type {...children.props} width={ICON_WIDTH}/>
+    <children.type {...children.props} width={ICON_WIDTH} />
   </div>
 );
 

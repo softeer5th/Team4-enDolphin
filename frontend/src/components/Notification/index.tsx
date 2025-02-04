@@ -28,11 +28,19 @@ export const Notification = ({
   };
 
   return (
-    <div className={clsx(containerStyle({ type }), className)} role='alert'>
+    <div
+      className={clsx(containerStyle({ type }), className)}
+      role='alert'
+    >
       {typeIconMap[type]}
       <div className={contentsStyle({ style: description ? 'default' : 'noDescription' })}>
-        <Text color={vars.color.Ref.Netural[800]} typo='t2'>{title}</Text>
-        { description && <Text color={vars.color.Ref.Netural[500]} typo='b2R'>{description}</Text> }
+        <Text color={vars.color.Ref.Netural[800]} typo='t2'>
+          {title}
+        </Text>
+        {description && 
+          <Text color={vars.color.Ref.Netural[500]} typo='b2R'>
+            {description}
+          </Text>}
       </div>
     </div>
   );
