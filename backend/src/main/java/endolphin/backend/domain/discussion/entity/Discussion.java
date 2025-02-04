@@ -1,5 +1,6 @@
 package endolphin.backend.domain.discussion.entity;
 
+import endolphin.backend.domain.discussion.enums.DiscussionStatus;
 import endolphin.backend.domain.discussion.enums.MeetingMethod;
 import endolphin.backend.global.base_entity.BaseTimeEntity;
 import jakarta.persistence.*;
@@ -49,9 +50,10 @@ public class Discussion extends BaseTimeEntity {
     @Column(nullable = false)
     private LocalDate deadline;
 
-    @ColumnDefault("1")
-    @Column(name = "is_modifiable", nullable = false)
-    private Boolean isModifiable;
+    @Enumerated(EnumType.STRING)
+    @ColumnDefault("ONGOING")
+    @Column(name = "status", nullable = false)
+    private DiscussionStatus discussionStatus;
 
     @Builder
     public Discussion(String title, LocalDate dateStart, LocalDate dateEnd,
