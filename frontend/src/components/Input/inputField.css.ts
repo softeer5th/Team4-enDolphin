@@ -44,7 +44,6 @@ export const inputFieldContainerStyle = recipe({
 export const selectIconStyle = style({
   width: '20px',
   height: '20px',
-  
 });
 
 const inputTypo = font['B3 (R)'];

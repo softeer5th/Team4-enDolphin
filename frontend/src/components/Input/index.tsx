@@ -11,6 +11,8 @@ export interface CommonInputProps {
   required?: boolean;
   hint?: string;
   error?: string;
+  placeholder?: string;
+  onClick?: () => void;
 }
 
 export const Input = () => {
