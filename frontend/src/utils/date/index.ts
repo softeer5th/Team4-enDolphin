@@ -37,7 +37,7 @@ const getWeekNumber = (date: Date) => {
 type DateWeekType = {
   year: string;
   month: number;
-  week: string;
+  week: keyof typeof WEEK_MAP;
 };
 /**
  * 날짜가 몇년 몇월 몇 번째 주인지 계산합니다.

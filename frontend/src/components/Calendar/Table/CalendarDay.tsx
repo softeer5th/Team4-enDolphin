@@ -1,3 +1,5 @@
+import { memo } from 'react';
+
 import { TIMES } from '../../../constants/date';
 import { CalendarCell } from './CalendarCell';
 import { dayStyle } from './index.css';
@@ -7,7 +9,7 @@ interface CalendarDayProps {
   selected: boolean;
 }
 
-export const CalendarDay = ({ holiday = false, selected }: CalendarDayProps) => (
+export const CalendarDay = memo(({ holiday = false, selected }: CalendarDayProps) => (
   <div className={dayStyle}>
     <CalendarCell
       holiday={holiday}
@@ -28,4 +30,4 @@ export const CalendarDay = ({ holiday = false, selected }: CalendarDayProps) => 
       />,
     )}
   </div>
-);
+));
