@@ -9,7 +9,7 @@ import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
-  { ignores: ['dist', 'src/components/Icon/component'] },
+  { ignores: ['dist', 'src/components/Icon'] },
   {
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
     files: ['**/*.{ts,tsx,js}'],
@@ -65,7 +65,6 @@ export default tseslint.config(
       '@stylistic/type-annotation-spacing': 'error',
       '@stylistic/max-len': ['error', { code: 100, ignoreUrls: true }],
       '@stylistic/newline-per-chained-call': 'error',
-      '@stylistic/operator-linebreak': 'error',
 
       '@stylistic/jsx-sort-props': 'error',
       '@stylistic/array-bracket-newline': 'error',

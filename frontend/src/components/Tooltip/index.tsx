@@ -1,13 +1,13 @@
 import type { PropsWithChildren, ReactNode } from 'react';
 
 import { vars } from '../../theme/index.css';
-import { containerStyle } from './index.css';
 import { 
   TooltipArrowDown,
   TooltipArrowLeft,
   TooltipArrowRight,
   TooltipArrowUp, 
-} from './TooltipArrow';
+} from '../Icon/component/TooltipArrow';
+import { containerStyle } from './index.css';
 import TooltipContent from './TooltipContent';
 
 export interface TooltipProps extends PropsWithChildren {
@@ -23,13 +23,13 @@ const Tooltip = ({ tailDirection, color = 'blue', button, children }: TooltipPro
   };
   return (
     <div className={containerStyle({ tailDirection })}>
-      { tailDirection === 'up' && <TooltipArrowUp fill={colorMap[color]} /> }
-      { tailDirection === 'left' && <TooltipArrowLeft fill={colorMap[color]} /> }
+      {tailDirection === 'up' && <TooltipArrowUp fill={colorMap[color]} />}
+      {tailDirection === 'left' && <TooltipArrowLeft fill={colorMap[color]} />}
       <TooltipContent button={button} color={color}>
         {children}
       </TooltipContent>
-      { tailDirection === 'down' && <TooltipArrowDown fill={colorMap[color]} /> }
-      { tailDirection === 'right' && <TooltipArrowRight fill={colorMap[color]}/> }
+      {tailDirection === 'down' && <TooltipArrowDown fill={colorMap[color]} />}
+      {tailDirection === 'right' && <TooltipArrowRight fill={colorMap[color]} />}
     </div>
   );
 };

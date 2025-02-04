@@ -26,7 +26,8 @@ const Pagination = ({
           currentPage={currentPage} 
           item={item} 
           key={index}
-          onPageChange={onPageChange} />,
+          onPageChange={onPageChange}
+        />,
       )}
     </div>
   );
