@@ -11,7 +11,7 @@ import { TimeControlButton } from './TimeControlButton';
 
 export const TimeControl = () => {
   const { selected } = useCalendarContext();
-  const { year, month, week  } = formatDateToWeek(selected);
+  const { year, month, week } = formatDateToWeek(selected);
   const weekString = `${year}년 ${month}월 ${week}`;
 
   return  (

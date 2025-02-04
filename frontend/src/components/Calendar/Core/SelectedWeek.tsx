@@ -1,4 +1,4 @@
-import {  formatDateToWeekDates, isSameDate } from '@/utils/date';
+import { isSameDate } from '@/utils/date';
 
 import { WEEK } from '../../../constants/date';
 import { useCalendarContext } from '../context/CalendarContext';
@@ -7,13 +7,8 @@ import { weekStyle } from './index.css';
 import { WeekCell } from './WeekCell';
 
 export const SelectedWeek = () => {
-  const { selected, setSelected } = useCalendarContext();
-  const dates = formatDateToWeekDates(selected);
+  const { selected, dates, handleChangeWeek } = useCalendarContext();
   const today = new Date();
-
-  const handleClickCell = (date: Date) => {
-    setSelected(date);
-  };
 
   return (
     <div className={weekStyle}>
@@ -27,7 +22,7 @@ export const SelectedWeek = () => {
           day={day}
           isToday={isSameDate(dates[i], today)}
           key={day}
-          onClickHandler={() => handleClickCell(dates[i])}
+          onClickHandler={() => handleChangeWeek(dates[i])}
           selected={isSameDate(dates[i], selected)}
         />)}
     </div>
