@@ -7,7 +7,6 @@ export const labelContainerStyle = style({
   display: 'inline-flex',
   gap: vars.spacing[50],
   color: vars.color.Ref.Netural[600],
-  // alignItems: 'center',
 });
 
 export const requiredMarkerStyle = style({

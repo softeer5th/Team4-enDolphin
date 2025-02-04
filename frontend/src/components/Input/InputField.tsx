@@ -13,10 +13,16 @@ const InputField = (props: InputHTMLAttributes<HTMLInputElement>) => {
     <div className={inputFieldContainerStyle({ isValid, type })} onClick={props.onClick}>
       <input
         className={inputFieldStyle}
+        readOnly={type === 'select'}
         {...props}
       />
       { type === 'select' &&
-        <button className={selectIconStyle}>
+        <button 
+          aria-hidden='true' // 스크린 리더(저시각자 보조기기)에서 무시
+          className={selectIconStyle}
+          tabIndex={-1} // tab으로 버튼 선택 안 되게
+          type='button'
+        >
           <ChevronDown fill={vars.color.Ref.Netural[500]} width={20} />
         </button>
       }
