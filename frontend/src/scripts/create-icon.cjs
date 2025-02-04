@@ -19,20 +19,18 @@ const generateSvgComponentMap = async () => {
   return svgFiles;
 };
 
-const deleteUnusedComponentFiles = async (svgComponentMap) => {
+const deleteComponentFiles = async (svgComponentMap) => {
   if (!existsSync(COMPONENT_DIR)) {
     fs.mkdir(COMPONENT_DIR);
     return;
   }
 
-  const componentFiles = await fs.readdir(COMPONENT_DIR);
-  const componentFilesToDelete = componentFiles.filter((componentFile) => {
-    const componentName = path.basename(componentFile, ".tsx");
-    return !(componentName in svgComponentMap);
+  const componentFiles = (await fs.readdir(COMPONENT_DIR)).filter((file) => {
+    return file.endsWith(".tsx");
   });
 
   await Promise.all(
-    componentFilesToDelete.map((file) => {
+    componentFiles.map((file) => {
       const componentFilePath = path.resolve(COMPONENT_DIR, file);
       return fs.unlink(componentFilePath);
     })
@@ -122,7 +120,7 @@ const generateExportFile = async (components) => {
 (async () => {
   try {
     const svgComponentMap = await generateSvgComponentMap();
-    await deleteUnusedComponentFiles(svgComponentMap);
+    await deleteComponentFiles(svgComponentMap);
     const components = await generateComponentFiles(svgComponentMap);
     await generateExportFile(components);
   } catch (error) {
