@@ -4,7 +4,6 @@ import endolphin.backend.domain.discussion.dto.CreateDiscussionRequest;
 import endolphin.backend.domain.discussion.dto.CreateDiscussionResponse;
 import endolphin.backend.domain.discussion.entity.Discussion;
 import endolphin.backend.domain.discussion.entity.DiscussionParticipant;
-import endolphin.backend.domain.discussion.enums.Role;
 import endolphin.backend.domain.user.UserRepository;
 import endolphin.backend.domain.user.entity.User;
 import endolphin.backend.global.security.UserContext;
@@ -44,7 +43,7 @@ public class DiscussionService {
         DiscussionParticipant participant = DiscussionParticipant.builder()
             .discussion(discussion)
             .user(currentUser)
-            .role(Role.HOST)
+            .isHost(true)
             .build();
         discussionParticipantRepository.save(participant);
 
