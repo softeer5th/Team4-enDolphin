@@ -54,15 +54,16 @@ public class PersonalEventService {
         PersonalEvent personalEvent = personalEventRepository.findById(personalEventId)
             .orElseThrow(() -> new RuntimeException("Personal event not found"));
         User user = userService.getCurrentUser();
+
         Validator.validateDateRange(request.startDateTime(), request.endDateTime());
 
         if (!personalEvent.getUser().equals(user)) {
             throw new RuntimeException("You are not allowed to update this personal event");
         }
 
-        PersonalEvent updatedPersonalEvent = personalEvent.update(request);
-        personalEventRepository.save(updatedPersonalEvent);
-        return PersonalEventResponse.fromEntity(updatedPersonalEvent);
+        personalEvent.update(request);
+        personalEventRepository.save(personalEvent);
+        return PersonalEventResponse.fromEntity(personalEvent);
     }
 
     public void deletePersonalEvent(Long personalEventId) {

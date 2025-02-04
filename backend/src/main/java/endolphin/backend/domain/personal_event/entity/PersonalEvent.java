@@ -57,11 +57,10 @@ public class PersonalEvent extends BaseTimeEntity {
         this.googleEventId = googleEventId;
     }
 
-    public PersonalEvent update(PersonalEventRequest personalEventRequest) {
+    public void update(PersonalEventRequest personalEventRequest) {
         this.startTime = personalEventRequest.startDateTime();
         this.endTime = personalEventRequest.endDateTime();
         this.title = personalEventRequest.title();
         this.isAdjustable = personalEventRequest.isAdjustable();
-        return this;
     }
 }
