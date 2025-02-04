@@ -13,13 +13,16 @@ frontend_files=$(echo "$files" | grep -E "^frontend/.*\.(js|ts|jsx|tsx)$" | sed 
 # !!! 확장자 수정해 주세요(문법 검사할 파일들) !!!
 backend_files=$(echo "$files" | grep -E "^backend/.*\.(java|yml)$" | sed 's|^backend/||')
 
+# 현재 브랜치 이름 get
+current_branch=$(git rev-parse --abbrev-ref HEAD)
+# 브랜치에서 fe|be 부분만 추출
+part=$(echo "$current_branch" | cut -d'/' -f2)
 
 #################### 프론트엔드 스크립트 ####################
 
-if [ -n "$frontend_files" ]; then
+if [ "$part" = "fe" ]; then
   # eslint 실행을 위해 frontend 폴더로 이동
   cd frontend
-
   echo "[pre-commit] ⏳ Checking lint for staged files..."
   # Lint fix 실행
 if ! pnpm exec eslint --fix $frontend_files; then
@@ -36,10 +39,9 @@ fi
 fi
 
 
-
 #################### 백엔드 스크립트 ####################
 
-if [ -n "$backend_files" ]; then
+if [ "$part" = "be" ]; then
   cd backend
 
   # Do something
