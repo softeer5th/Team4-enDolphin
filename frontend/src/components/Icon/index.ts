@@ -1,4 +1,5 @@
 export * from './component/Check.tsx';
+export * from './component/ChevronDown.tsx';
 export * from './component/ChevronLeft.tsx';
 export * from './component/ChevronRight.tsx';
 export * from './component/CircleCheck.tsx';
