@@ -11,41 +11,13 @@ export const cellThemeVars = createThemeContract({
 
 export const calendarStyle = style({
   display: 'flex',
+  height: '218px',
   flexDirection: 'column',
-  alignItems: 'flex-start',
-  gap: '4px',
-});
-
-export const cellWrapperStyle = style({
-  display: 'flex',
-  justifyContent: 'center',
+  justifyContent: 'space-between',
   alignItems: 'center',
-  width: '32px',
-  height: '32px',
 });
 
-export const weekdayCellStyle = style({
-  color: vars.color.Ref.Netural[700],
-});
-
-export const todayCellStyle = style({
-  backgroundColor: cellThemeVars.todayCellBackgroundColor,
-  color: cellThemeVars.todayCellColor,
-});
-
-export const selectedCellStyle = style({
-  backgroundColor: cellThemeVars.selectedCellBackgroundColor,
-  color: cellThemeVars.selectedCellColor,
-});
-
-export const otherMonthCellStyle = style({
-  color: vars.color.Ref.Netural[400],
-});
-
-export const saturdayCellStyle = style({
-  color: vars.color.Ref.Primary[500],
-});
-
-export const holidayCellStyle = style({
-  color: vars.color.Ref.Red[500],
+export const rowContainerStyle = style({
+  display: 'flex',
+  padding: `${vars.spacing[100]} 0`,
 });

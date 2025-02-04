@@ -1,26 +1,26 @@
 import { assignInlineVars } from '@vanilla-extract/dynamic';
-import type { PropsWithChildren } from 'react';
 
 import { useSafeContext } from '@/hooks/useSafeContext';
 
-import CellWrapper from '../CellWrapper';
-import { DatePickerContext } from '../DatePickerContext';
-import { 
-  cellThemeVars,
+import { DatePickerContext } from '../../DatePickerContext';
+import { cellThemeVars } from '../index.css';
+import CellWrapper from './CellWrapper';
+import {
   holidayCellStyle,
   otherMonthCellStyle,
   saturdayCellStyle,
   selectedCellStyle,
   todayCellStyle,
-  weekdayCellStyle, 
+  weekdayCellStyle,
 } from './index.css';
 
-interface DateCellProps extends PropsWithChildren {
+interface DateCellProps {
   selected: boolean;
   today: boolean;
   otherMonth: boolean;
   saturday: boolean;
   holiday: boolean;
+  children: string;
 }
 
 const DateCell = ({ children, ...props }: DateCellProps) => {
@@ -45,7 +45,7 @@ const getDateCellStyle = ({
   otherMonth, 
   saturday, 
   holiday, 
-}: DateCellProps) => {
+}: Omit<DateCellProps, 'children'>) => {
   if (selected) return selectedCellStyle;
   if (today) return todayCellStyle;
   if (otherMonth) return otherMonthCellStyle;

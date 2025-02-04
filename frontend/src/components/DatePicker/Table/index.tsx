@@ -1,7 +1,8 @@
+import TableHeader from './TableHeader';
 
 const Table = () => (
   <div>
-    Table
+    <TableHeader />
   </div>
 );
 
