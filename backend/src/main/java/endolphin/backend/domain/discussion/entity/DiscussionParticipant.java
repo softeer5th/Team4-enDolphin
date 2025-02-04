@@ -1,6 +1,5 @@
 package endolphin.backend.domain.discussion.entity;
 
-import endolphin.backend.domain.discussion.enums.Role;
 import endolphin.backend.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -27,15 +26,15 @@ public class DiscussionParticipant {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Column(nullable = false)
+    @Column(name = "is_host", nullable = false)
     @Enumerated(EnumType.STRING)
-    private Role role;
+    private boolean isHost;
 
     @Builder
-    public DiscussionParticipant(Discussion discussion, User user, Role role) {
+    public DiscussionParticipant(Discussion discussion, User user, boolean isHost) {
         this.discussion = discussion;
         this.user = user;
-        this.role = role;
+        this.isHost = isHost;
     }
 }
 
