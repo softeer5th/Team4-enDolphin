@@ -1,3 +1,4 @@
+import { TanStackRouterVite } from '@tanstack/router-plugin/vite';
 import { vanillaExtractPlugin } from '@vanilla-extract/vite-plugin';
 import react from '@vitejs/plugin-react';
 import path from 'path';
@@ -9,14 +10,22 @@ const dirname = path.dirname(filename);
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react(), vanillaExtractPlugin()],
+  plugins: [
+    TanStackRouterVite({ 
+      autoCodeSplitting: true,
+      routeFileIgnorePrefix: '@',
+      routesDirectory: './src/routes',
+      generatedRouteTree: './src/routeTree.gen.ts',
+    }), 
+    react(), 
+    vanillaExtractPlugin(),
+  ],
   resolve: {
     alias: {
       '@': path.resolve(dirname, 'src'),
       '@components': path.resolve(dirname, 'src/components'),
       '@hooks': path.resolve(dirname, 'src/hooks'),
       '@utils': path.resolve(dirname, 'src/utils'),
-      '@pages': path.resolve(dirname, 'src/pages'),
       '@theme': path.resolve(dirname, 'src/theme'),
     },
   },

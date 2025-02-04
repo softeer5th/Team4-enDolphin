@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import Tooltip from '.';
 
 const meta = {
-  title: 'Tooltip',
+  title: 'Components/Tooltip',
   component: Tooltip,
   argTypes: {
     tailDirection: {

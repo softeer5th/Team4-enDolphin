@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Dropdown } from '.';
 
 const meta: Meta = {
-  title: 'Dropdown',
+  title: 'Components/Dropdown',
   component: Dropdown,
   argTypes: {
     onChange: {
