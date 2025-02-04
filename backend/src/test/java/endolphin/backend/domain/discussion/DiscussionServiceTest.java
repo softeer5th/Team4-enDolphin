@@ -72,8 +72,6 @@ public class DiscussionServiceTest {
         assertThat(response.meetingMethod()).isEqualTo(MeetingMethod.OFFLINE);
         assertThat(response.location()).isEqualTo("회의실 1");
         assertThat(response.duration()).isEqualTo(60);
-        assertThat(response.shareableLink())
-            .isEqualTo("localhost:8080/api/v1/discussion/invite/100");
         assertThat(response.timeLeft()).isNotNull();
         assertThat(response.timeLeft()).isEqualTo("마감까지 10일");
     }

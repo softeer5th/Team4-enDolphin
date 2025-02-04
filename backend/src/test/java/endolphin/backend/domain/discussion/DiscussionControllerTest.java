@@ -67,7 +67,6 @@ public class DiscussionControllerTest {
             MeetingMethod.ONLINE,
             null,
             60,
-            "localhost:8080/api/v1/discussion/invite/100",
             "마감까지 10일"
         );
 
@@ -79,8 +78,6 @@ public class DiscussionControllerTest {
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.id").value(100))
-            .andExpect(jsonPath("$.title").value("Test Discussion"))
-            .andExpect(
-                jsonPath("$.shareableLink").value("localhost:8080/api/v1/discussion/invite/100"));
+            .andExpect(jsonPath("$.title").value("Test Discussion"));
     }
 }
