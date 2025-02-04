@@ -82,6 +82,7 @@ export default tseslint.config(
         'error',
         { allow: 'single-child' },
       ],
+      '@stylistic/jsx-equals-spacing': [2, 'never'],
 
       // Possible Problems
       'array-callback-return': ['error', { checkForEach: true }],
