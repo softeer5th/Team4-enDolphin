@@ -28,6 +28,12 @@ const isEndWithLastWeek = (date: Date) => {
   return true;
 };
 
+const getWeekNumber = (date: Date) => {
+  const firstDayOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
+  const offset = isStartWithFirstWeek(firstDayOfMonth) ? firstDayOfMonth.getDay() : 0;
+  return Math.ceil((date.getDate() + offset) / 7);
+};
+
 type DateWeekType = {
   year: string;
   month: number;
@@ -55,16 +61,10 @@ export const formatDateToWeek = (date: Date): DateWeekType => {
     };
   }
 
-  const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
-  const day = firstDay.getDay();
-  // TODO: 매직넘버 파티 수정..
-  const offset = (day === 0 ? -6 : 1 - day);
-  const week = Math.ceil((date.getDate() - offset) / 7);
-
   return {
     year: String(date.getFullYear()).slice(2),
     month: date.getMonth() + 1,
-    week: WEEK_MAP[week],
+    week: WEEK_MAP[getWeekNumber(date)],
   };
 };
 
