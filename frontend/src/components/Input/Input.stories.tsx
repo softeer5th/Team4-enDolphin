@@ -47,9 +47,7 @@ export const Default: StoryObj<typeof Input.Single> = {
     hint: '이메일을 입력하세요',
     error: '이메일 형식이 아닙니다',
     type: 'text',
-    inputProps: {
-      placeholder: '이메일을 입력하세요',
-    },
+    placeholder: '이메일을 입력하세요',
   },
   render: (args) => (
     <Input.Single {...args}/>
