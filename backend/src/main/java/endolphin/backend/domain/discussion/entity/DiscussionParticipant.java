@@ -27,7 +27,6 @@ public class DiscussionParticipant {
     private User user;
 
     @Column(name = "is_host", nullable = false)
-    @Enumerated(EnumType.STRING)
     private boolean isHost;
 
     @Builder
