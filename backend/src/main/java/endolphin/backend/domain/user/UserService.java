@@ -6,6 +6,8 @@ import endolphin.backend.domain.user.dto.OAuthResponse;
 import endolphin.backend.domain.user.dto.UrlResponse;
 import endolphin.backend.domain.user.entity.User;
 import endolphin.backend.global.config.GoogleOAuthProperties;
+import endolphin.backend.global.error.exception.ApiException;
+import endolphin.backend.global.error.exception.ErrorCode;
 import endolphin.backend.global.security.JwtProvider;
 import endolphin.backend.global.security.UserContext;
 import endolphin.backend.global.security.UserInfo;
@@ -51,7 +53,7 @@ public class UserService {
     public User getCurrentUser() {
         UserInfo userInfo = UserContext.get();
         return userRepository.findById(userInfo.userId())
-            .orElseThrow(() -> new RuntimeException("User not found"));
+            .orElseThrow(() -> new ApiException(ErrorCode.USER_NOT_FOUND));
     }
 
     private User createUser(GoogleUserInfo userInfo, GoogleTokens tokenResponse) {
@@ -61,8 +63,8 @@ public class UserService {
                     .email(userInfo.email())
                     .name(userInfo.name())
                     .picture(userInfo.picture())
-                    .access_token(tokenResponse.accessToken())
-                    .refresh_token(tokenResponse.refreshToken())
+                    .accessToken(tokenResponse.accessToken())
+                    .refreshToken(tokenResponse.refreshToken())
                     .build();
             });
         userRepository.save(user);
