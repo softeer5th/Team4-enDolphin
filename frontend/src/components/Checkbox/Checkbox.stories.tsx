@@ -7,7 +7,7 @@ import { Group } from '../Group';
 import { Checkbox } from '.';
 
 const meta: Meta = {
-  title: 'Checkbox',
+  title: 'Components/Checkbox',
   component: Checkbox,
   argTypes: {
     size: {

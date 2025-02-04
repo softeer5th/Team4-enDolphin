@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Tab } from '.';
 
 const meta: Meta = {
-  title: 'Tab',
+  title: 'Components/Tab',
   component: Tab,
   argTypes: {
     onChange: {
