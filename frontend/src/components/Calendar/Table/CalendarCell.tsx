@@ -17,11 +17,14 @@ export const CalendarCell = ({ holiday = false, time, selected }: CalendarCellPr
 
   return (
     <div 
+      aria-selected={selected}
       className={cellStyle({ 
         day: holiday ? 'holiday' : 'default', 
         time: formatTimeToStyle(time),
         state: selected ? 'selected' : 'default',
       })}
+      role='gridcell'
+      tabIndex={0}
     >
     </div>
   );
