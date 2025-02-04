@@ -66,14 +66,16 @@ const prepareSeparatorLayout = (separator: string | (JSX.Element & { props: Sepa
 const intersperse = (
   childElements: ReactNode[],
   separator?: JSX.Element,
-): ReactNode[] => 
-  childElements.reduce<ReactNode[]>((acc, child, index) => {
+): ReactNode[] => {
+  const result: ReactNode[] = [];
+  childElements.forEach((child, index) => {
+    result.push(child);
     if (separator && index < childElements.length - 1) {
-      return [...acc, child, <separator.type {...separator.props} key={index} />];
+      result.push(<separator.type {...separator.props} key={index} />);
     }
-    return [...acc, child];
-  }, []);
-
+  });
+  return result;
+};
 MultiInput.InputField = InputField;
 
 export default MultiInput;
