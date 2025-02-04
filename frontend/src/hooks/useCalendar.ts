@@ -10,6 +10,7 @@ export interface CalendarInfo {
 }
 
 export const useCalendar = (): CalendarInfo => {
+  const WEEK_TIME = 7 * 24 * 60 * 60 * 1000;
   const [selected, setSelected] = useState(new Date());
 
   const handleClickToday = () => {
@@ -17,14 +18,12 @@ export const useCalendar = (): CalendarInfo => {
   };
     
   const handleClickPrevWeek = () => {
-    const prevWeek = new Date(selected);
-    prevWeek.setDate(prevWeek.getDate() - 7);
+    const prevWeek = new Date(selected.getTime() - WEEK_TIME);
     setSelected(prevWeek);
   };
     
   const handleClickNextWeek = () => {
-    const nextWeek = new Date(selected);
-    nextWeek.setDate(nextWeek.getDate() + 7);
+    const nextWeek = new Date(selected.getTime() + WEEK_TIME);
     setSelected(nextWeek);
   };
     
