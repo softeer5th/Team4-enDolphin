@@ -4,6 +4,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.List;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -56,6 +57,15 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getRequestURI();
-        return path.startsWith("/api/v1/google") || path.startsWith("/oauth2/callback");
+
+        List<String> excludedPaths = List.of(
+            "/api/v1/google",
+            "/oauth2/callback",
+            "/swagger-ui", // prod profile에서는 swagger-ui 접근 불가
+            "/v3/api-docs", // prod profile에서는 v3/api-docs 접근 불가
+            "/h2-console" // prod profile에서는 h2-console 접근 불가
+        );
+
+        return excludedPaths.stream().anyMatch(path::startsWith);
     }
 }
