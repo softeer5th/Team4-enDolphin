@@ -51,7 +51,7 @@ public class Discussion extends BaseTimeEntity {
     private LocalDate deadline;
 
     @Enumerated(EnumType.STRING)
-    @ColumnDefault("ONGOING")
+    @ColumnDefault("'ONGOING'")
     @Column(name = "status", nullable = false)
     private DiscussionStatus discussionStatus;
 
