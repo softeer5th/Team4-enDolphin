@@ -26,7 +26,7 @@ public class PersonalEventService {
         LocalDateTime endDateTime) {
         User user = userService.getCurrentUser();
 
-        Validator.validateDateRange(startDateTime, endDateTime);
+        Validator.validateDateTimeRange(startDateTime, endDateTime);
 
         List<PersonalEventResponse> personalEventResponseList = personalEventRepository.findByUserAndStartTimeBetween(
                 user, startDateTime, endDateTime)
@@ -37,7 +37,7 @@ public class PersonalEventService {
     public PersonalEventResponse createPersonalEvent(PersonalEventRequest request) {
         User user = userService.getCurrentUser();
 
-        Validator.validateDateRange(request.startDateTime(), request.endDateTime());
+        Validator.validateDateTimeRange(request.startDateTime(), request.endDateTime());
 
         PersonalEvent personalEvent = PersonalEvent.builder()
             .title(request.title())
@@ -55,7 +55,7 @@ public class PersonalEventService {
             .orElseThrow(() -> new RuntimeException("Personal event not found"));
         User user = userService.getCurrentUser();
 
-        Validator.validateDateRange(request.startDateTime(), request.endDateTime());
+        Validator.validateDateTimeRange(request.startDateTime(), request.endDateTime());
 
         if (!personalEvent.getUser().equals(user)) {
             throw new RuntimeException("You are not allowed to update this personal event");

@@ -57,19 +57,9 @@ class PersonalEventServiceTest {
         LocalDateTime startDateTime = LocalDateTime.of(2025, 2, 2, 10, 0);
         LocalDateTime endDateTime = LocalDateTime.of(2025, 2, 9, 10, 0);
 
-        PersonalEvent personalEvent1 = PersonalEvent.builder()
-            .title("Meeting")
-            .user(testUser)
-            .startTime(LocalDateTime.of(2025, 2, 3, 16, 0))
-            .endTime(LocalDateTime.of(2025, 2, 3, 18, 0))
-            .build();
+        PersonalEvent personalEvent1 = createPersonalEvent("Meeting1", 2, testUser);
 
-        PersonalEvent personalEvent2 = PersonalEvent.builder()
-            .title("Meeting2")
-            .user(testUser)
-            .startTime(LocalDateTime.of(2025, 2, 5, 8, 0))
-            .endTime(LocalDateTime.of(2025, 2, 5, 20, 0))
-            .build();
+        PersonalEvent personalEvent2 = createPersonalEvent("Meeting2", 4, testUser);
         List<PersonalEvent> eventList = List.of(
             personalEvent1, personalEvent2
         );
@@ -91,12 +81,7 @@ class PersonalEventServiceTest {
         // given
         given(userService.getCurrentUser()).willReturn(testUser);
 
-        PersonalEvent savedEvent = PersonalEvent.builder()
-            .title(request.title())
-            .startTime(request.startDateTime())
-            .endTime(request.endDateTime())
-            .user(testUser)
-            .build();
+        PersonalEvent savedEvent = createPersonalEvent(request.title(), 0, testUser);
 
         given(personalEventRepository.save(any(PersonalEvent.class))).willReturn(savedEvent);
 
@@ -116,12 +101,7 @@ class PersonalEventServiceTest {
     @DisplayName("개인 일정 업데이트 테스트")
     void testUpdatePersonalEvent_Success() {
         // given
-        PersonalEvent existingEvent = PersonalEvent.builder()
-            .title("Old Title")
-            .startTime(startTime.minusHours(1))
-            .endTime(endTime.minusHours(1))
-            .user(testUser)
-            .build();
+        PersonalEvent existingEvent = createPersonalEvent("Old Title", 1, testUser);
 
         given(personalEventRepository.findById(anyLong())).willReturn(Optional.of(existingEvent));
         given(userService.getCurrentUser()).willReturn(testUser);
@@ -159,12 +139,7 @@ class PersonalEventServiceTest {
         User anotherUser = User.builder().name("anotherUser").email("another@email.com")
             .picture("another_picture").build();
 
-        PersonalEvent existingEvent = PersonalEvent.builder()
-            .title("Old Title")
-            .startTime(startTime.minusHours(1))
-            .endTime(endTime.minusHours(1))
-            .user(anotherUser)
-            .build();
+        PersonalEvent existingEvent = createPersonalEvent("Old Title", 1, anotherUser);
 
         given(personalEventRepository.findById(anyLong())).willReturn(Optional.of(existingEvent));
         given(userService.getCurrentUser()).willReturn(testUser);
@@ -184,12 +159,7 @@ class PersonalEventServiceTest {
         User anotherUser = User.builder().name("anotherUser").email("another@email.com")
             .picture("another_picture").build();
 
-        PersonalEvent existingEvent = PersonalEvent.builder()
-            .title("Old Title")
-            .startTime(startTime.minusHours(1))
-            .endTime(endTime.minusHours(1))
-            .user(anotherUser)
-            .build();
+        PersonalEvent existingEvent = createPersonalEvent("Old Title", 1, anotherUser);
         given(personalEventRepository.findById(anyLong())).willReturn(Optional.of(existingEvent));
         given(userService.getCurrentUser()).willReturn(testUser);
 
@@ -199,5 +169,30 @@ class PersonalEventServiceTest {
         then(personalEventRepository).should(times(1)).findById(anyLong());
         then(userService).should(times(1)).getCurrentUser();
         then(personalEventRepository).should(never()).save(any(PersonalEvent.class));
+    }
+
+    @Test
+    @DisplayName("개인 일정 삭제 성공")
+    void testDeletePersonalEvent_Success() {
+        // given
+        PersonalEvent event = createPersonalEvent("test Title", 0, testUser);
+
+        given(personalEventRepository.findById(anyLong())).willReturn(Optional.of(event));
+        given(userService.getCurrentUser()).willReturn(testUser);
+
+        // when
+        personalEventService.deletePersonalEvent(anyLong());
+
+        // then
+        then(personalEventRepository).should(times(1)).delete(any(PersonalEvent.class));
+    }
+
+    PersonalEvent createPersonalEvent(String title, int minusHour, User user) {
+        return PersonalEvent.builder()
+            .title(title)
+            .startTime(startTime.minusHours(minusHour))
+            .endTime(endTime.minusHours(minusHour))
+            .user(user)
+            .build();
     }
 }
