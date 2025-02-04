@@ -31,7 +31,7 @@ const isEndWithLastWeek = (date: Date) => {
 const getWeekNumber = (date: Date) => {
   const firstDayOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
   const offset = isStartWithFirstWeek(firstDayOfMonth) ? firstDayOfMonth.getDay() : 0;
-  return Math.ceil((date.getDate() + offset) / 7);
+  return Math.ceil((date.getDate() - (date.getDay() + 6) % 7 + offset) / 7);
 };
 
 type DateWeekType = {
