@@ -2,7 +2,6 @@ package endolphin.backend.domain.personal_event;
 
 import endolphin.backend.domain.personal_event.dto.PersonalEventRequest;
 import endolphin.backend.domain.personal_event.dto.PersonalEventResponse;
-import endolphin.backend.domain.personal_event.dto.PersonalEventSearchRequest;
 import endolphin.backend.domain.personal_event.entity.PersonalEvent;
 import endolphin.backend.domain.user.UserService;
 import endolphin.backend.domain.user.entity.User;

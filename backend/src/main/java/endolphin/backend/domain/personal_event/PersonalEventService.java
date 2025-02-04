@@ -6,6 +6,7 @@ import endolphin.backend.domain.personal_event.entity.PersonalEvent;
 import endolphin.backend.domain.user.UserService;
 import endolphin.backend.domain.user.entity.User;
 import endolphin.backend.global.dto.ListResponse;
+import endolphin.backend.global.util.Validator;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,8 @@ public class PersonalEventService {
         LocalDateTime endDateTime) {
         User user = userService.getCurrentUser();
 
+        Validator.validateDateRange(startDateTime, endDateTime);
+
         List<PersonalEventResponse> personalEventResponseList = personalEventRepository.findByUserAndStartTimeBetween(
                 user, startDateTime, endDateTime)
             .stream().map(PersonalEventResponse::fromEntity).toList();
@@ -33,6 +36,9 @@ public class PersonalEventService {
 
     public PersonalEventResponse createPersonalEvent(PersonalEventRequest request) {
         User user = userService.getCurrentUser();
+
+        Validator.validateDateRange(request.startDateTime(), request.endDateTime());
+
         PersonalEvent personalEvent = PersonalEvent.builder()
             .title(request.title())
             .endTime(request.endDateTime())
@@ -48,6 +54,7 @@ public class PersonalEventService {
         PersonalEvent personalEvent = personalEventRepository.findById(personalEventId)
             .orElseThrow(() -> new RuntimeException("Personal event not found"));
         User user = userService.getCurrentUser();
+        Validator.validateDateRange(request.startDateTime(), request.endDateTime());
 
         if (!personalEvent.getUser().equals(user)) {
             throw new RuntimeException("You are not allowed to update this personal event");
