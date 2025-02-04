@@ -98,7 +98,7 @@ export const isSameDate = (date1: Date, date2: Date): boolean => (
     date1.getDate() === date2.getDate()
 );
 
-export const isHoliday = (date: Date): boolean => {
+export const isWeekend = (date: Date): boolean => {
   const SUNDAY = 0;
   const SATURDAY = 6;
   

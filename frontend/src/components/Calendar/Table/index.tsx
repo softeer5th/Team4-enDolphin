@@ -1,5 +1,5 @@
 
-import { isHoliday, isSameDate } from '@/utils/date';
+import { isSameDate, isWeekend } from '@/utils/date';
 
 import { useCalendarContext } from '../context/CalendarContext';
 import { CalendarDay } from './CalendarDay';
@@ -15,7 +15,7 @@ export const CalendarTable = () => {
         <CalendarSide />
         {dates.map((date) => 
           <CalendarDay
-            holiday={isHoliday(date)}
+            holiday={isWeekend(date)}
             key={date.getTime()}
             selected={isSameDate(selected, date)}
           />)}

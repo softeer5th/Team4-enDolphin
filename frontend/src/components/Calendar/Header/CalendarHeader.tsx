@@ -1,4 +1,4 @@
-import { isHoliday, isSameDate } from '@/utils/date';
+import { isSameDate, isWeekend } from '@/utils/date';
 
 import { useCalendarContext } from '../context/CalendarContext';
 import { CalendarCell } from '../Table/CalendarCell';
@@ -13,7 +13,7 @@ export const CalendarHeader = () => {
       <SideCell time='all' />
       {dates.map((date) => 
         <CalendarCell
-          holiday={isHoliday(date)}
+          holiday={isWeekend(date)}
           key={date.getTime()}
           selected={isSameDate(selected, date)}
           time='all'
