@@ -45,7 +45,8 @@ class PersonalEventServiceTest {
 
         startTime = LocalDateTime.now();
         endTime = startTime.plusHours(1);
-        request = new PersonalEventRequest("Test Event", startTime, endTime, true);
+        request = new PersonalEventRequest("Test Event", startTime, endTime, true,
+            false);
     }
 
     @Test
@@ -54,10 +55,8 @@ class PersonalEventServiceTest {
         // Given
         given(userService.getCurrentUser()).willReturn(testUser);
 
-        PersonalEventSearchRequest request = new PersonalEventSearchRequest(
-            LocalDateTime.of(2025, 2, 2, 10, 0),
-            LocalDateTime.of(2025, 2, 9, 10, 0)
-        );
+        LocalDateTime startDateTime = LocalDateTime.of(2025, 2, 2, 10, 0);
+        LocalDateTime endDateTime = LocalDateTime.of(2025, 2, 9, 10, 0);
 
         PersonalEvent personalEvent1 = PersonalEvent.builder()
             .title("Meeting")
@@ -76,11 +75,12 @@ class PersonalEventServiceTest {
             personalEvent1, personalEvent2
         );
 
-        given(personalEventRepository.findByUserAndStartTimeBetween(testUser, request.startDateTime(),
-            request.endDateTime())).willReturn(eventList);
+        given(personalEventRepository.findByUserAndStartTimeBetween(testUser, startDateTime,
+            endDateTime)).willReturn(eventList);
 
         // When
-        ListResponse<PersonalEventResponse> response = personalEventService.listPersonalEvents(request);
+        ListResponse<PersonalEventResponse> response = personalEventService.listPersonalEvents(
+            startDateTime, endDateTime);
 
         // Then
         assertThat(response.data().size()).isEqualTo(2);

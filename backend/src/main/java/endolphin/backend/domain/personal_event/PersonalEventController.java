@@ -2,10 +2,11 @@ package endolphin.backend.domain.personal_event;
 
 import endolphin.backend.domain.personal_event.dto.PersonalEventRequest;
 import endolphin.backend.domain.personal_event.dto.PersonalEventResponse;
-import endolphin.backend.domain.personal_event.dto.PersonalEventSearchRequest;
 import endolphin.backend.global.dto.ListResponse;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import java.net.URI;
+import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -26,9 +28,11 @@ public class PersonalEventController {
     private final PersonalEventService personalEventService;
 
     @GetMapping
-    public ResponseEntity<ListResponse<PersonalEventResponse>> getPersonalEvents(@Valid @RequestBody
-        PersonalEventSearchRequest request) {
-        ListResponse<PersonalEventResponse> response = personalEventService.listPersonalEvents(request);
+    public ResponseEntity<ListResponse<PersonalEventResponse>> getPersonalEvents(
+        @Valid @NotNull @RequestParam LocalDateTime startDateTime,
+        @Valid @NotNull @RequestParam LocalDateTime endDateTime) {
+        ListResponse<PersonalEventResponse> response = personalEventService.listPersonalEvents(
+            startDateTime, endDateTime);
         return ResponseEntity.ok(response);
     }
 
