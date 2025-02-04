@@ -6,9 +6,9 @@ import { chipStyle } from './index.css';
 
 interface ChipProps extends PropsWithChildren {
   color: 'blue' | 'green' | 'red' | 'black';
-  style: 'borderness' | 'weak' | 'filled';
-  radius: 'round' | 'max';
-  size: 'sm' | 'md' | 'lg';
+  style?: 'borderness' | 'weak' | 'filled';
+  radius?: 'round' | 'max';
+  size?: 'sm' | 'md' | 'lg';
 }
 
 /**
@@ -20,7 +20,13 @@ interface ChipProps extends PropsWithChildren {
  * @param size - Chip의 크기.
  * @param children - Chip의 내용.
  */
-export const Chip = ({ color, style, radius, size, children }: ChipProps) => {
+export const Chip = ({ 
+  color, 
+  style = 'weak',
+  radius = 'round',
+  size = 'sm',
+  children, 
+}: ChipProps) => {
   const fontMap: Record<typeof size, Typo> = {
     sm: 'b3M',
     md: 't3',
