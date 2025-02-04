@@ -1,10 +1,10 @@
 import { createContext } from 'react';
 
-import type { InputProps } from '.';
+import type { CommonInputProps } from '.';
 
 interface InputContextProps {
   isValid: boolean;
-  type: InputProps['type'];
+  type: CommonInputProps['type'];
 }
 
 /**
