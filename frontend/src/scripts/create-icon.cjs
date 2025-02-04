@@ -50,7 +50,9 @@ const createComponentContent = (
   const hasFill = fillAttributes.length;
   const propsString = `{ className, width = 24${hasStroke || hasFill ? ` ${hasStroke ? ', stroke = "white"' : ""}${hasFill ? ', fill = "white"' : ""}` : ""}, ...rest }`;
   const modifiedSvgContent = svgContent
-    .replace(/-(\w)/g, (_, letter) => letter.toUpperCase())
+    .replace(/style="mask-type:luminance"/g, "PLACEHOLDER") 
+    .replace(/[-:](\w)/g, (_, letter) => letter.toUpperCase())
+    .replace(/PLACEHOLDER/g, "mask-type='luminance'")
     .replace(/<svg([^>]*)width="(\d+)"/g, `<svg$1width={width}`)
     .replace(/<svg([^>]*)height="(\d+)"/g, `<svg$1height={width}`)
     .replace(/<svg([^>]*)fill="[^"]*"([^>]*)>/, "<svg$1$2>")
@@ -59,8 +61,7 @@ const createComponentContent = (
     .replace(
       /<svg([^>]*)>/,
       `<svg$1 aria-label="${iconName} icon" fill="none" className={className} {...rest}>`
-    )
-    .replace(/style="maskType:luminance"/g, "mask-type='luminance'");
+    );
 
   return `   
 import type { IconProps } from '../Icon.d.ts';
@@ -114,7 +115,12 @@ const generateExportFile = async (components) => {
     )
     .join("\n");
 
-  await fs.writeFile(EXPORT_FILE_PATH, exportFileContent);
+  const folders = ["TooltipArrow"];
+  const exportFolderContent = folders
+    .map((folder) => `export * from "./component/${folder}";`)
+    .join("\n");
+
+  await fs.writeFile(EXPORT_FILE_PATH, `${exportFileContent}\n${exportFolderContent}`);
 };
 
 (async () => {
