@@ -1,7 +1,19 @@
+import type { PropsWithChildren } from 'react';
 
-const CellWrapper = () => (
-  <div>
+import { Text } from '../Text';
+import { cellWrapperStyle } from './Table/index.css';
 
-  </div>);
+interface CellWrapperProps extends PropsWithChildren {
+  className?: string;
+  style: object;
+}
+const CellWrapper = ({ className, style, children }: CellWrapperProps) => (
+  <div
+    className={`${cellWrapperStyle} ${className}`}
+    style={style}
+  >
+    <Text typo='caption'>{children}</Text>
+  </div>
+);
 
 export default CellWrapper;
