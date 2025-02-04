@@ -3,6 +3,7 @@ package endolphin.backend.domain.personal_event;
 import endolphin.backend.domain.personal_event.dto.PersonalEventRequest;
 import endolphin.backend.domain.personal_event.dto.PersonalEventResponse;
 import endolphin.backend.global.dto.ListResponse;
+import io.swagger.v3.oas.annotations.Operation;
 import endolphin.backend.global.util.URIUtil;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -28,6 +29,7 @@ public class PersonalEventController {
 
     private final PersonalEventService personalEventService;
 
+    @Operation(summary = "개인 일정 조회", description = "개인 일정 리스트를 조회합니다.")
     @GetMapping
     public ResponseEntity<ListResponse<PersonalEventResponse>> getPersonalEvents(
         @Valid @NotNull @RequestParam LocalDateTime startDateTime,
@@ -37,6 +39,7 @@ public class PersonalEventController {
         return ResponseEntity.ok(response);
     }
 
+    @Operation(summary = "개인 일정 생성", description = "개인 일정을 생성합니다.")
     @PostMapping
     public ResponseEntity<PersonalEventResponse> createPersonalEvent(
         @Valid @RequestBody PersonalEventRequest request) {
@@ -45,6 +48,7 @@ public class PersonalEventController {
         return ResponseEntity.created(location).body(response);
     }
 
+    @Operation(summary = "개인 일정 수정", description = "개인 일정을 수정합니다.")
     @PutMapping("/{personalEventId}")
     public ResponseEntity<PersonalEventResponse> updatePersonalEvent(
         @Valid @RequestBody PersonalEventRequest request,
@@ -54,6 +58,7 @@ public class PersonalEventController {
         return ResponseEntity.ok(response);
     }
 
+    @Operation(summary = "개인 일정 삭제", description = "개인 일정을 삭제합니다.")
     @DeleteMapping("/{personalEventId}")
     public ResponseEntity<Void> deletePersonalEvent(
         @PathVariable("personalEventId") Long personalEventId) {
