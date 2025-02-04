@@ -74,7 +74,7 @@ public class DiscussionControllerTest {
         given(discussionService.createDiscussion(request)).willReturn(response);
 
         // when & then
-        mockMvc.perform(post("/api/v1/discussion/create")
+        mockMvc.perform(post("/api/v1/discussion/")
                 .contentType("application/json")
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isOk())
