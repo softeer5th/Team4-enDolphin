@@ -18,6 +18,6 @@ public class DiscussionController {
     public ResponseEntity<CreateDiscussionResponse> createDiscussion(
         @RequestBody @Valid CreateDiscussionRequest request) {
         CreateDiscussionResponse response = discussionService.createDiscussion(request);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(response); //TODO: 201 created로 변경
     }
 }

@@ -47,7 +47,7 @@ public class DiscussionService {
             .build();
         discussionParticipantRepository.save(participant);
 
-        // 공유 링크 생성 (도메인 주소 설정 필요)
+        //TODO: 도메인 주소 설정
         String shareableLink = "localhost:8080/api/v1/discussion/invite/" + discussion.getId();
 
         return new CreateDiscussionResponse(
@@ -62,7 +62,7 @@ public class DiscussionService {
             calculateTimeLeft(discussion.getDeadline())
         );
     }
-
+    //TODO: 삭제 예정
     private User getCurrentUser() {
         Long userId = UserContext.get().userId();
         return userRepository.findById(userId)
