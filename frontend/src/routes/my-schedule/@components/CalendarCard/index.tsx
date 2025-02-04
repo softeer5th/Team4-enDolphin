@@ -19,10 +19,12 @@ interface CalendarCardProps {
   title: string;
   startTime: Date;
   endTime: Date;
+  onClickGoggle: () => void;
+  onClickEdit: () => void;
 }
   
 export const CalendarCard = ({ 
-  status = 'fixed', title, startTime, endTime }: CalendarCardProps,
+  status = 'fixed', title, startTime, endTime, ...handlers }: CalendarCardProps,
 ) => (
   <div className={cardContainerStyle({ status })}>
     <Flex className={cardBackgroundStyle} direction='column'>
@@ -53,8 +55,8 @@ export const CalendarCard = ({
         justify='flex-end'
         width='full'
       >
-        <GoggleCalendar />
-        <Pencil fill={vars.color.Ref.Netural[600]} />
+        <GoggleCalendar onClick={handlers.onClickGoggle} />
+        <Pencil fill={vars.color.Ref.Netural[600]} onClick={handlers.onClickEdit} />
       </Flex>
     </Flex>
   </div>
