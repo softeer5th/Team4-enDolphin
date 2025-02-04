@@ -47,7 +47,12 @@ export const MultiInput = ({
   );
 };
 
-const prepareSeparatorLayout = (separator: string | JSX.Element) => {
+interface SeparatorProps {
+  width?: number;
+  fill?: string;
+}
+
+const prepareSeparatorLayout = (separator: string | (JSX.Element & { props: SeparatorProps })) => {
   if (typeof separator === 'string') {
     return (
       <div className={separatorStyle}>
