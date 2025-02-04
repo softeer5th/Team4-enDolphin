@@ -24,7 +24,7 @@ export const Primary: Story = {
   args: { 
     width: 'full',
     direction: 'column',
-    children: [<div>item1</div>, <div>item2</div>],
+    children: [<div key='item1'>item1</div>, <div key='item2'>item2</div>],
     gap: 10,
   },
 };
