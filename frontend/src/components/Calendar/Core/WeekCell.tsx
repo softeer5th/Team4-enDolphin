@@ -1,10 +1,12 @@
 import type { MouseEvent } from 'react';
 
+import type { WEEKDAY } from '@/constants/date';
+
 import { Text } from '../../Text';
 import { weekCellBoxStyle, weekCellStyle } from './index.css';
 
 interface WeekCellProps {
-  day: string;
+  day: WEEKDAY;
   date: Date;
   isToday: boolean;
   selected: boolean;
@@ -12,8 +14,7 @@ interface WeekCellProps {
 }
 
 export const WeekCell = ({ day, date, isToday, selected, onClickHandler }: WeekCellProps) => {
-
-  const dayStyleName = (day: string) => {
+  const dayStyleName = (day: WEEKDAY) => {
     switch (day) {
       case 'SUN':
         return 'sunday';
