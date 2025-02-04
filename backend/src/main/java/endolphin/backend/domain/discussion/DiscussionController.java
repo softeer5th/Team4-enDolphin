@@ -14,7 +14,7 @@ public class DiscussionController {
 
     private final DiscussionService discussionService;
 
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<CreateDiscussionResponse> createDiscussion(
         @RequestBody @Valid CreateDiscussionRequest request) {
         CreateDiscussionResponse response = discussionService.createDiscussion(request);
