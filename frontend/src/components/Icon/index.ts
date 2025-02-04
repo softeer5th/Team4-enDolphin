@@ -5,5 +5,6 @@ export * from "./component/ChevronRight.tsx";
 export * from "./component/CircleCheck.tsx";
 export * from "./component/GoggleCalendar.tsx";
 export * from "./component/IconDotsMono.tsx";
+export * from "./component/Pencil.tsx";
 export * from "./component/TriangleWarning.tsx";
 export * from "./component/TooltipArrow";
