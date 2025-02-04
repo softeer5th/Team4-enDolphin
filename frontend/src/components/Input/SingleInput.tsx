@@ -8,7 +8,7 @@ import InputField from './InputField';
 import Label from './Label';
 
 export interface SingleInputProps extends CommonInputProps {
-  inputProps?: InputHTMLAttributes<HTMLInputElement>;
+  inputProps?: Omit<InputHTMLAttributes<HTMLInputElement>, 'placeholder' | 'onClick' | 'readOnly'>;
 }
 
 export const SingleInput = ({ 
@@ -27,7 +27,7 @@ export const SingleInput = ({
       <Label required={required}>{label}</Label>
       <div className={inputFieldsContainerStyle}>
         <InputField 
-          inputProps={inputProps} 
+          {...inputProps}
           onClick={onClick} 
           placeholder={placeholder} 
         />

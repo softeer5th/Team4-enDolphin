@@ -7,13 +7,14 @@ import { ChevronDown } from '../Icon';
 import { InputContext } from './InputContext';
 import { inputFieldContainerStyle, inputFieldStyle, selectIconStyle } from './inputField.css';
 
-interface InputFieldProps extends InputHTMLAttributes<HTMLInputElement> {
-  placeholder?: string;
+interface InputFieldProps extends Omit<
+  InputHTMLAttributes<HTMLInputElement>, 
+  'onClick' | 'readOnly' 
+> {
   onClick?: () => void;
-  inputProps?: InputHTMLAttributes<HTMLInputElement>;
 }
 
-const InputField = ({ placeholder, onClick, inputProps }: InputFieldProps) => {
+const InputField = ({ placeholder, onClick, ...inputProps }: InputFieldProps) => {
   const { isValid, type } = useSafeContext(InputContext);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -31,7 +32,7 @@ const InputField = ({ placeholder, onClick, inputProps }: InputFieldProps) => {
         ref={inputRef}
         {...inputProps}
       />
-      { type === 'select' &&
+      {type === 'select' &&
         <button 
           aria-hidden='true' // 스크린 리더(저시각자 보조기기)에서 무시
           className={selectIconStyle}
@@ -39,8 +40,7 @@ const InputField = ({ placeholder, onClick, inputProps }: InputFieldProps) => {
           type='button'
         >
           <ChevronDown fill={vars.color.Ref.Netural[500]} width={20} />
-        </button>
-      }
+        </button>}
     </div>
   );
 };
