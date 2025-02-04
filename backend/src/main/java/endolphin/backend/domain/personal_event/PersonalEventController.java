@@ -3,6 +3,7 @@ package endolphin.backend.domain.personal_event;
 import endolphin.backend.domain.personal_event.dto.PersonalEventRequest;
 import endolphin.backend.domain.personal_event.dto.PersonalEventResponse;
 import endolphin.backend.global.dto.ListResponse;
+import endolphin.backend.global.util.URIUtil;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import java.net.URI;
@@ -40,7 +41,7 @@ public class PersonalEventController {
     public ResponseEntity<PersonalEventResponse> createPersonalEvent(
         @Valid @RequestBody PersonalEventRequest request) {
         PersonalEventResponse response = personalEventService.createPersonalEvent(request);
-        URI location = buildResourceUri(response.id());
+        URI location = URIUtil.buildResourceUri(response.id());
         return ResponseEntity.created(location).body(response);
     }
 
@@ -58,13 +59,5 @@ public class PersonalEventController {
         @PathVariable("personalEventId") Long personalEventId) {
         personalEventService.deletePersonalEvent(personalEventId);
         return ResponseEntity.noContent().build();
-    }
-
-    private URI buildResourceUri(Object resourceId) {
-        return ServletUriComponentsBuilder
-            .fromCurrentRequest()
-            .path("/{id}")
-            .buildAndExpand(resourceId)
-            .toUri();
     }
 }
