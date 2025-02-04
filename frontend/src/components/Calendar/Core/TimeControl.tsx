@@ -1,12 +1,9 @@
+import { Flex } from '@/components/Flex';
 import { formatDateToWeek } from '@/utils/date';
 
 import { Text } from '../../Text';
 import { useCalendarContext } from '../context/CalendarContext';
-import { 
-  timeControlButtonStyle, 
-  timeControlButtonWrapperStyle, 
-  timeControlStyle,
-} from './index.css';
+import { timeControlButtonStyle } from './index.css';
 import { TimeControlButton } from './TimeControlButton';
 
 export const TimeControl = () => {
@@ -15,15 +12,15 @@ export const TimeControl = () => {
   const weekString = `${year}년 ${month}월 ${week}`;
 
   return  (
-    <div className={timeControlStyle}>
-      <div className={timeControlButtonWrapperStyle}>
+    <Flex gap={200} justify='flex-start'>
+      <Flex justify='flex-start'>
         <TimeControlButton type='prev' />
         <span className={timeControlButtonStyle({ order: 'mid' })}>
           <Text>{weekString}</Text>
         </span>
         <TimeControlButton type='next' />
-      </div>
+      </Flex>
       <TimeControlButton type='today' />
-    </div>
+    </Flex>
   );
 };
