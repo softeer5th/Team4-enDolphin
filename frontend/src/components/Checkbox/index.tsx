@@ -1,18 +1,20 @@
 import type { InputHTMLAttributes, PropsWithChildren, SetStateAction }  from 'react';
 import { useId } from 'react';
 
-import { useCheckbox } from '../../hooks/useCheckbox';
+import { useCheckbox } from '@/hooks/useCheckbox';
+
 import { Check } from '../Icon';
-import type { Typo } from '../Text';
-import { Text } from '../Text';
-import { checkboxStyle, containerStyle, inputStyle, labelStyle } from './index.css';
+import { CheckboxLabel } from './CheckboxLabel';
+import { checkboxStyle, containerStyle, inputStyle } from './index.css';
+
+export type Size = 'sm' | 'md';
 
 interface CheckboxProps extends PropsWithChildren {
   value?: number;
   isChecked?: boolean;
   onToggleCheck?: (prev: SetStateAction<boolean>) => void;
   type?: 'all' | 'single';
-  size?: 'sm' | 'md';
+  size?: Size;
   defaultChecked?: boolean;
   inputProps?: InputHTMLAttributes<HTMLInputElement>;
 }
@@ -42,30 +44,30 @@ export const Checkbox = ({
   const defaultId = `checkbox-${useId()}`;
   const id = inputProps?.id ?? defaultId;
 
-  const { handleClickCheck, checked } 
-    = useCheckbox({ value, defaultChecked, type, isChecked, onToggleCheck });
-
+  const { handleClickCheck, checked } = 
+    useCheckbox({ value, defaultChecked, type, isChecked, onToggleCheck });
   const checkStyleName = checked ? 'selected' : 'rest';
-  const fontMap: Record<typeof size, Typo> = {
-    sm: 'caption',
-    md: 'b2M',
-  };
-  
+
   return(
     <div className={containerStyle} onClick={handleClickCheck}>
       <span className={checkboxStyle({ size, style: checkStyleName })}>
-        {checked && <Check width={16}/>}
+        {checked && <Check width={16} />}
       </span>
-      <label className={labelStyle({ size, style: checkStyleName })} htmlFor={id}>
-        <Text typo={fontMap[size]}>{children}</Text>
-      </label>
+      <CheckboxLabel
+        id={id}
+        size={size}
+        style={checkStyleName}
+      >
+        {children}
+      </CheckboxLabel>
       <input 
         checked={checked}
         className={inputStyle}
         id={id}
         type='checkbox'
         {...inputProps}
-        onChange={handleClickCheck} />
+        onChange={handleClickCheck}
+      />
     </div>
   ); 
 };

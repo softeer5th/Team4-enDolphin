@@ -10,4 +10,6 @@ interface TextProps extends PropsWithChildren {
 } 
 
 export const Text = ({ children, typo = 't2', color = 'current' }: TextProps) => 
-  <span className={styles[typo]} style={{ color }}>{children}</span>;
+  <span className={styles[typo]} style={{ color }}>
+    {children}
+  </span>;

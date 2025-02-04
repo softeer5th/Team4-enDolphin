@@ -1,7 +1,8 @@
 import type { PropsWithChildren } from 'react';
 import { useId } from 'react';
 
-import type { GroupStateReturn } from '../../hooks/useGroup';
+import type { GroupStateReturn } from '@/hooks/useGroup';
+
 import { GroupContext } from './GroupContext';
 
 export interface GroupProps extends PropsWithChildren {
@@ -22,13 +23,15 @@ export const Group = ({
   const { checkedList, isAllChecked, handleToggleCheck, handleToggleAllCheck } = groupInfos;
 
   return (
-    <GroupContext.Provider value={{ 
-      controlId: controlId || defaultId,
-      checkedList,
-      onToggleCheck: handleToggleCheck,
-      onToggleAllCheck: handleToggleAllCheck,
-      isAllChecked,
-    }}>
+    <GroupContext.Provider 
+      value={{ 
+        controlId: controlId || defaultId,
+        checkedList,
+        onToggleCheck: handleToggleCheck,
+        onToggleAllCheck: handleToggleAllCheck,
+        isAllChecked,
+      }}
+    >
       {children}
     </GroupContext.Provider>
   ); 

@@ -1,6 +1,6 @@
 import { style } from '@vanilla-extract/css';
 
-import { font } from '../../theme/font';
+import { font } from '@/theme/font';
 
 export const h1 = style({
   ...font['H1'],

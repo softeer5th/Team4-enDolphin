@@ -1,56 +1,119 @@
 name: PR Slack Notification
 
 on:
-    pull_request:
-        types: [opened, review_requested]
+  pull_request:
+    types: [opened, review_requested]
+
+concurrency:
+  group: slack-notification-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
 
 jobs:
-    notify_slack:
-        name: Send PR Notification to Reviewers
-        runs-on: ubuntu-latest
-        steps:
-            - name: Load Slack User Mapping
-              id: load_mapping
-              env:
-                  SLACK_USER_MAPPING: ${{ secrets.SLACK_USER_MAPPING }}
-              run: |
-                  declare -A USER_MAP
-                  while IFS="," read -r key value; do
-                    USER_MAP[$key]=$(echo $value | tr -d '"')
-                  done < <(echo "$SLACK_USER_MAPPING" | jq -r 'to_entries | map("\(.key),\(.value)") | .[]')
+  notify_slack:
+    name: Send PR Notification to Reviewers
+    runs-on: ubuntu-latest
+    steps:
+      # 1) 캐시에서 reviewer list 복원
+      - name: Restore reviewer cache
+        id: cache_restore
+        uses: actions/cache@v3
+        with:
+          path: ./.reviewer-state  # 캐시 저장 경로
+          key: pr-reviewers-${{ github.event.pull_request.number }}
 
-                  REVIEWERS=$(jq -r '.pull_request.requested_reviewers | map(.login) | join(", ")' $GITHUB_EVENT_PATH)
-                  MENTION_LIST=""
+      # 2) 이전 reviewer list를 Load
+      - name: Read old reviewer list
+        id: read_old
+        run: |
+          mkdir -p .reviewer-state
+          if [ -f .reviewer-state/old_reviewers.txt ]; then
+            OLD_REVIEWERS=$(cat .reviewer-state/old_reviewers.txt)
+          else
+            OLD_REVIEWERS=""
+          fi
+          echo "old_reviewers=$OLD_REVIEWERS" >> $GITHUB_OUTPUT
 
-                  for reviewer in ${REVIEWERS//,/ }; do
-                    if [[ -n "${USER_MAP[$reviewer]}" ]]; then
-                      MENTION_LIST+="<@${USER_MAP[$reviewer]}> "
-                    fi
-                  done
+      # 3) 새로운 reviewer list 생성
+      - name: Prepare new reviewer list
+        id: prepare_new
+        run: |
+          # "requested_reviewers": [{ "login": "kwon204" }, ...]
+          NEW_REVIEWERS=$(jq -r '.pull_request.requested_reviewers | map(.login) | sort | join(",")' $GITHUB_EVENT_PATH)
+          echo "new_reviewers=$NEW_REVIEWERS"
+          echo "new_reviewers=$NEW_REVIEWERS" >> $GITHUB_OUTPUT
 
-                  echo "mention_list=$MENTION_LIST" >> $GITHUB_ENV
+      # 4) reviewer list의 중복 여부 판별
+      - name: Check if same as old
+        id: check_diff
+        run: |
+          if [ "${{ steps.read_old.outputs.old_reviewers }}" = "${{ steps.prepare_new.outputs.new_reviewers }}" ]; then
+            echo "⚠️ Same reviewer set -> skip notification"
+            echo "skip=true" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          echo "✅ New/different reviewer set -> proceed"
+          echo "skip=false" >> $GITHUB_OUTPUT
 
-            - name: Send Slack Notification
-              env:
-                  SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-                  PR_TITLE: ${{ github.event.pull_request.title }}
-                  PR_URL: ${{ github.event.pull_request.html_url }}
-                  PR_CREATOR: ${{ github.event.pull_request.user.login }}
-                  PR_REVIEWERS: ${{ env.mention_list }}
-              run: |
-                  if [ -z "$PR_REVIEWERS" ]; then
-                    echo "No reviewers, skipping Slack notification."
-                    exit 0
-                  fi
+      # 5) github - slack 아이디 매핑을 Load
+      - name: Load Slack User Mapping
+        if: ${{ steps.check_diff.outputs.skip == 'false' }}
+        id: load_mapping
+        env:
+          SLACK_USER_MAPPING: ${{ secrets.SLACK_USER_MAPPING }}
+        run: |
+          declare -A USER_MAP
+          while IFS="," read -r key value; do
+            USER_MAP[$key]=$(echo $value | tr -d '"')
+          done < <(echo "$SLACK_USER_MAPPING" | jq -r 'to_entries | map("\(.key),\(.value)") | .[]')
 
-                  PAYLOAD=$(jq -n \
-                    --arg prCreator "$PR_CREATOR" \
-                    --arg prTitle "$PR_TITLE" \
-                    --arg prUrl "$PR_URL" \
-                    --arg prReviewers "$PR_REVIEWERS" \
-                    '{
-                      text: "📢 *PR 리뷰 요청*\n👤 *작성자*: \($prCreator)\n🔗 *PR*: <\($prUrl)|\($prTitle)>\n🔍 *리뷰어*: \($prReviewers)"
-                    }'
-                  )
+          REVIEWERS=$(jq -r '.pull_request.requested_reviewers | map(.login) | join(", ")' $GITHUB_EVENT_PATH)
+          MENTION_LIST=""
 
-                  curl -X POST -H 'Content-type: application/json' --data "$PAYLOAD" "$SLACK_WEBHOOK_URL"
+          for reviewer in ${REVIEWERS//,/ }; do
+            if [[ -n "${USER_MAP[$reviewer]}" ]]; then
+              MENTION_LIST+="<@${USER_MAP[$reviewer]}> "
+            fi
+          done
+
+          echo "mention_list=$MENTION_LIST" >> $GITHUB_ENV
+
+      # 6) Slack 알림 전송
+      - name: Send Slack Notification
+        if: ${{ steps.check_diff.outputs.skip == 'false' }}
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          PR_CREATOR: ${{ github.event.pull_request.user.login }}
+          PR_REVIEWERS: ${{ env.mention_list }}
+        run: |
+          if [ -z "$PR_REVIEWERS" ]; then
+            echo "No reviewers, skipping Slack notification."
+            exit 0
+          fi
+
+          PAYLOAD=$(jq -n \
+            --arg prCreator "$PR_CREATOR" \
+            --arg prTitle "$PR_TITLE" \
+            --arg prUrl "$PR_URL" \
+            --arg prReviewers "$PR_REVIEWERS" \
+            '{
+              text: "📢 *PR 리뷰 요청*\n👤 *작성자*: \($prCreator)\n🔗 *PR*: <\($prUrl)|\($prTitle)>\n🔍 *리뷰어*: \($prReviewers)"
+            }'
+          )
+
+          curl -X POST -H 'Content-type: application/json' --data "$PAYLOAD" "$SLACK_WEBHOOK_URL"
+
+      # 7) 새 reviewer list를 임시 파일로 생성 및 캐시에 업데이트
+      - name: Save new reviewer list
+        if: ${{ steps.check_diff.outputs.skip == 'false' }}
+        run: |
+          mkdir -p .reviewer-state
+          echo "${{ steps.prepare_new.outputs.new_reviewers }}" > .reviewer-state/old_reviewers.txt
+
+      - name: Save cache
+        if: ${{ steps.check_diff.outputs.skip == 'false' }}
+        uses: actions/cache@v3
+        with:
+          path: ./.reviewer-state
+          key: pr-reviewers-${{ github.event.pull_request.number }}

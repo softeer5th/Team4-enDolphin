@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 
-import { useNotification } from '../../hooks/useNotification';
+import { useNotification } from '@/hooks/useNotification';
+
 import { GlobalNotification } from './GlobalNotification';
 import { NotificationContext } from './NotificationContext';
 
@@ -9,7 +10,7 @@ export const NotificationProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <NotificationContext.Provider value={{ addNoti }}>
-      {state.notifications.length > 0 && <GlobalNotification notifications={state.notifications}/>}
+      {state.notifications.length > 0 && <GlobalNotification notifications={state.notifications} />}
       {children}
     </NotificationContext.Provider>
   );

@@ -20,11 +20,13 @@ export const Tab = ({
   const defaultId = `Tab-${useId()}`;
 
   return (
-    <TabContext.Provider value={{ 
-      controlId: defaultId, 
-      selectedValue,
-      onChange,
-    }}>
+    <TabContext.Provider 
+      value={{ 
+        controlId: defaultId, 
+        selectedValue,
+        onChange,
+      }}
+    >
       <div className={tabContainerStyle} id={defaultId}>
         {children}
       </div>
