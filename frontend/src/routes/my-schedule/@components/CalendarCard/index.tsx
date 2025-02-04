@@ -1,20 +1,18 @@
 import { Chip } from '@/components/Chip';
 import { Flex } from '@/components/Flex';
-import { GoggleCalendar, Pencil } from '@/components/Icon';
 import { Text } from '@/components/Text';
 import type { AdjustmentStatus } from '@/constants/statusMap';
 import { adjustmentStatusMap } from '@/constants/statusMap';
-import { vars } from '@/theme/index.css';
 import { formatDateToTimeString } from '@/utils/date';
 
+import { CardBottom } from './CardBottom';
 import {
   cardBackgroundStyle, 
-  cardBottomStyle,
   cardContainerStyle, 
   cardContentStyle, 
 } from './index.css';
 
-interface CalendarCardProps {
+export interface CalendarCardProps {
   status: AdjustmentStatus; 
   title: string;
   startTime: Date;
@@ -47,17 +45,7 @@ export const CalendarCard = ({
           </Text>
         </Flex>
       </Flex>
-      <Flex
-        align='flex-end'
-        className={cardBottomStyle}
-        gap={200}
-        height='100%'
-        justify='flex-end'
-        width='full'
-      >
-        <GoggleCalendar onClick={handlers.onClickGoggle} />
-        <Pencil fill={vars.color.Ref.Netural[600]} onClick={handlers.onClickEdit} />
-      </Flex>
+      <CardBottom {...handlers} />
     </Flex>
   </div>
 );
