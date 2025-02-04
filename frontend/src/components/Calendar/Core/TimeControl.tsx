@@ -3,7 +3,7 @@ import { formatDateToWeek } from '@/utils/date';
 import { Text } from '../../Text';
 import { useCalendarContext } from '../context/CalendarContext';
 import { 
-  timeConrolButtonStyle, 
+  timeControlButtonStyle, 
   timeControlButtonWrapperStyle, 
   timeControlStyle,
 } from './index.css';
@@ -18,7 +18,7 @@ export const TimeControl = () => {
     <div className={timeControlStyle}>
       <div className={timeControlButtonWrapperStyle}>
         <TimeControlButton type='prev' />
-        <span className={timeConrolButtonStyle({ order: 'mid' })}>
+        <span className={timeControlButtonStyle({ order: 'mid' })}>
           <Text>{weekString}</Text>
         </span>
         <TimeControlButton type='next' />

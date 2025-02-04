@@ -25,7 +25,7 @@ export const timeControlButtonWrapperStyle = style({
   alignItems: 'center',
 });
 
-export const timeConrolButtonStyle = recipe({
+export const timeControlButtonStyle = recipe({
   base: {
     height: 36,
 

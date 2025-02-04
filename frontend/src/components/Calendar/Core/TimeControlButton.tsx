@@ -3,7 +3,7 @@ import { ChevronLeft, ChevronRight } from '@/components/Icon';
 import { vars } from '@/theme/index.css';
 
 import { useCalendarContext } from '../context/CalendarContext';
-import { timeConrolButtonStyle } from './index.css';
+import { timeControlButtonStyle } from './index.css';
 
 export const TimeControlButton = ({ type }: { type: 'prev' | 'next' | 'today' }) => {
   const { handleClickPrevWeek, handleClickNextWeek, handleClickToday } = useCalendarContext();
@@ -12,7 +12,7 @@ export const TimeControlButton = ({ type }: { type: 'prev' | 'next' | 'today' })
       return (
         <button
           aria-label='이전 주' 
-          className={timeConrolButtonStyle({ order: 'first' })}
+          className={timeControlButtonStyle({ order: 'first' })}
           onClick={handleClickPrevWeek}
         >
           <ChevronLeft fill={vars.color.Ref.Netural[600]} />
@@ -22,7 +22,7 @@ export const TimeControlButton = ({ type }: { type: 'prev' | 'next' | 'today' })
       return (
         <button
           aria-label='다음 주'
-          className={timeConrolButtonStyle({ order: 'last' })} 
+          className={timeControlButtonStyle({ order: 'last' })} 
           onClick={handleClickNextWeek}
         >
           <ChevronRight fill={vars.color.Ref.Netural[600]} />
