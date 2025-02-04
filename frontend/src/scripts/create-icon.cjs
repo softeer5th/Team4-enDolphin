@@ -48,7 +48,7 @@ const createComponentContent = (
     (attr) => attr !== 'fill="none"'
   );
   const hasFill = fillAttributes.length;
-  const propsString = `{ className, width = 24${hasStroke || hasFill ? ` ${hasStroke ? ', stroke = "white"' : ""}${hasFill ? ', fill = "white"' : ""}` : ""}, ...rest }`;
+  const propsString = `{ clickable = false, className, width = 24${hasStroke || hasFill ? ` ${hasStroke ? ', stroke = "white"' : ""}${hasFill ? ', fill = "white"' : ""}` : ""}, ...rest }`;
   const modifiedSvgContent = svgContent
     .replace(/style="mask-type:luminance"/g, "MASK_TYPE_PLACEHOLDER")
     .replace(/data:image/g, "DATA_IMAGE_PLACEHOLDER") 
@@ -62,7 +62,7 @@ const createComponentContent = (
     .replace(/(<(?!rect)[^>]+)stroke="([^"]+)"/g, `$1stroke={stroke}`)
     .replace(
       /<svg([^>]*)>/,
-      `<svg$1 aria-label="${iconName} icon" fill="none" className={className} {...rest}>`
+      `<svg$1 aria-label="${iconName} icon" fill="none" className={className} style={{ cursor: clickable ? "pointer": "default", ...rest.style }} {...rest}>`
     );
 
   return `   
