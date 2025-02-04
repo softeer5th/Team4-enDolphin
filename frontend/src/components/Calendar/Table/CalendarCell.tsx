@@ -9,23 +9,17 @@ interface CalendarCellProps {
 }
 
 export const CalendarCell = ({ holiday = false, time, selected }: CalendarCellProps) => {
-  if (time === 'empty') {
-    return (
-      <div 
-        className={cellStyle({ 
-          day: holiday ? 'holiday' : 'default', 
-          time: 'empty',
-          state: selected ? 'selected' : 'default', 
-        })}
-      />
-    );
-  }
+  const formatTimeToStyle = (time: Time) => {
+    if (time === 'empty') return 'empty';
+    if (time === 'all') return 'all';
+    return 'default';
+  };
 
   return (
     <div 
       className={cellStyle({ 
         day: holiday ? 'holiday' : 'default', 
-        time: time === 'all' ? 'all' : 'default', 
+        time: formatTimeToStyle(time),
         state: selected ? 'selected' : 'default',
       })}
     >
