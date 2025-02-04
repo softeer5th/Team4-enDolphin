@@ -22,7 +22,7 @@ export interface CalendarCardProps {
 }
   
 export const CalendarCard = ({ 
-  status = 'fixed', title, startTime, endTime, ...handlers }: CalendarCardProps,
+  status, title, startTime, endTime, ...handlers }: CalendarCardProps,
 ) => (
   <div className={cardContainerStyle({ status })}>
     <Flex className={cardBackgroundStyle} direction='column'>
