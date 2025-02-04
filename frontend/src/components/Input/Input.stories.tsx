@@ -5,9 +5,9 @@ import { vars } from '../../theme/index.css';
 import { Check } from '../Icon';
 import { Input } from './index';
 
-const meta: Meta<typeof Input> = {
+const meta: Meta<typeof Input.Single> = {
   title: 'Components/Input',
-  component: Input,
+  component: Input.Single,
   argTypes: {
     isValid: {
       control: 'boolean',
@@ -26,10 +26,6 @@ const meta: Meta<typeof Input> = {
       control: 'boolean',
       description: '필수 입력 여부',
     },
-    separator: {
-      control: 'text',
-      description: '입력 필드 사이 구분자',
-    },
     hint: {
       control: 'text',
       description: '힌트 메시지',
@@ -39,11 +35,11 @@ const meta: Meta<typeof Input> = {
       description: '에러 메시지',
     },
   },
-} satisfies Meta<typeof Input>;
+} satisfies Meta<typeof Input.Single>;
 
 export default meta;
 
-export const Default: StoryObj<typeof Input> = {
+export const Default: StoryObj<typeof Input.Single> = {
   args: {
     label: '이메일',
     isValid: true,
@@ -51,13 +47,12 @@ export const Default: StoryObj<typeof Input> = {
     hint: '이메일을 입력하세요',
     error: '이메일 형식이 아닙니다',
     type: 'text',
+    inputProps: {
+      placeholder: '이메일을 입력하세요',
+    },
   },
   render: (args) => (
-    <Input {...args}>
-      <Input.InputField
-        placeholder='이메일을 입력하세요'
-      />
-    </Input>
+    <Input.Single {...args}/>
   ),
 };
 
@@ -70,24 +65,24 @@ export const MultiInput = () => {
     setSecondValue(e.target.value);
 
   return (
-    <Input 
+    <Input.Multi
       isValid={true}
       label='시간'
       required={true}
       separator='~'
       type='text'
     >
-      <Input.InputField 
+      <Input.Multi.InputField 
         onChange={handleFirstChange}
         placeholder='시작 시간을 입력하세요'
         value={firstValue}
       />
-      <Input.InputField 
+      <Input.Multi.InputField 
         onChange={handleSecondChange}
         placeholder='종료 시간을 입력하세요'
         value={secondValue}
       />
-    </Input>
+    </Input.Multi>
   );
 };
 
@@ -100,23 +95,23 @@ export const CustomSeparatorIcon = () => {
     setSecondValue(e.target.value);
 
   return (
-    <Input 
+    <Input.Multi
       isValid={true}
-      label='이메일'
+      label='시간'
       required={true}
-      separator={<Check fill={vars.color.Ref.Netural[500]}/>}
-      type='select'
+      separator={<Check fill={vars.color.Ref.Netural[600]}/>}
+      type='text'
     >
-      <Input.InputField 
+      <Input.Multi.InputField 
         onChange={handleFirstChange}
-        placeholder='이메일을 입력하세요'
+        placeholder='시작 시간을 입력하세요'
         value={firstValue}
       />
-      <Input.InputField 
+      <Input.Multi.InputField 
         onChange={handleSecondChange}
-        placeholder='이메일을 입력하세요'
+        placeholder='종료 시간을 입력하세요'
         value={secondValue}
       />
-    </Input>
+    </Input.Multi>
   );
 };
