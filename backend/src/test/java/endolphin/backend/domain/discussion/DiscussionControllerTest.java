@@ -76,7 +76,7 @@ public class DiscussionControllerTest {
         mockMvc.perform(post("/api/v1/discussion")
                 .contentType("application/json")
                 .content(objectMapper.writeValueAsString(request)))
-            .andExpect(status().isOk())
+            .andExpect(status().isCreated())
             .andExpect(jsonPath("$.id").value(100))
             .andExpect(jsonPath("$.title").value("Test Discussion"));
     }
