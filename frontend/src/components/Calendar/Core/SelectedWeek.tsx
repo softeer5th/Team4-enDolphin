@@ -26,7 +26,7 @@ export const SelectedWeek = () => {
           date={dates[i]}
           day={day}
           isToday={isSameDate(dates[i], today)}
-          key={`${day}${i}`}
+          key={day}
           onClickHandler={() => handleClickCell(dates[i])}
           selected={isSameDate(dates[i], selected)}
         />)}
