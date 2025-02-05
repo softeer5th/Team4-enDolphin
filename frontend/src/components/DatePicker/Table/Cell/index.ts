@@ -1,2 +1,2 @@
-export * from './DateCell';
-export * from './DowCell';
+export * from './DateCell.tsx';
+export * from './DowCell.tsx';

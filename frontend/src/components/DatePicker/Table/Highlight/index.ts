@@ -1,6 +1,6 @@
 import type { PropsWithChildren } from 'react';
 
-export * from './HighlightCell';
+export * from './HighlightBox';
 export * from './HighlightGap';
 
 export type HighlightState = 'none' | 'startOfRange' | 'InRange' | 'EndOfRange';

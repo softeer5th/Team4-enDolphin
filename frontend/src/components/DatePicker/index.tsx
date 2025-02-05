@@ -1,5 +1,7 @@
 
-import { DatePickerContext } from './DatePickerContext';
+import useMonthCalendar from '@/hooks/useMonthCalendar';
+
+import { MonthCalendarContext } from './DatePickerContext';
 import Header from './Header';
 import { containerStyle } from './index.css';
 import Table from './Table';
@@ -14,13 +16,17 @@ export interface DatePickerProps {
   selectedCellStyle: CellStyleProps;
 }
 
-const DatePicker = ({ todayCellStyle, selectedCellStyle }: DatePickerProps) => (
-  <DatePickerContext.Provider value={{ todayCellStyle, selectedCellStyle }}>
-    <div className={containerStyle}>
-      <Header />
-      <Table />
-    </div>
-  </DatePickerContext.Provider>
-);
+// TODO: container style 외부에서 주입할 수 있도록 구현
+const DatePicker = ({ todayCellStyle, selectedCellStyle }: DatePickerProps) => {
+  const monthCalendar = useMonthCalendar();
+  return (
+    <MonthCalendarContext.Provider value={{ todayCellStyle, selectedCellStyle, ...monthCalendar }}>
+      <div className={containerStyle}>
+        <Header />
+        <Table />
+      </div>
+    </MonthCalendarContext.Provider>
+  );
+};
 
 export default DatePicker;

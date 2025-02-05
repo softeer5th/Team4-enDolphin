@@ -1,5 +1,4 @@
-
-import DowCell from './Cell/DowCell';
+import { DowCell } from './Cell';
 import { holidayCellStyle, saturdayCellStyle, weekdayCellStyle } from './Cell/index.css';
 import RowContainer from './RowContainer';
 

@@ -1,8 +1,10 @@
 import { assignInlineVars } from '@vanilla-extract/dynamic';
+import type { PropsWithChildren } from 'react';
 
 import { useSafeContext } from '@/hooks/useSafeContext';
+import { isHoliday, isSameDate, isSaturday, isSunday } from '@/utils/date';
 
-import { DatePickerContext } from '../../DatePickerContext';
+import { MonthCalendarContext } from '../../DatePickerContext';
 import { cellThemeVars } from '../index.css';
 import CellWrapper from './CellWrapper';
 import {
@@ -14,17 +16,14 @@ import {
   weekdayCellStyle,
 } from './index.css';
 
-interface DateCellProps {
+export interface DateCellProps extends PropsWithChildren {
+  date: Date;
   selected: boolean;
-  today: boolean;
-  otherMonth: boolean;
-  saturday: boolean;
-  holiday: boolean;
-  children: string;
+  currentMonth: number;
 }
 
-const DateCell = ({ children, ...props }: DateCellProps) => {
-  const { todayCellStyle, selectedCellStyle } = useSafeContext(DatePickerContext);
+export const DateCell = ({ children, date, selected, currentMonth }: DateCellProps) => {
+  const { todayCellStyle, selectedCellStyle } = useSafeContext(MonthCalendarContext);
   const inlineCellStyles = assignInlineVars(cellThemeVars, {
     todayCellBackgroundColor: todayCellStyle.backgroundColor ?? 'transparent',
     todayCellColor: todayCellStyle.color ?? 'transparent',
@@ -33,25 +32,20 @@ const DateCell = ({ children, ...props }: DateCellProps) => {
   });
 
   return (
-    <CellWrapper className={getDateCellStyle(props)} style={inlineCellStyles}>
-      {children}
+    <CellWrapper 
+      className={getDateCellStyle(date, selected, currentMonth )} 
+      style={inlineCellStyles}
+    >
+      {date.getDate()}
     </CellWrapper>
   );
 };
 
-const getDateCellStyle = ({ 
-  selected, 
-  today,
-  otherMonth, 
-  saturday, 
-  holiday, 
-}: Omit<DateCellProps, 'children'>) => {
+const getDateCellStyle = (date: Date, selected: boolean, currentMonth: number) => {
   if (selected) return selectedCellStyle;
-  if (today) return todayCellStyle;
-  if (otherMonth) return otherMonthCellStyle;
-  if (holiday) return holidayCellStyle;
-  if (saturday) return saturdayCellStyle;
+  if (isSameDate(date, new Date())) return todayCellStyle;
+  if (date.getMonth() !== currentMonth ) return otherMonthCellStyle;
+  if (isSunday(date) || isHoliday(date)) return holidayCellStyle;
+  if (isSaturday(date)) return saturdayCellStyle;
   return weekdayCellStyle;
 };
-
-export default DateCell;

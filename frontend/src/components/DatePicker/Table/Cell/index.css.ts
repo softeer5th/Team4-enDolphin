@@ -10,6 +10,7 @@ export const cellWrapperStyle = style({
   alignItems: 'center',
   width: '32px',
   height: '32px',
+  cursor: 'default',
 });
 
 export const weekdayCellStyle = style({

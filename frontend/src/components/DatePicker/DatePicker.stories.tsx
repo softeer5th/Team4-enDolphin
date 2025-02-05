@@ -14,5 +14,15 @@ export default meta;
 type Story = StoryObj<typeof DatePicker>;
 
 export const Default: Story = {
-  render: () => <DatePicker />,
+  render: () => <DatePicker 
+    selectedCellStyle={
+      {
+        backgroundColor: 'blue',
+        color: 'black',
+      }
+    }
+    todayCellStyle={{
+      backgroundColor: 'red',
+      color: 'black',
+    }}          />,
 };

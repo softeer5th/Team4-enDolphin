@@ -8,7 +8,7 @@ interface CellWrapperProps extends PropsWithChildren {
   className?: string;
   style?: object;
 }
-const CellWrapper = ({ className, style, children }: CellWrapperProps) => (
+export const CellWrapper = ({ className, style, children }: CellWrapperProps) => (
   <div
     className={`${cellWrapperStyle} ${className}`}
     style={style}

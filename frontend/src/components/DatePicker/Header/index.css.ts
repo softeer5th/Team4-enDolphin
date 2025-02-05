@@ -8,7 +8,7 @@ export const headerStyle = style({
   alignSelf: 'stretch',
 });
 
-export const chevronWrapperStyle = style({
+export const chevronWrapper = style({
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',

@@ -6,10 +6,8 @@ interface DowCellProps extends PropsWithChildren {
   className: string;
 }
 
-const DowCell = ({ className, children }: DowCellProps) => (
+export const DowCell = ({ className, children }: DowCellProps) => (
   <CellWrapper className={className}>
     {children}
   </CellWrapper>
 );
-
-export default DowCell;
