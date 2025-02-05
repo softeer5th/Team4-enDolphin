@@ -1,5 +1,7 @@
 package endolphin.backend.domain.discussion.entity;
 
+import endolphin.backend.domain.discussion.enums.DiscussionStatus;
+import endolphin.backend.domain.discussion.enums.MeetingMethod;
 import endolphin.backend.global.base_entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -39,7 +41,8 @@ public class Discussion extends BaseTimeEntity {
     private Integer duration;
 
     @Column(name = "meeting_method")
-    private String meetingMethod;
+    @Enumerated(EnumType.STRING)
+    private MeetingMethod meetingMethod;
 
     @Column
     private String location;
@@ -47,14 +50,16 @@ public class Discussion extends BaseTimeEntity {
     @Column(nullable = false)
     private LocalDate deadline;
 
-    @ColumnDefault("1")
-    @Column(name = "is_modifiable", nullable = false)
-    private Boolean isModifiable;
+    @Enumerated(EnumType.STRING)
+    @ColumnDefault("'ONGOING'")
+    @Column(name = "status", nullable = false)
+    private DiscussionStatus discussionStatus;
 
     @Builder
     public Discussion(String title, LocalDate dateStart, LocalDate dateEnd,
         LocalTime timeStart, LocalTime timeEnd,
-        Integer duration, LocalDate deadline) {
+        Integer duration, LocalDate deadline,
+        MeetingMethod meetingMethod, String location) {
         this.title = title;
         this.dateRangeStart = dateStart;
         this.dateRangeEnd = dateEnd;
@@ -62,5 +67,7 @@ public class Discussion extends BaseTimeEntity {
         this.timeRangeEnd = timeEnd;
         this.duration = duration;
         this.deadline = deadline;
+        this.meetingMethod = meetingMethod;
+        this.location = location;
     }
 }

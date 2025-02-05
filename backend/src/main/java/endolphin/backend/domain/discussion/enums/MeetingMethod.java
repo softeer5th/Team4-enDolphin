@@ -1,5 +1,5 @@
 package endolphin.backend.domain.discussion.enums;
 
-public enum Role {
-    HOST, ATTENDEE
+public enum MeetingMethod {
+    OFFLINE, ONLINE
 }
