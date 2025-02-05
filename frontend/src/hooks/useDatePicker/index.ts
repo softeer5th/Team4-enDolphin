@@ -14,7 +14,7 @@ export interface UseMonthCalendarReturn {
   highlightRange: HighlightRange;
   goToPrevMonth: () => void;
   goToNextMonth: () => void;
-  handleDateSelect: (date: Date) => void;
+  handleDateSelect: (date: Date | null) => void;
   setHighlightStart: (date: Date | null) => void;
   setHighlightEnd: (date: Date | null) => void;
 }
@@ -31,7 +31,11 @@ export const useDatePicker = (): UseMonthCalendarReturn => {
     setCalendarDates(generateMonthCalendar(baseDate));
   }, [baseDate, selectedDate, highlightRange]);
 
-  const handleDateSelect = (date: Date) => {
+  const handleDateSelect = (date: Date | null) => {
+    if (!date) {
+      setSelectedDate(null);
+      return; 
+    }
     const currentYear = baseDate.getFullYear();
     const currentMonth = baseDate.getMonth();
     const calendarDates = getDaysInMonth(baseDate);
@@ -48,15 +52,8 @@ export const useDatePicker = (): UseMonthCalendarReturn => {
   };
 
   return {
-    baseDate,
-    calendarDates,
-    selectedDate,
-    highlightRange,
-    goToPrevMonth,
-    goToNextMonth,
-    handleDateSelect,
-    setHighlightStart,
-    setHighlightEnd,
+    baseDate, calendarDates, selectedDate, highlightRange, 
+    goToPrevMonth, goToNextMonth, handleDateSelect, setHighlightStart, setHighlightEnd,
   };
 };
 

@@ -16,6 +16,6 @@ type Story = StoryObj<typeof DatePicker>;
 export const Default: Story = {
   render: () => 
     <DatePicker
-      calendarType='select'
+      calendarType='range'
     />,
 };

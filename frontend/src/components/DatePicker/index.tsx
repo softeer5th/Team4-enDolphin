@@ -20,12 +20,12 @@ export interface DatePickerProps {
 
 // TODO: container style 외부에서 주입할 수 있도록 구현
 const DatePicker = ({ calendarType }: DatePickerProps) => {
-  const monthCalendar = useDatePicker();
+  const useDatePickerReturns = useDatePicker();
   const todayCellStyle = getTodayCellStyle(calendarType);
   const selectedCellStyle = getSelectedCellStyle(calendarType);
   return (
     <DatePickerContext.Provider 
-      value={{ calendarType, todayCellStyle, selectedCellStyle, ...monthCalendar }}
+      value={{ calendarType, todayCellStyle, selectedCellStyle, ...useDatePickerReturns }}
     >
       <div className={containerStyle}>
         <Header />
