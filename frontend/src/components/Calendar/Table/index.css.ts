@@ -1,6 +1,8 @@
 import { style } from '@vanilla-extract/css';
 import { recipe } from '@vanilla-extract/recipes';
 
+import { fadeHighlightProps } from '@/theme/animation.css';
+
 import { vars } from '../../../theme/index.css';
 
 export const containerStyle = style({
@@ -31,6 +33,7 @@ export const sideStyle = style({
 export const cellStyle = recipe({
   base: {
     width: '100%',
+    boxShadow: `inset 0 0 0 0.5px ${vars.color.Ref.Netural[200]}`,
   },
   variants: {
     day: {
@@ -55,19 +58,28 @@ export const cellStyle = recipe({
     state: {
       selected: {
         backgroundColor: vars.color.Ref.Primary[50],
-        boxShadow: `inset 0 0 0 0.5px ${vars.color.Ref.Primary[100]}`,
+        ...fadeHighlightProps,
       },
-      default: {
-        boxShadow: `inset 0 0 0 0.5px ${vars.color.Ref.Netural[200]}`,
-      },
+      default: {},
     },
   },
 });
 
-export const cellDetailStyle = style({
-  width: '100%',
-  flexGrow: 1,
-  // borderBottom: '1px solid #E5E5E5',
+export const cellDetailStyle = recipe({
+  base: {
+    width: '100%',
+    flexGrow: 1,
+    cursor: 'pointer',
+  },
+  variants: {
+    state: {
+      selected: {
+        backgroundColor: vars.color.Ref.Primary[50],
+        boxShadow: `inset 0 0 0 0.5px ${vars.color.Ref.Primary[100]}`,
+      },
+      default: {},
+    },
+  },
 });
   
 export const sideCellStyle = recipe({

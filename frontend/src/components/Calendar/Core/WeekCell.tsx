@@ -31,6 +31,7 @@ export const WeekCell = ({ day, date, isToday, selected }: WeekCellProps) => {
         day: dayStyleName(day), 
         state: selected ? 'selected' : 'default', 
       })}
+      key={selected ? Date.now() : ''}
     >
       <Text typo='b3M'>{day}</Text>
       <div className={weekCellBoxStyle({ day: isToday ? 'today' : dayStyleName(day) })}>

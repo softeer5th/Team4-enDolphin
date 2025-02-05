@@ -1,6 +1,8 @@
 import { style } from '@vanilla-extract/css';
 import { recipe } from '@vanilla-extract/recipes';
 
+import { fadeHighlightProps } from '@/theme/animation.css';
+
 import { vars } from '../../../theme/index.css';
 
 export const containerStyle = style({
@@ -64,8 +66,6 @@ export const weekCellStyle = recipe({
     justifyContent: 'center',
     alignItems: 'center',
     gap: vars.spacing[100],
-
-    cursor: 'pointer',
   },
   variants: {
     day: {
@@ -82,6 +82,7 @@ export const weekCellStyle = recipe({
     state: {
       selected: {
         backgroundColor: vars.color.Ref.Primary[50],
+        ...fadeHighlightProps,
       },
       default: {
         backgroundColor: vars.color.Ref.Netural.White,
