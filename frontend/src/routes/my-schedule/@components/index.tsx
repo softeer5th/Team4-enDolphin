@@ -1,4 +1,8 @@
+import { SchedulePopover } from './SchedulePopover';
+
 const MySchedule = () => 
-  <div></div>;
+  <div>
+    <SchedulePopover isOpen={true} />
+  </div>;
 
 export default MySchedule;
