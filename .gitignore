@@ -2,7 +2,4 @@
 .idea
 
 .DS_Store
-script/*.tar
 script/wait-for-it.sh
-script/setup.sh
-script
