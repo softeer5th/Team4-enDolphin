@@ -6,7 +6,7 @@ import { chipStyle } from './index.css';
 
 interface ChipProps extends PropsWithChildren {
   color: 'blue' | 'green' | 'red' | 'black';
-  style?: 'borderness' | 'weak' | 'filled';
+  style?: 'borderless' | 'weak' | 'filled';
   radius?: 'round' | 'max';
   size?: 'sm' | 'md' | 'lg';
 }
