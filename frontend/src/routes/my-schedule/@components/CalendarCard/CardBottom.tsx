@@ -1,11 +1,11 @@
 import { Flex } from '@/components/Flex';
-import { GoggleCalendar, Pencil } from '@/components/Icon';
+import { GoogleCalendar, Pencil } from '@/components/Icon';
 import { vars } from '@/theme/index.css';
 
 import type { CalendarCardProps } from '.';
 import { cardBottomStyle } from './index.css';
 
-export const CardBottom = (handlers: Pick<CalendarCardProps, 'onClickEdit' | 'onClickGoggle'>) => (
+export const CardBottom = (handlers: Pick<CalendarCardProps, 'onClickEdit' | 'onClickGoogle'>) => (
   <Flex
     align='flex-end'
     className={cardBottomStyle}
@@ -14,7 +14,7 @@ export const CardBottom = (handlers: Pick<CalendarCardProps, 'onClickEdit' | 'on
     justify='flex-end'
     width='full'
   >
-    <GoggleCalendar clickable onClick={handlers.onClickGoggle} />
+    <GoogleCalendar clickable onClick={handlers.onClickGoogle} />
     <Pencil
       clickable
       fill={vars.color.Ref.Netural[600]}

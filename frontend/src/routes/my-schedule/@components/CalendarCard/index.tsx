@@ -17,12 +17,12 @@ export interface CalendarCardProps {
   title: string;
   startTime: Date;
   endTime: Date;
-  onClickGoggle: () => void;
+  onClickGoogle: () => void;
   onClickEdit: () => void;
 }
   
 export const CalendarCard = ({ 
-  status, title, startTime, endTime, ...handlers }: CalendarCardProps,
+  status, title, startTime, endTime, onClickEdit, onClickGoogle }: CalendarCardProps,
 ) => (
   <div className={cardContainerStyle({ status })}>
     <Flex className={cardBackgroundStyle} direction='column'>
@@ -45,7 +45,7 @@ export const CalendarCard = ({
           </Text>
         </Flex>
       </Flex>
-      <CardBottom {...handlers} />
+      <CardBottom onClickEdit={onClickEdit} onClickGoogle={onClickGoogle} />
     </Flex>
   </div>
 );
