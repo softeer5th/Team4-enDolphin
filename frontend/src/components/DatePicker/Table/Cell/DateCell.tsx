@@ -16,14 +16,19 @@ import {
   weekdayCellStyle,
 } from './index.css';
 
-export interface DateCellProps extends PropsWithChildren {
+export interface DateCellProps {
   date: Date;
   selected: boolean;
   currentMonth: number;
+  onClick?: () => void;
 }
 
-export const DateCell = ({ children, date, selected, currentMonth }: DateCellProps) => {
-  const { todayCellStyle, selectedCellStyle } = useSafeContext(MonthCalendarContext);
+export const DateCell = ({ date, selected, currentMonth, onClick }: DateCellProps) => {
+  const { 
+    todayCellStyle,
+    selectedCellStyle,
+    handleDateSelect,
+  } = useSafeContext(MonthCalendarContext);
   const inlineCellStyles = assignInlineVars(cellThemeVars, {
     todayCellBackgroundColor: todayCellStyle.backgroundColor ?? 'transparent',
     todayCellColor: todayCellStyle.color ?? 'transparent',
@@ -34,6 +39,7 @@ export const DateCell = ({ children, date, selected, currentMonth }: DateCellPro
   return (
     <CellWrapper 
       className={getDateCellStyle(date, selected, currentMonth )} 
+      onClick={() => handleDateSelect(date)}
       style={inlineCellStyles}
     >
       {date.getDate()}

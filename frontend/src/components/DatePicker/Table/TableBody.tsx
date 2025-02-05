@@ -7,10 +7,10 @@ import { DateCell } from './Cell';
 import RowContainer from './RowContainer';
 
 const TableBody = () => {
-  const { daysInMonth, selectedDate, currentMonth } = useSafeContext(MonthCalendarContext);
+  const { calendarDates, selectedDate, currentMonth } = useSafeContext(MonthCalendarContext);
   return (
     <div>
-      {daysInMonth.map((week, index) => (
+      {calendarDates.map((week, index) => (
         <RowContainer key={index}>
           {week.map((day, index) => (
             <DateCell 
