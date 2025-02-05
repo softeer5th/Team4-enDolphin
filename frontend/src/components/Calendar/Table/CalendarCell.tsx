@@ -1,17 +1,18 @@
 
 import { Flex } from '@/components/Flex';
-import type { Time } from '@/constants/date';
-import { MINUTES } from '@/constants/date';
+import { MINUTES, type Time } from '@/constants/date';
+import { isWeekend } from '@/utils/date';
 
-import { cellDetailStyle, cellStyle } from './index.css';
+import { CalendarDetailCell } from './CalendarDetailCell';
+import { cellStyle } from './index.css';
 
 interface CalendarCellProps {
-  holiday?: boolean;
+  date: Date;
   time: Time;
   selected: boolean;
 }
 
-export const CalendarCell = ({ holiday = false, time, selected }: CalendarCellProps) => {
+export const CalendarCell = ({ date, time, selected }: CalendarCellProps) => {
   const formatTimeToStyle = (time: Time) => {
     if (time === 'empty') return 'empty';
     if (time === 'all') return 'all';
@@ -22,7 +23,7 @@ export const CalendarCell = ({ holiday = false, time, selected }: CalendarCellPr
     <div 
       aria-selected={selected}
       className={cellStyle({ 
-        day: holiday ? 'holiday' : 'default', 
+        day: isWeekend(date) ? 'holiday' : 'default', 
         time: formatTimeToStyle(time),
         state: selected ? 'selected' : 'default',
       })}
@@ -31,13 +32,14 @@ export const CalendarCell = ({ holiday = false, time, selected }: CalendarCellPr
     >
       {(time === 'empty' || time === 'all') ? null : (
         <Flex direction='column' height='100%'>
-          {MINUTES.map(({ startTime, endTime }) => (
-            <div
-              className={cellDetailStyle}
-              key={`${startTime}-${endTime}`}
-            />
-          ))}
-        </Flex>)}
+          {MINUTES.map((minute) => {
+            const newDate = new Date(date);
+            newDate.setHours(time);
+            newDate.setMinutes(minute);
+            return <CalendarDetailCell date={newDate} key={newDate.getTime()} />;
+          })}
+        </Flex>
+      )}
     </div>
   );
 };

@@ -15,7 +15,7 @@ export const CalendarTable = () => {
         <CalendarSide />
         {dates.map((date) => 
           <CalendarDay
-            holiday={isWeekend(date)}
+            date={date}
             key={date.getTime()}
             selected={isSameDate(selected, date)}
           />)}

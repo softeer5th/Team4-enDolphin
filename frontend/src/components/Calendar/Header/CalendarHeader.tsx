@@ -13,7 +13,7 @@ export const CalendarHeader = () => {
       <SideCell time='all' />
       {dates.map((date) => 
         <CalendarCell
-          holiday={isWeekend(date)}
+          date={date}
           key={date.getTime()}
           selected={isSameDate(selected, date)}
           time='all'
