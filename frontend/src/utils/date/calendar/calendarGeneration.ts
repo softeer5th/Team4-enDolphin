@@ -1,10 +1,10 @@
-import { FIRST_DAY, FIRST_MONTH, LAST_MONTH, WEEK_DAYS } from './calendarHelpers';
+import { FIRST_DAY, WEEK_DAYS } from '.';
 
 /**
  * 주어진 연도와 월(0-indexed)을 기반으로 해당 달의 총 일수를 반환합니다.
  */
-export const getDaysInMonth = (year: number, month: number): number =>
-  new Date(year, month + 1, 0).getDate();
+export const getDaysInMonth = (date: Date): number =>
+  new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
 
 /**
  * 1차원 배열을 size 크기로 2차원 배열로 분할합니다.
@@ -19,34 +19,29 @@ const partitionArray = <T>(array: T[], size: number): T[][] => {
   return chunks;
 };
 
-export interface CalendarDay {
-  day: number;
-  month: number; // 0-indexed (0: January ~ 11: December)
-  year: number;
-  isCurrentMonth: boolean;
-}
-
 /**
  * 이전 달 정보를 반환합니다.
  * @param year - 연도
  * @param month - 현재 달 (0-indexed)
  */
-const getPreviousMonthInfo = (year: number, month: number) => {
-  const prevMonth = month === FIRST_MONTH ? LAST_MONTH : month - 1;
-  const prevYear = month === FIRST_MONTH ? year - 1 : year;
-  return { prevMonth, prevYear, prevMonthDays: getDaysInMonth(prevYear, prevMonth) };
+const getPreviousMonthInfo = (date: Date) => {
+  const prevDate = new Date(date);
+  prevDate.setMonth(date.getMonth() - 1);
+  return { prevDate, prevMonthDays: getDaysInMonth(prevDate) };
 };
 
 /**
  * 이전 달의 날짜(Date 객체)들을 배열로 생성합니다.
  */
-const generatePreviousMonthDays = (year: number, month: number): Date[] => {
-  const { prevMonth, prevYear, prevMonthDays } = getPreviousMonthInfo(year, month);
+const generatePreviousMonthDays = (baseDate: Date): Date[] => {
+  const { prevDate, prevMonthDays } = getPreviousMonthInfo(baseDate);
   // 현재 달의 1일의 요일 (0: 일요일 ~ 6: 토요일)
-  const firstDayDow = new Date(year, month, FIRST_DAY).getDay();
+  const firstDayDow = new Date(baseDate.getFullYear(), baseDate.getMonth(), FIRST_DAY)
+    .getDay();
+
   const dates: Date[] = [];
   for (let i = firstDayDow; i > 0; i--) {
-    dates.push(new Date(prevYear, prevMonth, prevMonthDays - i + 1));
+    dates.push(new Date(prevDate.getFullYear(), prevDate.getMonth(), prevMonthDays - i + 1));
   }
   return dates;
 };
@@ -54,8 +49,11 @@ const generatePreviousMonthDays = (year: number, month: number): Date[] => {
 /**
  * 현재 달의 날짜(Date 객체)들을 배열로 생성합니다.
  */
-const generateCurrentMonthDays = (year: number, month: number): Date[] => {
-  const totalDays = getDaysInMonth(year, month);
+const generateCurrentMonthDays = (baseDate: Date): Date[] => {
+  const totalDays = getDaysInMonth(baseDate);
+  const year = baseDate.getFullYear();
+  const month = baseDate.getMonth();
+  
   const dates: Date[] = [];
   for (let day = FIRST_DAY; day <= totalDays; day++) {
     dates.push(new Date(year, month, day));
@@ -68,19 +66,20 @@ const generateCurrentMonthDays = (year: number, month: number): Date[] => {
  * @param year - 연도
  * @param month - 현재 달 (0-indexed)
  */
-const getNextMonthInfo = (year: number, month: number) => {
-  const nextMonth = month === LAST_MONTH ? FIRST_MONTH : month + 1;
-  const nextYear = month === LAST_MONTH ? year + 1 : year;
-  return { nextMonth, nextYear };
+const getNextMonthInfo = (baseDate: Date) => {
+  const nextDate = new Date(baseDate);
+  nextDate.setMonth(baseDate.getMonth() + 1);
+  return { nextDate, prevMonthDays: getDaysInMonth(nextDate) };
 };
 
 /**
  * 남은 칸을 다음 달 날짜로 채웁니다.
  * @param existingCount - 이전 달과 현재 달 날짜의 총 개수
  */
-const generateNextMonthDays = (existingCount: number, year: number, month: number): Date[] => {
+const generateNextMonthDays = (existingCount: number, baseDate: Date): Date[] => {
   const remainingCells = (WEEK_DAYS - (existingCount % WEEK_DAYS)) % WEEK_DAYS;
-  const { nextMonth, nextYear } = getNextMonthInfo(year, month);
+  const { nextDate } = getNextMonthInfo(baseDate);
+  const [nextYear, nextMonth] = [nextDate.getFullYear(), nextDate.getMonth()];
   const dates: Date[] = [];
   for (let day = FIRST_DAY; day <= remainingCells; day++) {
     dates.push(new Date(nextYear, nextMonth, day));
@@ -94,11 +93,11 @@ const generateNextMonthDays = (existingCount: number, year: number, month: numbe
  * @param year - 연도
  * @param month - 월 (0-indexed)
  */
-export const generateMonthCalendar = (year: number, month: number): Date[][] => {
-  const previousDays = generatePreviousMonthDays(year, month);
-  const currentDays = generateCurrentMonthDays(year, month);
+export const generateMonthCalendar = (baseDate: Date): Date[][] => {
+  const previousDays = generatePreviousMonthDays(baseDate);
+  const currentDays = generateCurrentMonthDays(baseDate);
   const combinedDays = [...previousDays, ...currentDays];
-  const nextDays = generateNextMonthDays(combinedDays.length, year, month);
+  const nextDays = generateNextMonthDays(combinedDays.length, baseDate);
   const daysArray = [...combinedDays, ...nextDays];
   return partitionArray(daysArray, WEEK_DAYS);
 };

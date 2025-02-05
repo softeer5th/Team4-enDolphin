@@ -2,14 +2,14 @@ import { useEffect, useState } from 'react';
 
 import { generateMonthCalendar } from '@/utils/date/calendar/calendarGeneration';
 
-export const useDaysInMonth = (year: number, month: number) => {
+export const useDaysInMonth = (baseDate: Date) => {
   const [daysInMonth, setDaysInMonth] = useState<Date[][]>(
-    generateMonthCalendar(year, month),
+    generateMonthCalendar(baseDate),
   );
 
   useEffect(() => {
-    setDaysInMonth(generateMonthCalendar(year, month));
-  }, [year, month]);
+    setDaysInMonth(generateMonthCalendar(baseDate));
+  }, [baseDate]);
 
   return daysInMonth;
 };

@@ -7,14 +7,14 @@ import { DateCell } from './Cell';
 import RowContainer from './RowContainer';
 
 const TableBody = () => {
-  const { calendarDates, selectedDate, currentMonth } = useSafeContext(MonthCalendarContext);
+  const { calendarDates, selectedDate, currentDate } = useSafeContext(MonthCalendarContext);
   return (
     <div>
       {calendarDates.map((week, index) => (
         <RowContainer key={index}>
           {week.map((day, index) => (
             <DateCell 
-              currentMonth={currentMonth}
+              currentMonth={currentDate.getMonth()}
               date={day}
               key={index}
               selected={selectedDate ? isSameDate(day, selectedDate) : false}

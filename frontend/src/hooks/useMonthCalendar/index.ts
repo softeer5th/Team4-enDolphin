@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { getDaysInMonth } from '@/utils/date/calendar/calendarHelpers';
+import { getDaysInMonth } from '@/utils/date/calendar';
 
 import { useDaysInMonth } from './useDaysInMonth';
 import type { HighlightRange } from './useHighlightRange';
@@ -8,8 +8,7 @@ import { useHighlightRange } from './useHighlightRange';
 import { useMonthNavigation } from './useMonthNavigation';
 
 export interface UseMonthCalendarReturn {
-  currentMonth: number;
-  currentYear: number;
+  currentDate: Date;
   calendarDates: Date[][];
   selectedDate: Date | null;
   highlightRange: HighlightRange | null;
@@ -21,19 +20,21 @@ export interface UseMonthCalendarReturn {
 }
 
 export const useMonthCalendar = (): UseMonthCalendarReturn => {
-  const { currentMonth, currentYear, goToPrevMonth, goToNextMonth } = useMonthNavigation();
-  const calendarDates = useDaysInMonth(currentYear, currentMonth);
-  const { highlightRange, setHighlightStart, setHighlightEnd } = useHighlightRange();
+  const { currentDate, goToPrevMonth, goToNextMonth } = useMonthNavigation();
   
+  const calendarDates = useDaysInMonth(currentDate);
+  const { highlightRange, setHighlightStart, setHighlightEnd } = useHighlightRange();
+
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
   const handleDateSelect = (date: Date) => {
+    const currentYear = currentDate.getFullYear();
+    const currentMonth = currentDate.getMonth();
+    const daysInMonth = getDaysInMonth(currentDate);
+
     const startOfCurrentMonth = new Date(currentYear, currentMonth, 1);
-    const endOfCurrentMonth = new Date(
-      currentYear,
-      currentMonth,
-      getDaysInMonth(currentYear, currentMonth),
-    );
+    const endOfCurrentMonth = new Date(currentYear, currentMonth, daysInMonth);
+
     if (date < startOfCurrentMonth) {
       goToPrevMonth();
     } else if (date > endOfCurrentMonth) {
@@ -43,8 +44,7 @@ export const useMonthCalendar = (): UseMonthCalendarReturn => {
   };
 
   return {
-    currentMonth,
-    currentYear,
+    currentDate,
     calendarDates,
     selectedDate,
     highlightRange,

@@ -1,23 +1,20 @@
 import { useState } from 'react';
 
-import { getNextMonthInfo, getPrevMonthInfo } from '@/utils/date/calendar/calendarHelpers';
+import { getNextMonthInfo, getPrevMonthInfo } from '@/utils/date/calendar';
 
 export const useMonthNavigation = () => {
   const today = new Date();
-  const [currentMonth, setCurrentMonth] = useState<number>(today.getMonth());
-  const [currentYear, setCurrentYear] = useState<number>(today.getFullYear());
+  const [currentDate, setCurrentDate] = useState(today);
 
   const goToPrevMonth = () => {
-    const { month, year } = getPrevMonthInfo(currentMonth, currentYear);
-    setCurrentMonth(month);
-    setCurrentYear(year);
+    const { month, year } = getPrevMonthInfo(currentDate);
+    setCurrentDate(new Date(year, month));
   };
 
   const goToNextMonth = () => {
-    const { month, year } = getNextMonthInfo(currentMonth, currentYear);
-    setCurrentMonth(month);
-    setCurrentYear(year);
+    const { month, year } = getNextMonthInfo(currentDate);
+    setCurrentDate(new Date(year, month));
   };
 
-  return { currentMonth, currentYear, goToPrevMonth, goToNextMonth };
+  return { currentDate, goToPrevMonth, goToNextMonth };
 };

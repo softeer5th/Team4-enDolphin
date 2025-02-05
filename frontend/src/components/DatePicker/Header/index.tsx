@@ -9,12 +9,12 @@ import { chevronWrapper, headerStyle } from './index.css';
 
 const Header = () => {
   const { 
-    currentYear,
-    currentMonth,
+    currentDate,
     goToPrevMonth,
     goToNextMonth, 
   } = useSafeContext(MonthCalendarContext);
-
+  const currentYear = currentDate.getFullYear();
+  const currentMonth = currentDate.getMonth();
   return (
     <div className={headerStyle}>
       <Text typo='b1M'>{`${currentYear}년 ${currentMonth + 1}월`}</Text>
