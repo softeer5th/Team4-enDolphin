@@ -1,7 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import { vars } from '@/theme/index.css';
-
 import DatePicker from '.';
 
 const meta: Meta = {
@@ -18,16 +16,6 @@ type Story = StoryObj<typeof DatePicker>;
 export const Default: Story = {
   render: () => 
     <DatePicker
-      calendarType='range'
-      selectedCellStyle={
-        {
-          backgroundColor: vars.color.Ref.Primary[100],
-          color: vars.color.Ref.Primary[500],
-        }
-      }
-      todayCellStyle={{
-        backgroundColor: vars.color.Ref.Primary[500],
-        color: vars.color.Ref.Netural['White'],
-      }}
+      calendarType='select'
     />,
 };
