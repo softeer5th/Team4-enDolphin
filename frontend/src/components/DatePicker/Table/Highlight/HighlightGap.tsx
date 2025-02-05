@@ -1,9 +1,9 @@
-import type { PropsWithChildren } from 'react';
 
+import type { HighlightProps } from '.';
 import { highlightGapStyle } from './index.css';
 
-const HighlightGap = ({ children }: PropsWithChildren) => (
-  <div className={highlightGapStyle}>
+const HighlightGap = ({ highlightState, children }: HighlightProps) => (
+  <div className={highlightGapStyle({ highlightState })}>
     {children}
   </div>
 );

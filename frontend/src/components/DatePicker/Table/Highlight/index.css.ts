@@ -1,4 +1,3 @@
-import { style } from '@vanilla-extract/css';
 import { recipe } from '@vanilla-extract/recipes';
 
 import { vars } from '@/theme/index.css';
@@ -15,10 +14,10 @@ export const highlightBoxStyle = recipe({
         borderTopLeftRadius: vars.radius[200],
         borderBottomLeftRadius: vars.radius[200],
       },
-      InRange: {
+      inRange: {
         backgroundColor: vars.color.Ref.Primary[50],
       },
-      EndOfRange: {
+      endOfRange: {
         backgroundColor: vars.color.Ref.Primary[50],
         borderTopRightRadius: vars.radius[200],
         borderBottomRightRadius: vars.radius[200],        
@@ -27,6 +26,26 @@ export const highlightBoxStyle = recipe({
   },
 });
 
-export const highlightGapStyle = style({
-  flexGrow: 1,
+export const highlightGapStyle = recipe({
+  base: {
+    flexGrow: 1,
+  },
+  variants: {
+    highlightState: {
+      none: { },
+      startOfRange: {
+        backgroundColor: vars.color.Ref.Primary[50],
+        borderTopLeftRadius: vars.radius[200],
+        borderBottomLeftRadius: vars.radius[200],
+      },
+      inRange: {
+        backgroundColor: vars.color.Ref.Primary[50],
+      },
+      endOfRange: {
+        backgroundColor: vars.color.Ref.Primary[50],
+        borderTopRightRadius: vars.radius[200],
+        borderBottomRightRadius: vars.radius[200],
+      },
+    },
+  }, 
 });

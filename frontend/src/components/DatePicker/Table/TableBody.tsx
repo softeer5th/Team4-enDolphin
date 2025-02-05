@@ -7,16 +7,14 @@ import Row from './Row';
 const TableBody = () => {
   const { calendarDates, selectedDate, baseDate } = useSafeContext(DatePickerContext);
   return (
-    <div>
-      {calendarDates.map((week, index) => (
-        <Row
-          baseDate={baseDate}
-          key={index}
-          selectedDate={selectedDate}
-          week={week}
-        />
-      ))}
-    </div>
+    calendarDates.map((week, index) => (
+      <Row
+        baseDate={baseDate}
+        key={index}
+        selectedDate={selectedDate}
+        week={week}
+      />
+    ))
   );
 };
 

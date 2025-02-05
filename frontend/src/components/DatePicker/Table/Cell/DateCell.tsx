@@ -58,7 +58,7 @@ const getDateCellStyle = (
 ) => {
   if (selected) return selectedCellStyle;
   if (calendarType === 'range' && (
-    highlightState === 'startOfRange' || highlightState === 'EndOfRange'
+    highlightState === 'startOfRange' || highlightState === 'endOfRange'
   )) {
     return selectedCellStyle;
   }

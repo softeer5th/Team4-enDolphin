@@ -11,7 +11,7 @@ export const cellThemeVars = createThemeContract({
 
 export const calendarStyle = style({
   display: 'flex',
-  height: '218px',
+  width: '320px',
   flexDirection: 'column',
   justifyContent: 'space-between',
   alignItems: 'center',
@@ -19,6 +19,11 @@ export const calendarStyle = style({
 
 export const rowContainerStyle = style({
   display: 'flex',
-  justifyContent: 'space-around',
+  width: '100%',
+  justifyContent: 'space-between',
   padding: `${vars.spacing[100]} 0`,
+});
+
+export const dowCellWrapperStyle = style({
+  padding: vars.spacing[100],
 });

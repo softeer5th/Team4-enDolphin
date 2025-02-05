@@ -1,5 +1,6 @@
 import { DowCell } from './Cell';
 import { holidayCellStyle, saturdayCellStyle, weekdayCellStyle } from './Cell/index.css';
+import { dowCellWrapperStyle } from './index.css';
 import RowContainer from './RowContainer';
 
 const days = [
@@ -15,9 +16,11 @@ const days = [
 const TableHeader = () => (
   <RowContainer>
     {days.map(({ label, style }, i) => (
-      <DowCell className={style} key={`${label}-${i}`}>
-        {label}
-      </DowCell>
+      <div className={dowCellWrapperStyle}>
+        <DowCell className={style} key={`${label}-${i}`}>
+          {label}
+        </DowCell>
+      </div>
     ))}
   </RowContainer>
 );
