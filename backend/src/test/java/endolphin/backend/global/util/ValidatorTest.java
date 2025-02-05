@@ -2,6 +2,7 @@ package endolphin.backend.global.util;
 
 import static org.assertj.core.api.Assertions.*;
 
+import endolphin.backend.global.error.exception.ApiException;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,6 +26,6 @@ class ValidatorTest {
         LocalDateTime endTime = LocalDateTime.of(2020, 10, 31, 23, 59, 59);
 
         assertThatThrownBy(() -> Validator.validateDateTimeRange(startTime, endTime))
-            .isInstanceOf(IllegalArgumentException.class);
+            .isInstanceOf(ApiException.class);
     }
 }
