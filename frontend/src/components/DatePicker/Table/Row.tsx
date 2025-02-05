@@ -18,16 +18,20 @@ interface RowProps {
 
 const Row = ({ week, baseDate, selectedDate }: RowProps) => {
   const { highlightRange } = useSafeContext(MonthCalendarContext);
-  const rawRow = week.map((day, index) => (
-    <HighlightBox highlightState={getHighlightState(day, highlightRange)} key={day.getTime()}>
-      <DateCell 
-        currentMonth={baseDate.getMonth()}
-        date={day}
-        key={index}
-        selected={selectedDate ? isSameDate(day, selectedDate) : false}
-      />
-    </HighlightBox>
-  ));
+  const rawRow = week.map((day, index) => {
+    const highlightState = getHighlightState(day, highlightRange);
+    return (
+      <HighlightBox highlightState={highlightState} key={day.getTime()}>
+        <DateCell 
+          baseDate={baseDate}
+          date={day}
+          highlightState={highlightState}
+          key={index}
+          selected={selectedDate ? isSameDate(day, selectedDate) : false}
+        />
+      </HighlightBox>
+    );
+  });
   const preparedRow = intersperseElement(rawRow, <HighlightGap />);
 
   return (

@@ -18,7 +18,7 @@ type Story = StoryObj<typeof DatePicker>;
 export const Default: Story = {
   render: () => 
     <DatePicker
-      calendarType='select'
+      calendarType='range'
       selectedCellStyle={
         {
           backgroundColor: vars.color.Ref.Primary[100],

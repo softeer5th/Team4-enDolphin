@@ -11,7 +11,7 @@ interface CellStyleProps {
   color?: string;
 }
 
-type CalendarType = 'select' | 'range';
+export type CalendarType = 'select' | 'range';
 
 export interface DatePickerProps {
   calendarType: CalendarType;
