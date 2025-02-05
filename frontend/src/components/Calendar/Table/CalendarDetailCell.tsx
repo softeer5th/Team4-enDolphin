@@ -5,17 +5,26 @@ import { cellDetailStyle } from './index.css';
 
 export const CalendarDetailCell = ({ date }: { date: Date }) => {
   const { 
-    selectedStartTime, 
-    selectedEndTime, 
+    selectedStartTime,
+    selectedEndTime,
+    doneStartTime,
+    doneEndTime,
     handleMouseDown,
     handleMouseEnter,
     handleMouseUp,
   } = useTimeTableContext();
   const selected = isDateInRange(date, selectedStartTime, selectedEndTime);
+  const done = isDateInRange(date, doneStartTime, doneEndTime);
+
+  const stateStyle = (() => {
+    if (done) return 'done';
+    if (selected) return 'selected';
+    return 'default';
+  })();
 
   return (
     <div
-      className={cellDetailStyle({ state: selected ? 'selected' : 'default' })}
+      className={cellDetailStyle({ state: stateStyle })}
       key={date.getTime()}
       onMouseDown={()=>handleMouseDown(date)}
       onMouseEnter={()=>handleMouseEnter(date)}

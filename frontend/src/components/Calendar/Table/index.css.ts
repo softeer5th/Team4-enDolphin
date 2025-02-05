@@ -77,6 +77,9 @@ export const cellDetailStyle = recipe({
         backgroundColor: vars.color.Ref.Primary[50],
         boxShadow: `inset 0 0 0 0.5px ${vars.color.Ref.Primary[100]}`,
       },
+      done: {
+        backgroundColor: vars.color.Ref.Primary[50],
+      },
       default: {},
     },
   },
