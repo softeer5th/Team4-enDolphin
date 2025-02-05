@@ -24,6 +24,7 @@ export const useMonthCalendar = (): UseMonthCalendarReturn => {
   const { currentMonth, currentYear, goToPrevMonth, goToNextMonth } = useMonthNavigation();
   const calendarDates = useDaysInMonth(currentYear, currentMonth);
   const { highlightRange, setHighlightStart, setHighlightEnd } = useHighlightRange();
+  
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
   const handleDateSelect = (date: Date) => {

@@ -8,8 +8,8 @@ export const cellWrapperStyle = style({
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
-  width: '32px',
-  height: '32px',
+  width: '24px',
+  height: '24px',
   cursor: 'default',
 });
 
@@ -18,11 +18,13 @@ export const weekdayCellStyle = style({
 });
 
 export const todayCellStyle = style({
+  borderRadius: vars.radius[200],
   backgroundColor: cellThemeVars.todayCellBackgroundColor,
   color: cellThemeVars.todayCellColor,
 });
 
 export const selectedCellStyle = style({
+  borderRadius: vars.radius[200],
   backgroundColor: cellThemeVars.selectedCellBackgroundColor,
   color: cellThemeVars.selectedCellColor,
 });

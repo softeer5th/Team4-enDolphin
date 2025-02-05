@@ -1,5 +1,4 @@
 import { assignInlineVars } from '@vanilla-extract/dynamic';
-import type { PropsWithChildren } from 'react';
 
 import { useSafeContext } from '@/hooks/useSafeContext';
 import { isHoliday, isSameDate, isSaturday, isSunday } from '@/utils/date';
@@ -20,10 +19,9 @@ export interface DateCellProps {
   date: Date;
   selected: boolean;
   currentMonth: number;
-  onClick?: () => void;
 }
 
-export const DateCell = ({ date, selected, currentMonth, onClick }: DateCellProps) => {
+export const DateCell = ({ date, selected, currentMonth }: DateCellProps) => {
   const { 
     todayCellStyle,
     selectedCellStyle,
