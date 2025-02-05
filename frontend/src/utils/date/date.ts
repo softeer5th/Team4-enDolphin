@@ -104,3 +104,24 @@ export const isWeekend = (date: Date): boolean => {
   
   return date.getDay() === SUNDAY || date.getDay() === SATURDAY;
 };
+
+/**
+ * 
+ * @param target - 비교할 날짜
+ * @param startDate - 시작 날짜
+ * @param endDate - 종료 날짜
+ * @returns - 날짜가 범위 내에 있는지 여부
+ */
+export const isDateInRange = (
+  target: Date,
+  startDate: Date | null,
+  endDate: Date | null,
+): boolean => {
+  if (!startDate || !endDate) return false;
+
+  const targetTime = target.getTime();
+  const startTime = startDate.getTime();
+  const endTime = endDate.getTime();
+
+  return targetTime >= startTime && targetTime <= endTime;
+};
