@@ -1,5 +1,5 @@
 
-import { isSameDate, isWeekend } from '@/utils/date';
+import { isSameDate } from '@/utils/date';
 
 import { useCalendarContext } from '../context/CalendarContext';
 import { CalendarDay } from './CalendarDay';
