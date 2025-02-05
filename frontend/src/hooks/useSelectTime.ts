@@ -48,8 +48,8 @@ const selectReducer = (state: State, action: Action) => {
           endTime: null,
         },
         doneTime: {
-          startTime: startDate,
-          endTime: endDate,
+          startTime: action.date || startDate,
+          endTime: action.date || endDate,
         },
         isSelecting: false,
       };
@@ -67,6 +67,7 @@ export interface TimeInfo {
   handleMouseDown: (date: Date) => void;
   handleMouseEnter: (date: Date) => void;
   handleMouseUp: () => void;
+  handleClick: (date: Date) => void;
 }
 
 export const useSelectTime = (): TimeInfo => {
@@ -84,5 +85,6 @@ export const useSelectTime = (): TimeInfo => {
     handleMouseDown: (date: Date) => dispatch({ type: 'SELECT_START', date }),
     handleMouseEnter: (date: Date) => dispatch({ type: 'SELECT_PROGRESS', date }),
     handleMouseUp: () => dispatch({ type: 'SELECT_END' }),
+    handleClick: (date: Date) => dispatch({ type: 'SELECT_END', date }),
   };
 };

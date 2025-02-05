@@ -12,6 +12,7 @@ export const CalendarDetailCell = ({ date }: { date: Date }) => {
     handleMouseDown,
     handleMouseEnter,
     handleMouseUp,
+    handleClick,
   } = useTimeTableContext();
   const selected = isDateInRange(date, selectedStartTime, selectedEndTime);
   const done = isDateInRange(date, doneStartTime, doneEndTime);
@@ -26,6 +27,7 @@ export const CalendarDetailCell = ({ date }: { date: Date }) => {
     <div
       className={cellDetailStyle({ state: stateStyle })}
       key={date.getTime()}
+      onClick={()=>handleClick(date)}
       onMouseDown={()=>handleMouseDown(date)}
       onMouseEnter={()=>handleMouseEnter(date)}
       onMouseUp={handleMouseUp}
