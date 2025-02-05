@@ -1,26 +1,20 @@
 
 import { useSafeContext } from '@/hooks/useSafeContext';
-import { isSameDate } from '@/utils/date';
 
-import { MonthCalendarContext } from '../DatePickerContext';
-import { DateCell } from './Cell';
-import RowContainer from './RowContainer';
+import { MonthCalendarContext } from '../MonthCalendarContext';
+import Row from './Row';
 
 const TableBody = () => {
-  const { calendarDates, selectedDate, currentDate } = useSafeContext(MonthCalendarContext);
+  const { calendarDates, selectedDate, baseDate } = useSafeContext(MonthCalendarContext);
   return (
     <div>
       {calendarDates.map((week, index) => (
-        <RowContainer key={index}>
-          {week.map((day, index) => (
-            <DateCell 
-              currentMonth={currentDate.getMonth()}
-              date={day}
-              key={index}
-              selected={selectedDate ? isSameDate(day, selectedDate) : false}
-            />
-          ))}
-        </RowContainer>
+        <Row
+          baseDate={baseDate}
+          key={index}
+          selectedDate={selectedDate}
+          week={week}
+        />
       ))}
     </div>
   );

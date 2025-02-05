@@ -1,8 +1,9 @@
 
 import type { HighlightProps } from '.';
+import { highlightBoxStyle } from './index.css';
 
 const HighlightBox = ({ highlightState, children }: HighlightProps) => (
-  <div>
+  <div className={highlightBoxStyle({ highlightState })}>
     {children}
   </div>
 );

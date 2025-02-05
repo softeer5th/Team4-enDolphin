@@ -1,9 +1,10 @@
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 
+import { useDateSelect } from '@/hooks/useMonthCalendar/useDateSelect';
 import { useSafeContext } from '@/hooks/useSafeContext';
 import { isHoliday, isSameDate, isSaturday, isSunday } from '@/utils/date';
 
-import { MonthCalendarContext } from '../../DatePickerContext';
+import { MonthCalendarContext } from '../../MonthCalendarContext';
 import { cellThemeVars } from '../index.css';
 import CellWrapper from './CellWrapper';
 import {
@@ -25,7 +26,6 @@ export const DateCell = ({ date, selected, currentMonth }: DateCellProps) => {
   const { 
     todayCellStyle,
     selectedCellStyle,
-    handleDateSelect,
   } = useSafeContext(MonthCalendarContext);
   const inlineCellStyles = assignInlineVars(cellThemeVars, {
     todayCellBackgroundColor: todayCellStyle.backgroundColor ?? 'transparent',
@@ -36,8 +36,8 @@ export const DateCell = ({ date, selected, currentMonth }: DateCellProps) => {
 
   return (
     <CellWrapper 
-      className={getDateCellStyle(date, selected, currentMonth )} 
-      onClick={() => handleDateSelect(date)}
+      className={getDateCellStyle(date, selected, currentMonth)} 
+      onClick={useDateSelect(date)}
       style={inlineCellStyles}
     >
       {date.getDate()}

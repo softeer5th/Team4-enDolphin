@@ -21,5 +21,4 @@ const TableHeader = () => (
     ))}
   </RowContainer>
 );
-
 export default TableHeader;

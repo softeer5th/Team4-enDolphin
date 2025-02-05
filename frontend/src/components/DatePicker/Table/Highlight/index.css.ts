@@ -1,8 +1,9 @@
+import { style } from '@vanilla-extract/css';
 import { recipe } from '@vanilla-extract/recipes';
 
 import { vars } from '@/theme/index.css';
 
-export const highlightCellStyle = recipe({
+export const highlightBoxStyle = recipe({
   base: {
     padding: vars.spacing[100],
   },
@@ -24,7 +25,8 @@ export const highlightCellStyle = recipe({
       },
     },
   },
-  defaultVariants: {
-    highlightState: 'none',
-  },
+});
+
+export const highlightGapStyle = style({
+  flexGrow: 1,
 });

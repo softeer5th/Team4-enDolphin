@@ -1,39 +1,43 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { getDaysInMonth } from '@/utils/date/calendar';
+import { generateMonthCalendar } from '@/utils/date/calendar/calendarGeneration';
 
-import { useDaysInMonth } from './useDaysInMonth';
 import type { HighlightRange } from './useHighlightRange';
 import { useHighlightRange } from './useHighlightRange';
 import { useMonthNavigation } from './useMonthNavigation';
 
 export interface UseMonthCalendarReturn {
-  currentDate: Date;
+  baseDate: Date;
   calendarDates: Date[][];
   selectedDate: Date | null;
-  highlightRange: HighlightRange | null;
+  highlightRange: HighlightRange;
   goToPrevMonth: () => void;
   goToNextMonth: () => void;
   handleDateSelect: (date: Date) => void;
-  setHighlightStart: (date: Date) => void;
-  setHighlightEnd: (date: Date) => void;
+  setHighlightStart: (date: Date | null) => void;
+  setHighlightEnd: (date: Date | null) => void;
 }
 
 export const useMonthCalendar = (): UseMonthCalendarReturn => {
-  const { currentDate, goToPrevMonth, goToNextMonth } = useMonthNavigation();
-  
-  const calendarDates = useDaysInMonth(currentDate);
+  const { baseDate, goToPrevMonth, goToNextMonth } = useMonthNavigation();
+  const [calendarDates, setCalendarDates] = useState<Date[][]>(
+    generateMonthCalendar(baseDate),
+  );
   const { highlightRange, setHighlightStart, setHighlightEnd } = useHighlightRange();
-
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  
+  useEffect(() => {
+    setCalendarDates(generateMonthCalendar(baseDate));
+  }, [baseDate, selectedDate, highlightRange]);
 
   const handleDateSelect = (date: Date) => {
-    const currentYear = currentDate.getFullYear();
-    const currentMonth = currentDate.getMonth();
-    const daysInMonth = getDaysInMonth(currentDate);
+    const currentYear = baseDate.getFullYear();
+    const currentMonth = baseDate.getMonth();
+    const calendarDates = getDaysInMonth(baseDate);
 
     const startOfCurrentMonth = new Date(currentYear, currentMonth, 1);
-    const endOfCurrentMonth = new Date(currentYear, currentMonth, daysInMonth);
+    const endOfCurrentMonth = new Date(currentYear, currentMonth, calendarDates);
 
     if (date < startOfCurrentMonth) {
       goToPrevMonth();
@@ -44,7 +48,7 @@ export const useMonthCalendar = (): UseMonthCalendarReturn => {
   };
 
   return {
-    currentDate,
+    baseDate,
     calendarDates,
     selectedDate,
     highlightRange,

@@ -4,17 +4,17 @@ import { Text } from '@/components/Text';
 import { useSafeContext } from '@/hooks/useSafeContext';
 import { vars } from '@/theme/index.css';
 
-import { MonthCalendarContext } from '../DatePickerContext';
+import { MonthCalendarContext } from '../MonthCalendarContext';
 import { chevronWrapper, headerStyle } from './index.css';
 
 const Header = () => {
   const { 
-    currentDate,
+    baseDate,
     goToPrevMonth,
     goToNextMonth, 
   } = useSafeContext(MonthCalendarContext);
-  const currentYear = currentDate.getFullYear();
-  const currentMonth = currentDate.getMonth();
+  const currentYear = baseDate.getFullYear();
+  const currentMonth = baseDate.getMonth();
   return (
     <div className={headerStyle}>
       <Text typo='b1M'>{`${currentYear}년 ${currentMonth + 1}월`}</Text>

@@ -19,5 +19,6 @@ export const calendarStyle = style({
 
 export const rowContainerStyle = style({
   display: 'flex',
+  justifyContent: 'space-around',
   padding: `${vars.spacing[100]} 0`,
 });
