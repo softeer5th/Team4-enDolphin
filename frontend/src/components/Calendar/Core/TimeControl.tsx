@@ -12,8 +12,12 @@ export const TimeControl = () => {
   const weekString = `${year}년 ${month}월 ${week}`;
 
   return  (
-    <Flex gap={200} justify='flex-start'>
-      <Flex justify='flex-start'>
+    <Flex
+      align='center'
+      gap={200}
+      justify='flex-start'
+    >
+      <Flex align='center' justify='flex-start'>
         <TimeControlButton type='prev' />
         <span className={timeControlButtonStyle({ order: 'mid' })}>
           <Text>{weekString}</Text>

@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { Flex } from '.';
 
 const meta: Meta = {
-  title: 'Flex',
+  title: 'Components/Flex',
   component: Flex,
   argTypes: {
     width: { control: 'text' },

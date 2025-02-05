@@ -1,9 +1,9 @@
    
 import type { IconProps } from '../Icon.d.ts';
 
-export const IconDotsMono = ({ className, width = 20 , fill = "white", ...rest }: IconProps) => {
+export const IconDotsMono = ({ clickable = false, className, width = 24 , fill = "white", ...rest }: IconProps) => {
     return (
-        <svg width={width} height={width} viewBox="0 0 24 24"  xmlns="http://www.w3.org/2000/svg" aria-label="icon-dots-mono icon" fill="none" className={className} {...rest}>
+        <svg width={width} height={width} viewBox="0 0 24 24"  xmlns="http://www.w3.org/2000/svg" aria-label="icon-dots-mono icon" fill="none" className={className} style={{ cursor: clickable ? "pointer": "default", ...rest.style }} {...rest}>
 <mask id="mask0_732_481" mask-type='luminance' maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="24">
 <rect width="24" height="24" fill="white"/>
 </mask>

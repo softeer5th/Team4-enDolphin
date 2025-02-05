@@ -19,20 +19,18 @@ const generateSvgComponentMap = async () => {
   return svgFiles;
 };
 
-const deleteUnusedComponentFiles = async (svgComponentMap) => {
+const deleteComponentFiles = async (svgComponentMap) => {
   if (!existsSync(COMPONENT_DIR)) {
     fs.mkdir(COMPONENT_DIR);
     return;
   }
 
-  const componentFiles = await fs.readdir(COMPONENT_DIR);
-  const componentFilesToDelete = componentFiles.filter((componentFile) => {
-    const componentName = path.basename(componentFile, ".tsx");
-    return !(componentName in svgComponentMap);
+  const componentFiles = (await fs.readdir(COMPONENT_DIR)).filter((file) => {
+    return file.endsWith(".tsx");
   });
 
   await Promise.all(
-    componentFilesToDelete.map((file) => {
+    componentFiles.map((file) => {
       const componentFilePath = path.resolve(COMPONENT_DIR, file);
       return fs.unlink(componentFilePath);
     })
@@ -50,9 +48,13 @@ const createComponentContent = (
     (attr) => attr !== 'fill="none"'
   );
   const hasFill = fillAttributes.length;
-  const propsString = `{ className, width = 24${hasStroke || hasFill ? ` ${hasStroke ? ', stroke = "white"' : ""}${hasFill ? ', fill = "white"' : ""}` : ""}, ...rest }`;
+  const propsString = `{ clickable = false, className, width = 24${hasStroke || hasFill ? ` ${hasStroke ? ', stroke = "white"' : ""}${hasFill ? ', fill = "white"' : ""}` : ""}, ...rest }`;
   const modifiedSvgContent = svgContent
-    .replace(/-(\w)/g, (_, letter) => letter.toUpperCase())
+    .replace(/style="mask-type:luminance"/g, "MASK_TYPE_PLACEHOLDER")
+    .replace(/data:image/g, "DATA_IMAGE_PLACEHOLDER") 
+    .replace(/[-:](\w)/g, (_, letter) => letter.toUpperCase())
+    .replace(/MASK_TYPE_PLACEHOLDER/g, "mask-type='luminance'")
+    .replace(/DATA_IMAGE_PLACEHOLDER/g, "data:image")
     .replace(/<svg([^>]*)width="(\d+)"/g, `<svg$1width={width}`)
     .replace(/<svg([^>]*)height="(\d+)"/g, `<svg$1height={width}`)
     .replace(/<svg([^>]*)fill="[^"]*"([^>]*)>/, "<svg$1$2>")
@@ -60,9 +62,8 @@ const createComponentContent = (
     .replace(/(<(?!rect)[^>]+)stroke="([^"]+)"/g, `$1stroke={stroke}`)
     .replace(
       /<svg([^>]*)>/,
-      `<svg$1 aria-label="${iconName} icon" fill="none" className={className} {...rest}>`
-    )
-    .replace(/style="maskType:luminance"/g, "mask-type='luminance'");
+      `<svg$1 aria-label="${iconName} icon" fill="none" className={className} style={{ cursor: clickable ? "pointer": "default", ...rest.style }} {...rest}>`
+    );
 
   return `   
 import type { IconProps } from '../Icon.d.ts';
@@ -116,13 +117,18 @@ const generateExportFile = async (components) => {
     )
     .join("\n");
 
-  await fs.writeFile(EXPORT_FILE_PATH, exportFileContent);
+  const folders = ["TooltipArrow"];
+  const exportFolderContent = folders
+    .map((folder) => `export * from "./component/${folder}";`)
+    .join("\n");
+
+  await fs.writeFile(EXPORT_FILE_PATH, `${exportFileContent}\n${exportFolderContent}`);
 };
 
 (async () => {
   try {
     const svgComponentMap = await generateSvgComponentMap();
-    await deleteUnusedComponentFiles(svgComponentMap);
+    await deleteComponentFiles(svgComponentMap);
     const components = await generateComponentFiles(svgComponentMap);
     await generateExportFile(components);
   } catch (error) {

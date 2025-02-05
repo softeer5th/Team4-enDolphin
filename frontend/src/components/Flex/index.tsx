@@ -22,7 +22,7 @@ export const Flex = ({ className, children, ...styles }: FlexProps) => {
     height = 'auto',
     direction = 'row', 
     justify = 'center',
-    align = 'center',
+    align = 'flex-start',
     gap,
   } = styles;
 

@@ -11,7 +11,7 @@ const meta: Meta = {
       control: { type: 'radio' },
     },
     style: {
-      options: ['borderness', 'weak', 'filled'],
+      options: ['borderless', 'weak', 'filled'],
       control: { type: 'radio' },
     },
     radius: {
@@ -46,7 +46,7 @@ export const Borderness: Story = {
   args: {
     children: '라벨',
     color: 'blue',
-    style: 'borderness',
+    style: 'borderless',
     radius: 'round',
     size: 'md',
   },

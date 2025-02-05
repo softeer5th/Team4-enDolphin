@@ -50,7 +50,7 @@ export const chipStyle = recipe({
       },
     },
     style: {
-      borderness: { 
+      borderless: { 
         backgroundColor: 'transparent', 
         color: vars.color.Ref.Netural[600],
         ':hover': {

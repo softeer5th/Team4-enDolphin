@@ -1,3 +1,4 @@
-const MySchedule = () => <div>My Schedule</div>;
+const MySchedule = () => 
+  <div></div>;
 
 export default MySchedule;
