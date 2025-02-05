@@ -106,6 +106,22 @@ export const isWeekend = (date: Date): boolean => {
 };
 
 /**
+ * 두 날짜 객체를 비교하여 시작 날짜와 종료 날짜를 반환합니다.
+ * @param date1 - 비교할 날짜1
+ * @param date2 - 비교할 날짜2
+ * @returns - 시작 날짜와 종료 날짜
+ */
+export const sortDate = (date1: Date | null, date2: Date | null): {
+  startDate: Date | null;
+  endDate: Date | null;
+} => {
+  if (!date1 || !date2) return { startDate: date1, endDate: date2 };
+  const [startDate, endDate] 
+    = [date1, date2].sort((a, b) => a.getTime() - b.getTime());
+  return { startDate, endDate };
+};
+
+/**
  * 
  * @param target - 비교할 날짜
  * @param startDate - 시작 날짜
@@ -119,9 +135,12 @@ export const isDateInRange = (
 ): boolean => {
   if (!startDate || !endDate) return false;
 
+  const { startDate: start, endDate: end } = sortDate(startDate, endDate);
+  if (!start || !end) return false;
+
   const targetTime = target.getTime();
-  const startTime = startDate.getTime();
-  const endTime = endDate.getTime();
+  const startTime = start.getTime();
+  const endTime = end.getTime();
 
   return targetTime >= startTime && targetTime <= endTime;
 };

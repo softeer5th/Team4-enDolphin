@@ -1,5 +1,7 @@
 import { useReducer } from 'react';
 
+import { sortDate } from '@/utils/date';
+
 export interface TimeRange {
   startTime: Date | null;
   endTime: Date | null;
@@ -17,7 +19,7 @@ type Action = {
 
 const selectReducer = (state: State, action: Action) => {
   switch (action.type) {
-    case 'SELECT_START':
+    case 'SELECT_START': {
       if (!action.date) return state;
       return {
         selectedTime: {
@@ -26,7 +28,8 @@ const selectReducer = (state: State, action: Action) => {
         },
         isSelecting: true,
       };
-    case 'SELECT_PROGRESS':
+    }
+    case 'SELECT_PROGRESS': {
       if (!state.isSelecting || !action.date) return state;
       return {
         ...state,
@@ -35,11 +38,18 @@ const selectReducer = (state: State, action: Action) => {
           endTime: action.date,
         },
       };
-    case 'SELECT_END':
+    }
+    case 'SELECT_END': {
+      const { startDate, endDate }
+         = sortDate(state.selectedTime.startTime, state.selectedTime.endTime);
       return {
-        ...state,
+        selectedTime: {
+          startTime: startDate,
+          endTime: endDate,
+        },
         isSelecting: false,
       };
+    }
     default:
       return state;
   }
