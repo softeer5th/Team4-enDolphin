@@ -14,39 +14,39 @@ type State = {
 };
 
 type Action = {
-  type: 'SELECT_START' | 'SELECT_PROGRESS' | 'SELECT_END';
+  type: 'SELECT_START' | 'SELECT_PROGRESS' | 'SELECT_END' | 'SELECT_CANCEL';
   date?: Date;
 };
+
+const resetSelectedTime = () => ({
+  startTime: null,
+  endTime: null,
+});
+
+const resetDoneTime = () => ({
+  startTime: null,
+  endTime: null,
+});
 
 const selectReducer = (state: State, action: Action) => {
   switch (action.type) {
     case 'SELECT_START':
       if (!action.date) return state;
-      return {
-        ...state,
-        selectedTime: {
-          startTime: action.date,
-          endTime: null,
-        },
-        isSelecting: true,
+      return { 
+        ...state, selectedTime: { startTime: action.date, endTime: null }, isSelecting: true,
       };
+
     case 'SELECT_PROGRESS':
       if (!state.isSelecting || !action.date) return state;
-      return {
-        ...state,
-        selectedTime: {
-          ...state.selectedTime,
-          endTime: action.date,
-        },
+      return { 
+        ...state, selectedTime: { ...state.selectedTime, endTime: action.date }, 
       };
+
     case 'SELECT_END': {
       const { startDate, endDate }
          = sortDate(state.selectedTime.startTime, state.selectedTime.endTime);
       return {
-        selectedTime: {
-          startTime: null,
-          endTime: null,
-        },
+        selectedTime: resetSelectedTime(),
         doneTime: {
           startTime: action.date || startDate,
           endTime: action.date || endDate,
@@ -54,6 +54,14 @@ const selectReducer = (state: State, action: Action) => {
         isSelecting: false,
       };
     }
+
+    case 'SELECT_CANCEL':
+      return {
+        selectedTime: resetSelectedTime(),
+        doneTime: resetDoneTime(),
+        isSelecting: false,
+      };
+
     default:
       return state;
   }
@@ -68,6 +76,7 @@ export interface TimeInfo {
   handleMouseEnter: (date: Date) => void;
   handleMouseUp: () => void;
   handleClick: (date: Date) => void;
+  reset: () => void;
 }
 
 export const useSelectTime = (): TimeInfo => {
@@ -86,5 +95,6 @@ export const useSelectTime = (): TimeInfo => {
     handleMouseEnter: (date: Date) => dispatch({ type: 'SELECT_PROGRESS', date }),
     handleMouseUp: () => dispatch({ type: 'SELECT_END' }),
     handleClick: (date: Date) => dispatch({ type: 'SELECT_END', date }),
+    reset: () => dispatch({ type: 'SELECT_CANCEL' }),
   };
 };

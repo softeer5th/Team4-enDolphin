@@ -115,7 +115,12 @@ export const sortDate = (date1: Date | null, date2: Date | null): {
   startDate: Date | null;
   endDate: Date | null;
 } => {
-  if (!date1 || !date2) return { startDate: date1, endDate: date2 };
+  if (!date1 || !date2) {
+    return { 
+      startDate: date1 || date2, 
+      endDate: date1 || date2, 
+    };
+  }
   const [startDate, endDate] 
     = [date1, date2].sort((a, b) => a.getTime() - b.getTime());
   return { startDate, endDate };
