@@ -1,5 +1,5 @@
 
-import useMonthCalendar from '@/hooks/useMonthCalendar';
+import useDatePicker from '@/hooks/useDatePicker';
 
 import Header from './Header';
 import { containerStyle } from './index.css';
@@ -21,7 +21,7 @@ export interface DatePickerProps {
 
 // TODO: container style 외부에서 주입할 수 있도록 구현
 const DatePicker = ({ calendarType, todayCellStyle, selectedCellStyle }: DatePickerProps) => {
-  const monthCalendar = useMonthCalendar();
+  const monthCalendar = useDatePicker();
   return (
     <MonthCalendarContext.Provider 
       value={{ calendarType, todayCellStyle, selectedCellStyle, ...monthCalendar }}

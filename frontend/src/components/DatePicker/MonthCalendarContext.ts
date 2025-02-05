@@ -1,6 +1,6 @@
 import { createContext } from 'react';
 
-import type { UseMonthCalendarReturn } from '@/hooks/useMonthCalendar';
+import type { UseMonthCalendarReturn } from '@/hooks/useDatePicker';
 
 import type { DatePickerProps } from '.';
 

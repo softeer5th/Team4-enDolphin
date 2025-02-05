@@ -1,4 +1,4 @@
-import type { HighlightRange } from '@/hooks/useMonthCalendar/useHighlightRange';
+import type { HighlightRange } from '@/hooks/useDatePicker/useHighlightRange';
 import { useSafeContext } from '@/hooks/useSafeContext';
 import { isSameDate } from '@/utils/date';
 import { intersperseElement } from '@/utils/jsxUtils';

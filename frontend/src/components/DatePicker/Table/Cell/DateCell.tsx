@@ -1,6 +1,6 @@
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 
-import { useDateSelect } from '@/hooks/useMonthCalendar/useDateSelect';
+import { useDateSelect } from '@/hooks/useDatePicker/useDateSelect';
 import { useSafeContext } from '@/hooks/useSafeContext';
 import { isHoliday, isSameDate, isSaturday, isSunday } from '@/utils/date';
 

@@ -19,7 +19,7 @@ export interface UseMonthCalendarReturn {
   setHighlightEnd: (date: Date | null) => void;
 }
 
-export const useMonthCalendar = (): UseMonthCalendarReturn => {
+export const useDatePicker = (): UseMonthCalendarReturn => {
   const { baseDate, goToPrevMonth, goToNextMonth } = useMonthNavigation();
   const [calendarDates, setCalendarDates] = useState<Date[][]>(
     generateMonthCalendar(baseDate),
@@ -60,4 +60,4 @@ export const useMonthCalendar = (): UseMonthCalendarReturn => {
   };
 };
 
-export default useMonthCalendar;
+export default useDatePicker;
