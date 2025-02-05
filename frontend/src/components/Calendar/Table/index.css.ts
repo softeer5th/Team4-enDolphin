@@ -63,6 +63,12 @@ export const cellStyle = recipe({
     },
   },
 });
+
+export const cellDetailStyle = style({
+  width: '100%',
+  flexGrow: 1,
+  // borderBottom: '1px solid #E5E5E5',
+});
   
 export const sideCellStyle = recipe({
   base: {

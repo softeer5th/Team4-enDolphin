@@ -16,3 +16,10 @@ export const WEEK_MAP: Record<string, string> = Object.freeze({
   4: '넷째주',
   5: '다섯째주',
 });
+
+export const MINUTES = Object.freeze(
+  new Array(4).fill(0)
+    .map((_, i) => ({
+      startTime: i * 15,
+      endTime: i * 15 + 15,
+    })));

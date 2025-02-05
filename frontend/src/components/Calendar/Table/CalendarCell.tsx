@@ -1,6 +1,9 @@
 
-import type { Time } from '../../../constants/date';
-import { cellStyle } from './index.css';
+import { Flex } from '@/components/Flex';
+import type { Time } from '@/constants/date';
+import { MINUTES } from '@/constants/date';
+
+import { cellDetailStyle, cellStyle } from './index.css';
 
 interface CalendarCellProps {
   holiday?: boolean;
@@ -26,6 +29,15 @@ export const CalendarCell = ({ holiday = false, time, selected }: CalendarCellPr
       role='gridcell'
       tabIndex={0}
     >
+      {(time === 'empty' || time === 'all') ? null : (
+        <Flex direction='column' height='100%'>
+          {MINUTES.map(({ startTime, endTime }) => (
+            <div
+              className={cellDetailStyle}
+              key={`${startTime}-${endTime}`}
+            />
+          ))}
+        </Flex>)}
     </div>
   );
 };
