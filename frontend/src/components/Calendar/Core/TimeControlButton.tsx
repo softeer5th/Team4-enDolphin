@@ -15,7 +15,7 @@ export const TimeControlButton = ({ type }: { type: 'prev' | 'next' | 'today' })
           className={timeControlButtonStyle({ order: 'first' })}
           onClick={handleClickPrevWeek}
         >
-          <ChevronLeft fill={vars.color.Ref.Netural[600]} />
+          <ChevronLeft clickable fill={vars.color.Ref.Netural[600]} />
         </button>
       );
     case 'next':
@@ -25,7 +25,7 @@ export const TimeControlButton = ({ type }: { type: 'prev' | 'next' | 'today' })
           className={timeControlButtonStyle({ order: 'last' })} 
           onClick={handleClickNextWeek}
         >
-          <ChevronRight fill={vars.color.Ref.Netural[600]} />
+          <ChevronRight clickable fill={vars.color.Ref.Netural[600]} />
         </button>
       );
     case 'today':

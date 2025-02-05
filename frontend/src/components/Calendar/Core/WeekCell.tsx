@@ -10,10 +10,10 @@ interface WeekCellProps {
   date: Date;
   isToday: boolean;
   selected: boolean;
-  onClickHandler: (event: MouseEvent<HTMLDivElement>) => void;
+  onClickHandler?: (event: MouseEvent<HTMLDivElement>) => void;
 }
 
-export const WeekCell = ({ day, date, isToday, selected, onClickHandler }: WeekCellProps) => {
+export const WeekCell = ({ day, date, isToday, selected }: WeekCellProps) => {
   const dayStyleName = (day: WEEKDAY) => {
     switch (day) {
       case 'SUN':
@@ -31,7 +31,6 @@ export const WeekCell = ({ day, date, isToday, selected, onClickHandler }: WeekC
         day: dayStyleName(day), 
         state: selected ? 'selected' : 'default', 
       })}
-      onClick={onClickHandler}
     >
       <Text typo='b3M'>{day}</Text>
       <div className={weekCellBoxStyle({ day: isToday ? 'today' : dayStyleName(day) })}>
