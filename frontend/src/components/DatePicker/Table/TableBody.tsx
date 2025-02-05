@@ -1,11 +1,11 @@
 
 import { useSafeContext } from '@/hooks/useSafeContext';
 
-import { MonthCalendarContext } from '../MonthCalendarContext';
+import { DatePickerContext } from '../DatePickerContext';
 import Row from './Row';
 
 const TableBody = () => {
-  const { calendarDates, selectedDate, baseDate } = useSafeContext(MonthCalendarContext);
+  const { calendarDates, selectedDate, baseDate } = useSafeContext(DatePickerContext);
   return (
     <div>
       {calendarDates.map((week, index) => (

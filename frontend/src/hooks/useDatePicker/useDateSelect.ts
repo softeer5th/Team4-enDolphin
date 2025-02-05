@@ -1,4 +1,4 @@
-import { MonthCalendarContext } from '@/components/DatePicker/MonthCalendarContext';
+import { DatePickerContext } from '@/components/DatePicker/DatePickerContext';
 import { useSafeContext } from '@/hooks/useSafeContext';
 
 export const useDateSelect = (date: Date) => {
@@ -8,7 +8,7 @@ export const useDateSelect = (date: Date) => {
     highlightRange,
     setHighlightStart,
     setHighlightEnd,
-  } = useSafeContext(MonthCalendarContext);
+  } = useSafeContext(DatePickerContext);
   const selectDate = () => {
     if (calendarType === 'select') {
       handleDateSelect(date);

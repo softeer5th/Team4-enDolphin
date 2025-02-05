@@ -2,10 +2,10 @@ import { assignInlineVars } from '@vanilla-extract/dynamic';
 
 import { useDateSelect } from '@/hooks/useDatePicker/useDateSelect';
 import { useSafeContext } from '@/hooks/useSafeContext';
-import { isHoliday, isSameDate, isSaturday, isSunday } from '@/utils/date';
+import { isSameDate, isSaturday, isSunday } from '@/utils/date';
 
 import type { CalendarType } from '../..';
-import { MonthCalendarContext } from '../../MonthCalendarContext';
+import { DatePickerContext } from '../../DatePickerContext';
 import type { HighlightState } from '../Highlight';
 import { cellThemeVars } from '../index.css';
 import CellWrapper from './CellWrapper';
@@ -30,7 +30,7 @@ export const DateCell = ({ date, selected, baseDate, highlightState }: DateCellP
     calendarType,
     todayCellStyle,
     selectedCellStyle,
-  } = useSafeContext(MonthCalendarContext);
+  } = useSafeContext(DatePickerContext);
   const inlineCellStyles = assignInlineVars(cellThemeVars, {
     todayCellBackgroundColor: todayCellStyle.backgroundColor ?? 'transparent',
     todayCellColor: todayCellStyle.color ?? 'transparent',
@@ -63,9 +63,10 @@ const getDateCellStyle = (
     return selectedCellStyle;
   }
 
-  if (isSameDate(date, new Date())) return todayCellStyle;
+  if (calendarType === 'select' && isSameDate(date, new Date())) return todayCellStyle;
   if (date.getMonth() !== baseDate.getMonth()) return otherMonthCellStyle;
-  if (isSunday(date) || isHoliday(date)) return holidayCellStyle;
+  // TODO: 공휴일도 함께 체크
+  if (isSunday(date)) return holidayCellStyle;
   if (isSaturday(date)) return saturdayCellStyle;
   return weekdayCellStyle;
 };

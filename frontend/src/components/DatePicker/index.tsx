@@ -1,9 +1,9 @@
 
 import useDatePicker from '@/hooks/useDatePicker';
 
+import { DatePickerContext } from './DatePickerContext';
 import Header from './Header';
 import { containerStyle } from './index.css';
-import { MonthCalendarContext } from './MonthCalendarContext';
 import Table from './Table';
 
 interface CellStyleProps {
@@ -23,14 +23,14 @@ export interface DatePickerProps {
 const DatePicker = ({ calendarType, todayCellStyle, selectedCellStyle }: DatePickerProps) => {
   const monthCalendar = useDatePicker();
   return (
-    <MonthCalendarContext.Provider 
+    <DatePickerContext.Provider 
       value={{ calendarType, todayCellStyle, selectedCellStyle, ...monthCalendar }}
     >
       <div className={containerStyle}>
         <Header />
         <Table />
       </div>
-    </MonthCalendarContext.Provider>
+    </DatePickerContext.Provider>
   );
 };
 

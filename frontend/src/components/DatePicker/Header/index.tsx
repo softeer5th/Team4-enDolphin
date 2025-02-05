@@ -4,7 +4,7 @@ import { Text } from '@/components/Text';
 import { useSafeContext } from '@/hooks/useSafeContext';
 import { vars } from '@/theme/index.css';
 
-import { MonthCalendarContext } from '../MonthCalendarContext';
+import { DatePickerContext } from '../DatePickerContext';
 import { chevronWrapper, headerStyle } from './index.css';
 
 const Header = () => {
@@ -12,7 +12,7 @@ const Header = () => {
     baseDate,
     goToPrevMonth,
     goToNextMonth, 
-  } = useSafeContext(MonthCalendarContext);
+  } = useSafeContext(DatePickerContext);
   const currentYear = baseDate.getFullYear();
   const currentMonth = baseDate.getMonth();
   return (

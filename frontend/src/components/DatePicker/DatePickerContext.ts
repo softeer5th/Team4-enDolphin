@@ -6,4 +6,4 @@ import type { DatePickerProps } from '.';
 
 interface DatePickerContextProps extends UseMonthCalendarReturn, DatePickerProps {}
 
-export const MonthCalendarContext = createContext<DatePickerContextProps | null>(null);
+export const DatePickerContext = createContext<DatePickerContextProps | null>(null);

@@ -3,7 +3,7 @@ import { useSafeContext } from '@/hooks/useSafeContext';
 import { isSameDate } from '@/utils/date';
 import { intersperseElement } from '@/utils/jsxUtils';
 
-import { MonthCalendarContext } from '../MonthCalendarContext';
+import { DatePickerContext } from '../DatePickerContext';
 import { DateCell } from './Cell';
 import type { HighlightState } from './Highlight';
 import HighlightBox from './Highlight/HighlightBox';
@@ -17,7 +17,7 @@ interface RowProps {
 }
 
 const Row = ({ week, baseDate, selectedDate }: RowProps) => {
-  const { highlightRange } = useSafeContext(MonthCalendarContext);
+  const { highlightRange } = useSafeContext(DatePickerContext);
   const rawRow = week.map((day, index) => {
     const highlightState = getHighlightState(day, highlightRange);
     return (
