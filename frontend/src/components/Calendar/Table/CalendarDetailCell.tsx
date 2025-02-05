@@ -7,23 +7,19 @@ export const CalendarDetailCell = ({ date }: { date: Date }) => {
   const { 
     selectedStartTime, 
     selectedEndTime, 
-    handleSelectStartTime, 
-    handleSelectEndTime, 
+    handleMouseDown,
+    handleMouseEnter,
+    handleMouseUp,
   } = useTimeTableContext();
-
   const selected = isDateInRange(date, selectedStartTime, selectedEndTime);
-  const handleSelectTime = () => {
-    // eslint-disable-next-line no-console
-    console.log(date);
-    handleSelectStartTime(date);
-    handleSelectEndTime(date);
-  };
 
   return (
     <div
       className={cellDetailStyle({ state: selected ? 'selected' : 'default' })}
       key={date.getTime()}
-      onClick={handleSelectTime}
+      onMouseDown={()=>handleMouseDown(date)}
+      onMouseEnter={()=>handleMouseEnter(date)}
+      onMouseUp={handleMouseUp}
     />
   );
 };
