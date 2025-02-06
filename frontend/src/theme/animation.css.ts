@@ -1,4 +1,7 @@
+import type { CSSProperties } from '@vanilla-extract/css';
 import { keyframes, style } from '@vanilla-extract/css';
+
+import { vars } from './index.css';
 
 // TODO: 토큰 매직넘버 제거
 
@@ -24,6 +27,27 @@ const disappear = keyframes({
   },
 });
 
-export const fadeInAndOut = style({
+export const fadeInAndOutStyle = style({
   animation: `${appear} 0.3s ease-out, ${disappear} 0.3s ease-in 2.7s`,
 });
+
+export const fadeHighlight = keyframes({
+  '0%': { backgroundColor: vars.color.Ref.Netural.White },
+  '5%': { 
+    backgroundColor: vars.color.Ref.Primary[50],         
+    boxShadow: `inset 0 0 0 0.5px ${vars.color.Ref.Primary[100]}`, 
+  },
+  '50%': { 
+    backgroundColor: vars.color.Ref.Primary[50],
+    boxShadow: `inset 0 0 0 0.5px ${vars.color.Ref.Primary[100]}`,
+  },
+  '100%': { 
+    backgroundColor: vars.color.Ref.Netural.White,
+  },
+});
+
+export const fadeHighlightProps: CSSProperties = {
+  animationName: fadeHighlight,
+  animationDuration: '2s',
+  animationFillMode: 'forwards',
+};

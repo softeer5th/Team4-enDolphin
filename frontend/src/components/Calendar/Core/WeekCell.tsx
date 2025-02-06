@@ -1,5 +1,3 @@
-import type { MouseEvent } from 'react';
-
 import type { WEEKDAY } from '@/constants/date';
 
 import { Text } from '../../Text';
@@ -10,10 +8,9 @@ interface WeekCellProps {
   date: Date;
   isToday: boolean;
   selected: boolean;
-  onClickHandler: (event: MouseEvent<HTMLDivElement>) => void;
 }
 
-export const WeekCell = ({ day, date, isToday, selected, onClickHandler }: WeekCellProps) => {
+export const WeekCell = ({ day, date, isToday, selected }: WeekCellProps) => {
   const dayStyleName = (day: WEEKDAY) => {
     switch (day) {
       case 'SUN':
@@ -31,7 +28,7 @@ export const WeekCell = ({ day, date, isToday, selected, onClickHandler }: WeekC
         day: dayStyleName(day), 
         state: selected ? 'selected' : 'default', 
       })}
-      onClick={onClickHandler}
+      key={selected ? Date.now() : ''}
     >
       <Text typo='b3M'>{day}</Text>
       <div className={weekCellBoxStyle({ day: isToday ? 'today' : dayStyleName(day) })}>
