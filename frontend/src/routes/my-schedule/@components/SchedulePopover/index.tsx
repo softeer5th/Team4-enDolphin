@@ -1,28 +1,23 @@
 import Button from '@/components/Button';
 import { Checkbox } from '@/components/Checkbox';
 import { Flex } from '@/components/Flex';
-import { Plus } from '@/components/Icon';
 import Input from '@/components/Input';
 import { Text } from '@/components/Text';
 import { Toggle } from '@/components/Toggle';
 import { vars } from '@/theme/index.css';
 
-import { buttonStyle, cardStyle, containerStyle, inputStyle, titleStyle } from './index.css';
+import type { PopoverType } from '../../@types';
+import { buttonStyle, cardStyle, containerStyle, inputStyle } from './index.css';
+import { Title } from './Title';
 
 interface SchedulePopoverProps {
   isOpen: boolean;
+  type: PopoverType;
 }
 
-export const SchedulePopover = ({ isOpen }: SchedulePopoverProps) => (
+export const SchedulePopover = ({ isOpen, type }: SchedulePopoverProps) => (
   <dialog className={containerStyle} open={isOpen}>
-    <Text
-      className={titleStyle}
-      color={vars.color.Ref.Netural[600]}
-      typo='t3'
-    >
-      <Plus stroke={vars.color.Ref.Netural[600]} width={20} />
-      일정 추가
-    </Text>
+    <Title type={type} />
     <Flex
       align='flex-end'
       className={cardStyle}
