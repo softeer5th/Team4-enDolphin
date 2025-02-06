@@ -1,7 +1,7 @@
 
 import { style } from '@vanilla-extract/css';
 
-import { vars } from '../../theme/index.css';
+import { vars } from '@/theme/index.css';
 
 export const labelContainerStyle = style({
   display: 'inline-flex',

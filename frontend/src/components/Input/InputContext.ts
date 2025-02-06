@@ -5,6 +5,7 @@ import type { CommonInputProps } from '.';
 interface InputContextProps {
   isValid: boolean;
   type: CommonInputProps['type'];
+  borderPlacement?: 'container' | 'inputField';
 }
 
 /**

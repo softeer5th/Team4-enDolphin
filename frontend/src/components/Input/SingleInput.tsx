@@ -1,11 +1,11 @@
 import type { InputHTMLAttributes } from 'react';
 
 import { type CommonInputProps } from '.';
-import HelperText from './HelperText';
-import { containerStyle, inputFieldsContainerStyle } from './index.css';
+import HelperText from './Core/HelperText';
+import InputField from './Core/InputField';
+import Label from './Core/Label';
+import { containerStyle, inputFieldsContainerStyle, interactableBorderStyle } from './index.css';
 import { InputContext } from './InputContext';
-import InputField from './InputField';
-import Label from './Label';
 
 export interface SingleInputProps extends CommonInputProps {
   inputProps?: Omit<InputHTMLAttributes<HTMLInputElement>, 'placeholder' | 'onClick' | 'readOnly'>;
@@ -25,7 +25,7 @@ export const SingleInput = ({
   <InputContext.Provider value={{ isValid, type }}>
     <div className={containerStyle}>
       <Label required={required}>{label}</Label>
-      <div className={inputFieldsContainerStyle}>
+      <div className={`${inputFieldsContainerStyle} ${interactableBorderStyle({ isValid })}`}>
         <InputField 
           {...inputProps}
           onClick={onClick} 

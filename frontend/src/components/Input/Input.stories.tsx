@@ -50,7 +50,7 @@ export const Default: StoryObj<typeof Input.Single> = {
     placeholder: '이메일을 입력하세요',
   },
   render: (args) => (
-    <Input.Single {...args}/>
+    <Input.Single {...args} />
   ),
 };
 
@@ -64,6 +64,7 @@ export const MultiInput = () => {
 
   return (
     <Input.Multi
+      borderPlacement='inputField'
       isValid={true}
       label='시간'
       required={true}
@@ -94,10 +95,11 @@ export const CustomSeparatorIcon = () => {
 
   return (
     <Input.Multi
+      borderPlacement='container'
       isValid={true}
       label='시간'
       required={true}
-      separator={<Check fill={vars.color.Ref.Netural[600]}/>}
+      separator={<Check fill={vars.color.Ref.Netural[600]} />}
       type='text'
     >
       <Input.Multi.InputField 
