@@ -11,25 +11,22 @@ interface AvatarProps {
 
 const MAX_IMAGE_COUNT = 4;
 
-const Avatar = ({ size, imageUrls: prevUrls }: AvatarProps) => {
-  let limitedUrls = prevUrls;
-  if (prevUrls.length > MAX_IMAGE_COUNT) {
-    limitedUrls = prevUrls.slice(0, MAX_IMAGE_COUNT);
-  }
+const Avatar = ({ size, imageUrls }: AvatarProps) => {
+  const ENTIRE_LENGTH = imageUrls.length;
+  const limitedUrls = imageUrls.slice(0, MAX_IMAGE_COUNT);
 
   return (
     <div className={avatarContainerStyle}>
       {limitedUrls.map((url, index) => (
         <AvatarItem
-          alt=''
           key={`${index}-${url}`}
           size={size}
           src={url}
         />
       ))}
-      {prevUrls.length > MAX_IMAGE_COUNT && (
+      {ENTIRE_LENGTH > MAX_IMAGE_COUNT && (
         <AvatarCount
-          count={prevUrls.length}
+          count={ENTIRE_LENGTH}
           size={size}
         />
       )}
