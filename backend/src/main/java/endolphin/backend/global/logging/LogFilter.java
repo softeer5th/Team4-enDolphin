@@ -5,7 +5,9 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.MDC;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 @Slf4j
@@ -16,6 +18,8 @@ public class LogFilter extends OncePerRequestFilter {
         FilterChain filterChain) throws ServletException, IOException {
 
         long startTime = System.nanoTime();
+        String correlationId = UUID.randomUUID().toString();
+        MDC.put("correlationId", correlationId);
         log.info("Incoming Request: [{}] {} {}",
             request.getMethod(), request.getRequestURI(),
             request.getQueryString() != null ? request.getQueryString() : "");
@@ -26,6 +30,8 @@ public class LogFilter extends OncePerRequestFilter {
         log.info("Incoming Response: [{}] {}, {}, {} ms",
             request.getMethod(), request.getRequestURI() ,
             response.getStatus(), (endTime - startTime) / 1_000_000.0);
+
+        MDC.clear();
     }
 
     @Override
