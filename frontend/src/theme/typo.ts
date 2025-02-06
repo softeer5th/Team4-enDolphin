@@ -12,6 +12,7 @@ export const lineHeights = {
   7: '1.375rem',
 };
 export const fontWeights = {
+  bold: 700,
   'pretendard-0': 600,
   'pretendard-1': 500,
   'pretendard-2': 400,
