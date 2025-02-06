@@ -23,7 +23,7 @@ public class DiscussionBitmapService {
      * LocalDateTime을 분 단위의 long 값(에포크 기준 분 값)으로 변환.
      */
     private long convertToMinuteKey(LocalDateTime dateTime) {
-        return dateTime.toEpochSecond(ZoneOffset.UTC) / 60;
+        return dateTime.toEpochSecond(ZoneOffset.ofHours(9)) / 60;
     }
 
     /**
