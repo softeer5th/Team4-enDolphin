@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { getDaysInMonth } from '@/utils/date/calendar';
+import { getDateParts, getDaysInMonth } from '@/utils/date/calendar';
 import { generateMonthCalendar } from '@/utils/date/calendar/calendarGeneration';
 
 import type { HighlightRange } from './useHighlightRange';
@@ -21,12 +21,14 @@ export interface UseMonthCalendarReturn {
 
 export const useDatePicker = (): UseMonthCalendarReturn => {
   const { baseDate, goToPrevMonth, goToNextMonth } = useMonthNavigation();
+  // TODO: calendarDates 외부로 분리
   const [calendarDates, setCalendarDates] = useState<Date[][]>(
     generateMonthCalendar(baseDate),
   );
   const { highlightRange, setHighlightStart, setHighlightEnd } = useHighlightRange();
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   
+  // TODO: calendarDates 외부로 분리
   useEffect(() => {
     setCalendarDates(generateMonthCalendar(baseDate));
   }, [baseDate, selectedDate, highlightRange]);
@@ -36,12 +38,11 @@ export const useDatePicker = (): UseMonthCalendarReturn => {
       setSelectedDate(null);
       return; 
     }
-    const currentYear = baseDate.getFullYear();
-    const currentMonth = baseDate.getMonth();
-    const calendarDates = getDaysInMonth(baseDate);
+    const { year, month } = getDateParts(baseDate);
+    const daysInMonth = getDaysInMonth(baseDate);
 
-    const startOfCurrentMonth = new Date(currentYear, currentMonth, 1);
-    const endOfCurrentMonth = new Date(currentYear, currentMonth, calendarDates);
+    const startOfCurrentMonth = new Date(year, month, 1);
+    const endOfCurrentMonth = new Date(year, month, daysInMonth);
 
     if (date < startOfCurrentMonth) {
       goToPrevMonth();

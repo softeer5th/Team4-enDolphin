@@ -3,6 +3,7 @@ import { ChevronLeft, ChevronRight } from '@/components/Icon';
 import { Text } from '@/components/Text';
 import { useSafeContext } from '@/hooks/useSafeContext';
 import { vars } from '@/theme/index.css';
+import { getDateParts } from '@/utils/date/calendar';
 
 import { DatePickerContext } from '../DatePickerContext';
 import { chevronWrapper, headerStyle } from './index.css';
@@ -13,8 +14,7 @@ const Header = () => {
     goToPrevMonth,
     goToNextMonth, 
   } = useSafeContext(DatePickerContext);
-  const currentYear = baseDate.getFullYear();
-  const currentMonth = baseDate.getMonth();
+  const { year: currentYear, month: currentMonth } = getDateParts(baseDate);
   return (
     <div className={headerStyle}>
       <Text typo='b1M'>{`${currentYear}년 ${currentMonth + 1}월`}</Text>
