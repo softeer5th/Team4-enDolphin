@@ -1,6 +1,7 @@
 import type { JSX, PropsWithChildren, ReactNode } from 'react';
 import { isValidElement } from 'react';
 
+import clsx from '@/utils/clsx';
 import { intersperseElement } from '@/utils/jsxUtils';
 
 import { Text } from '../Text';
@@ -18,7 +19,7 @@ import { InputContext } from './InputContext';
 
 export interface MultiInputProps extends CommonInputProps, PropsWithChildren {
   separator?: string | JSX.Element;
-  borderPlacement: 'container' | 'inputField';
+  borderPlacement?: 'container' | 'inputField';
 }
 
 export const MultiInput = ({ 
@@ -29,7 +30,7 @@ export const MultiInput = ({
   separator = '',
   hint, 
   error, 
-  borderPlacement,
+  borderPlacement = 'inputField',
   children,
 }: MultiInputProps) => {
   const childElements = children ? 
@@ -43,10 +44,9 @@ export const MultiInput = ({
     <InputContext.Provider value={{ isValid, type, borderPlacement }}>
       <div className={containerStyle}>
         <Label required={required}>{label}</Label>
-        <div className={`
-         ${inputFieldsContainerStyle}
-         ${borderPlacement === 'container' && interactableBorderStyle({ isValid })}
-         `}
+        <div className={clsx(
+          inputFieldsContainerStyle,
+          interactableBorderStyle({ isValid }))}
         >
           {childrenWithSeparators}
         </div>

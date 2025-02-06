@@ -4,6 +4,7 @@ import { useRef } from 'react';
 import { ChevronDown } from '@/components/Icon';
 import { useSafeContext } from '@/hooks/useSafeContext';
 import { vars } from '@/theme/index.css';
+import clsx from '@/utils/clsx';
 
 import { interactableBorderStyle } from '../index.css';
 import { InputContext } from '../InputContext';
@@ -27,10 +28,9 @@ const InputField = ({ placeholder, onClick, ...inputProps }: InputFieldProps) =>
 
   return (
     <div 
-      className={`
-        ${inputFieldContainerStyle({ type })}
-        ${borderPlacement === 'inputField' && interactableBorderStyle({ isValid })}
-      `} 
+      className={clsx(
+        inputFieldContainerStyle({ type }), 
+        borderPlacement === 'inputField' && interactableBorderStyle({ isValid }) )} 
       onClick={handleContainerClick}
     >
       <input
