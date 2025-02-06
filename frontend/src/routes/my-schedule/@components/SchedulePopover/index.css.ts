@@ -18,6 +18,14 @@ export const containerStyle = style({
   borderRadius: vars.radius[500],
 });
 
+export const titleStyle = style({
+  paddingBottom: vars.spacing[200],
+
+  display: 'flex',
+  alignItems: 'center',
+  gap: vars.spacing[100],
+});
+
 export const inputStyle = style({
   width: '100%',
   padding: `${vars.spacing[200]} 2px`,
