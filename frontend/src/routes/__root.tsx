@@ -4,6 +4,8 @@ import { lazy } from 'react';
 import { defaultENV } from '@/envconfig';
 
 import ErrorPage from './@components/ErrorPage';
+import GlobalHeader from './@components/GlobalHeader';
+import RootContainer from './@components/RootContainer';
 
 const TanStackRouterDevtools =
   defaultENV.MODE === 'production'
@@ -16,10 +18,11 @@ const TanStackRouterDevtools =
 
 export const Route = createRootRoute({
   component: () => (
-    <>
+    <RootContainer>
+      <GlobalHeader />
       <Outlet />
       <TanStackRouterDevtools />
-    </>
+    </RootContainer>
   ),
   notFoundComponent: ErrorPage,
 });
