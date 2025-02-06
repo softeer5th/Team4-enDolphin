@@ -10,6 +10,7 @@ import {
   subTitleStyle, 
   titleStyle, 
 } from './index.css';
+import { LandingImages } from './LandingImages';
 
 const Landing = () => {
   const handleClickGoogleLogin = () => {
@@ -41,6 +42,7 @@ const Landing = () => {
       >
         Google로 시작하기
       </Button>
+      <LandingImages />
     </div>
   );
 };
