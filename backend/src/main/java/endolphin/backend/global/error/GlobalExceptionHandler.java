@@ -17,7 +17,7 @@ public class GlobalExceptionHandler {
         log.error("[API exception] Error code: {}, Message: {}",
             e.getErrorCode(), e.getMessage(), e);
         ErrorResponse response = ErrorResponse.of(e.getErrorCode());
-        return ResponseEntity.status((response.httpStatus())).body(response);
+        return ResponseEntity.status(e.getErrorCode().getHttpStatus()).body(response);
     }
 
     @ExceptionHandler(Exception.class)
