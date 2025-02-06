@@ -35,7 +35,7 @@ public class UserService {
     }
 
     public OAuthResponse oauth2Callback(String code) {
-        GoogleTokens tokenResponse = googleOAuthService.getAccessToken(code);
+        GoogleTokens tokenResponse = googleOAuthService.getGoogleTokens(code);
         GoogleUserInfo userInfo = googleOAuthService.getUserInfo(tokenResponse.accessToken());
         User user = createUser(userInfo, tokenResponse);
         String accessToken = jwtProvider.createToken(user.getId(), user.getEmail());

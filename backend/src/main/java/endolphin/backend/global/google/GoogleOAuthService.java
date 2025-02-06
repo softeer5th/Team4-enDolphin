@@ -20,7 +20,7 @@ public class GoogleOAuthService {
     private final GoogleOAuthProperties googleOAuthProperties;
     private final RestTemplate restTemplate;
 
-    public GoogleTokens getAccessToken(String code) {
+    public GoogleTokens getGoogleTokens(String code) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 

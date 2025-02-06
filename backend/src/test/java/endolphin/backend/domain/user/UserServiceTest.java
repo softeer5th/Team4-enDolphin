@@ -13,7 +13,6 @@ import endolphin.backend.global.config.GoogleOAuthProperties;
 import endolphin.backend.global.google.GoogleOAuthService;
 import endolphin.backend.global.security.JwtProvider;
 import java.util.Optional;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -66,7 +65,7 @@ class UserServiceTest {
         GoogleTokens googleTokens = new GoogleTokens("test-access-token", "test-refresh-token");
         GoogleUserInfo googleUserInfo = new GoogleUserInfo("test-sub", "test-name", "test-email",
             "test-pic");
-        
+
         User user = User.builder()
             .email(googleUserInfo.email())
             .name(googleUserInfo.name())
@@ -75,7 +74,7 @@ class UserServiceTest {
             .refreshToken(googleTokens.refreshToken())
             .build();
 
-        given(googleOAuthService.getAccessToken(anyString()))
+        given(googleOAuthService.getGoogleTokens(anyString()))
             .willReturn(googleTokens);
 
         given(googleOAuthService.getUserInfo(anyString()))
