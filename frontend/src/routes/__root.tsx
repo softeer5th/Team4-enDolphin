@@ -6,6 +6,7 @@ import { defaultENV } from '@/envconfig';
 import ErrorPage from './@components/ErrorPage';
 import GlobalHeader from './@components/GlobalHeader';
 import RootContainer from './@components/RootContainer';
+import RootContentWrapper from './@components/RootContentWrapper';
 
 const TanStackRouterDevtools =
   defaultENV.MODE === 'production'
@@ -20,7 +21,9 @@ export const Route = createRootRoute({
   component: () => (
     <RootContainer>
       <GlobalHeader />
-      <Outlet />
+      <RootContentWrapper>
+        <Outlet />
+      </RootContentWrapper>
       <TanStackRouterDevtools />
     </RootContainer>
   ),
