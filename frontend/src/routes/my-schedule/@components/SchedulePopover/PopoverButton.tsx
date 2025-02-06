@@ -21,7 +21,7 @@ export const PopoverButton = ({ type, ...handlers }: PopoverButtonProps)=>(
         className={buttonStyle}
         onClick={handlers.onClickDelete}
         style='weak'
-        type='destructive'
+        variant='destructive'
       >
         삭제
       </Button>
