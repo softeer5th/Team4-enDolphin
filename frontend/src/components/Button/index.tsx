@@ -29,8 +29,8 @@ const Button = ({
   children,
   className,
 }: ButtonProps) => (
-  <button
-    className={clsx(className, containerStyle({ type, style, radius, size }))}
+  <button 
+    className={clsx(containerStyle({ type, style, radius, size }), className)}
     onClick={onClick}
   >
     {leftIcon && <ButtonIcon size={size}>{leftIcon}</ButtonIcon>}
