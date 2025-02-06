@@ -5,7 +5,7 @@ import { Flex } from '@/components/Flex';
 import { Text } from '@/components/Text';
 import { vars } from '@/theme/index.css';
 
-const Error = () => (
+const ErrorPage = () => (
   <Flex
     align='center'
     direction='column'
@@ -36,4 +36,4 @@ const Error = () => (
   </Flex>
 );
 
-export default Error;
+export default ErrorPage;
