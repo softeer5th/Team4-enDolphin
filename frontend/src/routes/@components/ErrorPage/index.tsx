@@ -13,6 +13,7 @@ const ErrorPage = () => (
     height='100vh'
   >
     <img
+      alt='에러를 나타내는 이미지'
       height={180}
       src='/images/assets/error.webp'
       width={180}
