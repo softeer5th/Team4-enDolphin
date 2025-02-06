@@ -37,7 +37,7 @@ public class UserService {
 
     public UrlResponse getGoogleLoginUrl() {
         return new UrlResponse(String.format(
-            "%s?client_id=%s&redirect_uri=%s&response_type=code&scope=%s&access_type=offline",
+            "%s?client_id=%s&redirect_uri=%s&response_type=code&scope=%s&access_type=offline&prompt=consent",
             googleOAuthProperties.authUrl(), googleOAuthProperties.clientId(),
             googleOAuthProperties.redirectUri(), googleOAuthProperties.scope()));
     }
