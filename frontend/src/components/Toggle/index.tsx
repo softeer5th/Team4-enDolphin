@@ -40,9 +40,15 @@ export const Toggle = ({
   const checkStyleName = checked ? 'selected' : 'rest';
 
   return(
-    <div className={containerStyle({ style: checkStyleName })} onClick={handleClickCheck}>
+    <div
+      aria-checked={checked} 
+      className={containerStyle({ style: checkStyleName })}  
+      onClick={handleClickCheck}
+      role='switch'
+    >
       <span className={checkboxStyle({ style: checkStyleName })} />
       <input 
+        aria-hidden='true'
         checked={checked}
         className={inputStyle}
         id={id}
