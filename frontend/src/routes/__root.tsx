@@ -3,6 +3,8 @@ import { lazy } from 'react';
 
 import { defaultENV } from '@/envconfig';
 
+import Error from './@components/Error';
+
 const TanStackRouterDevtools =
   defaultENV.MODE === 'production'
     ? () => null
@@ -19,4 +21,5 @@ export const Route = createRootRoute({
       <TanStackRouterDevtools />
     </>
   ),
+  notFoundComponent: Error,
 });
