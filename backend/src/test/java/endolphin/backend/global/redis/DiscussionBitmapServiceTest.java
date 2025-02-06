@@ -41,5 +41,13 @@ public class DiscussionBitmapServiceTest {
         // big-endian 순서로 확인: (7 - bitPosition)
         boolean extractedBit = ((bitmapData[byteIndex] >> (7 - bitPosition)) & 1) == 1;
         assertThat(extractedBit).isTrue();
+
+        // 5. SCAN을 이용하여 해당 discussionId의 모든 비트맵 키 삭제
+        bitmapService.deleteDiscussionBitmapsUsingScan(discussionId);
+
+        // 6. 삭제 후 데이터 검증: 비트맵 데이터가 없어야 함
+        byte[] afterDelete = bitmapService.getBitmapData(discussionId, dateTime);
+        assertThat(afterDelete).as("deleteDiscussionBitmapsUsingScan should remove the bitmap")
+            .isNull();
     }
 }
