@@ -8,8 +8,8 @@ export const useDateSelect = (date: Date) => {
     highlightRange,
     setHighlightStart,
     setHighlightEnd,
-    
   } = useSafeContext(DatePickerContext);
+  
   const selectDate = () => {
     handleDateSelect(date);
     if (calendarType === 'select') return;

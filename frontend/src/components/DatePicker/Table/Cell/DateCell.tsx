@@ -39,6 +39,11 @@ export const DateCell = ({ date, selected, baseDate, highlightState }: DateCellP
   });
 
   const dateCellType = getDateCellType(date, calendarType, selected, baseDate, highlightState);
+  const selectDate = useDateSelect(date);
+  const handleDateCellClick = () => {
+    if (calendarType === 'range' && dateCellType === 'otherMonth') return;
+    selectDate();
+  };
   // TODO: cell에 대한 cursor style과 컨트롤을 묶어서 처리할 방법 모색
   return (
     <CellWrapper 
@@ -46,7 +51,7 @@ export const DateCell = ({ date, selected, baseDate, highlightState }: DateCellP
       cursorType={calendarType === 'range' && dateCellType === 'otherMonth' 
         ? 'not-allowed' 
         : 'pointer'}
-      onClick={useDateSelect(date)}
+      onClick={handleDateCellClick}
       style={inlineCellStyles}
     >
       {date.getDate()}
