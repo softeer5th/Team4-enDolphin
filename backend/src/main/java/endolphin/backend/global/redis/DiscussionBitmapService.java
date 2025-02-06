@@ -3,6 +3,7 @@ package endolphin.backend.global.redis;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.RedisSystemException;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -33,11 +34,16 @@ public class DiscussionBitmapService {
      * @param dateTime     초기화할 기준 시각 (분 단위로 변환됨)
      */
     public void initializeBitmap(Long discussionId, LocalDateTime dateTime) {
-        int byteSize = 2;
-        long minuteKey = convertToMinuteKey(dateTime);
-        String redisKey = buildRedisKey(discussionId, minuteKey);
-        byte[] initialData = new byte[byteSize];
-        redisTemplate.opsForValue().set(redisKey, initialData);
+        try {
+            int byteSize = 2;
+            long minuteKey = convertToMinuteKey(dateTime);
+            String redisKey = buildRedisKey(discussionId, minuteKey);
+            byte[] initialData = new byte[byteSize];
+            redisTemplate.opsForValue().set(redisKey, initialData);
+        } catch (RedisSystemException e) {
+            //TODO: 예외 처리
+            throw e;
+        }
     }
 
     /**
