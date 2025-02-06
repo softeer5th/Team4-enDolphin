@@ -34,7 +34,7 @@ export const TimeControlButton = ({ type }: { type: 'prev' | 'next' | 'today' })
           aria-label='오늘'
           onClick={handleClickToday}
           style='outline'
-          type='secondary'
+          variant='secondary'
         >
           오늘
         </Button>

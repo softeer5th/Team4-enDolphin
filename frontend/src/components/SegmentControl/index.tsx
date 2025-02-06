@@ -36,7 +36,7 @@ const SegmentControl = ({
       {options.map((option) => {
         const isSelected = option.value === selectedValue;
         const buttonStyles: ButtonProps = {
-          type: 'secondary',
+          variant: 'secondary',
           radius: 'max',
           size: 'lg',
           style: getButtonStyle(isSelected, style), 

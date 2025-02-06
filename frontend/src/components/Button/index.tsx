@@ -1,4 +1,9 @@
-import type { JSX, MouseEventHandler } from 'react';
+import type { 
+  ComponentPropsWithoutRef, 
+  ElementType, 
+  JSX, 
+  MouseEventHandler,
+} from 'react';
 
 import clsx from '@/utils/clsx';
 
@@ -6,8 +11,12 @@ import ButtonIcon from './ButtonIcon';
 import ButtonText from './ButtonText';
 import { containerStyle } from './index.css';
 
+type AsProp<T extends ElementType = 'button'> = {
+  as?: T;
+};
+
 export interface ButtonProps {
-  type?: 'primary' | 'secondary' | 'destructive' | 're';
+  variant?: 'primary' | 'secondary' | 'destructive' | 're';
   style?: 'weak' | 'filled' | 'outline' | 'borderless';
   radius?: 'max' | 'roundCorner';
   size?: 'sm' | 'md' | 'lg' | 'xl';
@@ -18,8 +27,9 @@ export interface ButtonProps {
   className?: string;
 }
 
-const Button = ({
-  type = 'primary',
+const Button = <T extends ElementType = 'button'>({
+  as,
+  variant = 'primary',
   style = 'filled',
   radius = 'roundCorner',
   size = 'md',
@@ -28,15 +38,19 @@ const Button = ({
   onClick,
   children,
   className,
-}: ButtonProps) => (
-  <button 
-    className={clsx(containerStyle({ type, style, radius, size }), className)}
-    onClick={onClick}
-  >
-    {leftIcon && <ButtonIcon size={size}>{leftIcon}</ButtonIcon>}
-    <ButtonText size={size}>{children}</ButtonText>
-    {rightIcon && <ButtonIcon size={size}>{rightIcon}</ButtonIcon>}
-  </button>
-);
+}: AsProp<T> & ComponentPropsWithoutRef<T> & ButtonProps) => {
+  const Component = as || 'button';
+
+  return(
+    <Component 
+      className={clsx(containerStyle({ variant, style, radius, size }), className)}
+      onClick={onClick}
+    >
+      {leftIcon && <ButtonIcon size={size}>{leftIcon}</ButtonIcon>}
+      <ButtonText size={size}>{children}</ButtonText>
+      {rightIcon && <ButtonIcon size={size}>{rightIcon}</ButtonIcon>}
+    </Component>
+  );
+};
 
 export default Button;

@@ -7,7 +7,7 @@ const meta: Meta<typeof Button> = {
   title: 'Components/Button',
   component: Button,
   argTypes: {
-    type: {
+    variant: {
       control: { type: 'radio' },
       options: ['primary', 'secondary', 'destructive', 're'],
     },

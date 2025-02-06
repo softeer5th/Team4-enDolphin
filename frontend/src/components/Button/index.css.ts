@@ -10,7 +10,7 @@ export const containerStyle = recipe({
     cursor: 'pointer',
   },
   variants: {
-    type: {
+    variant: {
       primary: {
         color: vars.color.Ref.Primary[500],
       },
@@ -62,7 +62,7 @@ export const containerStyle = recipe({
   compoundVariants: [
     {
       variants: {
-        type: 'primary',
+        variant: 'primary',
         style: 'filled',
       },
       style: {
@@ -71,7 +71,7 @@ export const containerStyle = recipe({
     },
     {
       variants: {
-        type: 'primary',
+        variant: 'primary',
         style: 'weak',
       },
       style: {
@@ -80,7 +80,7 @@ export const containerStyle = recipe({
     },
     {
       variants: {
-        type: 'primary',
+        variant: 'primary',
         style: 'outline',
       },
       style: {
@@ -89,7 +89,7 @@ export const containerStyle = recipe({
     },
     {
       variants: {
-        type: 'secondary',
+        variant: 'secondary',
         style: 'filled',
       },
       style: {
@@ -98,7 +98,7 @@ export const containerStyle = recipe({
     },
     {
       variants: {
-        type: 'secondary',
+        variant: 'secondary',
         style: 'weak',
       },
       style: {
@@ -107,7 +107,7 @@ export const containerStyle = recipe({
     },
     {
       variants: {
-        type: 'secondary',
+        variant: 'secondary',
         style: 'outline',
       },
       style: {
@@ -117,7 +117,7 @@ export const containerStyle = recipe({
     },
     {
       variants: {
-        type: 'secondary',
+        variant: 'secondary',
         style: 'borderless',
       },
       style: {
@@ -126,7 +126,7 @@ export const containerStyle = recipe({
     },
     {
       variants: {
-        type: 'destructive',
+        variant: 'destructive',
         style: 'filled',
       },
       style: {
@@ -135,7 +135,7 @@ export const containerStyle = recipe({
     },
     {
       variants: {
-        type: 'destructive',
+        variant: 'destructive',
         style: 'weak',
       },
       style: {
@@ -144,7 +144,7 @@ export const containerStyle = recipe({
     },
     {
       variants: {
-        type: 're',
+        variant: 're',
         style: 'filled',
       },
       style: {
@@ -153,7 +153,7 @@ export const containerStyle = recipe({
     },
     {
       variants: {
-        type: 're',
+        variant: 're',
         style: 'outline',
       },
       style: {
@@ -175,7 +175,7 @@ export const containerStyle = recipe({
     },
   ],
   defaultVariants: {
-    type: 'primary',
+    variant: 'primary',
     style: 'filled',
     size: 'md',
     radius: 'max',
