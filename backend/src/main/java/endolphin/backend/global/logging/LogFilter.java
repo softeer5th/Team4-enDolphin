@@ -15,16 +15,17 @@ public class LogFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
         FilterChain filterChain) throws ServletException, IOException {
 
-        long startTime = System.currentTimeMillis();
-        log.info("Incoming Request: [{}] {}",
-            request.getMethod(), request.getRequestURI());
+        long startTime = System.nanoTime();
+        log.info("Incoming Request: [{}] {} {}",
+            request.getMethod(), request.getRequestURI(),
+            request.getQueryString() != null ? request.getQueryString() : "");
 
         filterChain.doFilter(request, response);
 
-        long endTime = System.currentTimeMillis();
-        log.info("Incoming Response: [{}] {}, {},  {} ms",
+        long endTime = System.nanoTime();
+        log.info("Incoming Response: [{}] {}, {}, {} ms",
             request.getMethod(), request.getRequestURI() ,
-            response.getStatus(), endTime - startTime);
+            response.getStatus(), (endTime - startTime) / 1_000_000.0);
     }
 
     @Override
