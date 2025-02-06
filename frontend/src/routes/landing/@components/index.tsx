@@ -1,5 +1,5 @@
 import Button from '@/components/Button';
-import { Goggle } from '@/components/Icon';
+import { Google } from '@/components/Icon';
 import { Text } from '@/components/Text';
 import { vars } from '@/theme/index.css';
 
@@ -36,7 +36,7 @@ const Landing = () => {
       </Text>
       <Button
         className={buttonStyle}
-        leftIcon={<Goggle />}
+        leftIcon={<Google />}
         onClick={handleClickGoogleLogin}
         size='xl'
       >
