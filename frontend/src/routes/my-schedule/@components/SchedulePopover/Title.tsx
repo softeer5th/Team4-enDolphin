@@ -8,7 +8,7 @@ import type { PopoverType } from '../../@types';
 import { titleStyle } from './index.css';
 
 export const Title = ({ type }: { type: PopoverType })=>{
-  const popOverTypeMap: Record<PopoverType, {
+  const popoverTitleTypeMap: Record<PopoverType, {
     title: string;
     icon: ReactNode;
   }> = {
@@ -28,8 +28,8 @@ export const Title = ({ type }: { type: PopoverType })=>{
       color={vars.color.Ref.Netural[600]}
       typo='t3'
     >
-      {popOverTypeMap[type].icon}
-      {popOverTypeMap[type].title}
+      {popoverTitleTypeMap[type].icon}
+      {popoverTitleTypeMap[type].title}
     </Text>
   ); 
 };

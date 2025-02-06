@@ -40,6 +40,7 @@ export const inputStyle = style({
 });
 
 export const cardStyle = style({
+  width: '100%',
   padding: vars.spacing[300],
 
   backgroundColor: vars.color.Ref.Netural.White,
