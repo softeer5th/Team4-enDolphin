@@ -41,7 +41,7 @@ public class PersonalEventController {
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "일정 조회 성공",
             content = @Content(
-                array = @ArraySchema (
+                array = @ArraySchema(
                     schema = @Schema(implementation = PersonalEventResponse.class)))),
         @ApiResponse(responseCode = "400", description = "잘못된 요청 파라미터",
             content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
