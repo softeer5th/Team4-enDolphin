@@ -3,6 +3,11 @@ const path = require("path");
 const sharp = require("sharp");
 
 const IMAGES_DIR = path.resolve(__dirname, "../../public/images");
+const BREAKPOINTS = [
+  { width: 480, suffix: '-480w' },
+  { width: 768, suffix: '-768w' },
+  { width: 1280, suffix: '-1280w' },
+];
 
 const convertImagesToWebP = async () => {
   try {
@@ -12,25 +17,33 @@ const convertImagesToWebP = async () => {
 
     const folders = fs.readdirSync(IMAGES_DIR);
     for (const folder of folders) {
-      const folderPath = path.join(IMAGES_DIR, folder);
+      const FOLDER_PATH = path.join(IMAGES_DIR, folder);
 
-      if (fs.statSync(folderPath).isDirectory()) {
-        const files = fs.readdirSync(folderPath);
+      if (fs.statSync(FOLDER_PATH).isDirectory()) {
+        const files = fs.readdirSync(FOLDER_PATH);
 
         console.log(`🔄 ${files.length}개의 이미지를 변환 중...`);
 
         for (const file of files) {
-          const filePath = path.join(folderPath, file);
-          if (fs.statSync(filePath).isFile() && /\.(png|jpg|jpeg)$/i.test(file)) {
-            const outputFilePath = path.join(folderPath, file.replace(/\.(png|jpg|jpeg)$/i, ".webp"));
+          const FILE_PATH = path.join(FOLDER_PATH, file);
+          if (fs.statSync(FILE_PATH).isFile() && /\.(png|jpg|jpeg)$/i.test(file)) {
+            const OUTPUT_FILE_PATH = path.join(FOLDER_PATH, file.replace(/\.(png|jpg|jpeg)$/i, ".webp"));
 
-            await sharp(filePath)
+            await sharp(FILE_PATH)
               .toFormat("webp")
               .webp({ quality: 80 })
-              .toFile(outputFilePath);
+              .toFile(OUTPUT_FILE_PATH);
+            
+            console.log(`✅ 변환 완료: ${OUTPUT_FILE_PATH}`);
+            fs.unlinkSync(FILE_PATH); 
+          }
 
-            console.log(`✅ 변환 완료: ${outputFilePath}`);
-            fs.unlinkSync(filePath); 
+          for (const { width, suffix } of BREAKPOINTS) {
+            const RESIZED_FILE_PATH = path.join(FOLDER_PATH, file.replace(/\.webp$/i, `${suffix}.webp`)); 
+            await sharp(FILE_PATH)
+              .resize(width + 100)
+              .toFile(RESIZED_FILE_PATH);
+            console.log(`✅ 리사이징 완료: ${RESIZED_FILE_PATH}`);
           }
         }
       }

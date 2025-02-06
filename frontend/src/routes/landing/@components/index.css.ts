@@ -46,10 +46,8 @@ export const buttonStyle = style({
   justifySelf: 'center',
 });
 
-export const imageWrapperStyle = style({
-  width: '100%',
-
-  paddingTop: '3rem',
+export const imageWrapperStyle = style({  
+  padding: '3rem 1.75rem 0',
 
   display: 'flex',
   alignItems: 'center',
@@ -59,14 +57,21 @@ export const imageWrapperStyle = style({
   '@media': {
     '(max-width: 1024px)': {
       flexDirection: 'column',
-      paddingBottom: '3rem',
+      padding: '3rem 0',
     },
   },
 });
 
 export const imageStyle = style({
-  maxWidth: '100%',
+  width: '50%',
   maxHeight: '28.375rem',
 
   objectFit: 'cover',
+
+  '@media': {
+    '(max-width: 1024px)': {
+      width: '100%',
+      maxHeight: '40rem',
+    },
+  },
 });
