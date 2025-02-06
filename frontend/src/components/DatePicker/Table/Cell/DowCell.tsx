@@ -7,7 +7,7 @@ interface DowCellProps extends PropsWithChildren {
 }
 
 export const DowCell = ({ className, children }: DowCellProps) => (
-  <CellWrapper className={className}>
+  <CellWrapper className={className} cursorType={'default'}>
     {children}
   </CellWrapper>
 );

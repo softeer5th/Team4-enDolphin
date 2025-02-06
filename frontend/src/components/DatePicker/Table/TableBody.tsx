@@ -7,10 +7,10 @@ import Row from './Row';
 const TableBody = () => {
   const { calendarDates, selectedDate, baseDate } = useSafeContext(DatePickerContext);
   return (
-    calendarDates.map((week, index) => (
+    calendarDates.map((week) => (
       <Row
         baseDate={baseDate}
-        key={index}
+        key={`week-${week[0].toISOString()}`}
         selectedDate={selectedDate}
         week={week}
       />

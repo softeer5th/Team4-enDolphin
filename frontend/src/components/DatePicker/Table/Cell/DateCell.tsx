@@ -38,9 +38,14 @@ export const DateCell = ({ date, selected, baseDate, highlightState }: DateCellP
     selectedCellColor: selectedCellStyle.color ?? 'transparent',
   });
 
+  const dateCellType = getDateCellType(date, calendarType, selected, baseDate, highlightState);
+  // TODO: cell에 대한 cursor style과 컨트롤을 묶어서 처리할 방법 모색
   return (
     <CellWrapper 
-      className={getDateCellStyle(date, calendarType, selected, baseDate, highlightState)} 
+      className={getDateCellStyle(dateCellType)}
+      cursorType={calendarType === 'range' && dateCellType === 'otherMonth' 
+        ? 'not-allowed' 
+        : 'pointer'}
       onClick={useDateSelect(date)}
       style={inlineCellStyles}
     >
@@ -49,24 +54,46 @@ export const DateCell = ({ date, selected, baseDate, highlightState }: DateCellP
   );
 };
 
-const getDateCellStyle = (
+type DateCellType = 'weekday' | 'saturday' | 'holiday' | 'otherMonth' | 'today' | 'selected';
+
+const getDateCellType = (
   date: Date,
   calendarType: CalendarType,
   selected: boolean,
   baseDate: Date,
   highlightState: HighlightState,
-) => {
-  if (selected) return selectedCellStyle;
+): DateCellType => {
+  if (selected) return 'selected';
   if (calendarType === 'range' && (
     highlightState === 'startOfRange' || highlightState === 'endOfRange'
   )) {
-    return selectedCellStyle;
+    return 'selected';
   }
 
-  if (calendarType === 'select' && isSameDate(date, new Date())) return todayCellStyle;
-  if (date.getMonth() !== baseDate.getMonth()) return otherMonthCellStyle;
+  if (calendarType === 'select' && isSameDate(date, new Date())) return 'today';
+  if (date.getMonth() !== baseDate.getMonth()) return 'otherMonth';
   // TODO: 공휴일도 함께 체크
-  if (isSunday(date)) return holidayCellStyle;
-  if (isSaturday(date)) return saturdayCellStyle;
-  return weekdayCellStyle;
+  if (isSunday(date)) return 'holiday';
+  if (isSaturday(date)) return 'saturday';
+  return 'weekday';
+};
+
+const getDateCellStyle = (
+  dateCellType: DateCellType,
+) => {
+  switch (dateCellType) {
+    case 'selected':
+      return selectedCellStyle;
+    case 'today':
+      return todayCellStyle;
+    case 'otherMonth':
+      return otherMonthCellStyle;
+    case 'holiday':
+      return holidayCellStyle;
+    case 'saturday':
+      return saturdayCellStyle;
+    case 'weekday':
+    default:
+      return weekdayCellStyle;
+  }
 };

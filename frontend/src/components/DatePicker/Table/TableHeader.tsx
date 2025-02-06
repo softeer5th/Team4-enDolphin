@@ -16,8 +16,8 @@ const days = [
 const TableHeader = () => (
   <RowContainer>
     {days.map(({ label, style }, i) => (
-      <div className={dowCellWrapperStyle}>
-        <DowCell className={style} key={`${label}-${i}`}>
+      <div className={dowCellWrapperStyle}  key={`${label}-${i}`}>
+        <DowCell className={style}>
           {label}
         </DowCell>
       </div>

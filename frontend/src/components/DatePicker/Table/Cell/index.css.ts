@@ -1,16 +1,31 @@
 import { style } from '@vanilla-extract/css';
+import { recipe } from '@vanilla-extract/recipes';
 
 import { vars } from '@/theme/index.css';
 
 import { cellThemeVars } from '../index.css';
 
-export const cellWrapperStyle = style({
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  width: '24px',
-  height: '24px',
-  cursor: 'default',
+export const cellWrapperStyle = recipe({
+  base: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '24px',
+    height: '24px',
+  },
+  variants: {
+    cursorType: {
+      pointer: {
+        cursor: 'pointer',
+      },
+      default: {
+        cursor: 'default',
+      },
+      'not-allowed': {
+        cursor: 'not-allowed',
+      }, 
+    },
+  },
 });
 
 export const weekdayCellStyle = style({
