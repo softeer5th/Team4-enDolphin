@@ -12,7 +12,10 @@ export const containerStyle = style({
   flexDirection: 'column',
   gap: vars.spacing[100],
 
+  // TODO: 아래 코드들도 토큰화
   backgroundColor: '#E5E8EB80',
+  backdropFilter: 'blur(20px)',
+  boxShadow: '0px 0px 15px rgba(0, 0, 0, 0.15)',
 
   border: `1px solid ${vars.color.Ref.Netural[200]}`,
   borderRadius: vars.radius[500],
