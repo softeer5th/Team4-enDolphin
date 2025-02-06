@@ -27,6 +27,25 @@ type Story = StoryObj<typeof Avatar>;
 export const Default: Story = {
   args: {
     size: 'sm',
-    imageUrls: ['1', '2', '3', '4', '5', '6'],
+    imageUrls: [
+      'https://picsum.photos/200',
+      'https://picsum.photos/201',
+      'https://picsum.photos/202',
+      'https://picsum.photos/203',
+      'https://picsum.photos/204',
+      'https://picsum.photos/205',
+    ],
+  },
+};
+
+export const FetchError: Story = {
+  args: {
+    size: 'sm',
+    imageUrls: [
+      'https://hi.com/',
+      'https://hi.com/',
+      'https://hi.com/',
+      'https://hi.com/',
+    ],
   },
 };
