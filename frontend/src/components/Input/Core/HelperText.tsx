@@ -1,6 +1,6 @@
 import type { PropsWithChildren } from 'react';
 
-import { Text } from '../Text';
+import { Text } from '../../Text';
 import { helperTextStyle } from './helperText.css';
 
 interface HelperTextProps extends PropsWithChildren {

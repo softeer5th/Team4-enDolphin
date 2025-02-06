@@ -1,10 +1,12 @@
 import type { InputHTMLAttributes } from 'react';
 import { useRef } from 'react';
 
-import { useSafeContext } from '../../hooks/useSafeContext';
-import { vars } from '../../theme/index.css';
-import { ChevronDown } from '../Icon';
-import { InputContext } from './InputContext';
+import { ChevronDown } from '@/components/Icon';
+import { useSafeContext } from '@/hooks/useSafeContext';
+import { vars } from '@/theme/index.css';
+
+import { interactableBorderStyle } from '../index.css';
+import { InputContext } from '../InputContext';
 import { inputFieldContainerStyle, inputFieldStyle, selectIconStyle } from './inputField.css';
 
 interface InputFieldProps extends Omit<
@@ -15,7 +17,7 @@ interface InputFieldProps extends Omit<
 }
 
 const InputField = ({ placeholder, onClick, ...inputProps }: InputFieldProps) => {
-  const { isValid, type } = useSafeContext(InputContext);
+  const { isValid, type, borderPlacement } = useSafeContext(InputContext);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleContainerClick = () => {
@@ -24,7 +26,13 @@ const InputField = ({ placeholder, onClick, ...inputProps }: InputFieldProps) =>
   };
 
   return (
-    <div className={inputFieldContainerStyle({ isValid, type })} onClick={handleContainerClick}>
+    <div 
+      className={`
+        ${inputFieldContainerStyle({ type })}
+        ${borderPlacement === 'inputField' && interactableBorderStyle({ isValid })}
+      `} 
+      onClick={handleContainerClick}
+    >
       <input
         className={inputFieldStyle}
         placeholder={placeholder}

@@ -1,16 +1,24 @@
 import type { JSX, PropsWithChildren, ReactNode } from 'react';
 import { isValidElement } from 'react';
 
+import { intersperseElement } from '@/utils/jsxUtils';
+
 import { Text } from '../Text';
 import { type CommonInputProps, ICON_WIDTH } from '.';
-import HelperText from './HelperText';
-import { containerStyle, inputFieldsContainerStyle, separatorStyle } from './index.css';
+import HelperText from './Core/HelperText';
+import InputField from './Core/InputField';
+import Label from './Core/Label';
+import { 
+  containerStyle,
+  inputFieldsContainerStyle,
+  interactableBorderStyle,
+  separatorStyle, 
+} from './index.css';
 import { InputContext } from './InputContext';
-import InputField from './InputField';
-import Label from './Label';
 
 export interface MultiInputProps extends CommonInputProps, PropsWithChildren {
   separator?: string | JSX.Element;
+  borderPlacement: 'container' | 'inputField';
 }
 
 export const MultiInput = ({ 
@@ -21,6 +29,7 @@ export const MultiInput = ({
   separator = '',
   hint, 
   error, 
+  borderPlacement,
   children,
 }: MultiInputProps) => {
   const childElements = children ? 
@@ -28,20 +37,23 @@ export const MultiInput = ({
     : [];
   const separatorElement = prepareSeparatorLayout(separator);
   const childrenWithSeparators =
-    childElements.length > 1 ? intersperse(childElements, separatorElement) : childElements;
+    childElements.length > 1 ? intersperseElement(childElements, separatorElement) : childElements;
 
   return (
-    <InputContext.Provider value={{ isValid, type }}>
+    <InputContext.Provider value={{ isValid, type, borderPlacement }}>
       <div className={containerStyle}>
         <Label required={required}>{label}</Label>
-        <div className={inputFieldsContainerStyle}>
+        <div className={`
+         ${inputFieldsContainerStyle}
+         ${borderPlacement === 'container' && interactableBorderStyle({ isValid })}
+         `}
+        >
           {childrenWithSeparators}
         </div>
         {isValid ? 
           <HelperText type='hint'>{hint}</HelperText>
           : 
-          <HelperText type='error'>{error}</HelperText>
-        }
+          <HelperText type='error'>{error}</HelperText>}
       </div>
     </InputContext.Provider>
   );
@@ -60,22 +72,9 @@ const prepareSeparatorLayout = (separator: string | (JSX.Element & { props: Sepa
       </div>
     );
   }
-  return <separator.type {...separator.props} width={ICON_WIDTH}/>;
+  return <separator.type {...separator.props} width={ICON_WIDTH} />;
 };
 
-const intersperse = (
-  childElements: ReactNode[],
-  separator?: JSX.Element,
-): ReactNode[] => {
-  const result: ReactNode[] = [];
-  childElements.forEach((child, index) => {
-    result.push(child);
-    if (separator && index < childElements.length - 1) {
-      result.push(<separator.type {...separator.props} key={index} />);
-    }
-  });
-  return result;
-};
 MultiInput.InputField = InputField;
 
 export default MultiInput;

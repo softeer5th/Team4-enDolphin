@@ -1,6 +1,6 @@
 import type { PropsWithChildren } from 'react';
 
-import { Text } from '../Text';
+import { Text } from '../../Text';
 import { labelContainerStyle, requiredMarkerStyle } from './label.css';
 
 interface LabelProps extends PropsWithChildren {
