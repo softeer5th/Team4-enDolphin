@@ -7,15 +7,12 @@ interface AvatarItemProps {
   size: Size;
 }
 
-const AvatarItem = ({ size }: AvatarItemProps) => (
-  <div className={avatarItemStyle({ size })}>
-  </div>
-  // TODO: 외부에서 이미지 주입
-  // <img
-  //   alt={alt}
-  //   className={avatarItemStyle({ size })}
-  //   src={src}
-  // />
+const AvatarItem = ({ src, size, alt }: AvatarItemProps) => (
+  <img
+    alt={alt}
+    className={avatarItemStyle({ size })}
+    src={src}
+  />
 );
 
 export default AvatarItem;
