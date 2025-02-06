@@ -51,10 +51,11 @@ export const MultiInput = ({
         >
           {childrenWithSeparators}
         </div>
-        {isValid ? 
-          <HelperText type='hint'>{hint}</HelperText>
-          : 
-          <HelperText type='error'>{error}</HelperText>}
+        <HelperText
+          error={error}
+          hint={hint}
+          isValid={isValid}
+        />
       </div>
     </InputContext.Provider>
   );
