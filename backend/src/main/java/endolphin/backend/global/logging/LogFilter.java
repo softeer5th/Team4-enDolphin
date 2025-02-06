@@ -33,9 +33,4 @@ public class LogFilter extends OncePerRequestFilter {
 
         MDC.clear();
     }
-
-    @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) {
-        return !request.getRequestURI().startsWith("/api/v1");
-    }
 }
