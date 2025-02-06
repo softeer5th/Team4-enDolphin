@@ -6,6 +6,7 @@ import endolphin.backend.global.dto.ListResponse;
 import endolphin.backend.global.error.ErrorResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import endolphin.backend.global.util.URIUtil;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -39,7 +40,9 @@ public class PersonalEventController {
     @Operation(summary = "개인 일정 조회", description = "사용자의 개인 일정을 주 단위로 조회합니다.")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "일정 조회 성공",
-            useReturnTypeSchema = true),
+            content = @Content(
+                array = @ArraySchema (
+                    schema = @Schema(implementation = PersonalEventResponse.class)))),
         @ApiResponse(responseCode = "400", description = "잘못된 요청 파라미터",
             content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
         @ApiResponse(responseCode = "401", description = "인증 실패",
@@ -58,8 +61,8 @@ public class PersonalEventController {
 
     @Operation(summary = "개인 일정 생성", description = "새 일정을 추가합니다.")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "일정 조회 성공",
-            useReturnTypeSchema = true),
+        @ApiResponse(responseCode = "201", description = "일정 생성 성공",
+            content = @Content(schema = @Schema(implementation = PersonalEventResponse.class))),
         @ApiResponse(responseCode = "400", description = "잘못된 요청 파라미터",
             content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
         @ApiResponse(responseCode = "401", description = "인증 실패",
@@ -78,7 +81,7 @@ public class PersonalEventController {
     @Operation(summary = "개인 일정 수정", description = "개인 일정을 수정합니다.")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "일정 수정 성공",
-            useReturnTypeSchema = true),
+            content = @Content(schema = @Schema(implementation = PersonalEventResponse.class))),
         @ApiResponse(responseCode = "400", description = "잘못된 요청 데이터",
             content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
         @ApiResponse(responseCode = "401", description = "인증 실패",
