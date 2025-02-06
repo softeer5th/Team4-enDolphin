@@ -1,6 +1,8 @@
 
 import type { PropsWithChildren } from 'react';
 
+import clsx from '@/utils/clsx';
+
 import { Text } from '../../../Text';
 import { cellWrapperStyle } from './index.css';
 
@@ -18,7 +20,7 @@ export const CellWrapper = ({
   children,
 }: CellWrapperProps) => (
   <div
-    className={`${cellWrapperStyle({ cursorType })} ${className}`}
+    className={clsx(cellWrapperStyle({ cursorType }), className )}
     onClick={onClick}
     style={style}
   >
