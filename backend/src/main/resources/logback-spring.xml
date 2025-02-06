@@ -6,7 +6,7 @@
   <property name="FILE_LOG_PATTERN"
     value="%d{yyyy-MM-dd HH:mm:ss}:%-4relative %-5level ${PID:-} [%thread] %logger{36} - %msg%n" />
   <property name="LOG_PATH" value="/var/logs/myapp"/>
-  
+
   <springProfile name="!prod">
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
       <encoder>
