@@ -1,10 +1,17 @@
 package endolphin.backend.global.redis;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.RedisSystemException;
+import org.springframework.data.redis.connection.RedisCommandsProvider;
+import org.springframework.data.redis.connection.RedisConnection;
+import org.springframework.data.redis.connection.RedisKeyCommands;
+import org.springframework.data.redis.core.Cursor;
+import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ScanOptions;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -39,6 +46,7 @@ public class DiscussionBitmapService {
             long minuteKey = convertToMinuteKey(dateTime);
             String redisKey = buildRedisKey(discussionId, minuteKey);
             byte[] initialData = new byte[byteSize];
+            //TODO: 만료 설정?
             redisTemplate.opsForValue().set(redisKey, initialData);
         } catch (RedisSystemException e) {
             //TODO: 예외 처리
@@ -87,5 +95,34 @@ public class DiscussionBitmapService {
         long minuteKey = convertToMinuteKey(dateTime);
         String redisKey = buildRedisKey(discussionId, minuteKey);
         return redisTemplate.opsForValue().get(redisKey);
+    }
+
+    /**
+     * SCAN을 이용해 해당 논의의 모든 비트맵 키를 찾고 삭제합니다.
+     *
+     * @param discussionId 논의 식별자
+     */
+    public void deleteDiscussionBitmapsUsingScan(Long discussionId) {
+        String pattern = discussionId + ":*";
+
+        // SCAN 옵션
+        ScanOptions scanOptions = ScanOptions.scanOptions()
+            .match(pattern)
+            .count(1000)
+            .build();
+
+        redisTemplate.execute((RedisConnection connection) -> {
+
+            RedisKeyCommands keyCommands = ((RedisCommandsProvider) connection).keyCommands();
+
+            try (Cursor<byte[]> cursor = keyCommands.scan(scanOptions)) {
+                while (cursor.hasNext()) {
+                    byte[] rawKey = cursor.next();
+                    keyCommands.del(rawKey);
+                }
+            }
+
+            return null;
+        });
     }
 }
