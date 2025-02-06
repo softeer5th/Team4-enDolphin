@@ -46,7 +46,8 @@ export const MultiInput = ({
         <Label required={required}>{label}</Label>
         <div className={clsx(
           inputFieldsContainerStyle,
-          interactableBorderStyle({ isValid }))}
+          borderPlacement === 'container' && interactableBorderStyle({ isValid }), 
+        )}
         >
           {childrenWithSeparators}
         </div>

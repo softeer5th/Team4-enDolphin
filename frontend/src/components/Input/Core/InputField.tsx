@@ -30,7 +30,8 @@ const InputField = ({ placeholder, onClick, ...inputProps }: InputFieldProps) =>
     <div 
       className={clsx(
         inputFieldContainerStyle({ type }), 
-        borderPlacement === 'inputField' && interactableBorderStyle({ isValid }) )} 
+        borderPlacement === 'inputField' && interactableBorderStyle({ isValid }),
+      )} 
       onClick={handleContainerClick}
     >
       <input
