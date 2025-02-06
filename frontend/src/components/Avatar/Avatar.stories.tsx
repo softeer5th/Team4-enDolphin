@@ -22,6 +22,6 @@ type Story = StoryObj<typeof Avatar>;
 export const Default: Story = {
   args: {
     size: 'sm',
-    imageUrls: ['1', '2', '3'],
+    imageUrls: ['1', '2', '3', '4', '5', '6'],
   },
 };

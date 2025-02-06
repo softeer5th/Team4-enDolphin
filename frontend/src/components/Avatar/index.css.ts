@@ -12,7 +12,7 @@ export const avatarItemStyle = recipe({
   base: {
     backgroundColor: vars.color.Ref.Netural['White'],
     borderRadius: vars.radius['Max'],
-    border: `2px solid ${vars.color.Ref.Netural[500]}`,
+    border: `2px solid ${vars.color.Ref.Netural[100]}`,
   },
   variants: {
     size: {
@@ -23,6 +23,9 @@ export const avatarItemStyle = recipe({
           '&:not(:first-child)': {
             marginLeft: '-12px',
           },
+          '&:(:last-child)': {
+            borderColor: vars.color.Ref.Netural[500],
+          },
         },
       },
       lg: { 
@@ -32,17 +35,11 @@ export const avatarItemStyle = recipe({
           '&:not(:first-child)': {
             marginLeft: '-14px',
           },
+          '&:(:last-child)': {
+            borderColor: vars.color.Ref.Netural[500],
+          },
         },
       },
     },
-  },
-});
-
-export const avatarCountStyle = recipe({
-  base: {
-    borderRadius: vars.radius['Max'],
-    backgroundColor: vars.color.Ref.Netural['White'],
-    color: vars.color.Ref.Netural[500],
-    border: `2px solid ${vars.color.Ref.Netural[100]}`,
   },
 });

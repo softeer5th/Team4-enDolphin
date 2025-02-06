@@ -10,6 +10,7 @@ interface AvatarItemProps {
 const AvatarItem = ({ size }: AvatarItemProps) => (
   <div className={avatarItemStyle({ size })}>
   </div>
+  // TODO: 외부에서 이미지 주입
   // <img
   //   alt={alt}
   //   className={avatarItemStyle({ size })}

@@ -21,7 +21,7 @@ const Avatar = ({ size, imageUrls: prevUrls }: AvatarProps) => {
     <div className={avatarContainerStyle}>
       {urls.map((url, index) => (
         <AvatarItem
-          alt='ㅎㅇ'
+          alt=''
           key={index}
           size={size}
           src={url}
