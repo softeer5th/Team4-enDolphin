@@ -20,6 +20,19 @@ globalStyle('*, *::before, *::after', {
   },
 });
 
+globalStyle('html, body, #root, #page', {
+  '@layer': {
+    reset: {
+      width: '100vw',
+      height: '100vh',
+
+      position: 'fixed',
+      left: 0,
+      top: 0,
+    },
+  },
+});
+
 globalStyle('a, button', {
   '@layer': {
     reset: {

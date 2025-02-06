@@ -32,16 +32,12 @@ export const SingleInput = ({
           placeholder={placeholder} 
         />
       </div>
-      {renderHelperText(isValid, hint, error)}
+      <HelperText
+        error={error}
+        hint={hint}
+        isValid={isValid}
+      />
     </div>
   </InputContext.Provider>
 );
-
-const renderHelperText = (isValid: boolean, hint?: string, error?: string) => {
-  if (!isValid) {
-    return error && <HelperText type='error'>{error}</HelperText>;
-  }
-  return hint && <HelperText type='hint'>{hint}</HelperText>;
-};
-
 export default SingleInput;
