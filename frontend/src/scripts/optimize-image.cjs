@@ -41,7 +41,7 @@ const convertImagesToWebP = async () => {
           for (const { width, suffix } of BREAKPOINTS) {
             const RESIZED_FILE_PATH = path.join(FOLDER_PATH, file.replace(/\.webp$/i, `${suffix}.webp`)); 
             await sharp(FILE_PATH)
-              .resize(width + 100)
+              .resize(width)
               .toFile(RESIZED_FILE_PATH);
             console.log(`✅ 리사이징 완료: ${RESIZED_FILE_PATH}`);
           }

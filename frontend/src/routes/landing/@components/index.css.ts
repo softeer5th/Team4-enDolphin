@@ -64,7 +64,7 @@ export const imageWrapperStyle = style({
 
 export const imageStyle = style({
   width: '50%',
-  maxHeight: '28.375rem',
+  maxHeight: '29.8rem',
 
   objectFit: 'cover',
 

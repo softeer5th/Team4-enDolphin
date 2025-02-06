@@ -14,7 +14,7 @@ import { LandingImages } from './LandingImages';
 
 const Landing = () => {
   const handleClickGoogleLogin = () => {
-    // do someting
+    // do something
   };
 
   return (
