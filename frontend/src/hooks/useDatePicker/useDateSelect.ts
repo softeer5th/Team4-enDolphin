@@ -1,5 +1,6 @@
 import { DatePickerContext } from '@/components/DatePicker/DatePickerContext';
 import { useSafeContext } from '@/hooks/useSafeContext';
+import { isSameDate } from '@/utils/date';
 
 export const useDateSelect = (date: Date) => {
   const {
@@ -9,7 +10,7 @@ export const useDateSelect = (date: Date) => {
     setHighlightStart,
     setHighlightEnd,
   } = useSafeContext(DatePickerContext);
-  
+
   const selectDate = () => {
     handleDateSelect(date);
     if (calendarType === 'select') return;
@@ -22,6 +23,12 @@ export const useDateSelect = (date: Date) => {
         setHighlightStart(date);
         return;
       }
+      if (isSameDate(date, highlightRange.start)) {
+        handleDateSelect(null);
+        setHighlightStart(null);
+        return;
+      }
+      
       setHighlightEnd(date);
       return;
     }
