@@ -20,13 +20,13 @@ globalStyle('*, *::before, *::after', {
   },
 });
 
-globalStyle('html, body, #root, #page', {
+globalStyle('html, body', {
   '@layer': {
     reset: {
       width: '100vw',
       height: '100vh',
 
-      position: 'fixed',
+      position: 'absolute',
       left: 0,
       top: 0,
     },
