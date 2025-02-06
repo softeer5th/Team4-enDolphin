@@ -5,7 +5,8 @@ import { fontFamilies, fontWeights } from '@/theme/typo';
 
 export const containerStyle = style({
   width: '100vw',
-  height: '100vh',
+  minHeight: '100vh',
+  padding: '0 1.75rem',
 
   background: 'linear-gradient(180deg, #B1F8FA8A 0%, #3182F610 98%)',
 });
@@ -43,4 +44,29 @@ export const descriptionStyle = style({
 
 export const buttonStyle = style({
   justifySelf: 'center',
+});
+
+export const imageWrapperStyle = style({
+  width: '100%',
+
+  paddingTop: '3rem',
+
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  gap: vars.spacing[700],
+    
+  '@media': {
+    '(max-width: 1024px)': {
+      flexDirection: 'column',
+      paddingBottom: '3rem',
+    },
+  },
+});
+
+export const imageStyle = style({
+  maxWidth: '100%',
+  maxHeight: '28.375rem',
+
+  objectFit: 'cover',
 });
