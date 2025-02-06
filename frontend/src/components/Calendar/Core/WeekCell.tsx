@@ -1,5 +1,3 @@
-import type { MouseEvent } from 'react';
-
 import type { WEEKDAY } from '@/constants/date';
 
 import { Text } from '../../Text';
@@ -10,7 +8,6 @@ interface WeekCellProps {
   date: Date;
   isToday: boolean;
   selected: boolean;
-  onClickHandler?: (event: MouseEvent<HTMLDivElement>) => void;
 }
 
 export const WeekCell = ({ day, date, isToday, selected }: WeekCellProps) => {
