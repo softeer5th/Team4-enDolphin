@@ -5,6 +5,11 @@ import Avatar from '.';
 const meta: Meta = {
   title: 'Components/Avatar',
   component: Avatar,
+  parameters: {
+    backgrounds: {
+      default: 'dark',
+    },
+  },
   argTypes: {
     size: {
       control: { type: 'radio', options: ['sm', 'lg'] },
