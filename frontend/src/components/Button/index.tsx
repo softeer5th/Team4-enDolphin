@@ -38,6 +38,7 @@ const Button = <T extends ElementType = 'button'>({
   onClick,
   children,
   className,
+  ...props
 }: AsProp<T> & ComponentPropsWithoutRef<T> & ButtonProps) => {
   const Component = as || 'button';
 
@@ -45,6 +46,7 @@ const Button = <T extends ElementType = 'button'>({
     <Component 
       className={clsx(containerStyle({ variant, style, radius, size }), className)}
       onClick={onClick}
+      {...props}
     >
       {leftIcon && <ButtonIcon size={size}>{leftIcon}</ButtonIcon>}
       <ButtonText size={size}>{children}</ButtonText>
