@@ -1,4 +1,3 @@
-import { useNavigate } from '@tanstack/react-router';
 
 import Button from '@/components/Button';
 import { Google } from '@/components/Icon';
@@ -15,11 +14,10 @@ import {
 } from './index.css';
 import { LandingImages } from './LandingImages';
 const Landing = () => {
-  const navigate = useNavigate({ from: '/landing' });
-
   const handleClickGoogleLogin = () => { 
-    navigate({ to: '/my-schedule' });
+    // Do something
   };
+  
   return (
     <>
       <GNB />

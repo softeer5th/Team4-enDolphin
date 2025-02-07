@@ -1,4 +1,4 @@
-import { IconProps } from "../../Icon";
+import { IconProps } from "../Icon";
 
 export const Logo = ({ clickable = false, className, ...rest }: IconProps) => 
 <svg width="84" height="22" viewBox="0 0 84 22" fill="none" xmlns="http://www.w3.org/2000/svg" className={className} style={{ cursor: clickable ? "pointer": "default", ...rest.style }} {...rest}>
