@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
     private final UserRepository userRepository;
 
+    @Transactional(readOnly = true)
     public User getCurrentUser() {
         UserInfo userInfo = UserContext.get();
         return userRepository.findById(userInfo.userId())
