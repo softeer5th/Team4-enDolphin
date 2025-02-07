@@ -13,7 +13,7 @@ import {
 export const font = {
   H1: {
     fontFamily: fontFamilies['pretendard'],
-    fontWeight: fontWeights['pretendard-0'],
+    fontWeight: fontWeights.bold,
     lineHeight: lineHeights['0'],
     fontSize: fontSize['6'],
     letterSpacing: letterSpacing['0'],
@@ -24,7 +24,7 @@ export const font = {
   },
   H2: {
     fontFamily: fontFamilies['pretendard'],
-    fontWeight: fontWeights['pretendard-0'],
+    fontWeight: fontWeights.bold,
     lineHeight: lineHeights['1'],
     fontSize: fontSize['5'],
     letterSpacing: letterSpacing['0'],
@@ -35,7 +35,7 @@ export const font = {
   },
   H3: {
     fontFamily: fontFamilies['pretendard'],
-    fontWeight: fontWeights['pretendard-1'],
+    fontWeight: fontWeights['pretendard-0'],
     lineHeight: lineHeights['2'],
     fontSize: fontSize['4'],
     letterSpacing: letterSpacing['1'],

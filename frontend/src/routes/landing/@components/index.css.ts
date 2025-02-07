@@ -5,10 +5,17 @@ import { fontFamilies, fontWeights } from '@/theme/typo';
 
 export const containerStyle = style({
   width: '100vw',
-  minHeight: '100vh',
+  height: '100vh',
   padding: '0 1.75rem',
 
   background: 'linear-gradient(180deg, #B1F8FA8A 0%, #3182F610 98%)',
+  overflow: 'hidden',
+
+  '@media': {
+    '(max-width: 1024px)': {
+      overflowY: 'scroll',
+    },
+  },
 });
 
 export const titleStyle = style({
@@ -63,8 +70,8 @@ export const imageWrapperStyle = style({
 });
 
 export const imageStyle = style({
-  width: '50%',
-  maxHeight: '29.8rem',
+  width: `calc(50%-${vars.spacing[300]})`,
+  maxHeight: '28rem',
 
   objectFit: 'cover',
 
