@@ -1,7 +1,7 @@
 import { createLazyFileRoute } from '@tanstack/react-router';
 
-import MySchedule from './@components';
+import MySchedulePage from '@/pages/MySchedulePage';
 
 export const Route = createLazyFileRoute('/_main/my-schedule/')({
-  component: MySchedule,
+  component: MySchedulePage,
 });

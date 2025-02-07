@@ -2,8 +2,7 @@ import { createRootRoute, Outlet } from '@tanstack/react-router';
 import { lazy } from 'react';
 
 import { defaultENV } from '@/envconfig';
-
-import ErrorPage from './@components/ErrorPage';
+import ErrorPage from '@/pages/ErrorPage';
 
 const TanStackRouterDevtools =
   defaultENV.MODE === 'production'

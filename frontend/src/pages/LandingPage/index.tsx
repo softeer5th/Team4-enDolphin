@@ -1,26 +1,46 @@
-
 import Button from '@/components/Button';
 import { Google } from '@/components/Icon';
+import { Image } from '@/components/Image';
 import { Text } from '@/components/Text';
+import GlobalNavBar from '@/layout/GlobalNavBar';
+import { LoginLink } from '@/layout/GlobalNavBar/buttons';
 import { vars } from '@/theme/index.css';
 
-import GNB from './GNB';
 import {
   buttonStyle,
   containerStyle,
   descriptionStyle,
+  imageStyle,
+  imageWrapperStyle,
   subTitleStyle,
-  titleStyle,
+  titleStyle, 
 } from './index.css';
-import { LandingImages } from './LandingImages';
-const Landing = () => {
+
+const LandingImages = () => (
+  <div className={imageWrapperStyle}>
+    <Image
+      alt='구글 캘린더 연동으로 간편하고 빠른 일정입력'
+      className={imageStyle}
+      src='/images/landing/landing-1.webp'
+    />
+    <Image
+      alt='참여자들의 일정을 고려한 추천으로 간단하게 끝나는 일정 조율'
+      className={imageStyle}
+      src='/images/landing/landing-2.webp'
+    />
+  </div>
+);
+
+const LandingPage = () => {
   const handleClickGoogleLogin = () => { 
     // Do something
   };
   
   return (
     <>
-      <GNB />
+      <GlobalNavBar>
+        <LoginLink />
+      </GlobalNavBar>
       <div className={containerStyle}>
         <h1 className={titleStyle}>
           언제 만나?
@@ -51,4 +71,4 @@ const Landing = () => {
   );
 };
 
-export default Landing;
+export default LandingPage;
