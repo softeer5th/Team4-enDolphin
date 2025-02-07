@@ -39,6 +39,9 @@ public class SharedEventService {
     }
 
     public void deleteSharedEvent(Long sharedEventId) {
+        if (!sharedEventRepository.existsById(sharedEventId)) {
+            throw new ApiException(ErrorCode.SHARED_EVENT_NOT_FOUND);
+        }
         sharedEventRepository.deleteById(sharedEventId);
     }
 
