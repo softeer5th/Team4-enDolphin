@@ -9,7 +9,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import endolphin.backend.domain.discussion.dto.CreateDiscussionRequest;
-import endolphin.backend.domain.discussion.dto.CreateDiscussionResponse;
+import endolphin.backend.domain.discussion.dto.DiscussionResponse;
 import endolphin.backend.domain.discussion.entity.Discussion;
 import endolphin.backend.domain.discussion.enums.MeetingMethod;
 import endolphin.backend.domain.shared_event.SharedEventService;
@@ -76,7 +76,7 @@ public class DiscussionServiceTest {
         given(userService.getCurrentUser()).willReturn(dummyUser);
 
         // when
-        CreateDiscussionResponse response = discussionService.createDiscussion(request);
+        DiscussionResponse response = discussionService.createDiscussion(request);
 
         // then
         assertThat(response).isNotNull();

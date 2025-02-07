@@ -1,7 +1,7 @@
 package endolphin.backend.domain.discussion;
 
 import endolphin.backend.domain.discussion.dto.CreateDiscussionRequest;
-import endolphin.backend.domain.discussion.dto.CreateDiscussionResponse;
+import endolphin.backend.domain.discussion.dto.DiscussionResponse;
 import endolphin.backend.domain.discussion.entity.Discussion;
 import endolphin.backend.domain.discussion.entity.DiscussionParticipant;
 import endolphin.backend.domain.shared_event.SharedEventService;
@@ -30,7 +30,7 @@ public class DiscussionService {
     private final UserService userService;
     private final SharedEventService sharedEventService;
 
-    public CreateDiscussionResponse createDiscussion(CreateDiscussionRequest request) {
+    public DiscussionResponse createDiscussion(CreateDiscussionRequest request) {
 
         Discussion discussion = Discussion.builder()
             .title(request.title())
@@ -54,7 +54,7 @@ public class DiscussionService {
             .build();
         discussionParticipantRepository.save(participant);
 
-        return new CreateDiscussionResponse(
+        return new DiscussionResponse(
             discussion.getId(),
             discussion.getTitle(),
             discussion.getDateRangeStart(),
