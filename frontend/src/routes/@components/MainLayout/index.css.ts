@@ -3,6 +3,9 @@ import { style } from '@vanilla-extract/css';
 import { vars } from '@/theme/index.css';
 
 export const containerStyle = style({
-  padding: `0 ${vars.spacing[700]}`,
-  minWidth: 1288,
+  width: '100vw',
+  maxWidth: 1288,
+  minHeight: '100vh',
+  overflowX: 'scroll',
+  padding: `56px ${vars.spacing[700]}`,
 });
