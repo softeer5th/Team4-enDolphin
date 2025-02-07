@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -58,7 +59,7 @@ public class DiscussionController {
     })
     @PostMapping("/{discussionId}/confirm")
     public ResponseEntity<SharedEventWithDiscussionInfoResponse> confirmSchedule(
-        @PathVariable Long discussionId,
+        @PathVariable @Min(1) Long discussionId,
         @Valid @RequestBody SharedEventRequest request) {
 
         SharedEventWithDiscussionInfoResponse response = discussionService.confirmSchedule(
