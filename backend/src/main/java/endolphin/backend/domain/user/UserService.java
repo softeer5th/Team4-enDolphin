@@ -37,10 +37,10 @@ public class UserService {
                     .email(userInfo.email())
                     .name(userInfo.name())
                     .picture(userInfo.picture())
-                    .accessToken(tokenResponse.accessToken())
-                    .refreshToken(tokenResponse.refreshToken())
                     .build();
             });
+        user.setAccessToken(tokenResponse.accessToken());
+        user.setRefreshToken(tokenResponse.refreshToken());
         userRepository.save(user);
         return user;
     }
