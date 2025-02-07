@@ -1,17 +1,9 @@
-import { Outlet } from '@tanstack/react-router';
-
-import GlobalNavBar from '@/routes/@components/GlobalNavBar';
-import { LoginLink, MyScheduleLink } from '@/routes/@components/GlobalNavBar/buttons';
-
+import GNB from './GNB';
 import { SchedulePopover } from './SchedulePopover';
 
 const MySchedule = () => 
   <>
-    <GlobalNavBar>
-      <MyScheduleLink />
-      <LoginLink />
-      <Outlet />
-    </GlobalNavBar>
+    <GNB />
     <SchedulePopover isOpen={true} type='edit' />
   </>;
 
