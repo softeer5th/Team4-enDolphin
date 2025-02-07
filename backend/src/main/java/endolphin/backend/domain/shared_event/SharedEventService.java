@@ -31,6 +31,7 @@ public class SharedEventService {
         return SharedEventResponse.of(sharedEventRepository.save(sharedEvent));
     }
 
+    @Transactional(readOnly = true)
     public SharedEventResponse getSharedEvent(Long sharedEventId) {
         SharedEvent sharedEvent = sharedEventRepository.findById(sharedEventId)
             .orElseThrow(() -> new ApiException(ErrorCode.SHARED_EVENT_NOT_FOUND));
