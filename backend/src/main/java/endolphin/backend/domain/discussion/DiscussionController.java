@@ -61,7 +61,8 @@ public class DiscussionController {
         @PathVariable Long discussionId,
         @Valid @RequestBody SharedEventRequest request) {
 
-        SharedEventWithDiscussionInfoResponse response = discussionService.confirmSchedule(discussionId, request);
+        SharedEventWithDiscussionInfoResponse response = discussionService.confirmSchedule(
+            discussionId, request);
         return ResponseEntity.ok(response);
     }
 }
