@@ -42,4 +42,21 @@ public class GoogleOAuthService {
             .retrieve()
             .body(GoogleUserInfo.class);
     }
+
+    public String reissueAccessToken(String refreshToken) {
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("client_id", googleOAuthProperties.clientId());
+        params.add("client_secret", googleOAuthProperties.clientSecret());
+        params.add("redirect_uri", googleOAuthProperties.redirectUri());
+        params.add("grant_type", "refresh_token");
+        params.add("refresh_token", refreshToken);
+
+        return restClient.post()
+            .uri(googleOAuthProperties.tokenUrl())
+            .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+            .body(params)
+            .retrieve()
+            .body(GoogleTokens.class)
+            .accessToken();
+    }
 }
