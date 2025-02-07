@@ -20,12 +20,12 @@ public class SharedEventService {
 
     public SharedEventResponse createSharedEvent(Discussion discussion,
         SharedEventRequest request) {
-        Validator.validateDateTimeRange(request.startTime(), request.endTime());
+        Validator.validateDateTimeRange(request.startDateTime(), request.endDateTime());
 
         SharedEvent sharedEvent = SharedEvent.builder()
             .discussion(discussion)
-            .start(request.startTime())
-            .end(request.endTime())
+            .start(request.startDateTime())
+            .end(request.endDateTime())
             .build();
 
         return SharedEventResponse.of(sharedEventRepository.save(sharedEvent));

@@ -50,8 +50,8 @@ class SharedEventServiceTest {
 
         sharedEvent = SharedEvent.builder()
             .discussion(discussion)
-            .start(request.startTime())
-            .end(request.endTime())
+            .start(request.startDateTime())
+            .end(request.endDateTime())
             .build();
 
         ReflectionTestUtils.setField(sharedEvent, "id", 100L);
@@ -65,8 +65,8 @@ class SharedEventServiceTest {
 
         assertThat(response).isNotNull();
         assertThat(response.id()).isEqualTo(100L);
-        assertThat(response.startDateTime()).isEqualTo(request.startTime());
-        assertThat(response.endDateTime()).isEqualTo(request.endTime());
+        assertThat(response.startDateTime()).isEqualTo(request.startDateTime());
+        assertThat(response.endDateTime()).isEqualTo(request.endDateTime());
 
         verify(sharedEventRepository, times(1)).save(any(SharedEvent.class));
     }

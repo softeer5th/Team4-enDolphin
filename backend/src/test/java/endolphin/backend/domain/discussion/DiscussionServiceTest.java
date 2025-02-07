@@ -108,8 +108,8 @@ public class DiscussionServiceTest {
 
         SharedEventResponse sharedEventResponse = new SharedEventResponse(
             101L,
-            request.startTime(),
-            request.endTime()
+            request.startDateTime(),
+            request.endDateTime()
         );
 
         List<String> participantPictures = List.of("pic1.jpg", "pic2.jpg");
