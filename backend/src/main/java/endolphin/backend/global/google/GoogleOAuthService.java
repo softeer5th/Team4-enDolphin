@@ -5,6 +5,7 @@ import endolphin.backend.global.google.dto.GoogleTokens;
 import endolphin.backend.global.google.dto.GoogleUserInfo;
 import endolphin.backend.global.config.GoogleOAuthProperties;
 import endolphin.backend.global.error.exception.OAuthException;
+import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClient;
+import org.springframework.web.client.RestClient.RequestHeadersSpec.ConvertibleClientHttpResponse;
 
 @Service
 @RequiredArgsConstructor
@@ -35,11 +37,7 @@ public class GoogleOAuthService {
             .contentType(MediaType.APPLICATION_FORM_URLENCODED)
             .body(params)
             .exchange((request, response) -> {
-                if (response.getStatusCode().is4xxClientError()) {
-                    String error = response.bodyTo(String.class);
-                    throw new OAuthException((HttpStatus) response.getStatusCode(), error);
-                }
-
+                validateResponse(response);
                 return response.bodyTo(GoogleTokens.class);
             });
     }
@@ -49,10 +47,7 @@ public class GoogleOAuthService {
             .uri(googleOAuthProperties.userInfoUrl())
             .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
             .exchange((request, response) -> {
-                if (response.getStatusCode().is4xxClientError()) {
-                    String error = response.bodyTo(String.class);
-                    throw new OAuthException((HttpStatus) response.getStatusCode(), error);
-                }
+                validateResponse(response);
                 return response.bodyTo(GoogleUserInfo.class);
             });
     }
@@ -67,10 +62,7 @@ public class GoogleOAuthService {
             .contentType(MediaType.APPLICATION_FORM_URLENCODED)
             .body(params)
             .exchange((request, response) -> {
-                if (response.getStatusCode().is4xxClientError()) {
-                    String error = response.bodyTo(String.class);
-                    throw new OAuthException((HttpStatus) response.getStatusCode(), error);
-                }
+                validateResponse(response);
                 GoogleTokens tokens = response.bodyTo(GoogleTokens.class);
 
                 return tokens.accessToken();
@@ -85,5 +77,12 @@ public class GoogleOAuthService {
         params.add("client_secret", googleOAuthProperties.clientSecret());
         params.add("redirect_uri", googleOAuthProperties.redirectUri());
         return params;
+    }
+
+    private void validateResponse(ConvertibleClientHttpResponse response) throws IOException {
+        if (response.getStatusCode().is4xxClientError()) {
+            String error = response.bodyTo(String.class);
+            throw new OAuthException((HttpStatus) response.getStatusCode(), error);
+        }
     }
 }
