@@ -19,4 +19,10 @@ public class OAuthException extends RuntimeException {
             default -> errorCode = ErrorCode.INTERNAL_ERROR;
         }
     }
+
+    public OAuthException(ErrorCode errorCode) {
+        super(errorCode.getMessage());
+        this.status = errorCode.getHttpStatus();
+        this.errorCode = errorCode;
+    }
 }
