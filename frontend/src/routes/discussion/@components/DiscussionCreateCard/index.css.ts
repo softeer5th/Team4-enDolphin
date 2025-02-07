@@ -9,3 +9,7 @@ export const containerStyle = style({
   borderRadius: vars.spacing[800],
   background: 'linear-gradient(180deg, #FFFFFF66 0%, #FFFFFF99 46.5%, #FFFFFFCC 100%)',
 });
+
+export const textStyle = style({
+  color: vars.color.Ref.Netural[600],
+});
