@@ -3,46 +3,47 @@ import { Link } from '@tanstack/react-router';
 import Button from '@/components/Button';
 import { Divider } from '@/components/Divider';
 import { Flex } from '@/components/Flex';
+import { NotificationContext } from '@/components/Notification/NotificationContext';
 import { Text } from '@/components/Text';
+import { useSafeContext } from '@/hooks/useSafeContext';
 import { vars } from '@/theme/index.css';
 
-import { containerStyle, textStyle } from './index.css';
+import DiscussionInfo from './DiscussionInfo';
+import { containerStyle } from './index.css';
 
-const DiscussionCreateCard = () => (
-  <Flex
-    align='center'
-    className={containerStyle}
-    direction='column'
-    gap={700}
-  >
-    <img src='/images/assets/calendar.webp' width={100} />
-    <Text color={vars.color.Ref.Netural[900]} typo='h2'>일정 조율 생성 완료</Text>
-    <Divider />
+const DiscussionCreateCard = () => {
+  const { addNoti } =  useSafeContext(NotificationContext);
+  const handleClickShareButton = () => {
+    addNoti({
+      title: '링크 복사가 완료됐어요',
+      type: 'success',
+    });
+  };
+
+  return (
     <Flex
+      align='center'
+      className={containerStyle}
       direction='column'
-      gap={200}
-      width='100%'
+      gap={700}
     >
-      <Text color={vars.color.Ref.Primary[500]} typo='t3'>마감까지 15일</Text>
-      <Text color={vars.color.Ref.Netural[800]} typo='h3'>기업디(3) 첫 팀플</Text>
-      <Flex className={textStyle} direction='column'>
-        <Text typo='b2R'>12월 30일 ~ 1월 5일</Text>
-        <Text typo='b2R'>강남역 4번 출구</Text>
-        <Text typo='b2R'>1시간</Text>
+      <img src='/images/assets/calendar.webp' width={100} />
+      <Text color={vars.color.Ref.Netural[900]} typo='h2'>일정 조율 생성 완료</Text>
+      <Divider />
+      <DiscussionInfo />
+      <Flex justify='flex-end' width='100%'>
+        <Button
+          as={Link}
+          size='xl'
+          style='borderless'
+          to='/'
+        >
+          홈으로
+        </Button>
+        <Button onClick={handleClickShareButton} size='xl'>링크 공유</Button>
       </Flex>
     </Flex>
-    <Flex justify='flex-end' width='100%'>
-      <Button
-        as={Link}
-        size='xl'
-        style='borderless'
-        to='/'
-      >
-        홈으로
-      </Button>
-      <Button size='xl'>링크 공유</Button>
-    </Flex>
-  </Flex>
-);
+  );
+};
 
 export default DiscussionCreateCard;
