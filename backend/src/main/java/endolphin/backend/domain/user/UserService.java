@@ -25,9 +25,9 @@ public class UserService {
             .orElseThrow(() -> new ApiException(ErrorCode.USER_NOT_FOUND));
     }
 
-    public void updateAccessToken(String accessToken) {
-        User user = getCurrentUser();
+    public void updateAccessToken(User user, String accessToken) {
         user.setAccessToken(accessToken);
+        userRepository.save(user);
     }
 
     public User createUser(GoogleUserInfo userInfo, GoogleTokens tokenResponse) {

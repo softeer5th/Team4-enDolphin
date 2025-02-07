@@ -1,6 +1,7 @@
 package endolphin.backend.global.google;
 
 import endolphin.backend.domain.user.UserService;
+import endolphin.backend.domain.user.entity.User;
 import endolphin.backend.global.google.dto.GoogleTokens;
 import endolphin.backend.global.google.dto.GoogleUserInfo;
 import endolphin.backend.global.config.GoogleOAuthProperties;
@@ -57,7 +58,7 @@ public class GoogleOAuthService {
         params.add("grant_type", "refresh_token");
         params.add("refresh_token", refreshToken);
 
-        String accessToken = restClient.post()
+        return restClient.post()
             .uri(googleOAuthProperties.tokenUrl())
             .contentType(MediaType.APPLICATION_FORM_URLENCODED)
             .body(params)
@@ -67,8 +68,6 @@ public class GoogleOAuthService {
 
                 return tokens.accessToken();
             });
-        userService.updateAccessToken(accessToken);
-        return accessToken;
     }
 
     private MultiValueMap<String, String> getStringStringMultiValueMap() {
