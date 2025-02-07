@@ -2,6 +2,7 @@ package endolphin.backend.global.error;
 
 import endolphin.backend.global.error.exception.ApiException;
 import endolphin.backend.global.error.exception.ErrorCode;
+import endolphin.backend.global.error.exception.OAuthException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,14 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ApiException.class)
     public ResponseEntity<ErrorResponse> handleApiException(ApiException e) {
         log.error("[API exception] Error code: {}, Message: {}",
+            e.getErrorCode(), e.getMessage(), e);
+        ErrorResponse response = ErrorResponse.of(e.getErrorCode());
+        return ResponseEntity.status(e.getErrorCode().getHttpStatus()).body(response);
+    }
+
+    @ExceptionHandler(OAuthException.class)
+    public ResponseEntity<ErrorResponse> handleOAuthException(OAuthException e) {
+        log.error("[OAuth exception] Error code: {}, Message: {}",
             e.getErrorCode(), e.getMessage(), e);
         ErrorResponse response = ErrorResponse.of(e.getErrorCode());
         return ResponseEntity.status(e.getErrorCode().getHttpStatus()).body(response);

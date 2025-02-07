@@ -18,6 +18,10 @@ public enum ErrorCode {
     //SharedEvent
     SHARED_EVENT_NOT_FOUND(HttpStatus.NOT_FOUND, "S001", "Shared Event not found")
 
+    // OAuth
+    OAUTH_UNAUTHORIZED_ERROR(HttpStatus.UNAUTHORIZED, "O001", "OAuth Unauthorized Error"),
+    OAUTH_BAD_REQUEST_ERROR(HttpStatus.UNAUTHORIZED, "O002", "OAuth Bad Request Error"),
+    OAUTH_FORBIDDEN_ERROR(HttpStatus.FORBIDDEN, "O003", "OAuth Forbidden Error"),
     ;
     private final HttpStatus httpStatus;
     private final String code;

@@ -3,8 +3,11 @@ package endolphin.backend.global.google;
 import endolphin.backend.domain.user.dto.GoogleTokens;
 import endolphin.backend.domain.user.dto.GoogleUserInfo;
 import endolphin.backend.global.config.GoogleOAuthProperties;
+import endolphin.backend.global.error.exception.OAuthException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
@@ -13,6 +16,7 @@ import org.springframework.web.client.RestClient;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class GoogleOAuthService {
 
     private final GoogleOAuthProperties googleOAuthProperties;
@@ -31,16 +35,27 @@ public class GoogleOAuthService {
             .uri(googleOAuthProperties.tokenUrl())
             .contentType(MediaType.APPLICATION_FORM_URLENCODED)
             .body(params)
-            .retrieve()
-            .body(GoogleTokens.class);
+            .exchange((request, response) -> {
+                if (response.getStatusCode().is4xxClientError()) {
+                    String error = response.bodyTo(String.class);
+                    throw new OAuthException((HttpStatus) response.getStatusCode(), error);
+                }
+
+                return response.bodyTo(GoogleTokens.class);
+            });
     }
 
     public GoogleUserInfo getUserInfo(String accessToken) {
         return restClient.get()
             .uri(googleOAuthProperties.userInfoUrl())
             .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
-            .retrieve()
-            .body(GoogleUserInfo.class);
+            .exchange((request, response) -> {
+                if (response.getStatusCode().is4xxClientError()) {
+                    String error = response.bodyTo(String.class);
+                    throw new OAuthException((HttpStatus) response.getStatusCode(), error);
+                }
+                return response.bodyTo(GoogleUserInfo.class);
+            });
     }
 
     public String reissueAccessToken(String refreshToken) {
@@ -55,8 +70,14 @@ public class GoogleOAuthService {
             .uri(googleOAuthProperties.tokenUrl())
             .contentType(MediaType.APPLICATION_FORM_URLENCODED)
             .body(params)
-            .retrieve()
-            .body(GoogleTokens.class)
-            .accessToken();
+            .exchange((request, response) -> {
+                if (response.getStatusCode().is4xxClientError()) {
+                    String error = response.bodyTo(String.class);
+                    throw new OAuthException((HttpStatus) response.getStatusCode(), error);
+                }
+                GoogleTokens tokens = response.bodyTo(GoogleTokens.class);
+
+                return tokens.accessToken();
+            });
     }
 }
