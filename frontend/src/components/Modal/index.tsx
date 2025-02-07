@@ -1,4 +1,4 @@
-import type { PropsWithChildren, ReactNode } from 'react';
+import type { PropsWithChildren } from 'react';
 
 import { vars } from '@/theme/index.css';
 
@@ -25,7 +25,6 @@ export const Modal = ({
   subTitle,
   title,
   description,
-  isOpen,
   className,
   children,
 }: ModalProps) => (
