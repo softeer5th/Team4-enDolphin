@@ -11,6 +11,6 @@ public record CreateDiscussionResponse(
     MeetingMethod meetingMethod,
     String location,
     Integer duration,
-    String timeLeft) {
+    long timeLeft) {
 
 }

@@ -2,10 +2,9 @@ package endolphin.backend.domain.discussion;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.assertj.core.api.Assertions.catchThrowable;
+import static org.assertj.core.api.Assertions.within;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -19,6 +18,7 @@ import endolphin.backend.domain.shared_event.dto.SharedEventResponse;
 import endolphin.backend.domain.shared_event.dto.SharedEventWithDiscussionInfoResponse;
 import endolphin.backend.domain.user.UserService;
 import endolphin.backend.domain.user.entity.User;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -87,8 +87,9 @@ public class DiscussionServiceTest {
         assertThat(response.meetingMethod()).isEqualTo(MeetingMethod.OFFLINE);
         assertThat(response.location()).isEqualTo("회의실 1");
         assertThat(response.duration()).isEqualTo(60);
-        assertThat(response.timeLeft()).isNotNull();
-        assertThat(response.timeLeft()).isEqualTo("마감까지 10일");
+        long timeLeft = Duration.between(LocalDateTime.now(), request.deadline().atTime(23, 59, 59))
+            .toMillis();
+        assertThat(response.timeLeft()).isCloseTo(timeLeft, within(1000L));
     }
 
     @DisplayName("Discussion 일정 확정 테스트")

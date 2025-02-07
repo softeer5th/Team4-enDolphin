@@ -88,21 +88,11 @@ public class DiscussionService {
         );
     }
 
-    private String calculateTimeLeft(LocalDate deadline) {
+    private long calculateTimeLeft(LocalDate deadline) {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime deadlineDateTime = deadline.atTime(23, 59, 59);
         Duration duration = Duration.between(now, deadlineDateTime);
 
-        long days = duration.toDays();
-        long hours = duration.toHours() % 24;
-        long minutes = duration.toMinutes() % 60;
-
-        if (days > 0) {
-            return "마감까지 " + days + "일";
-        } else if (hours > 0) {
-            return "마감까지 " + hours + "시간";
-        } else {
-            return "마감시간까지 " + minutes + "분";
-        }
+        return duration.toMillis();
     }
 }
