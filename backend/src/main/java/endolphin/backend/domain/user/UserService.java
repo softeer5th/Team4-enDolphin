@@ -1,15 +1,10 @@
 package endolphin.backend.domain.user;
 
-import endolphin.backend.domain.user.dto.GoogleUserInfo;
-import endolphin.backend.domain.user.dto.GoogleTokens;
-import endolphin.backend.domain.user.dto.OAuthResponse;
-import endolphin.backend.domain.user.dto.UrlResponse;
+import endolphin.backend.global.google.dto.GoogleUserInfo;
+import endolphin.backend.global.google.dto.GoogleTokens;
 import endolphin.backend.domain.user.entity.User;
-import endolphin.backend.global.config.GoogleOAuthProperties;
 import endolphin.backend.global.error.exception.ApiException;
 import endolphin.backend.global.error.exception.ErrorCode;
-import endolphin.backend.global.google.GoogleOAuthService;
-import endolphin.backend.global.security.JwtProvider;
 import endolphin.backend.global.security.UserContext;
 import endolphin.backend.global.security.UserInfo;
 import lombok.RequiredArgsConstructor;
@@ -22,25 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @Slf4j
 public class UserService {
-    private final GoogleOAuthProperties googleOAuthProperties;
     private final UserRepository userRepository;
-    private final JwtProvider jwtProvider;
-    private final GoogleOAuthService googleOAuthService;
-
-    public UrlResponse getGoogleLoginUrl() {
-        return new UrlResponse(String.format(
-            "%s?client_id=%s&redirect_uri=%s&response_type=code&scope=%s&access_type=offline&prompt=consent",
-            googleOAuthProperties.authUrl(), googleOAuthProperties.clientId(),
-            googleOAuthProperties.redirectUri(), googleOAuthProperties.scope()));
-    }
-
-    public OAuthResponse oauth2Callback(String code) {
-        GoogleTokens tokenResponse = googleOAuthService.getGoogleTokens(code);
-        GoogleUserInfo userInfo = googleOAuthService.getUserInfo(tokenResponse.accessToken());
-        User user = createUser(userInfo, tokenResponse);
-        String accessToken = jwtProvider.createToken(user.getId(), user.getEmail());
-        return new OAuthResponse(accessToken);
-    }
 
     public User getCurrentUser() {
         UserInfo userInfo = UserContext.get();
@@ -53,7 +30,7 @@ public class UserService {
         user.setAccessToken(accessToken);
     }
 
-    private User createUser(GoogleUserInfo userInfo, GoogleTokens tokenResponse) {
+    public User createUser(GoogleUserInfo userInfo, GoogleTokens tokenResponse) {
         User user = userRepository.findByEmail(userInfo.email())
             .orElseGet(() -> {
                 return User.builder()

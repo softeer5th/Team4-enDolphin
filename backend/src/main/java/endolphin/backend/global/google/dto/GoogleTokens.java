@@ -1,4 +1,4 @@
-package endolphin.backend.domain.user.dto;
+package endolphin.backend.global.google.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
