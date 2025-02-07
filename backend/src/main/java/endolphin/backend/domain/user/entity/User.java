@@ -28,6 +28,7 @@ public class User extends BaseTimeEntity {
     private String email;
     @Column(nullable = false)
     private String picture;
+    @Setter
     @Column(name = "access_token")
     private String accessToken;
     @Column(name = "refresh_token")
@@ -42,4 +43,5 @@ public class User extends BaseTimeEntity {
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
     }
+
 }

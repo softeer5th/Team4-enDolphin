@@ -1,5 +1,6 @@
 package endolphin.backend.global.google;
 
+import endolphin.backend.domain.user.UserService;
 import endolphin.backend.domain.user.dto.GoogleTokens;
 import endolphin.backend.domain.user.dto.GoogleUserInfo;
 import endolphin.backend.global.config.GoogleOAuthProperties;
@@ -19,6 +20,7 @@ import org.springframework.web.client.RestClient;
 @Slf4j
 public class GoogleOAuthService {
 
+    private final UserService userService;
     private final GoogleOAuthProperties googleOAuthProperties;
     private final RestClient restClient;
 
@@ -66,7 +68,7 @@ public class GoogleOAuthService {
         params.add("grant_type", "refresh_token");
         params.add("refresh_token", refreshToken);
 
-        return restClient.post()
+        String accessToken = restClient.post()
             .uri(googleOAuthProperties.tokenUrl())
             .contentType(MediaType.APPLICATION_FORM_URLENCODED)
             .body(params)
@@ -79,5 +81,7 @@ public class GoogleOAuthService {
 
                 return tokens.accessToken();
             });
+        userService.updateAccessToken(accessToken);
+        return accessToken;
     }
 }

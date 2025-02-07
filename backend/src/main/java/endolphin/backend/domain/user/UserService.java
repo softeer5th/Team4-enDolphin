@@ -48,6 +48,11 @@ public class UserService {
             .orElseThrow(() -> new ApiException(ErrorCode.USER_NOT_FOUND));
     }
 
+    public void updateAccessToken(String accessToken) {
+        User user = getCurrentUser();
+        user.setAccessToken(accessToken);
+    }
+
     private User createUser(GoogleUserInfo userInfo, GoogleTokens tokenResponse) {
         User user = userRepository.findByEmail(userInfo.email())
             .orElseGet(() -> {
