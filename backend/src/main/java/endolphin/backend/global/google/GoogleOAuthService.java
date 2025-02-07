@@ -1,8 +1,8 @@
 package endolphin.backend.global.google;
 
 import endolphin.backend.domain.user.UserService;
-import endolphin.backend.domain.user.dto.GoogleTokens;
-import endolphin.backend.domain.user.dto.GoogleUserInfo;
+import endolphin.backend.global.google.dto.GoogleTokens;
+import endolphin.backend.global.google.dto.GoogleUserInfo;
 import endolphin.backend.global.config.GoogleOAuthProperties;
 import endolphin.backend.global.error.exception.OAuthException;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +20,7 @@ import org.springframework.web.client.RestClient;
 @Slf4j
 public class GoogleOAuthService {
 
+    private final UserService userService;
     private final GoogleOAuthProperties googleOAuthProperties;
     private final RestClient restClient;
 
@@ -74,6 +75,7 @@ public class GoogleOAuthService {
 
                 return tokens.accessToken();
             });
+        userService.updateAccessToken(accessToken);
         return accessToken;
     }
 
