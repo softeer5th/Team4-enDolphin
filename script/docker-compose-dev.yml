@@ -15,6 +15,13 @@ services:
     ports:
       - "3307:3306"
 
+  redis:
+    image: redis:6-alpine
+    container_name: backend_redis
+    restart: always
+    ports:
+      - "6379:6379"
+
   api:
     depends_on:
       - db

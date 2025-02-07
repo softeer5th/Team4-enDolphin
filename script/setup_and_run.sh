@@ -15,7 +15,7 @@ cd ${BACKEND_DIR}
 echo "Gradle 빌드 중..."
 
 chmod +x ${BACKEND_DIR}/gradlew
-${BACKEND_DIR}/gradlew clean build -x test
+${BACKEND_DIR}/gradlew clean build
 
 echo "${IMAGE_NAME}/${IMAGE_TAG} 이미지를 빌드 중..."
 
@@ -30,6 +30,7 @@ echo "👉 docker-compose를 사용하여 API와 MySQL 컨테이너를 실행합
 
 API_CONTAINER_NAME="backend_api"
 DB_CONTAINER_NAME="backend_mysql"
+REDIS_CONTAINER_NAME="backend_redis"
 
 EXISTING_CONTAINER=$(docker ps -aq --filter "name=^/${API_CONTAINER_NAME}$")
 if [ -n "$EXISTING_CONTAINER" ]; then
@@ -39,6 +40,11 @@ fi
 EXISTING_CONTAINER=$(docker ps -aq --filter "name=^/${DB_CONTAINER_NAME}$")
 if [ -n "$EXISTING_CONTAINER" ]; then
   echo "👉 기존 컨테이너 '$DB_CONTAINER_NAME' 발견: 제거합니다..."
+  docker rm -f "$EXISTING_CONTAINER"
+fi
+EXISTING_CONTAINER=$(docker ps -aq --filter "name=^/${REDIS_CONTAINER_NAME}$")
+if [ -n "$EXISTING_CONTAINER" ]; then
+  echo "👉 기존 컨테이너 '$REDIS_CONTAINER_NAME' 발견: 제거합니다..."
   docker rm -f "$EXISTING_CONTAINER"
 fi
 
