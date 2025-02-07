@@ -7,7 +7,6 @@ import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.utility.DockerImageName;
 
 @DisplayName("Redis Test Containers")
-@Profile("dev")
 @Configuration
 public class RedisTestContainer {
 
