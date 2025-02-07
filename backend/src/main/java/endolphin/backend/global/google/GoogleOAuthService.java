@@ -20,15 +20,11 @@ import org.springframework.web.client.RestClient;
 @Slf4j
 public class GoogleOAuthService {
 
-    private final UserService userService;
     private final GoogleOAuthProperties googleOAuthProperties;
     private final RestClient restClient;
 
     public GoogleTokens getGoogleTokens(String code) {
-        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("client_id", googleOAuthProperties.clientId());
-        params.add("client_secret", googleOAuthProperties.clientSecret());
-        params.add("redirect_uri", googleOAuthProperties.redirectUri());
+        MultiValueMap<String, String> params = getStringStringMultiValueMap();
         params.add("code", code);
         params.add("grant_type", "authorization_code");
         params.add("access_type", "offline");
@@ -61,10 +57,7 @@ public class GoogleOAuthService {
     }
 
     public String reissueAccessToken(String refreshToken) {
-        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("client_id", googleOAuthProperties.clientId());
-        params.add("client_secret", googleOAuthProperties.clientSecret());
-        params.add("redirect_uri", googleOAuthProperties.redirectUri());
+        MultiValueMap<String, String> params = getStringStringMultiValueMap();
         params.add("grant_type", "refresh_token");
         params.add("refresh_token", refreshToken);
 
@@ -81,7 +74,14 @@ public class GoogleOAuthService {
 
                 return tokens.accessToken();
             });
-        userService.updateAccessToken(accessToken);
         return accessToken;
+    }
+
+    private MultiValueMap<String, String> getStringStringMultiValueMap() {
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("client_id", googleOAuthProperties.clientId());
+        params.add("client_secret", googleOAuthProperties.clientSecret());
+        params.add("redirect_uri", googleOAuthProperties.redirectUri());
+        return params;
     }
 }
