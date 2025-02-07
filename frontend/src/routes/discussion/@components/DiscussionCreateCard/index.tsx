@@ -25,7 +25,11 @@ const DiscussionCreateCard = () => {
       direction='column'
       gap={700}
     >
-      <img src='/images/assets/calendar.webp' width={100} />
+      <img
+        alt='캘린더 이미지'
+        src='/images/assets/calendar.webp'
+        width={100}
+      />
       <Text color={vars.color.Ref.Netural[900]} typo='h2'>일정 조율 생성 완료</Text>
       <Divider />
       <DiscussionInfo />
