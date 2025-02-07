@@ -1,7 +1,8 @@
 import { assignInlineVars } from '@vanilla-extract/dynamic';
-import type { PropsWithChildren  } from 'react';
+import type { ComponentPropsWithoutRef, ElementType, PropsWithChildren  } from 'react';
 
 import { vars } from '@/theme/index.css';
+import type { AsProp } from '@/types/polymorphism';
 import clsx from '@/utils/clsx';
 
 import { flexStyle, flexVars } from './flex.css';
@@ -16,15 +17,20 @@ interface FlexProps extends PropsWithChildren {
   className?: string;
 }
 
-export const Flex = ({ className, children, ...styles }: FlexProps) => {
-  const { 
-    width = 'auto',
-    height = 'auto',
-    direction = 'row', 
-    justify = 'center',
-    align = 'flex-start',
-    gap,
-  } = styles;
+export const Flex = <T extends ElementType = 'div'>({ 
+  as,
+  className,
+  children, 
+  width = 'auto',
+  height = 'auto',
+  direction = 'row', 
+  justify = 'center',
+  align = 'flex-start',
+  gap,
+  ...props
+}: AsProp<T> & ComponentPropsWithoutRef<T> & FlexProps) => {
+
+  const Component = as || 'button';
 
   const formattedWidth = (()=>{
     if (width === 'full') return '100%';
@@ -33,7 +39,7 @@ export const Flex = ({ className, children, ...styles }: FlexProps) => {
   })();
 
   return (
-    <div
+    <Component
       className={clsx(className, flexStyle)}
       style={assignInlineVars(flexVars, { 
         flex: { 
@@ -45,8 +51,9 @@ export const Flex = ({ className, children, ...styles }: FlexProps) => {
           gap: gap ? vars.spacing[gap] : '0',
         },
       })}
+      {...props}
     >
       {children}
-    </div>
+    </Component>
   );
 };

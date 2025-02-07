@@ -5,15 +5,12 @@ import type {
   MouseEventHandler,
 } from 'react';
 
+import type { AsProp } from '@/types/polymorphism';
 import clsx from '@/utils/clsx';
 
 import ButtonIcon from './ButtonIcon';
 import ButtonText from './ButtonText';
 import { containerStyle } from './index.css';
-
-type AsProp<T extends ElementType = 'button'> = {
-  as?: T;
-};
 
 export interface ButtonProps {
   variant?: 'primary' | 'secondary' | 'destructive' | 're';

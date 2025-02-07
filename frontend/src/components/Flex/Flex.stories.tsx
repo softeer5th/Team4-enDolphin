@@ -28,3 +28,14 @@ export const Primary: Story = {
     gap: 10,
   },
 };
+
+export const HeaderFlex: Story = {
+  args: { 
+    width: 'full',
+    direction: 'row',
+    justify: 'space-between',
+    as: 'header',
+    align: 'center',
+    children: <div>hello world</div>,
+  },
+};
