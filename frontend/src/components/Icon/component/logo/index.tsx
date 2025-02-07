@@ -1,5 +1,7 @@
-export const Logo = () => 
-<svg width="84" height="22" viewBox="0 0 84 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+import { IconProps } from "../../Icon";
+
+export const Logo = ({ clickable = false, className, ...rest }: IconProps) => 
+<svg width="84" height="22" viewBox="0 0 84 22" fill="none" xmlns="http://www.w3.org/2000/svg" className={className} style={{ cursor: clickable ? "pointer": "default", ...rest.style }} {...rest}>
 <path d="M5 7H25V19.6667C25 20.403 24.403 21 23.6667 21H6.33333C5.59695 21 5 20.403 5 19.6667V7Z" fill="#D1D6DB"/>
 <path d="M5 6H25V17.977C25 18.7134 24.403 19.3103 23.6667 19.3103H6.33333C5.59695 19.3103 5 18.7134 5 17.977V6Z" fill="url(#paint0_linear_792_13815)"/>
 <g filter="url(#filter0_d_792_13815)">

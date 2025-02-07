@@ -13,14 +13,20 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as MainImport } from './routes/_main'
 import { Route as IndexImport } from './routes/index'
 import { Route as LandingIndexImport } from './routes/landing/index'
 
 // Create Virtual Routes
 
-const MyScheduleIndexLazyImport = createFileRoute('/my-schedule/')()
+const MainMyScheduleIndexLazyImport = createFileRoute('/_main/my-schedule/')()
 
 // Create/Update Routes
+
+const MainRoute = MainImport.update({
+  id: '/_main',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const IndexRoute = IndexImport.update({
   id: '/',
@@ -28,19 +34,19 @@ const IndexRoute = IndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const MyScheduleIndexLazyRoute = MyScheduleIndexLazyImport.update({
-  id: '/my-schedule/',
-  path: '/my-schedule/',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() =>
-  import('./routes/my-schedule/index.lazy').then((d) => d.Route),
-)
-
 const LandingIndexRoute = LandingIndexImport.update({
   id: '/landing/',
   path: '/landing/',
   getParentRoute: () => rootRoute,
 } as any)
+
+const MainMyScheduleIndexLazyRoute = MainMyScheduleIndexLazyImport.update({
+  id: '/my-schedule/',
+  path: '/my-schedule/',
+  getParentRoute: () => MainRoute,
+} as any).lazy(() =>
+  import('./routes/_main/my-schedule/index.lazy').then((d) => d.Route),
+)
 
 // Populate the FileRoutesByPath interface
 
@@ -53,6 +59,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
+    '/_main': {
+      id: '/_main'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof MainImport
+      parentRoute: typeof rootRoute
+    }
     '/landing/': {
       id: '/landing/'
       path: '/landing'
@@ -60,56 +73,69 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LandingIndexImport
       parentRoute: typeof rootRoute
     }
-    '/my-schedule/': {
-      id: '/my-schedule/'
+    '/_main/my-schedule/': {
+      id: '/_main/my-schedule/'
       path: '/my-schedule'
       fullPath: '/my-schedule'
-      preLoaderRoute: typeof MyScheduleIndexLazyImport
-      parentRoute: typeof rootRoute
+      preLoaderRoute: typeof MainMyScheduleIndexLazyImport
+      parentRoute: typeof MainImport
     }
   }
 }
 
 // Create and export the route tree
 
+interface MainRouteChildren {
+  MainMyScheduleIndexLazyRoute: typeof MainMyScheduleIndexLazyRoute
+}
+
+const MainRouteChildren: MainRouteChildren = {
+  MainMyScheduleIndexLazyRoute: MainMyScheduleIndexLazyRoute,
+}
+
+const MainRouteWithChildren = MainRoute._addFileChildren(MainRouteChildren)
+
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '': typeof MainRouteWithChildren
   '/landing': typeof LandingIndexRoute
-  '/my-schedule': typeof MyScheduleIndexLazyRoute
+  '/my-schedule': typeof MainMyScheduleIndexLazyRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '': typeof MainRouteWithChildren
   '/landing': typeof LandingIndexRoute
-  '/my-schedule': typeof MyScheduleIndexLazyRoute
+  '/my-schedule': typeof MainMyScheduleIndexLazyRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
+  '/_main': typeof MainRouteWithChildren
   '/landing/': typeof LandingIndexRoute
-  '/my-schedule/': typeof MyScheduleIndexLazyRoute
+  '/_main/my-schedule/': typeof MainMyScheduleIndexLazyRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/landing' | '/my-schedule'
+  fullPaths: '/' | '' | '/landing' | '/my-schedule'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/landing' | '/my-schedule'
-  id: '__root__' | '/' | '/landing/' | '/my-schedule/'
+  to: '/' | '' | '/landing' | '/my-schedule'
+  id: '__root__' | '/' | '/_main' | '/landing/' | '/_main/my-schedule/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  MainRoute: typeof MainRouteWithChildren
   LandingIndexRoute: typeof LandingIndexRoute
-  MyScheduleIndexLazyRoute: typeof MyScheduleIndexLazyRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  MainRoute: MainRouteWithChildren,
   LandingIndexRoute: LandingIndexRoute,
-  MyScheduleIndexLazyRoute: MyScheduleIndexLazyRoute,
 }
 
 export const routeTree = rootRoute
@@ -123,18 +149,25 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/landing/",
-        "/my-schedule/"
+        "/_main",
+        "/landing/"
       ]
     },
     "/": {
       "filePath": "index.tsx"
     },
+    "/_main": {
+      "filePath": "_main.tsx",
+      "children": [
+        "/_main/my-schedule/"
+      ]
+    },
     "/landing/": {
       "filePath": "landing/index.tsx"
     },
-    "/my-schedule/": {
-      "filePath": "my-schedule/index.lazy.tsx"
+    "/_main/my-schedule/": {
+      "filePath": "_main/my-schedule/index.lazy.tsx",
+      "parent": "/_main"
     }
   }
 }
