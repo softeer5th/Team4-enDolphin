@@ -30,7 +30,7 @@ export const Flex = <T extends ElementType = 'div'>({
   ...props
 }: AsProp<T> & ComponentPropsWithoutRef<T> & FlexProps) => {
 
-  const Component = as || 'button';
+  const Component = as || 'div';
 
   const formattedWidth = (()=>{
     if (width === 'full') return '100%';

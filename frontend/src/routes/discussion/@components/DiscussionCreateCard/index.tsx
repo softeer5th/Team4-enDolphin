@@ -20,6 +20,7 @@ const DiscussionCreateCard = () => {
   return (
     <Flex
       align='center'
+      as='section'
       className={containerStyle}
       direction='column'
       gap={700}
