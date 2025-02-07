@@ -12,6 +12,9 @@ public enum ErrorCode {
     // User
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "U001", "User not found"),
 
+    // Discussion
+    DISCUSSION_NOT_FOUND(HttpStatus.NOT_FOUND, "D001", "Discussion not found"),
+
     ;
     private final HttpStatus httpStatus;
     private final String code;
