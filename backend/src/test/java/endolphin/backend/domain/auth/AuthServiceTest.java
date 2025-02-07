@@ -83,7 +83,7 @@ class AuthServiceTest {
         given(googleOAuthService.getUserInfo(anyString()))
             .willReturn(googleUserInfo);
 
-        given(userService.createUser(any(GoogleUserInfo.class), any(GoogleTokens.class)))
+        given(userService.upsertUser(any(GoogleUserInfo.class), any(GoogleTokens.class)))
             .willReturn(user);
         given(jwtProvider.createToken(user.getId(), user.getEmail())).willReturn("test-jwt-token");
 

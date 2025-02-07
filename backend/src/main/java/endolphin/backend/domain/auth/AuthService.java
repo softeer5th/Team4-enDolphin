@@ -39,7 +39,7 @@ public class AuthService {
         GoogleTokens tokenResponse = googleOAuthService.getGoogleTokens(code);
         GoogleUserInfo userInfo = googleOAuthService.getUserInfo(tokenResponse.accessToken());
         validateUserInfo(userInfo);
-        User user = userService.createUser(userInfo, tokenResponse);
+        User user = userService.upsertUser(userInfo, tokenResponse);
         String accessToken = jwtProvider.createToken(user.getId(), user.getEmail());
         return new OAuthResponse(accessToken);
     }

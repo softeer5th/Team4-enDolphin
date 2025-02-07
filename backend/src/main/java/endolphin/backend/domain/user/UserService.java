@@ -31,7 +31,7 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public User createUser(GoogleUserInfo userInfo, GoogleTokens tokenResponse) {
+    public User upsertUser(GoogleUserInfo userInfo, GoogleTokens tokenResponse) {
         User user = userRepository.findByEmail(userInfo.email())
             .orElseGet(() -> {
                 return User.builder()
