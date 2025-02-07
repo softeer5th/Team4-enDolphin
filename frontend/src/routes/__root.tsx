@@ -2,6 +2,7 @@ import { createRootRoute, Outlet } from '@tanstack/react-router';
 import { lazy } from 'react';
 
 import { defaultENV } from '@/envconfig';
+import GlobalNavBar from '@/layout/GlobalNavBar';
 import ErrorPage from '@/pages/ErrorPage';
 
 const TanStackRouterDevtools =
@@ -20,5 +21,10 @@ export const Route = createRootRoute({
       <TanStackRouterDevtools />
     </>
   ),
-  notFoundComponent: ErrorPage,
+  notFoundComponent: () => (
+    <>
+      <GlobalNavBar />
+      <ErrorPage />
+    </>
+  ), 
 });

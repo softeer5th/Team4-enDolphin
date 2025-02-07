@@ -3,7 +3,6 @@ import { Google } from '@/components/Icon';
 import { Image } from '@/components/Image';
 import { Text } from '@/components/Text';
 import GlobalNavBar from '@/layout/GlobalNavBar';
-import { LoginLink } from '@/layout/GlobalNavBar/buttons';
 import { vars } from '@/theme/index.css';
 
 import {
@@ -13,7 +12,7 @@ import {
   imageStyle,
   imageWrapperStyle,
   subTitleStyle,
-  titleStyle, 
+  titleStyle,
 } from './index.css';
 
 const LandingImages = () => (
@@ -39,7 +38,7 @@ const LandingPage = () => {
   return (
     <>
       <GlobalNavBar>
-        <LoginLink />
+        <GlobalNavBar.LoginLink />
       </GlobalNavBar>
       <div className={containerStyle}>
         <h1 className={titleStyle}>
