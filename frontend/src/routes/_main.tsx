@@ -1,6 +1,6 @@
 import { createFileRoute, Outlet } from '@tanstack/react-router';
 
-import MainLayout from './@components/MainLayout';
+import MainLayout from '@/layout/MainLayout';
 
 const Layout = () => (
   <MainLayout>
