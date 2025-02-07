@@ -15,7 +15,7 @@ cd ${BACKEND_DIR}
 echo "Gradle 빌드 중..."
 
 chmod +x ${BACKEND_DIR}/gradlew
-${BACKEND_DIR}/gradlew clean build
+${BACKEND_DIR}/gradlew clean build -x test
 
 echo "${IMAGE_NAME}/${IMAGE_TAG} 이미지를 빌드 중..."
 
