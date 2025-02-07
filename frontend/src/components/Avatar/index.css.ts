@@ -12,7 +12,12 @@ export const avatarItemStyle = recipe({
   base: {
     backgroundColor: vars.color.Ref.Netural['White'],
     borderRadius: vars.radius['Max'],
-    border: `2px solid ${vars.color.Ref.Netural[500]}`,
+    border: `2px solid ${vars.color.Ref.Netural['White']}`,
+    selectors: {
+      '&:last-child': {
+        borderColor: vars.color.Ref.Netural[100],
+      },
+    },
   },
   variants: {
     size: {
