@@ -7,8 +7,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import endolphin.backend.domain.discussion.dto.CreateDiscussionRequest;
-import endolphin.backend.domain.discussion.dto.CreateDiscussionResponse;
+import endolphin.backend.domain.discussion.dto.DiscussionResponse;
 import endolphin.backend.domain.discussion.enums.MeetingMethod;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import org.junit.jupiter.api.BeforeEach;
@@ -59,7 +60,7 @@ public class DiscussionControllerTest {
         );
 
         // given: 서비스가 반환할 응답 DTO 생성
-        CreateDiscussionResponse response = new CreateDiscussionResponse(
+        DiscussionResponse response = new DiscussionResponse(
             100L,
             "Test Discussion",
             LocalDate.of(2025, 2, 10),
@@ -67,7 +68,7 @@ public class DiscussionControllerTest {
             MeetingMethod.ONLINE,
             null,
             60,
-            "마감까지 10일"
+            Duration.ofDays(10).toMillis()
         );
 
         given(discussionService.createDiscussion(request)).willReturn(response);

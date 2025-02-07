@@ -23,15 +23,15 @@ public class SharedEvent {
     private Discussion discussion;
 
     @Column(name = "start_time", nullable = false)
-    private LocalDateTime startTime;
+    private LocalDateTime startDateTime;
 
     @Column(name = "end_time", nullable = false)
-    private LocalDateTime endTime;
+    private LocalDateTime endDateTime;
 
     @Builder
     public SharedEvent(Discussion discussion, LocalDateTime start, LocalDateTime end) {
         this.discussion = discussion;
-        this.startTime = start;
-        this.endTime = end;
+        this.startDateTime = start;
+        this.endDateTime = end;
     }
 }

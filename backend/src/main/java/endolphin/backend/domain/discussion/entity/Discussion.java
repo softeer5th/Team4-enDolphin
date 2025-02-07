@@ -4,6 +4,7 @@ import endolphin.backend.domain.discussion.enums.DiscussionStatus;
 import endolphin.backend.domain.discussion.enums.MeetingMethod;
 import endolphin.backend.global.base_entity.BaseTimeEntity;
 import jakarta.persistence.*;
+import java.util.Optional;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -69,5 +70,10 @@ public class Discussion extends BaseTimeEntity {
         this.deadline = deadline;
         this.meetingMethod = meetingMethod;
         this.location = location;
+    }
+
+    public String getMeetingMethodOrLocation() {
+        return Optional.ofNullable(location)
+            .orElseGet(() -> meetingMethod != null ? meetingMethod.name() : null);
     }
 }

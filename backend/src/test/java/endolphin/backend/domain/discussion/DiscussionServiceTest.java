@@ -1,17 +1,29 @@
 package endolphin.backend.domain.discussion;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.within;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import endolphin.backend.domain.discussion.dto.CreateDiscussionRequest;
-import endolphin.backend.domain.discussion.dto.CreateDiscussionResponse;
+import endolphin.backend.domain.discussion.dto.DiscussionResponse;
 import endolphin.backend.domain.discussion.entity.Discussion;
 import endolphin.backend.domain.discussion.enums.MeetingMethod;
+import endolphin.backend.domain.shared_event.SharedEventService;
+import endolphin.backend.domain.shared_event.dto.SharedEventRequest;
+import endolphin.backend.domain.shared_event.dto.SharedEventResponse;
+import endolphin.backend.domain.shared_event.dto.SharedEventWithDiscussionInfoResponse;
 import endolphin.backend.domain.user.UserService;
 import endolphin.backend.domain.user.entity.User;
+import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,6 +43,9 @@ public class DiscussionServiceTest {
 
     @Mock
     private UserService userService;
+
+    @Mock
+    private SharedEventService sharedEventService;
 
     @InjectMocks
     private DiscussionService discussionService;
@@ -61,7 +76,7 @@ public class DiscussionServiceTest {
         given(userService.getCurrentUser()).willReturn(dummyUser);
 
         // when
-        CreateDiscussionResponse response = discussionService.createDiscussion(request);
+        DiscussionResponse response = discussionService.createDiscussion(request);
 
         // then
         assertThat(response).isNotNull();
@@ -72,7 +87,52 @@ public class DiscussionServiceTest {
         assertThat(response.meetingMethod()).isEqualTo(MeetingMethod.OFFLINE);
         assertThat(response.location()).isEqualTo("회의실 1");
         assertThat(response.duration()).isEqualTo(60);
-        assertThat(response.timeLeft()).isNotNull();
-        assertThat(response.timeLeft()).isEqualTo("마감까지 10일");
+        long timeLeft = Duration.between(LocalDateTime.now(), request.deadline().atTime(23, 59, 59))
+            .toMillis();
+        assertThat(response.timeLeft()).isCloseTo(timeLeft, within(1000L));
+    }
+
+    @DisplayName("Discussion 일정 확정 테스트")
+    @Test
+    public void confirmSchedule_withValidRequest_returnsExpectedResponse() {
+        Long discussionId = 1L;
+        Discussion discussion = Discussion.builder()
+            .title("Project Sync")
+            .meetingMethod(MeetingMethod.ONLINE)
+            .build();
+
+        SharedEventRequest request = new SharedEventRequest(
+            LocalDateTime.of(2025, 3, 1, 10, 0),
+            LocalDateTime.of(2025, 3, 1, 12, 0)
+        );
+
+        SharedEventResponse sharedEventResponse = new SharedEventResponse(
+            101L,
+            request.startTime(),
+            request.endTime()
+        );
+
+        List<String> participantPictures = List.of("pic1.jpg", "pic2.jpg");
+
+        when(discussionRepository.findById(discussionId)).thenReturn(Optional.of(discussion));
+        when(sharedEventService.createSharedEvent(discussion, request)).thenReturn(
+            sharedEventResponse);
+        when(discussionParticipantRepository.findUserPicturesByDiscussionId(
+            discussionId)).thenReturn(participantPictures);
+
+        SharedEventWithDiscussionInfoResponse response = discussionService.confirmSchedule(
+            discussionId, request);
+
+        assertThat(response).isNotNull();
+        assertThat(response.discussionId()).isEqualTo(discussionId);
+        assertThat(response.title()).isEqualTo("Project Sync");
+        assertThat(response.meetingMethodOrLocation()).isEqualTo("ONLINE");
+        assertThat(response.sharedEventResponse().id()).isEqualTo(101L);
+        assertThat(response.participantPictureUrls()).containsExactlyElementsOf(
+            participantPictures);
+
+        verify(discussionRepository).findById(discussionId);
+        verify(sharedEventService).createSharedEvent(discussion, request);
+        verify(discussionParticipantRepository).findUserPicturesByDiscussionId(discussionId);
     }
 }
