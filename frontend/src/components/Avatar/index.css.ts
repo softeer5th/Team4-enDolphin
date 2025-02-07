@@ -42,3 +42,12 @@ export const avatarItemStyle = recipe({
     },
   },
 });
+
+export const avatarCountStyle = recipe({
+  base: {
+    borderRadius: vars.radius['Max'],
+    backgroundColor: vars.color.Ref.Netural['White'],
+    color: vars.color.Ref.Netural[500],
+    border: `2px solid ${vars.color.Ref.Netural[100]}`,
+  },
+});

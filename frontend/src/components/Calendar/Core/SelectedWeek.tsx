@@ -7,7 +7,7 @@ import { weekStyle } from './index.css';
 import { WeekCell } from './WeekCell';
 
 export const SelectedWeek = () => {
-  const { selected, dates, handleChangeWeek } = useCalendarContext();
+  const { selected, dates } = useCalendarContext();
   const today = new Date();
 
   return (
@@ -22,7 +22,6 @@ export const SelectedWeek = () => {
           day={day}
           isToday={isSameDate(dates[i], today)}
           key={day}
-          onClickHandler={() => handleChangeWeek(dates[i])}
           selected={isSameDate(dates[i], selected)}
         />)}
     </div>

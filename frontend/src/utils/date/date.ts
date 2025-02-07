@@ -1,5 +1,8 @@
 import { WEEK_MAP } from '@/constants/date';
 
+const SUNDAY_CODE = 0;
+const SATURDAY_CODE = 6;
+
 /**
  * 날짜가 해당 달의 첫째주에 포함되는지를 판단합니다.
  * @param date - 날짜 객체.
@@ -98,9 +101,55 @@ export const isSameDate = (date1: Date, date2: Date): boolean => (
     date1.getDate() === date2.getDate()
 );
 
-export const isWeekend = (date: Date): boolean => {
-  const SUNDAY = 0;
-  const SATURDAY = 6;
-  
-  return date.getDay() === SUNDAY || date.getDay() === SATURDAY;
+export const isWeekend = (date: Date): boolean => 
+  date.getDay() === SUNDAY_CODE || date.getDay() === SATURDAY_CODE;
+
+/**
+ * 두 날짜 객체를 비교하여 시작 날짜와 종료 날짜를 반환합니다.
+ * @param date1 - 비교할 날짜1
+ * @param date2 - 비교할 날짜2
+ * @returns - 시작 날짜와 종료 날짜
+ */
+export const sortDate = (date1: Date | null, date2: Date | null): {
+  startDate: Date | null;
+  endDate: Date | null;
+} => {
+  if (!date1 || !date2) {
+    return { 
+      startDate: date1 || date2, 
+      endDate: date1 || date2, 
+    };
+  }
+  const [startDate, endDate] 
+    = [date1, date2].sort((a, b) => a.getTime() - b.getTime());
+  return { startDate, endDate };
 };
+
+/**
+ * 
+ * @param target - 비교할 날짜
+ * @param startDate - 시작 날짜
+ * @param endDate - 종료 날짜
+ * @returns - 날짜가 범위 내에 있는지 여부
+ */
+export const isDateInRange = (
+  target: Date,
+  startDate: Date | null,
+  endDate: Date | null,
+): boolean => {
+  if (!startDate || !endDate) return false;
+
+  const { startDate: start, endDate: end } = sortDate(startDate, endDate);
+  if (!start || !end) return false;
+
+  const targetTime = target.getTime();
+  const startTime = start.getTime();
+  const endTime = end.getTime();
+
+  return targetTime >= startTime && targetTime <= endTime;
+};
+
+export const isSaturday = (date: Date): boolean => date.getDay() === SATURDAY_CODE;
+export const isSunday = (date: Date): boolean => date.getDay() === SUNDAY_CODE;
+// TODO: 공휴일 OPEN API에 연결
+// export const isHoliday = (date: Date): boolean => false;

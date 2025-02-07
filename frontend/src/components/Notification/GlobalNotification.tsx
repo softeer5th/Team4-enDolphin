@@ -1,7 +1,7 @@
 import { createPortal } from 'react-dom';
 
 import type { NotificationWithId } from '@/hooks/useNotification';
-import { fadeInAndOut } from '@/theme/animation.css';
+import { fadeInAndOutStyle } from '@/theme/animation.css';
 
 import { Notification } from '.';
 import { notificationsStyle } from './index.css';
@@ -14,7 +14,7 @@ export const GlobalNotification = ({ notifications }: { notifications: Notificat
       {notifications
         .map((noti) => 
           <Notification
-            className={fadeInAndOut}
+            className={fadeInAndOutStyle}
             key={noti.id}
             {...noti}
           />)}

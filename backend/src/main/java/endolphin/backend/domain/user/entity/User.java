@@ -10,6 +10,7 @@ import jakarta.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Entity
@@ -27,16 +28,18 @@ public class User extends BaseTimeEntity {
     private String email;
     @Column(nullable = false)
     private String picture;
-    private String access_token;
-    private String refresh_token;
+    @Column(name = "access_token")
+    private String accessToken;
+    @Column(name = "refresh_token")
+    private String refreshToken;
 
     @Builder
-    public User(String name, String email, String picture, String access_token,
-        String refresh_token) {
+    public User(String name, String email, String picture, String accessToken,
+        String refreshToken) {
         this.name = name;
         this.email = email;
         this.picture = picture;
-        this.access_token = access_token;
-        this.refresh_token = refresh_token;
+        this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
     }
 }

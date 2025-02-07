@@ -1,43 +1,27 @@
 import { style } from '@vanilla-extract/css';
 import { recipe } from '@vanilla-extract/recipes';
 
-import { font } from '../../theme/font';
-import { vars } from '../../theme/index.css';
+import { font } from '@/theme/font';
+import { vars } from '@/theme/index.css';
 
 export const inputFieldContainerStyle = recipe({
   base: {
     flex: 1,
+    height: '100%',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    borderRadius: vars.radius[200],
-    border: `1px solid ${vars.color.Ref.Netural[300]}`,
-    borderWidth: 1.5,
     backgroundColor: vars.color.Ref.Netural.White,
-    padding: vars.spacing[400],
-    height: 40, 
+    padding: `0 ${vars.spacing[400]}`,
+    borderRadius: vars.radius[200],
+    borderWidth: 1.5,
+    boxSizing: 'border-box',
   },
   variants: {
-    isValid: {
-      true: {
-        ':hover': {
-          borderColor: vars.color.Ref.Primary[200],
-        },
-        ':focus-within': {
-          borderColor: vars.color.Ref.Primary[500],
-        },
-      },
-      false: {
-        borderColor: vars.color.Ref.Red[500],
-      },
-    },
     type: {
       text: { cursor: 'text' },
       select: { cursor: 'pointer' },
     },
-  },
-  defaultVariants: {
-    isValid: true,
   },
 });
 

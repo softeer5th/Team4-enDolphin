@@ -1,0 +1,12 @@
+FROM amazoncorretto:17-alpine
+
+ARG JAR_FILE=backend/build/libs/backend-0.0.1-SNAPSHOT.jar
+RUN apk add --no-cache bash
+
+WORKDIR /app
+
+COPY ${JAR_FILE} app.jar
+COPY script/wait-for-it.sh /app/config/wait-for-it.sh
+RUN chmod +x /app/config/wait-for-it.sh
+
+ENTRYPOINT ["/app/config/wait-for-it.sh", "db:3306", "--", "java", "-Dspring.profiles.active=dev", "-Duser.timezone=Asia/Seoul", "-jar", "app.jar"]

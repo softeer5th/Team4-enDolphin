@@ -13,19 +13,20 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as IndexImport } from './routes/index'
+import { Route as LandingIndexImport } from './routes/landing/index'
 
 // Create Virtual Routes
 
-const IndexLazyImport = createFileRoute('/')()
 const MyScheduleIndexLazyImport = createFileRoute('/my-schedule/')()
 
 // Create/Update Routes
 
-const IndexLazyRoute = IndexLazyImport.update({
+const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
+} as any)
 
 const MyScheduleIndexLazyRoute = MyScheduleIndexLazyImport.update({
   id: '/my-schedule/',
@@ -35,6 +36,12 @@ const MyScheduleIndexLazyRoute = MyScheduleIndexLazyImport.update({
   import('./routes/my-schedule/index.lazy').then((d) => d.Route),
 )
 
+const LandingIndexRoute = LandingIndexImport.update({
+  id: '/landing/',
+  path: '/landing/',
+  getParentRoute: () => rootRoute,
+} as any)
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
@@ -43,7 +50,14 @@ declare module '@tanstack/react-router' {
       id: '/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexLazyImport
+      preLoaderRoute: typeof IndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/landing/': {
+      id: '/landing/'
+      path: '/landing'
+      fullPath: '/landing'
+      preLoaderRoute: typeof LandingIndexImport
       parentRoute: typeof rootRoute
     }
     '/my-schedule/': {
@@ -59,37 +73,42 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexLazyRoute
+  '/': typeof IndexRoute
+  '/landing': typeof LandingIndexRoute
   '/my-schedule': typeof MyScheduleIndexLazyRoute
 }
 
 export interface FileRoutesByTo {
-  '/': typeof IndexLazyRoute
+  '/': typeof IndexRoute
+  '/landing': typeof LandingIndexRoute
   '/my-schedule': typeof MyScheduleIndexLazyRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
-  '/': typeof IndexLazyRoute
+  '/': typeof IndexRoute
+  '/landing/': typeof LandingIndexRoute
   '/my-schedule/': typeof MyScheduleIndexLazyRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/my-schedule'
+  fullPaths: '/' | '/landing' | '/my-schedule'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/my-schedule'
-  id: '__root__' | '/' | '/my-schedule/'
+  to: '/' | '/landing' | '/my-schedule'
+  id: '__root__' | '/' | '/landing/' | '/my-schedule/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
-  IndexLazyRoute: typeof IndexLazyRoute
+  IndexRoute: typeof IndexRoute
+  LandingIndexRoute: typeof LandingIndexRoute
   MyScheduleIndexLazyRoute: typeof MyScheduleIndexLazyRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexLazyRoute: IndexLazyRoute,
+  IndexRoute: IndexRoute,
+  LandingIndexRoute: LandingIndexRoute,
   MyScheduleIndexLazyRoute: MyScheduleIndexLazyRoute,
 }
 
@@ -104,11 +123,15 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
+        "/landing/",
         "/my-schedule/"
       ]
     },
     "/": {
-      "filePath": "index.lazy.tsx"
+      "filePath": "index.tsx"
+    },
+    "/landing/": {
+      "filePath": "landing/index.tsx"
     },
     "/my-schedule/": {
       "filePath": "my-schedule/index.lazy.tsx"

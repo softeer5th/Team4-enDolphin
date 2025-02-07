@@ -83,8 +83,8 @@ class UserServiceTest {
             .email(googleUserInfo.email())
             .name(googleUserInfo.name())
             .picture(googleUserInfo.picture())
-            .access_token(googleTokens.accessToken())
-            .refresh_token(googleTokens.refreshToken())
+            .accessToken(googleTokens.accessToken())
+            .refreshToken(googleTokens.refreshToken())
             .build();
 
         given(restTemplate.postForEntity(eq(testTokenUrl), any(HttpEntity.class), eq(GoogleTokens.class)))

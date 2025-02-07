@@ -5,29 +5,30 @@ import { CalendarCell } from './CalendarCell';
 import { dayStyle } from './index.css';
 
 interface CalendarDayProps {
-  holiday?: boolean;
+  date: Date;
   selected: boolean;
 }
 
-export const CalendarDay = memo(({ holiday = false, selected }: CalendarDayProps) => (
+export const CalendarDay = memo(({ date, selected }: CalendarDayProps) => (
   <div className={dayStyle}>
     <CalendarCell
-      holiday={holiday}
+      date={date}
       selected={selected}
       time='all'
     />
     <CalendarCell
-      holiday={holiday}
+      date={date}
       selected={selected}
       time='empty'
     />
-    {TIMES.map((time) => 
+    {TIMES.map((time) => (
       <CalendarCell
-        holiday={holiday}
+        date={date}
         key={time}
         selected={selected}
         time={time}
-      />,
+      />
+    ),
     )}
   </div>
 ));
