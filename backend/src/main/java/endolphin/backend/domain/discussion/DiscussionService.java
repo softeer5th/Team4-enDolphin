@@ -82,16 +82,7 @@ public class DiscussionService {
         List<String> participantPictures = participants.stream().map(User::getPicture)
             .toList();
 
-        personalEventService.createPersonalEventsForParticipants(participants, discussion, sharedEventDto)
-            .thenRun(() -> log.info("PersonalEvent creation success for discussion {}", discussionId))
-            .exceptionally(ex -> {
-                /*TODO 실패시 처리
-                실패시 retry 사용을 위해 spring-retry 라이브러리 사용할지, 직접 구현할지?
-                아니면 이 부분을 그냥 동기로 처리할지에 대해 의견 주시면 감사하겠습니다.
-                 */
-                log.error("PersonalEvent creation failed: {}", ex.getMessage(), ex);
-                return null;
-            });
+        personalEventService.createPersonalEventsForParticipants(participants, discussion, sharedEventDto);
 
         discussionBitmapService.deleteDiscussionBitmapsUsingScan(discussionId)
             .thenRun(() -> log.info("Redis keys deleted successfully for discussionId : {}",

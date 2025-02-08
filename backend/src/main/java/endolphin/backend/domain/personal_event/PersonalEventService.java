@@ -11,9 +11,7 @@ import endolphin.backend.global.dto.ListResponse;
 import endolphin.backend.global.util.Validator;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 import lombok.RequiredArgsConstructor;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,26 +51,19 @@ public class PersonalEventService {
         return PersonalEventResponse.fromEntity(result);
     }
 
-    @Async
-    public CompletableFuture<Void> createPersonalEventsForParticipants(List<User> participants,
+    public void createPersonalEventsForParticipants(List<User> participants,
         Discussion discussion,
         SharedEventDto sharedEvent) {
-        try {
-            List<PersonalEvent> events = participants.stream()
-                .map(participant -> PersonalEvent.builder()
-                    .title(discussion.getTitle())
-                    .startTime(sharedEvent.startDateTime())
-                    .endTime(sharedEvent.endDateTime())
-                    .user(participant)
-                    .build())
-                .toList();
+        List<PersonalEvent> events = participants.stream()
+            .map(participant -> PersonalEvent.builder()
+                .title(discussion.getTitle())
+                .startTime(sharedEvent.startDateTime())
+                .endTime(sharedEvent.endDateTime())
+                .user(participant)
+                .build())
+            .toList();
 
-            personalEventRepository.saveAll(events);
-
-            return CompletableFuture.completedFuture(null);
-        } catch (Exception ex) {
-            return CompletableFuture.failedFuture(ex);
-        }
+        personalEventRepository.saveAll(events);
     }
 
     public PersonalEventResponse updatePersonalEvent(PersonalEventRequest request,

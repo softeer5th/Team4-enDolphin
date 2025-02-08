@@ -136,10 +136,6 @@ public class DiscussionServiceTest {
         when(discussionParticipantService.getUsersByDiscussionId(discussionId))
             .thenReturn(dummyParticipants);
 
-        when(personalEventService.createPersonalEventsForParticipants(
-            anyList(), any(Discussion.class), any(SharedEventDto.class)
-        )).thenReturn(CompletableFuture.completedFuture(null));
-
         when(discussionBitmapService.deleteDiscussionBitmapsUsingScan(
             any(Long.class)
         )).thenReturn(CompletableFuture.completedFuture(null));
@@ -162,7 +158,7 @@ public class DiscussionServiceTest {
         verify(discussionParticipantService).getUsersByDiscussionId(discussionId);
     }
 
-    @DisplayName("논의 확정 후 비동기 작업 실패 시 처리 확인")
+    @DisplayName("논의 확정 비동기 작업 실패 시 응답 확인")
     @Test
     public void confirmSchedule_asyncFailureHandledGracefully() {
         // Given
@@ -193,11 +189,6 @@ public class DiscussionServiceTest {
         when(sharedEventService.createSharedEvent(discussion, request)).thenReturn(sharedEventDto);
         when(discussionParticipantService.getUsersByDiscussionId(discussionId))
             .thenReturn(dummyParticipants);
-
-        // 비동기 작업 실패 시뮬레이션
-        when(personalEventService.createPersonalEventsForParticipants(
-            anyList(), any(Discussion.class), any(SharedEventDto.class)
-        )).thenReturn(CompletableFuture.failedFuture(new RuntimeException("DB Error")));
 
         when(discussionBitmapService.deleteDiscussionBitmapsUsingScan(any()))
             .thenReturn(CompletableFuture.failedFuture(new RuntimeException("Redis Error")));
