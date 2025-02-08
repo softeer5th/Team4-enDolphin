@@ -26,12 +26,12 @@ export const controlButtonStyle = recipe({
   },
 });
 
-export const cardContainerStyle = style({
+export const CarouselStyle = style({
   width: '100%',
   display: 'flex',
   left: 0,
   gap: vars.spacing[600],
   position: 'absolute',
-  top: 182,
+  top: 202,
   overflow: 'hidden',
 });
