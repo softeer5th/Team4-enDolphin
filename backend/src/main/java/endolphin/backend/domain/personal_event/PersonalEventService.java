@@ -58,16 +58,16 @@ public class PersonalEventService {
         Discussion discussion,
         SharedEventDto sharedEvent) {
         try {
-            for (User participant : participants) {
-                PersonalEvent personalEvent = PersonalEvent.builder()
+            List<PersonalEvent> events = participants.stream()
+                .map(participant -> PersonalEvent.builder()
                     .title(discussion.getTitle())
                     .startTime(sharedEvent.startDateTime())
                     .endTime(sharedEvent.endDateTime())
                     .user(participant)
-                    .build();
+                    .build())
+                .toList();
 
-                personalEventRepository.save(personalEvent);
-            }
+            personalEventRepository.saveAll(events);
 
             return CompletableFuture.completedFuture(null);
         } catch (Exception ex) {
