@@ -17,7 +17,6 @@ import endolphin.backend.domain.shared_event.dto.SharedEventRequest;
 import endolphin.backend.domain.shared_event.dto.SharedEventDto;
 import endolphin.backend.domain.shared_event.dto.SharedEventWithDiscussionInfoResponse;
 import endolphin.backend.domain.user.UserService;
-import endolphin.backend.domain.user.dto.UserProfile;
 import endolphin.backend.domain.user.entity.User;
 import java.time.Duration;
 import java.time.LocalDate;
@@ -113,18 +112,18 @@ public class DiscussionServiceTest {
             request.endDateTime()
         );
 
-        List<UserProfile> dummyParticipants = List.of(
-            new UserProfile(1L, "picA"),
-            new UserProfile(2L, "picB")
+        List<User> dummyParticipants = List.of(
+            User.builder().name("Bob").email("email1").picture("picA").build(),
+            User.builder().name("Alice").email("email2").picture("picB").build()
         );
 
-        List<String> participantPictures = dummyParticipants.stream().map(UserProfile::pictureUrl)
+        List<String> participantPictures = dummyParticipants.stream().map(User::getPicture)
             .toList();
 
         when(discussionRepository.findById(discussionId)).thenReturn(Optional.of(discussion));
         when(sharedEventService.createSharedEvent(discussion, request)).thenReturn(
             sharedEventDto);
-        when(discussionParticipantRepository.findUserProfilesByDiscussionId(discussionId))
+        when(discussionParticipantRepository.findUsersByDiscussionId(discussionId))
             .thenReturn(dummyParticipants);
 
         SharedEventWithDiscussionInfoResponse response = discussionService.confirmSchedule(
@@ -142,6 +141,6 @@ public class DiscussionServiceTest {
         verify(discussionRepository).findById(discussionId);
         verify(sharedEventService).createSharedEvent(discussion, request);
 
-        verify(discussionParticipantRepository).findUserProfilesByDiscussionId(discussionId);
+        verify(discussionParticipantRepository).findUsersByDiscussionId(discussionId);
     }
 }

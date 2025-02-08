@@ -9,7 +9,6 @@ import endolphin.backend.domain.shared_event.dto.SharedEventRequest;
 import endolphin.backend.domain.shared_event.dto.SharedEventWithDiscussionInfoResponse;
 import endolphin.backend.domain.shared_event.dto.SharedEventDto;
 import endolphin.backend.domain.user.UserService;
-import endolphin.backend.domain.user.dto.UserProfile;
 import endolphin.backend.domain.user.entity.User;
 import endolphin.backend.global.error.exception.ApiException;
 import endolphin.backend.global.error.exception.ErrorCode;
@@ -75,13 +74,10 @@ public class DiscussionService {
         SharedEventDto sharedEventDto = sharedEventService.createSharedEvent(discussion,
             request);
 
-        List<UserProfile> participants = discussionParticipantRepository.findUserProfilesByDiscussionId(
+        List<User> participants = discussionParticipantRepository.findUsersByDiscussionId(
             discussionId);
 
-        List<Long> participantIds = participants.stream().map(UserProfile::id)
-            .toList();
-
-        List<String> participantPictures = participants.stream().map(UserProfile::pictureUrl)
+        List<String> participantPictures = participants.stream().map(User::getPicture)
             .toList();
 
         //TODO: 모든 참여자의 개인 일정에 확정 일정 추가
