@@ -26,6 +26,7 @@ import { Route as DiscussionCreateIdImport } from './routes/discussion/create/$i
 const LoginIndexLazyImport = createFileRoute('/login/')()
 const OauthRedirectIndexLazyImport = createFileRoute('/oauth/redirect/')()
 const MainMyScheduleIndexLazyImport = createFileRoute('/_main/my-schedule/')()
+const MainHomeIndexLazyImport = createFileRoute('/_main/home/')()
 
 // Create/Update Routes
 
@@ -66,6 +67,14 @@ const MainMyScheduleIndexLazyRoute = MainMyScheduleIndexLazyImport.update({
   getParentRoute: () => MainRoute,
 } as any).lazy(() =>
   import('./routes/_main/my-schedule/index.lazy').then((d) => d.Route),
+)
+
+const MainHomeIndexLazyRoute = MainHomeIndexLazyImport.update({
+  id: '/home/',
+  path: '/home/',
+  getParentRoute: () => MainRoute,
+} as any).lazy(() =>
+  import('./routes/_main/home/index.lazy').then((d) => d.Route),
 )
 
 const DiscussionCreateIndexRoute = DiscussionCreateIndexImport.update({
@@ -152,6 +161,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DiscussionCreateIndexImport
       parentRoute: typeof rootRoute
     }
+    '/_main/home/': {
+      id: '/_main/home/'
+      path: '/home'
+      fullPath: '/home'
+      preLoaderRoute: typeof MainHomeIndexLazyImport
+      parentRoute: typeof MainImport
+    }
     '/_main/my-schedule/': {
       id: '/_main/my-schedule/'
       path: '/my-schedule'
@@ -172,10 +188,12 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 interface MainRouteChildren {
+  MainHomeIndexLazyRoute: typeof MainHomeIndexLazyRoute
   MainMyScheduleIndexLazyRoute: typeof MainMyScheduleIndexLazyRoute
 }
 
 const MainRouteChildren: MainRouteChildren = {
+  MainHomeIndexLazyRoute: MainHomeIndexLazyRoute,
   MainMyScheduleIndexLazyRoute: MainMyScheduleIndexLazyRoute,
 }
 
@@ -190,6 +208,7 @@ export interface FileRoutesByFullPath {
   '/discussion/edit/$id': typeof DiscussionEditIdRoute
   '/discussion/invite/$id': typeof DiscussionInviteIdRoute
   '/discussion/create': typeof DiscussionCreateIndexRoute
+  '/home': typeof MainHomeIndexLazyRoute
   '/my-schedule': typeof MainMyScheduleIndexLazyRoute
   '/oauth/redirect': typeof OauthRedirectIndexLazyRoute
 }
@@ -203,6 +222,7 @@ export interface FileRoutesByTo {
   '/discussion/edit/$id': typeof DiscussionEditIdRoute
   '/discussion/invite/$id': typeof DiscussionInviteIdRoute
   '/discussion/create': typeof DiscussionCreateIndexRoute
+  '/home': typeof MainHomeIndexLazyRoute
   '/my-schedule': typeof MainMyScheduleIndexLazyRoute
   '/oauth/redirect': typeof OauthRedirectIndexLazyRoute
 }
@@ -217,6 +237,7 @@ export interface FileRoutesById {
   '/discussion/edit/$id': typeof DiscussionEditIdRoute
   '/discussion/invite/$id': typeof DiscussionInviteIdRoute
   '/discussion/create/': typeof DiscussionCreateIndexRoute
+  '/_main/home/': typeof MainHomeIndexLazyRoute
   '/_main/my-schedule/': typeof MainMyScheduleIndexLazyRoute
   '/oauth/redirect/': typeof OauthRedirectIndexLazyRoute
 }
@@ -232,6 +253,7 @@ export interface FileRouteTypes {
     | '/discussion/edit/$id'
     | '/discussion/invite/$id'
     | '/discussion/create'
+    | '/home'
     | '/my-schedule'
     | '/oauth/redirect'
   fileRoutesByTo: FileRoutesByTo
@@ -244,6 +266,7 @@ export interface FileRouteTypes {
     | '/discussion/edit/$id'
     | '/discussion/invite/$id'
     | '/discussion/create'
+    | '/home'
     | '/my-schedule'
     | '/oauth/redirect'
   id:
@@ -256,6 +279,7 @@ export interface FileRouteTypes {
     | '/discussion/edit/$id'
     | '/discussion/invite/$id'
     | '/discussion/create/'
+    | '/_main/home/'
     | '/_main/my-schedule/'
     | '/oauth/redirect/'
   fileRoutesById: FileRoutesById
@@ -312,6 +336,7 @@ export const routeTree = rootRoute
     "/_main": {
       "filePath": "_main.tsx",
       "children": [
+        "/_main/home/",
         "/_main/my-schedule/"
       ]
     },
@@ -332,6 +357,10 @@ export const routeTree = rootRoute
     },
     "/discussion/create/": {
       "filePath": "discussion/create/index.tsx"
+    },
+    "/_main/home/": {
+      "filePath": "_main/home/index.lazy.tsx",
+      "parent": "/_main"
     },
     "/_main/my-schedule/": {
       "filePath": "_main/my-schedule/index.lazy.tsx",
