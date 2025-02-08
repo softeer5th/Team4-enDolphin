@@ -2,7 +2,7 @@
 import { Flex } from '@/components/Flex';
 import Pagination from '@/components/Pagination';
 
-import { paginationStyle } from './ScheduleList.css';
+import { paginationStyle } from './index.css';
 import ScheduleListItem from './scheduleListItem';
 
 interface ScheduleListProps {

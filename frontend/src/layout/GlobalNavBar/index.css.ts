@@ -10,7 +10,7 @@ export const containerStyle = recipe({
     position: 'fixed',
     left: 0,
     top: 0,
-  
+    
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -29,6 +29,9 @@ export const containerStyle = recipe({
         backgroundColor: 'transparent',
       },
     },
+  },
+  defaultVariants: {
+    background: 'transparent',
   },
 });
 

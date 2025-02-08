@@ -5,9 +5,9 @@ import { Flex } from '@/components/Flex';
 import SegmentControl from '@/components/SegmentControl';
 import { Text } from '@/components/Text';
 
+import ScheduleList from '../ScheduleList';
 import { containerStyle, mainContainerStyle, titleStyle } from './index.css';
 import ScheduleContents from './ScheduleDetails';
-import ScheduleList from './ScheduleList';
 
 const segmentOptions = [
   { label: '모든 일정', value: 'all' },
