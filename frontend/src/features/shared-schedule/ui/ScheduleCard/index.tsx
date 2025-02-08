@@ -20,7 +20,7 @@ const ScheduleCard = ({ selected }: ScheduleCardProps) => (
   >
     <Flex direction='column' gap={300}>
       <Chip
-        color='black'
+        color={selected ? 'black' : 'coolGray'}
         radius='max'
         size='md'
         style={selected ? 'filled' : 'weak'}

@@ -48,6 +48,10 @@ export const chipStyle = recipe({
           cursor: 'pointer',
         }, 
       },
+      coolGray: { 
+        backgroundColor: vars.color.Ref.CoolGrey[100],
+        color: vars.color.Ref.Netural[600],
+      },
     },
     style: {
       borderless: { 
