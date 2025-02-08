@@ -31,10 +31,10 @@ import org.springframework.transaction.annotation.Transactional;
 public class DiscussionService {
 
     private final DiscussionRepository discussionRepository;
-    private final DiscussionParticipantRepository discussionParticipantRepository;
     private final UserService userService;
     private final PersonalEventService personalEventService;
     private final SharedEventService sharedEventService;
+    private final DiscussionParticipantService discussionParticipantService;
     private final DiscussionBitmapService discussionBitmapService;
 
     public DiscussionResponse createDiscussion(CreateDiscussionRequest request) {
@@ -54,12 +54,8 @@ public class DiscussionService {
         discussionRepository.save(discussion);
 
         User currentUser = userService.getCurrentUser();
-        DiscussionParticipant participant = DiscussionParticipant.builder()
-            .discussion(discussion)
-            .user(currentUser)
-            .isHost(true)
-            .build();
-        discussionParticipantRepository.save(participant);
+
+        discussionParticipantService.addDiscussionParticipant(discussion, currentUser);
 
         return new DiscussionResponse(
             discussion.getId(),
@@ -81,8 +77,7 @@ public class DiscussionService {
         SharedEventDto sharedEventDto = sharedEventService.createSharedEvent(discussion,
             request);
 
-        List<User> participants = discussionParticipantRepository.findUsersByDiscussionId(
-            discussionId);
+        List<User> participants = discussionParticipantService.getUsersByDiscussionId(discussionId);
 
         List<String> participantPictures = participants.stream().map(User::getPicture)
             .toList();

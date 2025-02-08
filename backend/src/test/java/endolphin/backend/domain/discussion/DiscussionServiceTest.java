@@ -43,9 +43,6 @@ public class DiscussionServiceTest {
     private DiscussionRepository discussionRepository;
 
     @Mock
-    private DiscussionParticipantRepository discussionParticipantRepository;
-
-    @Mock
     private UserService userService;
 
     @Mock
@@ -56,6 +53,9 @@ public class DiscussionServiceTest {
 
     @Mock
     private DiscussionBitmapService discussionBitmapService;
+
+    @Mock
+    private DiscussionParticipantService discussionParticipantService;
 
     @InjectMocks
     private DiscussionService discussionService;
@@ -133,7 +133,7 @@ public class DiscussionServiceTest {
         when(discussionRepository.findById(discussionId)).thenReturn(Optional.of(discussion));
         when(sharedEventService.createSharedEvent(discussion, request)).thenReturn(
             sharedEventDto);
-        when(discussionParticipantRepository.findUsersByDiscussionId(discussionId))
+        when(discussionParticipantService.getUsersByDiscussionId(discussionId))
             .thenReturn(dummyParticipants);
 
         when(personalEventService.createPersonalEventsForParticipants(
@@ -159,7 +159,7 @@ public class DiscussionServiceTest {
         verify(discussionRepository).findById(discussionId);
         verify(sharedEventService).createSharedEvent(discussion, request);
 
-        verify(discussionParticipantRepository).findUsersByDiscussionId(discussionId);
+        verify(discussionParticipantService).getUsersByDiscussionId(discussionId);
     }
 
     @DisplayName("논의 확정 후 비동기 작업 실패 시 처리 확인")
@@ -191,7 +191,7 @@ public class DiscussionServiceTest {
         // 정상 데이터 반환 설정
         when(discussionRepository.findById(discussionId)).thenReturn(Optional.of(discussion));
         when(sharedEventService.createSharedEvent(discussion, request)).thenReturn(sharedEventDto);
-        when(discussionParticipantRepository.findUsersByDiscussionId(discussionId))
+        when(discussionParticipantService.getUsersByDiscussionId(discussionId))
             .thenReturn(dummyParticipants);
 
         // 비동기 작업 실패 시뮬레이션
@@ -214,7 +214,7 @@ public class DiscussionServiceTest {
 
         verify(discussionRepository).findById(discussionId);
         verify(sharedEventService).createSharedEvent(discussion, request);
-        verify(discussionParticipantRepository).findUsersByDiscussionId(discussionId);
+        verify(discussionParticipantService).getUsersByDiscussionId(discussionId);
         verify(personalEventService).createPersonalEventsForParticipants(
             dummyParticipants, discussion, sharedEventDto
         );
