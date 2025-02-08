@@ -20,6 +20,7 @@ import endolphin.backend.domain.shared_event.dto.SharedEventDto;
 import endolphin.backend.domain.shared_event.dto.SharedEventWithDiscussionInfoResponse;
 import endolphin.backend.domain.user.UserService;
 import endolphin.backend.domain.user.entity.User;
+import endolphin.backend.global.redis.DiscussionBitmapService;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -52,6 +53,9 @@ public class DiscussionServiceTest {
 
     @Mock
     private PersonalEventService personalEventService;
+
+    @Mock
+    private DiscussionBitmapService discussionBitmapService;
 
     @InjectMocks
     private DiscussionService discussionService;
@@ -136,6 +140,10 @@ public class DiscussionServiceTest {
             anyList(), any(Discussion.class), any(SharedEventDto.class)
         )).thenReturn(CompletableFuture.completedFuture(null));
 
+        when(discussionBitmapService.deleteDiscussionBitmapsUsingScan(
+            any(Long.class)
+        )).thenReturn(CompletableFuture.completedFuture(null));
+
         SharedEventWithDiscussionInfoResponse response = discussionService.confirmSchedule(
             discussionId, request);
 
@@ -153,4 +161,64 @@ public class DiscussionServiceTest {
 
         verify(discussionParticipantRepository).findUsersByDiscussionId(discussionId);
     }
+
+    @DisplayName("논의 확정 후 비동기 작업 실패 시 처리 확인")
+    @Test
+    public void confirmSchedule_asyncFailureHandledGracefully() {
+        // Given
+        Long discussionId = 1L;
+        Discussion discussion = Discussion.builder()
+            .title("Project Sync")
+            .meetingMethod(MeetingMethod.ONLINE)
+            .build();
+
+        SharedEventRequest request = new SharedEventRequest(
+            LocalDateTime.of(2025, 3, 1, 10, 0),
+            LocalDateTime.of(2025, 3, 1, 12, 0)
+        );
+
+        SharedEventDto sharedEventDto = new SharedEventDto(
+            101L,
+            request.startDateTime(),
+            request.endDateTime()
+        );
+
+        List<User> dummyParticipants = List.of(
+            User.builder().name("Bob").email("email1").picture("picA").build(),
+            User.builder().name("Alice").email("email2").picture("picB").build()
+        );
+
+        // 정상 데이터 반환 설정
+        when(discussionRepository.findById(discussionId)).thenReturn(Optional.of(discussion));
+        when(sharedEventService.createSharedEvent(discussion, request)).thenReturn(sharedEventDto);
+        when(discussionParticipantRepository.findUsersByDiscussionId(discussionId))
+            .thenReturn(dummyParticipants);
+
+        // 비동기 작업 실패 시뮬레이션
+        when(personalEventService.createPersonalEventsForParticipants(
+            anyList(), any(Discussion.class), any(SharedEventDto.class)
+        )).thenReturn(CompletableFuture.failedFuture(new RuntimeException("DB Error")));
+
+        when(discussionBitmapService.deleteDiscussionBitmapsUsingScan(any()))
+            .thenReturn(CompletableFuture.failedFuture(new RuntimeException("Redis Error")));
+
+        // When
+        SharedEventWithDiscussionInfoResponse response = discussionService.confirmSchedule(
+            discussionId, request
+        );
+
+        // Then
+        assertThat(response).isNotNull();
+        assertThat(response.discussionId()).isEqualTo(discussionId);
+        assertThat(response.title()).isEqualTo("Project Sync");
+
+        verify(discussionRepository).findById(discussionId);
+        verify(sharedEventService).createSharedEvent(discussion, request);
+        verify(discussionParticipantRepository).findUsersByDiscussionId(discussionId);
+        verify(personalEventService).createPersonalEventsForParticipants(
+            dummyParticipants, discussion, sharedEventDto
+        );
+        verify(discussionBitmapService).deleteDiscussionBitmapsUsingScan(discussionId);
+    }
+
 }

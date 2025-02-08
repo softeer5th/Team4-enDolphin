@@ -57,18 +57,22 @@ public class PersonalEventService {
     public CompletableFuture<Void> createPersonalEventsForParticipants(List<User> participants,
         Discussion discussion,
         SharedEventDto sharedEvent) {
-        for (User participant : participants) {
-            PersonalEvent personalEvent = PersonalEvent.builder()
-                .title(discussion.getTitle())
-                .startTime(sharedEvent.startDateTime())
-                .endTime(sharedEvent.endDateTime())
-                .user(participant)
-                .build();
+        try {
+            for (User participant : participants) {
+                PersonalEvent personalEvent = PersonalEvent.builder()
+                    .title(discussion.getTitle())
+                    .startTime(sharedEvent.startDateTime())
+                    .endTime(sharedEvent.endDateTime())
+                    .user(participant)
+                    .build();
 
-            personalEventRepository.save(personalEvent);
+                personalEventRepository.save(personalEvent);
+            }
+
+            return CompletableFuture.completedFuture(null);
+        } catch (Exception ex) {
+            return CompletableFuture.failedFuture(ex);
         }
-
-        return CompletableFuture.completedFuture(null);
     }
 
     public PersonalEventResponse updatePersonalEvent(PersonalEventRequest request,

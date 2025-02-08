@@ -13,6 +13,7 @@ import endolphin.backend.domain.user.UserService;
 import endolphin.backend.domain.user.entity.User;
 import endolphin.backend.global.error.exception.ApiException;
 import endolphin.backend.global.error.exception.ErrorCode;
+import endolphin.backend.global.redis.DiscussionBitmapService;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -34,6 +35,7 @@ public class DiscussionService {
     private final UserService userService;
     private final PersonalEventService personalEventService;
     private final SharedEventService sharedEventService;
+    private final DiscussionBitmapService discussionBitmapService;
 
     public DiscussionResponse createDiscussion(CreateDiscussionRequest request) {
 
@@ -85,23 +87,24 @@ public class DiscussionService {
         List<String> participantPictures = participants.stream().map(User::getPicture)
             .toList();
 
-        CompletableFuture<Void> future = personalEventService.createPersonalEventsForParticipants(
-            participants, discussion,
-            sharedEventDto);
-
-        future.whenComplete((unused, ex) -> {
-            if (ex == null) {
-                log.info("PersonalEvent creation success for discussion {}", discussion.getId());
-            } else {
+        personalEventService.createPersonalEventsForParticipants(participants, discussion, sharedEventDto)
+            .thenRun(() -> log.info("PersonalEvent creation success for discussion {}", discussionId))
+            .exceptionally(ex -> {
                 /*TODO 실패시 처리
                 실패시 retry 사용을 위해 spring-retry 라이브러리 사용할지, 직접 구현할지?
                 아니면 이 부분을 그냥 동기로 처리할지에 대해 의견 주시면 감사하겠습니다.
                  */
                 log.error("PersonalEvent creation failed: {}", ex.getMessage(), ex);
-            }
-        });
+                return null;
+            });
 
-        //TODO: Redis 데이터 삭제
+        discussionBitmapService.deleteDiscussionBitmapsUsingScan(discussionId)
+            .thenRun(() -> log.info("Redis keys deleted successfully for discussionId : {}",
+                discussionId))
+            .exceptionally(ex -> {
+                log.error("Failed to delete Redis keys", ex);
+                return null;
+            });
 
         return new SharedEventWithDiscussionInfoResponse(
             discussionId,
