@@ -1,10 +1,12 @@
 import type { PropsWithChildren } from 'react';
 
-import { containerStyle } from './index.css';
+import { containerStyle, contentWrapperStyle } from './index.css';
 
 const MainLayout = ({ children }: PropsWithChildren) => (
   <main className={containerStyle}>
-    {children}
+    <div className={contentWrapperStyle}>
+      {children}
+    </div>
   </main>
 );
 
