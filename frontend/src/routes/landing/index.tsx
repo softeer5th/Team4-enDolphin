@@ -5,7 +5,7 @@ import LandingPage from '@/pages/LandingPage';
 
 const Landing = () => (
   <>
-    <GlobalNavBar type='transparent'>
+    <GlobalNavBar background='transparent'>
       <GlobalNavBar.LoginLink />
     </GlobalNavBar>
     <LandingPage />

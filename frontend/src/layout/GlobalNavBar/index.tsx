@@ -10,10 +10,10 @@ import { LoginLink, MyScheduleLink, NewDiscussionLink } from './buttons';
 import { containerStyle } from './index.css';
 
 interface GlobalNavBarProps extends PropsWithChildren {
-  type?: 'white' | 'transparent';
-} 
+  background?: 'white' | 'transparent';
+}
 
-const GlobalNavBar = ({ type, children }: GlobalNavBarProps) => {
+const GlobalNavBar = ({ background = 'white', children }: GlobalNavBarProps) => {
   const navigate = useNavigate();
 
   const onClickLogo = () => {
@@ -21,13 +21,8 @@ const GlobalNavBar = ({ type, children }: GlobalNavBarProps) => {
   };
 
   return (
-    <header className={containerStyle({ type })}>
-      <Logo
-        clickable={true}
-        height={22}
-        onClick={onClickLogo}
-        width={80}
-      />
+    <header className={containerStyle({ background })}>
+      <Logo clickable={true} onClick={onClickLogo} />
       <Flex direction='row'>
         {children}
       </Flex>
