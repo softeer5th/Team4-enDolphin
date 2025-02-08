@@ -43,12 +43,15 @@ const InputField = ({ placeholder, onClick, ...inputProps }: InputFieldProps) =>
       />
       {type === 'select' &&
         <button 
-          aria-hidden='true' // 스크린 리더(저시각자 보조기기)에서 무시
           className={selectIconStyle}
           tabIndex={-1} // tab으로 버튼 선택 안 되게
           type='button'
         >
-          <ChevronDown fill={vars.color.Ref.Netural[500]} width={20} />
+          <ChevronDown
+            clickable
+            fill={vars.color.Ref.Netural[500]}
+            width={20}
+          />
         </button>}
     </div>
   );
