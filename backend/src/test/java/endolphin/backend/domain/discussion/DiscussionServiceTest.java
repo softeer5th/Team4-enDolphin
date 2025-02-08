@@ -17,6 +17,7 @@ import endolphin.backend.domain.shared_event.dto.SharedEventRequest;
 import endolphin.backend.domain.shared_event.dto.SharedEventResponse;
 import endolphin.backend.domain.shared_event.dto.SharedEventWithDiscussionInfoResponse;
 import endolphin.backend.domain.user.UserService;
+import endolphin.backend.domain.user.dto.UserProfile;
 import endolphin.backend.domain.user.entity.User;
 import java.time.Duration;
 import java.time.LocalDate;
@@ -112,13 +113,19 @@ public class DiscussionServiceTest {
             request.endDateTime()
         );
 
-        List<String> participantPictures = List.of("pic1.jpg", "pic2.jpg");
+        List<UserProfile> dummyParticipants = List.of(
+            new UserProfile(1L, "picA"),
+            new UserProfile(2L, "picB")
+        );
+
+        List<String> participantPictures = dummyParticipants.stream().map(UserProfile::pictureUrl)
+            .toList();
 
         when(discussionRepository.findById(discussionId)).thenReturn(Optional.of(discussion));
         when(sharedEventService.createSharedEvent(discussion, request)).thenReturn(
             sharedEventResponse);
-        when(discussionParticipantRepository.findUserPicturesByDiscussionId(
-            discussionId)).thenReturn(participantPictures);
+        when(discussionParticipantRepository.findUserProfilesByDiscussionId(discussionId))
+            .thenReturn(dummyParticipants);
 
         SharedEventWithDiscussionInfoResponse response = discussionService.confirmSchedule(
             discussionId, request);
@@ -128,11 +135,13 @@ public class DiscussionServiceTest {
         assertThat(response.title()).isEqualTo("Project Sync");
         assertThat(response.meetingMethodOrLocation()).isEqualTo("ONLINE");
         assertThat(response.sharedEventResponse().id()).isEqualTo(101L);
+
         assertThat(response.participantPictureUrls()).containsExactlyElementsOf(
             participantPictures);
 
         verify(discussionRepository).findById(discussionId);
         verify(sharedEventService).createSharedEvent(discussion, request);
-        verify(discussionParticipantRepository).findUserPicturesByDiscussionId(discussionId);
+
+        verify(discussionParticipantRepository).findUserProfilesByDiscussionId(discussionId);
     }
 }
