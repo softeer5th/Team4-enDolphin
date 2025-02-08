@@ -1,3 +1,4 @@
+export * from "./component/ArrowLeft.tsx";
 export * from "./component/Check.tsx";
 export * from "./component/ChevronDown.tsx";
 export * from "./component/ChevronLeft.tsx";

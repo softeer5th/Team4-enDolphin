@@ -1,7 +1,7 @@
 import Button from '@/components/Button';
 import { Flex } from '@/components/Flex';
 
-import type { PopoverType } from '../../@types';
+import type { PopoverType } from '../../model';
 import { buttonStyle } from './index.css';
 
 interface PopoverButtonProps {

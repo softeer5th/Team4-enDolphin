@@ -4,7 +4,7 @@ import { Pencil, Plus } from '@/components/Icon';
 import { Text } from '@/components/Text';
 import { vars } from '@/theme/index.css';
 
-import type { PopoverType } from '../../@types';
+import type { PopoverType } from '../../model';
 import { titleStyle } from './index.css';
 
 export const Title = ({ type }: { type: PopoverType })=>{

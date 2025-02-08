@@ -1,5 +1,5 @@
 
-import type { PopoverType } from '../../@types';
+import type { PopoverType } from '../../model';
 import { containerStyle } from './index.css';
 import { PopoverButton } from './PopoverButton';
 import { PopoverForm } from './PopoverForm';
