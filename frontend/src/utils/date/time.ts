@@ -21,3 +21,13 @@ export const getTimeRangeString = (startTime: Date, endTime: Date): string => {
 
   return `${format(startHour, startMinute)} ~ ${format(endHour, endMinute)}`;
 };
+
+export const formatMinutesToTimeString = (minutes: number): string => {
+  const hours = Math.floor(minutes / 60).toString()
+    .padStart(2, '0');
+  const restMinutes = (minutes % 60);
+  const minutesString = restMinutes ? ` ${restMinutes.toString().padStart(2, '0')}분` : '';
+  const amOrPm = hours >= '12' ? 'PM' : 'AM';
+
+  return `${amOrPm} ${hours}시${minutesString}`;
+};
