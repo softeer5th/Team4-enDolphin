@@ -18,9 +18,9 @@ public interface DiscussionParticipantRepository extends
         "WHERE dp.discussion.id = :discussionId")
     List<String> findUserPicturesByDiscussionId(@Param("discussionId") Long discussionId);
 
-    @Query("select u " +
+    @Query("select dp " +
         "from DiscussionParticipant dp " +
-        "join dp.user u " +
+        "join fetch dp.user " +
         "where dp.discussion.id = :discussionId")
     List<User> findUsersByDiscussionId(@Param("discussionId") Long discussionId);
 }
