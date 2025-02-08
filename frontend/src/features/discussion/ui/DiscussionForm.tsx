@@ -2,6 +2,7 @@ import { Flex } from '@/components/Flex';
 import { useFormControl } from '@/hooks/useFormControl';
 
 import MeetingDurationDropdown from './MeedtingDurationDropdown';
+import MeetingMethodDropdown from './MeetingMethodDropdown';
 import MeetingTitle from './MeetingTitle';
 
 const DiscussionForm = () => {
@@ -24,6 +25,7 @@ const DiscussionForm = () => {
     >
       <MeetingTitle handleChange={handleChange} value={values.title} />
       <MeetingDurationDropdown handleChange={handleChange} value={values.meetingTime} />
+      <MeetingMethodDropdown handleChange={handleChange} value={values.meetingMethod} />
     </Flex>
   );
 };
