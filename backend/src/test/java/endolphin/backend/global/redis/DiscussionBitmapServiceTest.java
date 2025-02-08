@@ -3,6 +3,8 @@ package endolphin.backend.global.redis;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDateTime;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,13 +43,31 @@ public class DiscussionBitmapServiceTest {
         // big-endian 순서로 확인: (7 - bitPosition)
         boolean extractedBit = ((bitmapData[byteIndex] >> (7 - bitPosition)) & 1) == 1;
         assertThat(extractedBit).isTrue();
+    }
 
-        // 5. SCAN을 이용하여 해당 discussionId의 모든 비트맵 키 삭제
-        bitmapService.deleteDiscussionBitmapsUsingScan(discussionId);
+    @DisplayName("🗑️ 비트맵 비동기 삭제 테스트")
+    @Test
+    public void testDeleteDiscussionBitmapsUsingScan() throws Exception {
+        Long discussionId = 200L;
+        LocalDateTime dateTime = LocalDateTime.now();
 
-        // 6. 삭제 후 데이터 검증: 비트맵 데이터가 없어야 함
+        // 1. 초기화 및 데이터 삽입
+        bitmapService.initializeBitmap(discussionId, dateTime);
+        bitmapService.setBitValue(discussionId, dateTime, 3, true);
+
+        // 2. 데이터 존재 확인
+        byte[] beforeDelete = bitmapService.getBitmapData(discussionId, dateTime);
+        assertThat(beforeDelete).isNotNull(); // 데이터가 존재해야 함
+
+        // 3. 비동기 삭제 호출 및 완료 대기
+        CompletableFuture<Void> deleteFuture = bitmapService.deleteDiscussionBitmapsUsingScan(
+            discussionId);
+        deleteFuture.get(5, TimeUnit.SECONDS);
+
+        // 4. 삭제 후 데이터 검증
         byte[] afterDelete = bitmapService.getBitmapData(discussionId, dateTime);
-        assertThat(afterDelete).as("deleteDiscussionBitmapsUsingScan should remove the bitmap")
+        assertThat(afterDelete)
+            .as("deleteDiscussionBitmapsUsingScan should remove the bitmap")
             .isNull();
     }
 }
