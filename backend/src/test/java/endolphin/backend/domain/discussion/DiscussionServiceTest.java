@@ -14,7 +14,7 @@ import endolphin.backend.domain.discussion.entity.Discussion;
 import endolphin.backend.domain.discussion.enums.MeetingMethod;
 import endolphin.backend.domain.shared_event.SharedEventService;
 import endolphin.backend.domain.shared_event.dto.SharedEventRequest;
-import endolphin.backend.domain.shared_event.dto.SharedEventResponse;
+import endolphin.backend.domain.shared_event.dto.SharedEventDto;
 import endolphin.backend.domain.shared_event.dto.SharedEventWithDiscussionInfoResponse;
 import endolphin.backend.domain.user.UserService;
 import endolphin.backend.domain.user.dto.UserProfile;
@@ -107,7 +107,7 @@ public class DiscussionServiceTest {
             LocalDateTime.of(2025, 3, 1, 12, 0)
         );
 
-        SharedEventResponse sharedEventResponse = new SharedEventResponse(
+        SharedEventDto sharedEventDto = new SharedEventDto(
             101L,
             request.startDateTime(),
             request.endDateTime()
@@ -123,7 +123,7 @@ public class DiscussionServiceTest {
 
         when(discussionRepository.findById(discussionId)).thenReturn(Optional.of(discussion));
         when(sharedEventService.createSharedEvent(discussion, request)).thenReturn(
-            sharedEventResponse);
+            sharedEventDto);
         when(discussionParticipantRepository.findUserProfilesByDiscussionId(discussionId))
             .thenReturn(dummyParticipants);
 
@@ -134,7 +134,7 @@ public class DiscussionServiceTest {
         assertThat(response.discussionId()).isEqualTo(discussionId);
         assertThat(response.title()).isEqualTo("Project Sync");
         assertThat(response.meetingMethodOrLocation()).isEqualTo("ONLINE");
-        assertThat(response.sharedEventResponse().id()).isEqualTo(101L);
+        assertThat(response.sharedEventDto().id()).isEqualTo(101L);
 
         assertThat(response.participantPictureUrls()).containsExactlyElementsOf(
             participantPictures);

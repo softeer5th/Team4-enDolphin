@@ -2,7 +2,7 @@ package endolphin.backend.domain.shared_event;
 
 import endolphin.backend.domain.discussion.entity.Discussion;
 import endolphin.backend.domain.shared_event.dto.SharedEventRequest;
-import endolphin.backend.domain.shared_event.dto.SharedEventResponse;
+import endolphin.backend.domain.shared_event.dto.SharedEventDto;
 import endolphin.backend.domain.shared_event.entity.SharedEvent;
 import endolphin.backend.global.error.ErrorResponse;
 import endolphin.backend.global.error.exception.ApiException;
@@ -63,7 +63,7 @@ class SharedEventServiceTest {
     void createSharedEvent_Success() {
         when(sharedEventRepository.save(any(SharedEvent.class))).thenReturn(sharedEvent);
 
-        SharedEventResponse response = sharedEventService.createSharedEvent(discussion, request);
+        SharedEventDto response = sharedEventService.createSharedEvent(discussion, request);
 
         assertThat(response).isNotNull();
         assertThat(response.id()).isEqualTo(100L);
@@ -78,7 +78,7 @@ class SharedEventServiceTest {
     void getSharedEvent_Success() {
         when(sharedEventRepository.findById(100L)).thenReturn(Optional.of(sharedEvent));
 
-        SharedEventResponse response = sharedEventService.getSharedEvent(100L);
+        SharedEventDto response = sharedEventService.getSharedEvent(100L);
 
         assertThat(response).isNotNull();
         assertThat(response.id()).isEqualTo(100L);

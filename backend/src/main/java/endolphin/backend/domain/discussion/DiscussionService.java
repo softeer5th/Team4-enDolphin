@@ -7,7 +7,7 @@ import endolphin.backend.domain.discussion.entity.DiscussionParticipant;
 import endolphin.backend.domain.shared_event.SharedEventService;
 import endolphin.backend.domain.shared_event.dto.SharedEventRequest;
 import endolphin.backend.domain.shared_event.dto.SharedEventWithDiscussionInfoResponse;
-import endolphin.backend.domain.shared_event.dto.SharedEventResponse;
+import endolphin.backend.domain.shared_event.dto.SharedEventDto;
 import endolphin.backend.domain.user.UserService;
 import endolphin.backend.domain.user.dto.UserProfile;
 import endolphin.backend.domain.user.entity.User;
@@ -72,7 +72,7 @@ public class DiscussionService {
         Discussion discussion = discussionRepository.findById(discussionId)
             .orElseThrow(() -> new ApiException(ErrorCode.DISCUSSION_NOT_FOUND));
 
-        SharedEventResponse sharedEventResponse = sharedEventService.createSharedEvent(discussion,
+        SharedEventDto sharedEventDto = sharedEventService.createSharedEvent(discussion,
             request);
 
         List<UserProfile> participants = discussionParticipantRepository.findUserProfilesByDiscussionId(
@@ -91,7 +91,7 @@ public class DiscussionService {
             discussionId,
             discussion.getTitle(),
             discussion.getMeetingMethodOrLocation(),
-            sharedEventResponse,
+            sharedEventDto,
             participantPictures
         );
     }
