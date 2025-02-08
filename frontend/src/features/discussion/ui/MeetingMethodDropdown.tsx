@@ -22,6 +22,7 @@ const MeetingMethodDropdown = ({ value, handleChange }: MeetingMethodDropdownPro
         type='select'
       />
     }
+    width='100%'
   >
     <Dropdown.Item value='만나서'>만나서</Dropdown.Item>
     <Dropdown.Item value='온라인 미팅'>온라인 미팅</Dropdown.Item>
