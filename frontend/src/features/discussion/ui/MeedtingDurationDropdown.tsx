@@ -19,7 +19,7 @@ const MeetingDurationDropdown = ({ value, handleChange }: MeetingDurationDropdow
       <Input.Single
         inputProps={{
           name: 'meetingTime',
-          value: formatMinutesToTimeString(Number(value)),
+          value: `${value}분`,
           onChange: (e: ChangeEvent<HTMLInputElement>) => handleChange(e.target),
           readOnly: true,
         }}
@@ -30,9 +30,10 @@ const MeetingDurationDropdown = ({ value, handleChange }: MeetingDurationDropdow
     }
     width={210}
   >
-    {MINUTES_HALF.map((minute) => (
+    {MINUTES_HALF(6, 30).map((minute) => (
       <Dropdown.Item key={minute} value={minute.toString()}>
-        {formatMinutesToTimeString(minute)}
+        {minute}
+        분
       </Dropdown.Item>
     ))}
   </Dropdown>

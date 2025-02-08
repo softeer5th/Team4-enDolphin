@@ -21,7 +21,7 @@ export const MINUTES = Object.freeze(
   new Array(4).fill(0)
     .map((_, i) => i * 15));
 
-export const MINUTES_HALF = Object.freeze(
-  new Array(48).fill(0)
-    .map((_, i) => i * 30),
+export const MINUTES_HALF = (totalTime: number, startTime: number) => Object.freeze(
+  new Array(totalTime * 2).fill(0)
+    .map((_, i) => startTime + i * 30),
 );
