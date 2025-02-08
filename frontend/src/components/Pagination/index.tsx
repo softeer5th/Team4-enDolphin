@@ -1,3 +1,5 @@
+import clsx from '@/utils/clsx';
+
 import {
   paginationContainerStyle,
 } from './index.css';
@@ -10,17 +12,19 @@ interface PaginationProps {
   currentPage: number;
   totalPages: number;
   onPageChange: (page: number) => void;
+  className?: string;
 }
 
 const Pagination = ({
   currentPage,
   totalPages,
   onPageChange,
+  className,
 }: PaginationProps) => {
   const pages = getPaginationItems(currentPage, totalPages);
 
   return (
-    <div className={paginationContainerStyle}>
+    <div className={clsx(paginationContainerStyle, className)}>
       {pages.map((item, index) => 
         <PaginationItem 
           currentPage={currentPage} 

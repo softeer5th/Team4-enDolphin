@@ -1,4 +1,4 @@
-import { Flex } from '@/components/Flex';
+import UnConfirmedSchedules from '@/features/shared-schedule/ui/UnConfirmedSchedules';
 import UpcomingSchedules from '@/features/shared-schedule/ui/UpcomingSchedules';
 
 import { containerStyle } from './index.css';
@@ -6,9 +6,10 @@ import { containerStyle } from './index.css';
 const HomePage = () => {
   const tmp = 1;
   return (
-    <Flex className={containerStyle}>
+    <div className={containerStyle}>
       <UpcomingSchedules schedules={[]} />
-    </Flex>
+      <UnConfirmedSchedules />
+    </div>
   );
 };
 
