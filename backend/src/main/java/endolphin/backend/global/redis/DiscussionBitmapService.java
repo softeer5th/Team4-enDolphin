@@ -107,29 +107,41 @@ public class DiscussionBitmapService {
     @Async
     public CompletableFuture<Void> deleteDiscussionBitmapsUsingScan(Long discussionId) {
         String pattern = discussionId + ":*";
+        ScanOptions scanOptions = ScanOptions.scanOptions().match(pattern).count(1000).build();
 
-        // SCAN 옵션
-        ScanOptions scanOptions = ScanOptions.scanOptions()
-            .match(pattern)
-            .count(1000)
-            .build();
+        int retryCount = 0;
+        int maxRetries = 3;
 
-        try {
-            redisTemplate.execute((RedisConnection connection) -> {
-                RedisKeyCommands keyCommands = ((RedisCommandsProvider) connection).keyCommands();
+        while (retryCount < maxRetries) {
+            try {
+                redisTemplate.execute((RedisConnection connection) -> {
+                    RedisKeyCommands keyCommands = ((RedisCommandsProvider) connection).keyCommands();
 
-                try (Cursor<byte[]> cursor = keyCommands.scan(scanOptions)) {
-                    while (cursor.hasNext()) {
-                        byte[] rawKey = cursor.next();
-                        keyCommands.del(rawKey);
+                    try (Cursor<byte[]> cursor = keyCommands.scan(scanOptions)) {
+                        while (cursor.hasNext()) {
+                            byte[] rawKey = cursor.next();
+                            keyCommands.del(rawKey);
+                        }
                     }
-                }
-                return null;
-            });
+                    return null;
+                });
+                return CompletableFuture.completedFuture(null);
+            } catch (Exception ex) {
+                retryCount++;
 
-            return CompletableFuture.completedFuture(null);
-        } catch (Exception ex) {
-            return CompletableFuture.failedFuture(ex);
+                if (retryCount >= maxRetries) {
+                    return CompletableFuture.failedFuture(ex);
+                }
+
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException ie) {
+                    Thread.currentThread().interrupt();
+                    return CompletableFuture.failedFuture(ie);
+                }
+            }
         }
+        return CompletableFuture.completedFuture(null);
     }
+
 }

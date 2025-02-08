@@ -82,13 +82,14 @@ public class DiscussionService {
         List<String> participantPictures = participants.stream().map(User::getPicture)
             .toList();
 
-        personalEventService.createPersonalEventsForParticipants(participants, discussion, sharedEventDto);
+        personalEventService.createPersonalEventsForParticipants(participants, discussion,
+            sharedEventDto);
 
         discussionBitmapService.deleteDiscussionBitmapsUsingScan(discussionId)
             .thenRun(() -> log.info("Redis keys deleted successfully for discussionId : {}",
                 discussionId))
             .exceptionally(ex -> {
-                log.error("Failed to delete Redis keys", ex);
+                log.error("Failed to delete Redis keys for three times", ex);
                 return null;
             });
 
