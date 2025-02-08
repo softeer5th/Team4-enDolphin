@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.within;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -12,6 +13,7 @@ import endolphin.backend.domain.discussion.dto.CreateDiscussionRequest;
 import endolphin.backend.domain.discussion.dto.DiscussionResponse;
 import endolphin.backend.domain.discussion.entity.Discussion;
 import endolphin.backend.domain.discussion.enums.MeetingMethod;
+import endolphin.backend.domain.personal_event.PersonalEventService;
 import endolphin.backend.domain.shared_event.SharedEventService;
 import endolphin.backend.domain.shared_event.dto.SharedEventRequest;
 import endolphin.backend.domain.shared_event.dto.SharedEventDto;
@@ -24,6 +26,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -46,6 +49,9 @@ public class DiscussionServiceTest {
 
     @Mock
     private SharedEventService sharedEventService;
+
+    @Mock
+    private PersonalEventService personalEventService;
 
     @InjectMocks
     private DiscussionService discussionService;
@@ -125,6 +131,10 @@ public class DiscussionServiceTest {
             sharedEventDto);
         when(discussionParticipantRepository.findUsersByDiscussionId(discussionId))
             .thenReturn(dummyParticipants);
+
+        when(personalEventService.createPersonalEventsForParticipants(
+            anyList(), any(Discussion.class), any(SharedEventDto.class)
+        )).thenReturn(CompletableFuture.completedFuture(null));
 
         SharedEventWithDiscussionInfoResponse response = discussionService.confirmSchedule(
             discussionId, request);

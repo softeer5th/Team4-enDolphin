@@ -4,6 +4,7 @@ import endolphin.backend.domain.discussion.dto.CreateDiscussionRequest;
 import endolphin.backend.domain.discussion.dto.DiscussionResponse;
 import endolphin.backend.domain.discussion.entity.Discussion;
 import endolphin.backend.domain.discussion.entity.DiscussionParticipant;
+import endolphin.backend.domain.personal_event.PersonalEventService;
 import endolphin.backend.domain.shared_event.SharedEventService;
 import endolphin.backend.domain.shared_event.dto.SharedEventRequest;
 import endolphin.backend.domain.shared_event.dto.SharedEventWithDiscussionInfoResponse;
@@ -16,18 +17,22 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class DiscussionService {
 
     private final DiscussionRepository discussionRepository;
     private final DiscussionParticipantRepository discussionParticipantRepository;
     private final UserService userService;
+    private final PersonalEventService personalEventService;
     private final SharedEventService sharedEventService;
 
     public DiscussionResponse createDiscussion(CreateDiscussionRequest request) {
@@ -80,7 +85,22 @@ public class DiscussionService {
         List<String> participantPictures = participants.stream().map(User::getPicture)
             .toList();
 
-        //TODO: 모든 참여자의 개인 일정에 확정 일정 추가
+        CompletableFuture<Void> future = personalEventService.createPersonalEventsForParticipants(
+            participants, discussion,
+            sharedEventDto);
+
+        future.whenComplete((unused, ex) -> {
+            if (ex == null) {
+                log.info("PersonalEvent creation success for discussion {}", discussion.getId());
+            } else {
+                /*TODO 실패시 처리
+                실패시 retry 사용을 위해 spring-retry 라이브러리 사용할지, 직접 구현할지?
+                아니면 이 부분을 그냥 동기로 처리할지에 대해 의견 주시면 감사하겠습니다.
+                 */
+                log.error("PersonalEvent creation failed: {}", ex.getMessage(), ex);
+            }
+        });
+
         //TODO: Redis 데이터 삭제
 
         return new SharedEventWithDiscussionInfoResponse(

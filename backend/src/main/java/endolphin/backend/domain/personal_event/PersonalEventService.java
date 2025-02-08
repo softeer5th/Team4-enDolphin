@@ -1,15 +1,19 @@
 package endolphin.backend.domain.personal_event;
 
+import endolphin.backend.domain.discussion.entity.Discussion;
 import endolphin.backend.domain.personal_event.dto.PersonalEventRequest;
 import endolphin.backend.domain.personal_event.dto.PersonalEventResponse;
 import endolphin.backend.domain.personal_event.entity.PersonalEvent;
+import endolphin.backend.domain.shared_event.dto.SharedEventDto;
 import endolphin.backend.domain.user.UserService;
 import endolphin.backend.domain.user.entity.User;
 import endolphin.backend.global.dto.ListResponse;
 import endolphin.backend.global.util.Validator;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,6 +51,24 @@ public class PersonalEventService {
             .build();
         PersonalEvent result = personalEventRepository.save(personalEvent);
         return PersonalEventResponse.fromEntity(result);
+    }
+
+    @Async
+    public CompletableFuture<Void> createPersonalEventsForParticipants(List<User> participants,
+        Discussion discussion,
+        SharedEventDto sharedEvent) {
+        for (User participant : participants) {
+            PersonalEvent personalEvent = PersonalEvent.builder()
+                .title(discussion.getTitle())
+                .startTime(sharedEvent.startDateTime())
+                .endTime(sharedEvent.endDateTime())
+                .user(participant)
+                .build();
+
+            personalEventRepository.save(personalEvent);
+        }
+
+        return CompletableFuture.completedFuture(null);
     }
 
     public PersonalEventResponse updatePersonalEvent(PersonalEventRequest request,
