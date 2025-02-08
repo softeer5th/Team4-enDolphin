@@ -18,6 +18,12 @@ public enum ErrorCode {
     //SharedEvent
     SHARED_EVENT_NOT_FOUND(HttpStatus.NOT_FOUND, "S001", "Shared Event not found"),
 
+    //Calendar
+    CALENDAR_UNAUTHORIZED_ERROR(HttpStatus.UNAUTHORIZED, "CA001", "Unauthorized"),
+    CALENDAR_FORBIDDEN_ERROR(HttpStatus.FORBIDDEN, "CA002", "Forbidden"),
+    CALENDAR_BAD_REQUEST_ERROR(HttpStatus.BAD_REQUEST, "CA003", "Bad Request"),
+    CALENDAR_NOT_FOUND_ERROR(HttpStatus.NOT_FOUND, "CA004", "Not Found"),
+
     // OAuth
     OAUTH_UNAUTHORIZED_ERROR(HttpStatus.UNAUTHORIZED, "O001", "OAuth Unauthorized Error"),
     OAUTH_BAD_REQUEST_ERROR(HttpStatus.BAD_REQUEST, "O002", "OAuth Bad Request Error"),
