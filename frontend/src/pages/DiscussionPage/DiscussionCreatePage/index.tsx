@@ -8,10 +8,18 @@ const DiscussionCreatePage = () => (
     <Flex
       align='center'
       direction='column'
-      gap={300}
+      gap={800}
+      height='100vh'
     >
-      <Text color={vars.color.Ref.Netural[800]} typo='h2'>일정 조율 생성</Text>
-      <Text color={vars.color.Ref.Netural[500]}>일정 조율에는 최대 15명이 참여가능해요</Text>
+      <Flex
+        direction='column'
+        gap={300}
+        justify='flex-start'
+        width='27.875rem'
+      >
+        <Text color={vars.color.Ref.Netural[800]} typo='h2'>일정 조율 생성</Text>
+        <Text color={vars.color.Ref.Netural[500]}>일정 조율에는 최대 15명이 참여가능해요</Text>
+      </Flex>
       <DiscussionForm />
     </Flex>
   </>

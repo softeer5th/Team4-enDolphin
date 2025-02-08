@@ -3,8 +3,6 @@ import { style } from '@vanilla-extract/css';
 import { vars } from '@/theme/index.css';
 
 export const dropdownContainerStyle = style({
-  padding: 6,
-
   display: 'flex',
   flexDirection: 'column',
   gap: vars.spacing[300],
