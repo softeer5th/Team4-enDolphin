@@ -5,4 +5,4 @@ export const radius = {
   500: '1.25rem',
   600: '1.5rem',
   Max: '6.188rem',
-};
+} as const;

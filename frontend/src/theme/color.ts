@@ -59,4 +59,4 @@ export const color = {
       'Table-Outline': 'Ref.Netural.200',
     },
   },
-};
+} as const;

@@ -11,4 +11,4 @@ export const spacing = {
   800: '2rem',
   900: '2.25rem',
   HomeFIxed: '77rem',
-};
+} as const;
