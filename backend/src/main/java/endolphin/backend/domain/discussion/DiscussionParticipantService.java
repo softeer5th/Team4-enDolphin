@@ -24,6 +24,7 @@ public class DiscussionParticipantService {
         discussionParticipantRepository.save(participant);
     }
 
+    @Transactional(readOnly = true)
     public List<User> getUsersByDiscussionId(Long discussionId){
         return discussionParticipantRepository.findUsersByDiscussionId(discussionId);
     }
