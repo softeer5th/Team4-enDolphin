@@ -6,6 +6,7 @@ import HomePage from '@/pages/HomePage';
 const Home = () => (
   <>
     <GlobalNavBar>
+      <GlobalNavBar.MyScheduleLink />
       <GlobalNavBar.NewDiscussionLink />
     </GlobalNavBar>
     <HomePage />

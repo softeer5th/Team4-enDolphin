@@ -7,11 +7,10 @@ export const containerStyle = style({
   margin: '56px 0',
   padding: '0 28px',
   display: 'flex',
+  overflow: 'hidden',
   justifyContent: 'center',
 });
 
 export const contentWrapperStyle = style({  
   width: '1288px',
-  minHeight: '100%',
-  overflow: 'hidden',
 });

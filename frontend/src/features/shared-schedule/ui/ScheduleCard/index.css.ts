@@ -8,6 +8,7 @@ export const containerStyle = recipe({
     height: 316,
     padding: vars.spacing[800],
     borderRadius: vars.radius[700],
+    flexShrink: 0,
   },
   variants: {
     selected: {

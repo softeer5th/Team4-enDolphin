@@ -1,6 +1,12 @@
+import { style } from '@vanilla-extract/css';
 import { recipe } from '@vanilla-extract/recipes';
 
 import { vars } from '@/theme/index.css';
+
+export const containerStyle = style({
+  width: '100%',
+  marginTop: 80,
+});
 
 export const controlButtonStyle = recipe({
   base: {
@@ -15,7 +21,17 @@ export const controlButtonStyle = recipe({
   variants: {
     available: {
       true: { opacity: 1, cursor: 'pointer' },
-      false: { opacity: 0.42, cursor: 'not-allowed' },
+      false: { opacity: 0.42, cursor: 'default' },
     },
   },
+});
+
+export const cardContainerStyle = style({
+  width: '100%',
+  display: 'flex',
+  left: 0,
+  gap: vars.spacing[600],
+  position: 'absolute',
+  top: 182,
+  overflow: 'hidden',
 });
