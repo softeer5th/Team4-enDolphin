@@ -3,7 +3,6 @@ import { style } from '@vanilla-extract/css';
 import { vars } from '@/theme/index.css';
 
 export const dropdownContainerStyle = style({
-  width: 'min-content',
   padding: 6,
 
   display: 'flex',

@@ -12,11 +12,12 @@ interface DropdownItemProps extends PropsWithChildren {
 }
 
 export const DropdownItem = ({ value, children }: DropdownItemProps) => {
-  const { controlId, selectedValue, onChange } = useSafeContext(DropdownContext);
+  const { controlId, selectedValue, onChange, setIsOpen } = useSafeContext(DropdownContext);
   const defaultId = `${controlId}-item-${useId()}`;
 
   const handleClick = () => {
     onChange(value);
+    setIsOpen(false);
   };
 
   const isSelected = selectedValue === value;
