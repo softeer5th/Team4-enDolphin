@@ -9,7 +9,7 @@ export const dropdownContainerStyle = style({
 
 export const dropdownContentStyle = style({
   width: '100%',
-  padding: '0 6px',
+  padding: vars.spacing[200],
 
   display: 'flex',
   flexDirection: 'column',
