@@ -1,6 +1,6 @@
 import { Flex } from '@/components/Flex';
+import DiscussionCreateCard from '@/features/discussion/ui/DiscussionCreateCard';
 
-import DiscussionCreateCard from './DiscussionCreateCard';
 import { pageContainerStyle } from './index.css';
 
 const DiscussionCreateFinishPage = () => (
