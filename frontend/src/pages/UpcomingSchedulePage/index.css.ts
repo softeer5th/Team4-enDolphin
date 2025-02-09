@@ -6,6 +6,7 @@ import { vars } from '@/theme/index.css';
 export const containerStyle = style({
   width: '100%',
   marginTop: 80,
+  paddingBottom: 218,
 });
 
 export const controlButtonStyle = recipe({

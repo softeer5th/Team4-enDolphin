@@ -2,6 +2,8 @@ import { Flex } from '@/components/Flex';
 import { Text } from '@/components/Text';
 import CarouselControlButton from '@/features/shared-schedule/ui/UpcomingSchedules/ControlButton';
 import UpcomingCarousel from '@/features/shared-schedule/ui/UpcomingSchedules/UpcomingCarousel';
+import UpcomingScheduleList from 
+  '@/features/shared-schedule/ui/UpcomingSchedules/UpcomingScheduleList';
 
 import { containerStyle } from './index.css';
 
@@ -33,6 +35,7 @@ const UpcomingSchedulePage = () => {
           <CarouselControlButton direction='right' isAvailable={true} />
         </Flex>
       </Flex>
+      <UpcomingScheduleList schedules={schedules} />
     </Flex>
   );
 
