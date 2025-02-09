@@ -3,6 +3,8 @@ package endolphin.backend.domain.discussion;
 import endolphin.backend.domain.discussion.entity.Discussion;
 import endolphin.backend.domain.discussion.entity.DiscussionParticipant;
 import endolphin.backend.domain.user.entity.User;
+import endolphin.backend.global.error.exception.ApiException;
+import endolphin.backend.global.error.exception.ErrorCode;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -27,5 +29,11 @@ public class DiscussionParticipantService {
     @Transactional(readOnly = true)
     public List<User> getUsersByDiscussionId(Long discussionId){
         return discussionParticipantRepository.findUsersByDiscussionId(discussionId);
+    }
+
+    @Transactional(readOnly = true)
+    public Long getDiscussionParticipantIndex(Long discussionId, Long userId) {
+        return discussionParticipantRepository.findIndexByDiscussionIdAndUserId(discussionId, userId)
+            .orElseThrow(() -> new ApiException(ErrorCode.DISCUSSION_PARTICIPANT_NOT_FOUND));
     }
 }

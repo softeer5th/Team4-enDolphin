@@ -1,6 +1,6 @@
 package endolphin.backend.domain.personal_event;
 
-import endolphin.backend.domain.discussion.DiscussionService;
+import endolphin.backend.domain.discussion.DiscussionParticipantService;
 import endolphin.backend.domain.discussion.entity.Discussion;
 import endolphin.backend.domain.personal_event.entity.PersonalEvent;
 import endolphin.backend.domain.user.entity.User;
@@ -15,10 +15,10 @@ import org.springframework.stereotype.Service;
 public class PersonalEventPreprocessor {
 
     private final DiscussionBitmapService discussionBitmapService;
-    private final DiscussionService discussionService;
+    private final DiscussionParticipantService discussionParticipantService;
 
     public void preprocess(List<PersonalEvent> personalEvents, Discussion discussion, User user) {
-        Long index = discussionService.getDiscussionParticipantIndex(discussion.getId(),
+        Long index = discussionParticipantService.getDiscussionParticipantIndex(discussion.getId(),
             user.getId());
         for (PersonalEvent personalEvent : personalEvents) {
             convert(personalEvent, discussion.getId(), index);

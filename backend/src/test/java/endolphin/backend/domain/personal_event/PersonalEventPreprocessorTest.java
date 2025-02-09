@@ -3,7 +3,7 @@ package endolphin.backend.domain.personal_event;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
-import endolphin.backend.domain.discussion.DiscussionService;
+import endolphin.backend.domain.discussion.DiscussionParticipantService;
 import endolphin.backend.domain.discussion.entity.Discussion;
 import endolphin.backend.domain.personal_event.entity.PersonalEvent;
 import endolphin.backend.domain.user.entity.User;
@@ -23,7 +23,7 @@ class PersonalEventPreprocessorTest {
     @Mock
     private DiscussionBitmapService discussionBitmapService;
     @Mock
-    private DiscussionService discussionService;
+    private DiscussionParticipantService discussionParticipantService;
     @InjectMocks
     private PersonalEventPreprocessor preprocessor;
 
@@ -42,7 +42,7 @@ class PersonalEventPreprocessorTest {
         User user = mock(User.class);
         given(user.getId()).willReturn(userId);
 
-        given(discussionService.getDiscussionParticipantIndex(discussionId, userId))
+        given(discussionParticipantService.getDiscussionParticipantIndex(discussionId, userId))
             .willReturn(participantIndex);
 
         // PersonalEvent: 시작 10:15, 종료 11:15
