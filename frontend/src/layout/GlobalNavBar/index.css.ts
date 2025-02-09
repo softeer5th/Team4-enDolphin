@@ -30,9 +30,6 @@ export const containerStyle = recipe({
       },
     },
   },
-  defaultVariants: {
-    background: 'transparent',
-  },
 });
 
 export const linkStyle = style({
