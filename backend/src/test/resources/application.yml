@@ -8,8 +8,8 @@ spring:
     hibernate:
       ddl-auto: create
 
-oauth:
-  google:
+google:
+  oauth:
     redirect-uri: "test"
     scope: "test"
     auth-url: "test"
@@ -17,6 +17,11 @@ oauth:
     userinfo-url: "test"
     client-id: "test"
     client-secret: "test"
+
+  calendar:
+    calendar-list-url: "https://www.googleapis.com/calendar/v3/users/me/calendarList"
+    subscribe-url: "https://www.googleapis.com/calendar/v3/calendars/{calendarId}/events/watch"
+    unsubscribe-url: "https://www.googleapis.com/calendar/v3/channels/stop"
 
 jwt:
   secret: "my-very-long-and-secure-secret-key-which-is-at-least-32-chars"
