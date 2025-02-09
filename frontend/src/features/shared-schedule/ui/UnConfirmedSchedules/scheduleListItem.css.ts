@@ -18,13 +18,28 @@ export const scheduleItemContainerStyle = recipe({
   },
 });
 
-export const updateIndicatorStyle = style({
-  width: 6,
-  height: 6,
-  borderRadius: vars.radius['Max'],
-  backgroundColor: vars.color.Ref.Primary[500],
+export const updateIndicatorStyle = recipe({
+  base: {
+    width: 6,
+    height: 6,
+    borderRadius: vars.radius['Max'],
+    backgroundColor: vars.color.Ref.Primary[500],
+  },
+  variants: {
+    isUpdated: {
+      true: {},
+      false: { opacity: 0 },
+    },  
+  },
 });
 
 export const detailsContainerStyle = style({
   paddingLeft: 14,
+});
+
+export const dotStyle = style({
+  width: 8,
+  height: 8,
+  borderRadius: vars.radius['Max'],
+  backgroundColor: vars.color.Ref.Netural[400],
 });

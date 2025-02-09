@@ -5,17 +5,27 @@ import { vars } from '@/theme/index.css';
 
 import {
   detailsContainerStyle, 
+  dotStyle, 
   scheduleItemContainerStyle,
   updateIndicatorStyle, 
 } from './scheduleListItem.css';
 
 interface ScheduleListItemProps {
-  schedule: object;
+  scheduleTitle: string;
+  participantImageUrls: string[];
   selected: boolean;
-  // onConfirm: (schedule: Schedule) => void;
+  isUpdated?: boolean;
+  meetingPlace?: string;
+  onClick?: () => void;
 }
 
-const ScheduleListItem = ({ schedule, selected }: ScheduleListItemProps) => (
+const ScheduleListItem = ({ 
+  scheduleTitle,
+  participantImageUrls,
+  selected,
+  isUpdated = false,
+  onClick,
+}: ScheduleListItemProps) => (
   <Flex
     className={scheduleItemContainerStyle({ selected })}
     direction='column'
@@ -27,9 +37,9 @@ const ScheduleListItem = ({ schedule, selected }: ScheduleListItemProps) => (
       height={24}
       justify='flex-start'
     >
-      <span className={updateIndicatorStyle} />
-      <Text typo='t2'>일정명을 입력해주세요</Text>
-      <Text color={vars.color.Ref.Primary[600]} typo='b3M'>일정을 업데이트한 사람이 있어요!</Text>
+      <span className={updateIndicatorStyle({ isUpdated })} />
+      <Text typo='t2'>{scheduleTitle}</Text>
+      {isUpdated && <Text color={vars.color.Ref.Primary[600]} typo='b3M'>일정을 업데이트한 사람이 있어요!</Text>}
     </Flex>
     <Flex
       align='center'
@@ -37,8 +47,10 @@ const ScheduleListItem = ({ schedule, selected }: ScheduleListItemProps) => (
       justify='space-between'
       width='full'
     >
-      <Text color={vars.color.Ref.Netural[600]} typo='b3R'>12월 28일 ~ 1월 23일</Text>
-      <Avatar imageUrls={['hi.com', 'hi.com']} size='sm' />
+      <Flex gap={200}>
+        <Text color={vars.color.Ref.Netural[600]} typo='b3R'>12월 28일 ~ 1월 23일 </Text>
+      </Flex>
+      <Avatar imageUrls={participantImageUrls} size='sm' />
     </Flex>
   </Flex>
 );
