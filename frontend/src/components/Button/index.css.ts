@@ -58,6 +58,14 @@ export const containerStyle = recipe({
         padding: `0 ${vars.spacing[500]}`,
       },
     },
+    disabled: {
+      true: {
+        cursor: 'not-allowed',
+        backgroundColor: `${vars.color.Ref.Netural[300]} !important`,
+        color: `${vars.color.Ref.Netural['White']} !important`,
+      },
+      false: {},
+    },
   },
   compoundVariants: [
     {

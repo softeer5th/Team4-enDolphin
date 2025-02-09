@@ -1,7 +1,7 @@
-import type { 
-  ComponentPropsWithoutRef, 
-  ElementType, 
-  JSX, 
+import type {
+  ComponentPropsWithoutRef,
+  ElementType,
+  JSX,
   MouseEventHandler,
 } from 'react';
 
@@ -22,6 +22,7 @@ export interface ButtonProps {
   onClick?: MouseEventHandler<HTMLButtonElement>;
   children?: string;
   className?: string;
+  disabled?: boolean;
 }
 
 const Button = <T extends ElementType = 'button'>({
@@ -35,21 +36,44 @@ const Button = <T extends ElementType = 'button'>({
   onClick,
   children,
   className,
+  disabled = false,
   ...props
 }: AsProp<T> & ComponentPropsWithoutRef<T> & ButtonProps) => {
   const Component = as || 'button';
 
-  return(
+  return (
     <Component 
-      className={clsx(containerStyle({ variant, style, radius, size }), className)}
-      onClick={onClick}
+      className={clsx(containerStyle({ variant, style, radius, size, disabled }), className)}
       {...props}
+      {...accessibilityProps(Component, disabled, onClick)}
     >
       {leftIcon && <ButtonIcon size={size}>{leftIcon}</ButtonIcon>}
       <ButtonText size={size}>{children}</ButtonText>
       {rightIcon && <ButtonIcon size={size}>{rightIcon}</ButtonIcon>}
     </Component>
   );
+};
+
+/**
+ * 버튼인 경우에는 disable 속성 주입, 버튼이 아닌 경우엔 aria-disabled와 클릭 방지 처리
+ * */ 
+const accessibilityProps = (
+  Component: ElementType, 
+  disabled: boolean,
+  onClick?: MouseEventHandler,
+) => {
+  const isIntrinsicButton = typeof Component === 'string' && Component === 'button';
+  if (isIntrinsicButton) return { disabled };
+  if (!onClick) return {};
+
+  const guardedOnClick: MouseEventHandler = disabled
+    ? (event) => event.preventDefault()
+    : onClick;
+    
+  return {
+    'aria-disabled': disabled,
+    onClick: guardedOnClick,
+  };
 };
 
 export default Button;
