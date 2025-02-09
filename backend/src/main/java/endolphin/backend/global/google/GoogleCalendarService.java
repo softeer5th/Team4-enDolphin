@@ -21,13 +21,13 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class CalendarService {
+public class GoogleCalendarService {
 
     private final RestClient restClient;
     private final GoogleCalendarUrl googleCalendarUrl;
 
-    public void syncUserCalendarEvents(String accessToken, User user) {
-        // TODO: 최초 로그인 시 Personal Event 동기화
+    public void getAllCalendarEvents(String accessToken, User user) {
+        // TODO: 회원가입 시 모든 이벤트 정보 가져오기
     }
 
     public void subscribeToAllCalendars(String accessToken, User user) {
