@@ -19,25 +19,9 @@ google:
     client-secret: "test"
 
   calendar:
-    calendar-list-url: "https://www.googleapis.com/calendar/v3/users/me/calendarList"
-    subscribe-url: "https://www.googleapis.com/calendar/v3/calendars/{calendarId}/events/watch"
-    unsubscribe-url: "https://www.googleapis.com/calendar/v3/channels/stop"
+    calendar-list-url: "test"
+    subscribe-url: "test"
+    unsubscribe-url: "test"
 
 jwt:
   secret: "my-very-long-and-secure-secret-key-which-is-at-least-32-chars"
-
-springdoc:
-  packages-to-scan: endolphin.backend
-  default-consumes-media-type: application/json;charset=UTF-8
-  default-produces-media-type: application/json;charset=UTF-8
-  cache:
-    disabled: true              # 캐시 사용 여부
-  api-docs:
-    path: /v3/api-docs          # API 문서 경로
-    groups:
-      enabled: true
-  swagger-ui:
-    enabled: true               # Swagger UI 사용여부
-    path: /swagger-ui           # Swagger UI 경로
-    tags-sorter: alpha          # alpha: 알파벳 순 태그 정렬, method: HTTP Method 순 정렬
-    operations-sorter: alpha    # alpha: 알파벳 순 태그 정렬, method: HTTP Method 순 정렬
