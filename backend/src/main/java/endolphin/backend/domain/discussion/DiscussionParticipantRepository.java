@@ -30,4 +30,9 @@ public interface DiscussionParticipantRepository extends
         "WHERE dp.discussion.id = :discussionId AND dp.user.id = :userId")
     Optional<Long> findIndexByDiscussionIdAndUserId(@Param("discussionId") Long discussionId,
         @Param("userId") Long userId);
+
+    @Query("SELECT COALESCE(MAX(dp.index), -1) " +
+        "FROM DiscussionParticipant dp " +
+        "WHERE dp.discussion.id = :discussionId")
+    Optional<Long> findMaxIndexByDiscussionId(@Param("discussionId") Long discussionId);
 }
