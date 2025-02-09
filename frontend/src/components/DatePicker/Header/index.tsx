@@ -3,7 +3,7 @@ import { ChevronLeft, ChevronRight } from '@/components/Icon';
 import { Text } from '@/components/Text';
 import { useSafeContext } from '@/hooks/useSafeContext';
 import { vars } from '@/theme/index.css';
-import { getDateParts } from '@/utils/date/calendar';
+import { getDateParts } from '@/utils/date';
 
 import { DatePickerContext } from '../context/DatePickerContext';
 import { chevronWrapper, headerStyle } from './index.css';

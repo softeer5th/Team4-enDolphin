@@ -38,9 +38,3 @@ export const getNextMonthInfo = (date: Date) => {
     ? { month: FIRST_MONTH, year: currentYear + 1 }
     : { month: currentMonth + 1, year: currentYear };
 };
-
-export const getDateParts = (date: Date) => ({
-  year: date.getFullYear(),
-  month: date.getMonth(),
-  day: date.getDate(),
-});
