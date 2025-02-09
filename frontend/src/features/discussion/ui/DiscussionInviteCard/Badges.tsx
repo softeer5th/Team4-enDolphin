@@ -5,12 +5,19 @@ import { getDateRangeString, getTimeRangeString } from '@/utils/date';
 import type { DiscussionInviteCardProps } from '.';
 import { badgeContainerStyle } from './index.css';
 
+interface BadgesProps {
+  dateRange: DiscussionInviteCardProps['dateRange'];
+  timeRange: DiscussionInviteCardProps['timeRange'];
+  meetingDuration: DiscussionInviteCardProps['meetingDuration'];
+  location?: DiscussionInviteCardProps['location'];
+}
+
 const Badges = ({ 
   dateRange, 
   timeRange,
   meetingDuration,
   location,
-}: Pick<DiscussionInviteCardProps, 'dateRange' | 'timeRange' | 'meetingDuration' | 'location'>) => (
+}: BadgesProps) => (
   <Flex
     align='center'
     className={badgeContainerStyle}

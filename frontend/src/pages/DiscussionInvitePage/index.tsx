@@ -8,7 +8,7 @@ const DiscussionInvitePage = () => {
     meetingDuration: 60,
     participantImageUrls: ['hi.com'],
     location: '서울시 강남구 역삼동 123-45',
-    canJoin: false,
+    canJoin: true,
   };
 
   return <DiscussionInviteCard {...dummyData} />;

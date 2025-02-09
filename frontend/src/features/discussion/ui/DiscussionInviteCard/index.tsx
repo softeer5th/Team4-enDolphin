@@ -2,6 +2,8 @@ import Avatar from '@/components/Avatar';
 import Button from '@/components/Button';
 import { Flex } from '@/components/Flex';
 import { Modal } from '@/components/Modal';
+import { Text } from '@/components/Text';
+import { vars } from '@/theme/index.css';
 
 import Badges from './Badges';
 import {
@@ -42,7 +44,8 @@ const DiscussionInviteCard = ({
         <Avatar imageUrls={participantImageUrls} size='lg' />
       </Flex>
     </Modal.Contents>
-    <Modal.Footer className={modalFooterStyle}>
+    <Modal.Footer className={modalFooterStyle({ disabled: !canJoin })}>
+      {!canJoin && <Text color={vars.color.Ref.Red[500]} typo='b2M'>인원이 꽉 찼어요</Text>}
       <Button
         disabled={!canJoin}
         onClick={() => alert('초대 수락됨')}
