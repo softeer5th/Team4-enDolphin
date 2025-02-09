@@ -6,7 +6,7 @@ public record SharedEventWithDiscussionInfoResponse(
     Long discussionId,
     String title,
     String meetingMethodOrLocation,
-    SharedEventResponse sharedEventResponse,
+    SharedEventDto sharedEventDto,
     List<String> participantPictureUrls) {
 
 }

@@ -1,8 +1,10 @@
 package endolphin.backend.domain.personal_event;
 
+import endolphin.backend.domain.discussion.entity.Discussion;
 import endolphin.backend.domain.personal_event.dto.PersonalEventRequest;
 import endolphin.backend.domain.personal_event.dto.PersonalEventResponse;
 import endolphin.backend.domain.personal_event.entity.PersonalEvent;
+import endolphin.backend.domain.shared_event.dto.SharedEventDto;
 import endolphin.backend.domain.user.UserService;
 import endolphin.backend.domain.user.entity.User;
 import endolphin.backend.global.dto.ListResponse;
@@ -47,6 +49,21 @@ public class PersonalEventService {
             .build();
         PersonalEvent result = personalEventRepository.save(personalEvent);
         return PersonalEventResponse.fromEntity(result);
+    }
+
+    public void createPersonalEventsForParticipants(List<User> participants,
+        Discussion discussion,
+        SharedEventDto sharedEvent) {
+        List<PersonalEvent> events = participants.stream()
+            .map(participant -> PersonalEvent.builder()
+                .title(discussion.getTitle())
+                .startTime(sharedEvent.startDateTime())
+                .endTime(sharedEvent.endDateTime())
+                .user(participant)
+                .build())
+            .toList();
+
+        personalEventRepository.saveAll(events);
     }
 
     public PersonalEventResponse updatePersonalEvent(PersonalEventRequest request,

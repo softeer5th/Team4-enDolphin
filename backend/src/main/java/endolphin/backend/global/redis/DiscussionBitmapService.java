@@ -3,6 +3,7 @@ package endolphin.backend.global.redis;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.concurrent.CompletableFuture;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.RedisSystemException;
 import org.springframework.data.redis.connection.RedisCommandsProvider;
@@ -12,6 +13,7 @@ import org.springframework.data.redis.core.Cursor;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ScanOptions;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -102,27 +104,44 @@ public class DiscussionBitmapService {
      *
      * @param discussionId 논의 식별자
      */
-    public void deleteDiscussionBitmapsUsingScan(Long discussionId) {
+    @Async
+    public CompletableFuture<Void> deleteDiscussionBitmapsUsingScan(Long discussionId) {
         String pattern = discussionId + ":*";
+        ScanOptions scanOptions = ScanOptions.scanOptions().match(pattern).count(1000).build();
 
-        // SCAN 옵션
-        ScanOptions scanOptions = ScanOptions.scanOptions()
-            .match(pattern)
-            .count(1000)
-            .build();
+        int retryCount = 0;
+        int maxRetries = 3;
 
-        redisTemplate.execute((RedisConnection connection) -> {
+        while (retryCount < maxRetries) {
+            try {
+                redisTemplate.execute((RedisConnection connection) -> {
+                    RedisKeyCommands keyCommands = ((RedisCommandsProvider) connection).keyCommands();
 
-            RedisKeyCommands keyCommands = ((RedisCommandsProvider) connection).keyCommands();
+                    try (Cursor<byte[]> cursor = keyCommands.scan(scanOptions)) {
+                        while (cursor.hasNext()) {
+                            byte[] rawKey = cursor.next();
+                            keyCommands.del(rawKey);
+                        }
+                    }
+                    return null;
+                });
+                return CompletableFuture.completedFuture(null);
+            } catch (Exception ex) {
+                retryCount++;
 
-            try (Cursor<byte[]> cursor = keyCommands.scan(scanOptions)) {
-                while (cursor.hasNext()) {
-                    byte[] rawKey = cursor.next();
-                    keyCommands.del(rawKey);
+                if (retryCount >= maxRetries) {
+                    return CompletableFuture.failedFuture(ex);
+                }
+
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException ie) {
+                    Thread.currentThread().interrupt();
+                    return CompletableFuture.failedFuture(ie);
                 }
             }
-
-            return null;
-        });
+        }
+        return CompletableFuture.completedFuture(null);
     }
+
 }

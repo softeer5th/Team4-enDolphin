@@ -4,31 +4,38 @@ import endolphin.backend.domain.discussion.dto.CreateDiscussionRequest;
 import endolphin.backend.domain.discussion.dto.DiscussionResponse;
 import endolphin.backend.domain.discussion.entity.Discussion;
 import endolphin.backend.domain.discussion.entity.DiscussionParticipant;
+import endolphin.backend.domain.personal_event.PersonalEventService;
 import endolphin.backend.domain.shared_event.SharedEventService;
 import endolphin.backend.domain.shared_event.dto.SharedEventRequest;
 import endolphin.backend.domain.shared_event.dto.SharedEventWithDiscussionInfoResponse;
-import endolphin.backend.domain.shared_event.dto.SharedEventResponse;
+import endolphin.backend.domain.shared_event.dto.SharedEventDto;
 import endolphin.backend.domain.user.UserService;
 import endolphin.backend.domain.user.entity.User;
 import endolphin.backend.global.error.exception.ApiException;
 import endolphin.backend.global.error.exception.ErrorCode;
+import endolphin.backend.global.redis.DiscussionBitmapService;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class DiscussionService {
 
     private final DiscussionRepository discussionRepository;
-    private final DiscussionParticipantRepository discussionParticipantRepository;
     private final UserService userService;
+    private final PersonalEventService personalEventService;
     private final SharedEventService sharedEventService;
+    private final DiscussionParticipantService discussionParticipantService;
+    private final DiscussionBitmapService discussionBitmapService;
 
     public DiscussionResponse createDiscussion(CreateDiscussionRequest request) {
 
@@ -47,12 +54,8 @@ public class DiscussionService {
         discussionRepository.save(discussion);
 
         User currentUser = userService.getCurrentUser();
-        DiscussionParticipant participant = DiscussionParticipant.builder()
-            .discussion(discussion)
-            .user(currentUser)
-            .isHost(true)
-            .build();
-        discussionParticipantRepository.save(participant);
+
+        discussionParticipantService.addDiscussionParticipant(discussion, currentUser);
 
         return new DiscussionResponse(
             discussion.getId(),
@@ -71,19 +74,30 @@ public class DiscussionService {
         Discussion discussion = discussionRepository.findById(discussionId)
             .orElseThrow(() -> new ApiException(ErrorCode.DISCUSSION_NOT_FOUND));
 
-        SharedEventResponse sharedEventResponse = sharedEventService.createSharedEvent(discussion,
+        SharedEventDto sharedEventDto = sharedEventService.createSharedEvent(discussion,
             request);
-        List<String> participantPictures = discussionParticipantRepository.findUserPicturesByDiscussionId(
-            discussionId);
 
-        //TODO: 모든 참여자의 개인 일정에 확정 일정 추가
-        //TODO: Redis 데이터 삭제
+        List<User> participants = discussionParticipantService.getUsersByDiscussionId(discussionId);
+
+        List<String> participantPictures = participants.stream().map(User::getPicture)
+            .toList();
+
+        personalEventService.createPersonalEventsForParticipants(participants, discussion,
+            sharedEventDto);
+
+        discussionBitmapService.deleteDiscussionBitmapsUsingScan(discussionId)
+            .thenRun(() -> log.info("Redis keys deleted successfully for discussionId : {}",
+                discussionId))
+            .exceptionally(ex -> {
+                log.error("Failed to delete Redis keys for three times", ex);
+                return null;
+            });
 
         return new SharedEventWithDiscussionInfoResponse(
             discussionId,
             discussion.getTitle(),
             discussion.getMeetingMethodOrLocation(),
-            sharedEventResponse,
+            sharedEventDto,
             participantPictures
         );
     }

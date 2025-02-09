@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.within;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -12,18 +13,21 @@ import endolphin.backend.domain.discussion.dto.CreateDiscussionRequest;
 import endolphin.backend.domain.discussion.dto.DiscussionResponse;
 import endolphin.backend.domain.discussion.entity.Discussion;
 import endolphin.backend.domain.discussion.enums.MeetingMethod;
+import endolphin.backend.domain.personal_event.PersonalEventService;
 import endolphin.backend.domain.shared_event.SharedEventService;
 import endolphin.backend.domain.shared_event.dto.SharedEventRequest;
-import endolphin.backend.domain.shared_event.dto.SharedEventResponse;
+import endolphin.backend.domain.shared_event.dto.SharedEventDto;
 import endolphin.backend.domain.shared_event.dto.SharedEventWithDiscussionInfoResponse;
 import endolphin.backend.domain.user.UserService;
 import endolphin.backend.domain.user.entity.User;
+import endolphin.backend.global.redis.DiscussionBitmapService;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -39,13 +43,19 @@ public class DiscussionServiceTest {
     private DiscussionRepository discussionRepository;
 
     @Mock
-    private DiscussionParticipantRepository discussionParticipantRepository;
-
-    @Mock
     private UserService userService;
 
     @Mock
     private SharedEventService sharedEventService;
+
+    @Mock
+    private PersonalEventService personalEventService;
+
+    @Mock
+    private DiscussionBitmapService discussionBitmapService;
+
+    @Mock
+    private DiscussionParticipantService discussionParticipantService;
 
     @InjectMocks
     private DiscussionService discussionService;
@@ -106,19 +116,29 @@ public class DiscussionServiceTest {
             LocalDateTime.of(2025, 3, 1, 12, 0)
         );
 
-        SharedEventResponse sharedEventResponse = new SharedEventResponse(
+        SharedEventDto sharedEventDto = new SharedEventDto(
             101L,
-            request.startTime(),
-            request.endTime()
+            request.startDateTime(),
+            request.endDateTime()
         );
 
-        List<String> participantPictures = List.of("pic1.jpg", "pic2.jpg");
+        List<User> dummyParticipants = List.of(
+            User.builder().name("Bob").email("email1").picture("picA").build(),
+            User.builder().name("Alice").email("email2").picture("picB").build()
+        );
+
+        List<String> participantPictures = dummyParticipants.stream().map(User::getPicture)
+            .toList();
 
         when(discussionRepository.findById(discussionId)).thenReturn(Optional.of(discussion));
         when(sharedEventService.createSharedEvent(discussion, request)).thenReturn(
-            sharedEventResponse);
-        when(discussionParticipantRepository.findUserPicturesByDiscussionId(
-            discussionId)).thenReturn(participantPictures);
+            sharedEventDto);
+        when(discussionParticipantService.getUsersByDiscussionId(discussionId))
+            .thenReturn(dummyParticipants);
+
+        when(discussionBitmapService.deleteDiscussionBitmapsUsingScan(
+            any(Long.class)
+        )).thenReturn(CompletableFuture.completedFuture(null));
 
         SharedEventWithDiscussionInfoResponse response = discussionService.confirmSchedule(
             discussionId, request);
@@ -127,12 +147,69 @@ public class DiscussionServiceTest {
         assertThat(response.discussionId()).isEqualTo(discussionId);
         assertThat(response.title()).isEqualTo("Project Sync");
         assertThat(response.meetingMethodOrLocation()).isEqualTo("ONLINE");
-        assertThat(response.sharedEventResponse().id()).isEqualTo(101L);
+        assertThat(response.sharedEventDto().id()).isEqualTo(101L);
+
         assertThat(response.participantPictureUrls()).containsExactlyElementsOf(
             participantPictures);
 
         verify(discussionRepository).findById(discussionId);
         verify(sharedEventService).createSharedEvent(discussion, request);
-        verify(discussionParticipantRepository).findUserPicturesByDiscussionId(discussionId);
+
+        verify(discussionParticipantService).getUsersByDiscussionId(discussionId);
     }
+
+    @DisplayName("논의 확정 비동기 작업 실패 시 응답 확인")
+    @Test
+    public void confirmSchedule_asyncFailureHandledGracefully() {
+        // Given
+        Long discussionId = 1L;
+        Discussion discussion = Discussion.builder()
+            .title("Project Sync")
+            .meetingMethod(MeetingMethod.ONLINE)
+            .build();
+
+        SharedEventRequest request = new SharedEventRequest(
+            LocalDateTime.of(2025, 3, 1, 10, 0),
+            LocalDateTime.of(2025, 3, 1, 12, 0)
+        );
+
+        SharedEventDto sharedEventDto = new SharedEventDto(
+            101L,
+            request.startDateTime(),
+            request.endDateTime()
+        );
+
+        List<User> dummyParticipants = List.of(
+            User.builder().name("Bob").email("email1").picture("picA").build(),
+            User.builder().name("Alice").email("email2").picture("picB").build()
+        );
+
+        // 정상 데이터 반환 설정
+        when(discussionRepository.findById(discussionId)).thenReturn(Optional.of(discussion));
+        when(sharedEventService.createSharedEvent(discussion, request)).thenReturn(sharedEventDto);
+        when(discussionParticipantService.getUsersByDiscussionId(discussionId))
+            .thenReturn(dummyParticipants);
+
+        when(discussionBitmapService.deleteDiscussionBitmapsUsingScan(any()))
+            .thenReturn(CompletableFuture.failedFuture(new RuntimeException("Redis Error")));
+
+        // When
+        SharedEventWithDiscussionInfoResponse response = discussionService.confirmSchedule(
+            discussionId, request
+        );
+
+        // Then
+        assertThat(response).isNotNull();
+        assertThat(response.discussionId()).isEqualTo(discussionId);
+        assertThat(response.title()).isEqualTo("Project Sync");
+
+        verify(discussionRepository).findById(discussionId);
+        verify(sharedEventService).createSharedEvent(discussion, request);
+        verify(discussionParticipantService).getUsersByDiscussionId(discussionId);
+        verify(personalEventService).createPersonalEventsForParticipants(
+            dummyParticipants, discussion, sharedEventDto
+        );
+        verify(discussionBitmapService).deleteDiscussionBitmapsUsingScan(discussionId);
+    }
+
 }
