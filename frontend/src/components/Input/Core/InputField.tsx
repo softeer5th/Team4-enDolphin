@@ -10,10 +10,7 @@ import { interactableBorderStyle } from '../index.css';
 import { InputContext } from '../InputContext';
 import { inputFieldContainerStyle, inputFieldStyle, selectIconStyle } from './inputField.css';
 
-interface InputFieldProps extends Omit<
-  InputHTMLAttributes<HTMLInputElement>, 
-  'onClick' | 'readOnly' 
-> {
+interface InputFieldProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'onClick'> {
   onClick?: () => void;
 }
 

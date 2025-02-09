@@ -4,11 +4,6 @@ import { vars } from '@/theme/index.css';
 
 export const dropdownContainerStyle = style({
   height: '100%',
-
-  display: 'flex',
-  flexDirection: 'column',
-  gap: vars.spacing[300],
-
   position: 'relative',
 });
 
@@ -20,7 +15,7 @@ export const dropdownContentStyle = style({
   flexDirection: 'column',
 
   position: 'absolute',
-  top: 46,
+  top: '5rem',
   zIndex: 1,
   
   borderRadius: 10,

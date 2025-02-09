@@ -23,11 +23,10 @@ export const getTimeRangeString = (startTime: Date, endTime: Date): string => {
 };
 
 export const formatMinutesToTimeString = (minutes: number): string => {
-  const hours = Math.floor(minutes / 60).toString()
-    .padStart(2, '0');
+  const hours = Math.floor(minutes / 60).toString();
   const restMinutes = (minutes % 60);
   const minutesString = restMinutes ? ` ${restMinutes.toString().padStart(2, '0')}분` : '';
-  const amOrPm = hours >= '12' ? 'PM' : 'AM';
+  const amOrPm = hours >= '12' ? '오후' : '오전';
 
   return `${amOrPm} ${hours}시${minutesString}`;
 };
