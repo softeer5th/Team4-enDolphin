@@ -5,7 +5,7 @@ import { ChevronRight } from '@/components/Icon';
 import { Text } from '@/components/Text';
 import { vars } from '@/theme/index.css';
 
-import { chevronButtonStyle, containerStyle } from './index.css';
+import { chevronButtonStyle, containerStyle } from './scheduleCard.css';
 
 interface ScheduleCardProps {
   selected: boolean;

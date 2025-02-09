@@ -1,4 +1,4 @@
-import ScheduleCard from '../ScheduleCard';
+import ScheduleCard from './ScheduleCard';
 import { carouselStyle } from './UpcomingCarousel.css';
 
 interface UpcomingCarouselProps {
