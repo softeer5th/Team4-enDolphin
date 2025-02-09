@@ -1,4 +1,4 @@
-package endolphin.backend.domain.user.dto;
+package endolphin.backend.domain.auth.dto;
 
 public record UrlResponse(String url) {
 
