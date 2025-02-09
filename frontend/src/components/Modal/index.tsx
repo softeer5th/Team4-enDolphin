@@ -16,6 +16,7 @@ export interface ModalProps extends PropsWithChildren {
   subTitle: string;
   title: string;
   description?: string;
+  isOpen: boolean;
   className?: string;
 }
 
@@ -31,10 +32,12 @@ export const Modal = forwardRef<HTMLDialogElement, ModalProps>(({
   title,
   description,
   className,
+  isOpen,
   children,
 }, ref) => (
   <dialog
     className={clsx(containerStyle, className)}
+    open={isOpen}
     ref={ref}
   >
     <Text 
