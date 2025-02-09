@@ -1,9 +1,9 @@
-import type { PropsWithChildren } from 'react';
+import clsx from '@utils/clsx';
+import type { ForwardRefExoticComponent, PropsWithChildren, RefAttributes  } from 'react';
+import { forwardRef } from 'react';
 
 import { vars } from '@/theme/index.css';
 
-import clsx from '../../utils/clsx';
-import { Flex } from '../Flex';
 import { Text } from '../Text';
 import { containerStyle, descriptionStyle, titleStyle } from './index.css';
 import { ModalContents } from './ModalContents';
@@ -16,22 +16,26 @@ export interface ModalProps extends PropsWithChildren {
   subTitle: string;
   title: string;
   description?: string;
-  isOpen: boolean;
   className?: string;
 }
 
-export const Modal = ({
+interface ModalComponent 
+  extends ForwardRefExoticComponent<ModalProps & RefAttributes<HTMLDialogElement>> {
+  Footer: typeof ModalFooter;
+  Contents: typeof ModalContents;
+}
+
+export const Modal = forwardRef<HTMLDialogElement, ModalProps>(({
   type = 'default',
   subTitle,
   title,
   description,
   className,
   children,
-}: ModalProps) => (
-  <Flex
+}, ref) => (
+  <dialog
     className={clsx(containerStyle, className)}
-    direction='column'
-    justify='flex-start'
+    ref={ref}
   >
     <Text 
       color={type === 'default' ? vars.color.Ref.Primary[500] : vars.color.Ref.Red[500]}
@@ -55,8 +59,10 @@ export const Modal = ({
       {description}
     </Text>}
     {children}
-  </Flex>
-);
+  </dialog>
+)) as ModalComponent;
+
+Modal.displayName = 'Modal';
 
 Modal.Footer = ModalFooter;
 Modal.Contents = ModalContents;
