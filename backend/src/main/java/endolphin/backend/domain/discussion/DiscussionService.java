@@ -3,7 +3,6 @@ package endolphin.backend.domain.discussion;
 import endolphin.backend.domain.discussion.dto.CreateDiscussionRequest;
 import endolphin.backend.domain.discussion.dto.DiscussionResponse;
 import endolphin.backend.domain.discussion.entity.Discussion;
-import endolphin.backend.domain.discussion.entity.DiscussionParticipant;
 import endolphin.backend.domain.personal_event.PersonalEventService;
 import endolphin.backend.domain.shared_event.SharedEventService;
 import endolphin.backend.domain.shared_event.dto.SharedEventRequest;
@@ -18,7 +17,6 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -100,12 +98,6 @@ public class DiscussionService {
             sharedEventDto,
             participantPictures
         );
-    }
-
-    @Transactional(readOnly = true)
-    public Long getDiscussionParticipantIndex(Long discussionId, Long userId) {
-        return discussionParticipantRepository.findIndexByDiscussionIdAndUserId(discussionId, userId)
-            .orElseThrow(() -> new ApiException(ErrorCode.DISCUSSION_PARTICIPANT_NOT_FOUND));
     }
 
     private long calculateTimeLeft(LocalDate deadline) {
