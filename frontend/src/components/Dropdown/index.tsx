@@ -1,6 +1,8 @@
 import type { PropsWithChildren, ReactNode } from 'react';
 import { useId, useState } from 'react';
 
+import { useClickOutside } from '@/hooks/useClickOutside';
+
 import { DropdownContext } from './DropdownContext';
 import { DropdownItem } from './DropdownItem';
 import { dropdownContainerStyle, dropdownContentStyle, dropdownTriggerStyle } from './index.css';
@@ -23,6 +25,7 @@ export const Dropdown = ({
 }: DropdownProps) => {
   const defaultId = `dropdown-${useId()}`;
   const [isOpen, setIsOpen] = useState(false);
+  const ref = useClickOutside<HTMLDivElement>(() => setIsOpen(false));
 
   return (
     <DropdownContext.Provider 
@@ -36,6 +39,7 @@ export const Dropdown = ({
       <div
         className={dropdownContainerStyle}
         id={defaultId}
+        ref={ref}
         style={{ width }}
       >
         <div className={dropdownTriggerStyle} onClick={() => setIsOpen((prev) => !prev)}>
