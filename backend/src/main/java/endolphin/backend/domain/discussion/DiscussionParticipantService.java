@@ -18,11 +18,25 @@ public class DiscussionParticipantService {
     private final DiscussionParticipantRepository discussionParticipantRepository;
 
     public void addDiscussionParticipant(Discussion discussion, User user) {
-        DiscussionParticipant participant = DiscussionParticipant.builder()
-            .discussion(discussion)
-            .user(user)
-            .isHost(true) // TODO 전처리 진행하실때 user index 관련 로직으로 변경해주시면 감사하겠습니다.
-            .build();
+        Long index = discussionParticipantRepository.findMaxIndexByDiscussionId(discussion.getId())
+            .orElseThrow(() -> new ApiException(ErrorCode.DISCUSSION_NOT_FOUND));
+        index += 1;
+        DiscussionParticipant participant;
+        if (index == 0) {
+            participant = DiscussionParticipant.builder()
+                .discussion(discussion)
+                .user(user)
+                .isHost(true)
+                .index(index)
+                .build();
+        } else {
+            participant = DiscussionParticipant.builder()
+                .discussion(discussion)
+                .user(user)
+                .isHost(false)
+                .index(index)
+                .build();
+        }
         discussionParticipantRepository.save(participant);
     }
 
