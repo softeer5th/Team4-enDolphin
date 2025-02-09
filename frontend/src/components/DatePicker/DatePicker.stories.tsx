@@ -1,24 +1,39 @@
 import type { Meta, StoryObj } from '@storybook/react';
+import { useState } from 'react';
+
+import { useMonthNavigation } from '@/hooks/useDatePicker/useMonthNavigation';
 
 import DatePicker from '.';
 
-const meta: Meta = {
+const meta = {
   title: 'Calendar/DatePicker',
-  component: DatePicker,
+  component: DatePicker.Select,
   argTypes: {
-    calendarType: {
-      control: { type: 'radio' },
-      options: ['select', 'range'],
+    baseDate: {
+      table: {
+        type: { summary: 'function' },
+      },
     },
+    
   },
-} satisfies Meta<typeof DatePicker>;
+} satisfies Meta<typeof DatePicker.Select>;
 
 export default meta;
 
-type Story = StoryObj<typeof DatePicker>;
+// export default meta;
 
-export const Default: Story = {
-  args: {
-    calendarType: 'select',
-  },  
+// type Story = StoryObj<typeof DatePicker.Select>;
+
+export const Default = () => {
+  const { setBaseDate, ...monthNavigation } = useMonthNavigation();
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+
+  return (
+    <DatePicker.Select
+      handleBaseDateChange={(date) => setBaseDate(date)}
+      handleDateSelect={(date) => setSelectedDate(date)}
+      selectedDate={selectedDate}
+      {...monthNavigation}
+    />
+  );
 };

@@ -1,4 +1,4 @@
-import { DatePickerContext } from '@/components/DatePicker/DatePickerContext';
+import { DatePickerContext } from '@/components/DatePicker/Table/context/DatePickerContext';
 import { useSafeContext } from '@/hooks/useSafeContext';
 import { isSameDate } from '@/utils/date';
 

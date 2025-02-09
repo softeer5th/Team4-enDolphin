@@ -5,15 +5,11 @@ import { useSafeContext } from '@/hooks/useSafeContext';
 import { vars } from '@/theme/index.css';
 import { getDateParts } from '@/utils/date/calendar';
 
-import { DatePickerContext } from '../DatePickerContext';
+import { DatePickerContext } from '../Table/context/DatePickerContext';
 import { chevronWrapper, headerStyle } from './index.css';
 
 const Header = () => {
-  const { 
-    baseDate,
-    goToPrevMonth,
-    goToNextMonth, 
-  } = useSafeContext(DatePickerContext);
+  const { baseDate, gotoNextMonth, gotoPrevMonth } = useSafeContext(DatePickerContext);
   const { year: currentYear, month: currentMonth } = getDateParts(baseDate);
   return (
     <div className={headerStyle}>
@@ -24,8 +20,8 @@ const Header = () => {
             aria-label='이전 달로 이동'
             clickable={true}
             fill={vars.color.Ref.Netural[500]}
-            onClick={goToPrevMonth}
-            onKeyDown={(e) => e.key === 'Enter' && goToPrevMonth()}
+            onClick={gotoPrevMonth}
+            onKeyDown={(e) => e.key === 'Enter' && gotoPrevMonth()}
             role='button'
             tabIndex={0}
           />
@@ -35,8 +31,8 @@ const Header = () => {
             aria-label='다음 달로 이동'
             clickable={true}
             fill={vars.color.Ref.Netural[500]}
-            onClick={goToNextMonth}
-            onKeyDown={(e) => e.key === 'Enter' && goToNextMonth()}
+            onClick={gotoNextMonth}
+            onKeyDown={(e) => e.key === 'Enter' && gotoNextMonth()}
             role='button'
             tabIndex={0}
           />

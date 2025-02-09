@@ -1,10 +1,7 @@
-import { useEffect, useState } from 'react';
 
 import { getDateParts, getDaysInMonth } from '@/utils/date/calendar';
-import { generateMonthCalendar } from '@/utils/date/calendar/calendarGeneration';
 
 import type { HighlightRange } from './useHighlightRange';
-import { useHighlightRange } from './useHighlightRange';
 import { useMonthNavigation } from './useMonthNavigation';
 
 export interface UseMonthCalendarReturn {
@@ -19,24 +16,27 @@ export interface UseMonthCalendarReturn {
   setHighlightEnd: (date: Date | null) => void;
 }
 
-export const useDatePicker = (): UseMonthCalendarReturn => {
-  const { baseDate, goToPrevMonth, goToNextMonth } = useMonthNavigation();
+interface UseDatePickerProps {
+  baseDate: Date;
+  selectedDate?: Date | null;
+  highlightRange: HighlightRange;
+  handleBaseDateChange: (date: Date | null) => void;
+  handleSelectedDateChange: (date: Date | null) => void;
+  handleHighlightRangeChange: (range: HighlightRange) => void;
+}
+
+export const useDatePicker = ({
+  baseDate,
+  selectedDate,
+  handleSelectedDateChange,
+}: UseDatePickerProps) => {
+  const { gotoPrevMonth, gotoNextMonth } = useMonthNavigation();
   // TODO: calendarDates 외부로 분리
-  const [calendarDates, setCalendarDates] = useState<Date[][]>(
-    generateMonthCalendar(baseDate),
-  );
-  const { highlightRange, setHighlightStart, setHighlightEnd } = useHighlightRange();
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  
-  // TODO: calendarDates 외부로 분리
-  useEffect(() => {
-    setCalendarDates(generateMonthCalendar(baseDate));
-  }, [baseDate, selectedDate, highlightRange]);
 
   const handleDateSelect = (date: Date | null) => {
     if (!date) {
-      setSelectedDate(null);
-      return; 
+      handleSelectedDateChange(null);
+      return;
     }
     const { year, month } = getDateParts(baseDate);
     const daysInMonth = getDaysInMonth(baseDate);
@@ -45,16 +45,16 @@ export const useDatePicker = (): UseMonthCalendarReturn => {
     const endOfCurrentMonth = new Date(year, month, daysInMonth);
 
     if (date < startOfCurrentMonth) {
-      goToPrevMonth();
+      gotoPrevMonth();
     } else if (date > endOfCurrentMonth) {
-      goToNextMonth();
+      gotoNextMonth();
     }
-    setSelectedDate(date);
+    handleSelectedDateChange(date);
   };
 
   return {
-    baseDate, calendarDates, selectedDate, highlightRange, 
-    goToPrevMonth, goToNextMonth, handleDateSelect, setHighlightStart, setHighlightEnd,
+    baseDate, selectedDate,
+    gotoPrevMonth, gotoNextMonth, handleDateSelect,
   };
 };
 
