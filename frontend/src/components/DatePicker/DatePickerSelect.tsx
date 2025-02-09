@@ -1,4 +1,3 @@
-import type { ReactNode } from '@tanstack/react-router';
 import { useState } from 'react';
 
 import { useDatePickerSelect } from '@/hooks/useDatePicker/useDatePickerSelect';
@@ -10,7 +9,6 @@ import Header from './Header';
 import Table from './Table';
 
 export interface DatePickerSelectProps extends CommonDatePickerProps {
-  trigger?: ReactNode;
   selectedDate: Date | null;
   handleDateSelect: (date: Date | null) => void;
 }

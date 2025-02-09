@@ -1,4 +1,3 @@
-import type { ReactNode } from '@tanstack/react-router';
 import { useCallback, useState } from 'react';
 
 import { useDatePickerRange } from '@/hooks/useDatePicker/useDatePickerRange';
@@ -11,7 +10,6 @@ import Header from './Header';
 import Table from './Table';
 
 export interface DatePickerRange extends CommonDatePickerProps {
-  trigger?: ReactNode;
   highlightRange: HighlightRange;
   setHighlightStart: (date: Date | null) => void;
   setHighlightEnd: (date: Date | null) => void;
