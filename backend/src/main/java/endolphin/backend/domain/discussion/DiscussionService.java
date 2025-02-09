@@ -102,6 +102,12 @@ public class DiscussionService {
         );
     }
 
+    @Transactional(readOnly = true)
+    public Long getDiscussionParticipantIndex(Long discussionId, Long userId) {
+        return discussionParticipantRepository.findIndexByDiscussionIdAndUserId(discussionId, userId)
+            .orElseThrow(() -> new ApiException(ErrorCode.DISCUSSION_PARTICIPANT_NOT_FOUND));
+    }
+
     private long calculateTimeLeft(LocalDate deadline) {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime deadlineDateTime = deadline.atTime(23, 59, 59);
