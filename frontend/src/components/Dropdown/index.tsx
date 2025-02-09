@@ -3,7 +3,7 @@ import { useId, useState } from 'react';
 
 import { DropdownContext } from './DropdownContext';
 import { DropdownItem } from './DropdownItem';
-import { dropdownContainerStyle, dropdownContentStyle } from './index.css';
+import { dropdownContainerStyle, dropdownContentStyle, dropdownTriggerStyle } from './index.css';
 
 interface DropdownProps extends PropsWithChildren {
   trigger: ReactNode;
@@ -38,7 +38,7 @@ export const Dropdown = ({
         id={defaultId}
         style={{ width }}
       >
-        <div onClick={() => setIsOpen((prev) => !prev)}>
+        <div className={dropdownTriggerStyle} onClick={() => setIsOpen((prev) => !prev)}>
           {trigger}
         </div>
         {
