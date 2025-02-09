@@ -18,6 +18,9 @@ public enum ErrorCode {
     //SharedEvent
     SHARED_EVENT_NOT_FOUND(HttpStatus.NOT_FOUND, "S001", "Shared Event not found"),
 
+    // DiscussionParticipant
+    DISCUSSION_PARTICIPANT_NOT_FOUND(HttpStatus.NOT_FOUND, "S002", "Discussion participant not found"),
+
     // OAuth
     OAUTH_UNAUTHORIZED_ERROR(HttpStatus.UNAUTHORIZED, "O001", "OAuth Unauthorized Error"),
     OAUTH_BAD_REQUEST_ERROR(HttpStatus.BAD_REQUEST, "O002", "OAuth Bad Request Error"),
