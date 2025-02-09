@@ -1,6 +1,7 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta } from '@storybook/react';
 import { useState } from 'react';
 
+import { useHighlightRange } from '@/hooks/useDatePicker/useHighlightRange';
 import { useMonthNavigation } from '@/hooks/useDatePicker/useMonthNavigation';
 
 import DatePicker from '.';
@@ -8,14 +9,6 @@ import DatePicker from '.';
 const meta = {
   title: 'Calendar/DatePicker',
   component: DatePicker.Select,
-  argTypes: {
-    baseDate: {
-      table: {
-        type: { summary: 'function' },
-      },
-    },
-    
-  },
 } satisfies Meta<typeof DatePicker.Select>;
 
 export default meta;
@@ -34,6 +27,19 @@ export const Default = () => {
       handleDateSelect={(date) => setSelectedDate(date)}
       selectedDate={selectedDate}
       {...monthNavigation}
+    />
+  );
+};
+
+export const Range = () => {
+  const { setBaseDate, ...monthNavigation } = useMonthNavigation();
+  const highlightProps = useHighlightRange();
+
+  return (
+    <DatePicker.Range
+      handleBaseDateChange={(date) => setBaseDate(date)}
+      {...monthNavigation}
+      {...highlightProps}
     />
   );
 };

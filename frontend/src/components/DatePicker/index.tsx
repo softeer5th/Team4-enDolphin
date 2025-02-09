@@ -1,14 +1,10 @@
 
 import type { ReactNode } from '@tanstack/react-router';
 
+import DatePickerRange from './DatePickerRange';
 import DatePickerSelect from './DatePickerSelect';
 
-export interface CellStyleProps {
-  backgroundColor?: string;
-  color?: string;
-}
-
-export type CalendarType = 'select' | 'range';
+export type DatePickerType = 'select' | 'range';
 
 export interface CommonDatePickerProps {
   baseDate: Date;
@@ -18,11 +14,11 @@ export interface CommonDatePickerProps {
   trigger?: ReactNode;
 }
 
-// TODO: container style 외부에서 주입할 수 있도록 구현
 const DatePicker = () => {
   throw new Error('!!! DatePicker.Select, DatePicker.Range를 사용해주세요 !!!');
 };
 
 DatePicker.Select = DatePickerSelect;
+DatePicker.Range = DatePickerRange;
 
 export default DatePicker;

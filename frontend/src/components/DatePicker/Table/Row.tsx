@@ -2,8 +2,8 @@ import type { HighlightRange } from '@/hooks/useDatePicker/useHighlightRange';
 import { useSafeContext } from '@/hooks/useSafeContext';
 import { isSameDate } from '@/utils/date';
 
+import { DatePickerContext } from '../context/DatePickerContext';
 import { DateCell } from './Cell';
-import { DatePickerContext } from './context/DatePickerContext';
 import type { HighlightState } from './Highlight';
 import HighlightBox from './Highlight/HighlightBox';
 import HighlightGap from './Highlight/HighlightGap';
@@ -15,7 +15,7 @@ interface RowProps {
 }
 
 const Row = ({ weekDates: week, baseDate }: RowProps) => {
-  const { highlightRange, selectedDate } = useSafeContext(DatePickerContext);
+  const { highlightRange, isDateSelected } = useSafeContext(DatePickerContext);
 
   return (
     <RowContainer>
@@ -27,7 +27,7 @@ const Row = ({ weekDates: week, baseDate }: RowProps) => {
               baseDate={baseDate}
               date={day}
               highlightState={highlightState}
-              selected={selectedDate ? isSameDate(day, selectedDate) : false}
+              selected={isDateSelected(day)}
             />
           </HighlightBox>
         );

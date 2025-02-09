@@ -5,7 +5,7 @@ import { useSafeContext } from '@/hooks/useSafeContext';
 import { vars } from '@/theme/index.css';
 import { getDateParts } from '@/utils/date/calendar';
 
-import { DatePickerContext } from '../Table/context/DatePickerContext';
+import { DatePickerContext } from '../context/DatePickerContext';
 import { chevronWrapper, headerStyle } from './index.css';
 
 const Header = () => {

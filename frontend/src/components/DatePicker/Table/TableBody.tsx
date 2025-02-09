@@ -1,7 +1,7 @@
 
 import { useSafeContext } from '@/hooks/useSafeContext';
 
-import { DatePickerContext } from './context/DatePickerContext';
+import { DatePickerContext } from '../context/DatePickerContext';
 import Row from './Row';
 
 const TableBody = () => {

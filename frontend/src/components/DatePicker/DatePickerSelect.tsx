@@ -2,11 +2,12 @@ import type { ReactNode } from '@tanstack/react-router';
 import { useState } from 'react';
 
 import { useDatePickerSelect } from '@/hooks/useDatePicker/useDatePickerSelect';
+import { isSameDate } from '@/utils/date';
 
 import type { CommonDatePickerProps } from '.';
+import { DatePickerContext } from './context/DatePickerContext';
 import Header from './Header';
 import Table from './Table';
-import { DatePickerContext } from './Table/context/DatePickerContext';
 
 export interface DatePickerSelectProps extends CommonDatePickerProps {
   trigger?: ReactNode;
@@ -14,19 +15,22 @@ export interface DatePickerSelectProps extends CommonDatePickerProps {
   handleDateSelect: (date: Date | null) => void;
 }
 
-const DatePickerSelect = (props: DatePickerSelectProps) => {
+const DatePickerSelect = ({ selectedDate, ...props }: DatePickerSelectProps) => {
   const [isOpen, setIsOpen] = useState(!props.trigger);
   
-  // 커스텀 훅을 통해 상태와 날짜 선택 로직 분리
-  const { calendarDates, highlightRange, onDateCellSelect } = useDatePickerSelect(props);
+  const { calendarDates, highlightRange, onDateCellClick } = useDatePickerSelect(props);
+
+  const isDateSelected = (date: Date) => selectedDate ? isSameDate(date, selectedDate) : false;
 
   return (
     <DatePickerContext.Provider 
       value={{
         calendarType: 'select',
+        selectedDate,
         calendarDates,
-        onDateCellSelect,
+        onDateCellClick,
         highlightRange,
+        isDateSelected,
         ...props,
       }}
     >
@@ -40,6 +44,7 @@ const DatePickerSelect = (props: DatePickerSelectProps) => {
         </div>
       )}
     </DatePickerContext.Provider>
+    
   );
 };
 

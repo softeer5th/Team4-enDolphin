@@ -2,14 +2,15 @@ import { createContext } from 'react';
 
 import type { HighlightRange } from '@/hooks/useDatePicker/useHighlightRange';
 
-import type { CalendarType, CommonDatePickerProps } from '../..';
+import type { CommonDatePickerProps, DatePickerType } from '..';
 
-interface DatePickerContextProps extends CommonDatePickerProps {
-  calendarType: CalendarType;
+export interface DatePickerContextProps extends CommonDatePickerProps {
+  calendarType: DatePickerType;
   calendarDates: Date[][];
   selectedDate: Date | null;
   highlightRange: HighlightRange;
-  onDateCellSelect: (date: Date | null) => void;
+  onDateCellClick: (date: Date) => void;
+  isDateSelected: (date: Date) => boolean;
 }
 
 export const DatePickerContext = createContext<DatePickerContextProps | null>(null);
