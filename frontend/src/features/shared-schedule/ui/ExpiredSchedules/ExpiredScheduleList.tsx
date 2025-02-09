@@ -4,8 +4,8 @@ import type { PropsWithChildren } from 'react';
 import { Flex } from '@/components/Flex';
 import Pagination from '@/components/Pagination';
 
-import ScheduleListItem from '../UnconfirmedSchedules/ScheduleListItem';
-import { paginationStyle } from './ScheduleList.css';
+import { paginationStyle } from './expiredScheduleList.css';
+import ExpiredScheduleListItem from './ExpiredScheduleListItem';
 
 interface ScheduleListProps extends PropsWithChildren {
   schedules: object[];
@@ -24,11 +24,12 @@ const ScheduleList = ({ schedules }: ScheduleListProps) => (
       width='full'
     >
       {schedules.map((schedule, index) => (
-        <ScheduleListItem
+        <ExpiredScheduleListItem
+          endDate={new Date()}
           key={index}
           participantImageUrls={['https://picsum.photos/200']}
           scheduleTitle='제목'
-          selected={false}
+          startDate={new Date()}
         />))}
     </Flex>
     <Pagination
@@ -40,6 +41,6 @@ const ScheduleList = ({ schedules }: ScheduleListProps) => (
   </Flex>
 );
 
-ScheduleList.Item = ScheduleListItem;
+ScheduleList.Item = ExpiredScheduleListItem;
 
 export default ScheduleList;

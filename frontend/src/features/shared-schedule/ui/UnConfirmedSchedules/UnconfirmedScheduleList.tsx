@@ -4,14 +4,14 @@ import type { PropsWithChildren } from 'react';
 import { Flex } from '@/components/Flex';
 import Pagination from '@/components/Pagination';
 
-import { paginationStyle } from './ScheduleList.css';
-import ScheduleListItem from './ScheduleListItem';
+import { paginationStyle } from './unconfirmedScheduleList.css';
+import UnconfimredScheduleListItem from './UnconfirmedScheduleListItem';
 
-interface ScheduleListProps extends PropsWithChildren {
+interface UnconfirmedScheduleListProps extends PropsWithChildren {
   schedules: object[];
 }
 
-const ScheduleList = ({ schedules }: ScheduleListProps) => (
+const UnconfirmedScheduleList = ({ schedules }: UnconfirmedScheduleListProps) => (
   <Flex
     direction='column'
     gap={600}
@@ -24,12 +24,11 @@ const ScheduleList = ({ schedules }: ScheduleListProps) => (
       width='full'
     >
       {schedules.map((schedule, index) => (
-        <ScheduleListItem
-          endDate={new Date()}
+        <UnconfimredScheduleListItem
           key={index}
           participantImageUrls={['https://picsum.photos/200']}
           scheduleTitle='제목'
-          startDate={new Date()}
+          selected={false}
         />))}
     </Flex>
     <Pagination
@@ -41,6 +40,6 @@ const ScheduleList = ({ schedules }: ScheduleListProps) => (
   </Flex>
 );
 
-ScheduleList.Item = ScheduleListItem;
+UnconfirmedScheduleList.Item = UnconfimredScheduleListItem;
 
-export default ScheduleList;
+export default UnconfirmedScheduleList;

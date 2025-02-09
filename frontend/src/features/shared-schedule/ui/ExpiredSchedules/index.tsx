@@ -3,7 +3,7 @@ import { ChevronLeft, ChevronRight } from '@/components/Icon';
 import { Text } from '@/components/Text';
 import { vars } from '@/theme/index.css';
 
-import ScheduleList from '../UnConfirmedSchedules/ScheduleList';
+import UnconfirmedScheduleList from '../UnConfirmedSchedules/UnconfirmedScheduleList';
 
 const ExpiredSchedules = () => {
   const schedules = [{}, {}, {}];
@@ -22,7 +22,7 @@ const ExpiredSchedules = () => {
           <ChevronRight clickable={true} fill={vars.color.Ref.Netural[700]} />
         </Flex>
       </Flex>
-      <ScheduleList schedules={schedules} />
+      <UnconfirmedScheduleList schedules={schedules} />
     </Flex>
   );
 };

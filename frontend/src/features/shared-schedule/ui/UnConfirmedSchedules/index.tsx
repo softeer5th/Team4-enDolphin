@@ -7,7 +7,7 @@ import { Text } from '@/components/Text';
 
 import { containerStyle, mainContainerStyle, titleStyle } from './index.css';
 import ScheduleContents from './ScheduleDetails';
-import ScheduleList from './ScheduleList';
+import UnconfirmedScheduleList from './UnconfirmedScheduleList';
 
 const segmentOptions = [
   { label: '모든 일정', value: 'all' },
@@ -29,7 +29,7 @@ const UnConfirmedSchedules = () => {
       <Text className={titleStyle} typo='h2'>확정되지 않은 일정</Text>
       <SegmentControl onChange={(value) => setSelectedSegment(value)} options={segmentOptions} />
       <div className={mainContainerStyle}>
-        <ScheduleList schedules={schedules} />
+        <UnconfirmedScheduleList schedules={schedules} />
         <ScheduleContents schedule={currentSchedule} />
       </div >
     </Flex>

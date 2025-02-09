@@ -5,12 +5,11 @@ import { vars } from '@/theme/index.css';
 
 import {
   detailsContainerStyle, 
-  dotStyle, 
   scheduleItemContainerStyle,
   updateIndicatorStyle, 
-} from './scheduleListItem.css';
+} from './unconfirmedScheduleListItem.css';
 
-interface ScheduleListItemProps {
+interface UnconfirmedScheduleListItemProps {
   scheduleTitle: string;
   participantImageUrls: string[];
   selected: boolean;
@@ -19,13 +18,13 @@ interface ScheduleListItemProps {
   onClick?: () => void;
 }
 
-const ScheduleListItem = ({ 
+const UnconfimredScheduleListItem = ({ 
   scheduleTitle,
   participantImageUrls,
   selected,
   isUpdated = false,
   onClick,
-}: ScheduleListItemProps) => (
+}: UnconfirmedScheduleListItemProps) => (
   <Flex
     className={scheduleItemContainerStyle({ selected })}
     direction='column'
@@ -55,4 +54,4 @@ const ScheduleListItem = ({
   </Flex>
 );
 
-export default ScheduleListItem;
+export default UnconfimredScheduleListItem;
