@@ -63,7 +63,7 @@ const accessibilityProps = (
   onClick?: MouseEventHandler,
 ) => {
   const isIntrinsicButton = typeof Component === 'string' && Component === 'button';
-  if (isIntrinsicButton) return { disabled };
+  if (isIntrinsicButton) return { disabled, 'aria-disabled': disabled,  onClick };
   if (!onClick) return {};
 
   const guardedOnClick: MouseEventHandler = disabled
