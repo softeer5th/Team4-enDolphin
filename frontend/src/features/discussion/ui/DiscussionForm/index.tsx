@@ -1,6 +1,8 @@
+import Button from '@/components/Button';
 import { Flex } from '@/components/Flex';
 import { useFormControl } from '@/hooks/useFormControl';
 
+import { buttonStyle } from './index.css';
 import MeetingDurationDropdown from './MeedtingDurationDropdown';
 import MeetingMethodDropdown from './MeetingMethodDropdown';
 import MeetingTimeDropdowns from './MeetingTimeDropdowns';
@@ -32,6 +34,7 @@ const DiscussionForm = () => {
       />
       <MeetingDurationDropdown handleChange={handleChange} value={values.meetingTime} />
       <MeetingMethodDropdown handleChange={handleChange} value={values.meetingMethod} />
+      <Button className={buttonStyle} size='xl'>생성하기</Button>
     </Flex>
   );
 };
