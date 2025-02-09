@@ -8,7 +8,7 @@ import { containerStyle, inputFieldsContainerStyle, interactableBorderStyle } fr
 import { InputContext } from './InputContext';
 
 export interface SingleInputProps extends CommonInputProps {
-  inputProps?: Omit<InputHTMLAttributes<HTMLInputElement>, 'placeholder' | 'onClick'>;
+  inputProps?: Omit<InputHTMLAttributes<HTMLInputElement>, 'placeholder' | 'onClick' | 'readOnly'>;
 }
 
 export const SingleInput = ({ 

@@ -1,22 +1,23 @@
 import Input from '@/components/Input';
 
-interface MeetingTitleProps {
-  value: string;
-  handleChange: ({ name, value }: { name: string; value: string }) => void;
-}
+import { useFormContext } from './FormContext';
+import type { FormBaseValue } from './type';
 
-const MeetingTitle = ({ value, handleChange }: MeetingTitleProps) => (
-  <Input.Single
-    inputProps={{
-      name: 'title',
-      value,
-      onChange: (e) => handleChange(e.target),
-    }}
-    label='제목'
-    placeholder='일정 제목은 필수에요'
-    required
-    type='text'
-  />
-);
+const MeetingTitle = ({ name }: FormBaseValue) => {
+  const { handleChange } = useFormContext();
+  return (
+    <Input.Single
+      error='필수 항목입니다.'
+      inputProps={{
+        name,
+        onChange: handleChange,
+      }}
+      label='제목'
+      placeholder='일정 제목은 필수에요'
+      required
+      type='text'
+    />
+  );
+};
 
 export default MeetingTitle;
