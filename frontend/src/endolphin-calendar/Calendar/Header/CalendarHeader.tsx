@@ -1,6 +1,6 @@
 import { isSameDate } from '@/utils/date';
 
-import { useCalendarContext } from '../context/CalendarContext';
+import { useCalendarContext } from '../context/CalendarTableContext';
 import { CalendarCell } from '../Table/CalendarCell';
 import { SideCell } from '../Table/SideCell';
 import { containerStyle } from './index.css';

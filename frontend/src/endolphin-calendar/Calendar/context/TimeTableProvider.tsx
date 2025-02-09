@@ -1,7 +1,6 @@
 import type { PropsWithChildren } from 'react';
 
-import { useSelectTime } from '@/hooks/useSelectTime';
-
+import { useSelectTime } from '../../hooks/useSelectTime';
 import { TimeTableContext } from './TimeTableContext';
 
 export const TimeTableProvider = ({ children }: PropsWithChildren) => {

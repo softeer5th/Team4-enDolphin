@@ -1,13 +1,13 @@
+import { useCalendarContext } from '@/endolphin-calendar/context/CalendarContext';
 import { isSameDate } from '@/utils/date';
 
 import { WEEK } from '../../../constants/date';
-import { useCalendarContext } from '../context/CalendarContext';
 import { sideCellStyle } from '../Table/index.css';
 import { weekStyle } from './index.css';
 import { WeekCell } from './WeekCell';
 
 export const SelectedWeek = () => {
-  const { selected, dates } = useCalendarContext();
+  const { selectedDate, selectedWeek } = useCalendarContext();
   const today = new Date();
 
   return (
@@ -18,11 +18,11 @@ export const SelectedWeek = () => {
       />
       {WEEK.map((day, i) => 
         <WeekCell
-          date={dates[i]}
+          date={selectedWeek[i]}
           day={day}
-          isToday={isSameDate(dates[i], today)}
+          isToday={isSameDate(selectedWeek[i], today)}
           key={day}
-          selected={isSameDate(dates[i], selected)}
+          selected={isSameDate(selectedWeek[i], selectedDate)}
         />)}
     </div>
   );

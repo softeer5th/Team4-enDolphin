@@ -1,4 +1,4 @@
-import { CalendarProvider } from './context/CalendarProvider';
+import { CalendarTableProvider } from './context/CalendarTableProvider';
 import { TimeTableProvider } from './context/TimeTableProvider';
 import { Core } from './Core';
 import { CalendarHeader } from './Header/CalendarHeader';
@@ -6,7 +6,7 @@ import { wrapperStyle } from './index.css';
 import { CalendarTable } from './Table';
 
 export const Calendar = () => (
-  <CalendarProvider>
+  <CalendarTableProvider>
     <Core />
     <TimeTableProvider>
       <div className={wrapperStyle}>
@@ -14,5 +14,5 @@ export const Calendar = () => (
         <CalendarTable />
       </div>
     </TimeTableProvider>
-  </CalendarProvider>
+  </CalendarTableProvider>
 );

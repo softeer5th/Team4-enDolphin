@@ -2,7 +2,7 @@
 import { useClickOutside } from '@/hooks/useClickOutside';
 import { isSameDate } from '@/utils/date';
 
-import { useCalendarContext } from '../context/CalendarContext';
+import { useCalendarContext } from '../context/CalendarTableContext';
 import { useTimeTableContext } from '../context/TimeTableContext';
 import { CalendarDay } from './CalendarDay';
 import { CalendarSide } from './CalendarSide';

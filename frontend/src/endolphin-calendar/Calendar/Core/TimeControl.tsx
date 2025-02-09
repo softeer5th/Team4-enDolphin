@@ -1,14 +1,14 @@
 import { Flex } from '@/components/Flex';
+import { Text } from '@/components/Text';
+import { useCalendarContext } from '@/endolphin-calendar/context/CalendarContext';
 import { formatDateToWeek } from '@/utils/date';
 
-import { Text } from '../../Text';
-import { useCalendarContext } from '../context/CalendarContext';
 import { timeControlButtonStyle } from './index.css';
 import { TimeControlButton } from './TimeControlButton';
 
 export const TimeControl = () => {
-  const { selected } = useCalendarContext();
-  const { year, month, week } = formatDateToWeek(selected);
+  const { selectedDate } = useCalendarContext();
+  const { year, month, week } = formatDateToWeek(selectedDate);
   const weekString = `${year}년 ${month}월 ${week}`;
 
   return  (

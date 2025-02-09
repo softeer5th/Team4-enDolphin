@@ -48,7 +48,7 @@ const calendarReducer = (state: State, action: Action) => {
   }
 };
 
-export const useCalendar = (): CalendarInfo => {
+export const useCalendarTable = (): CalendarInfo => {
   const [selected, dispatch] 
     = useReducer(calendarReducer, { 
       date: new Date(), 
