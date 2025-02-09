@@ -27,9 +27,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class AuthServiceTest {
 
     @Mock
-    private GoogleOAuthProperties googleOAuthProperties;
-
-    @Mock
     private UserService userService;
 
     @Mock
@@ -40,25 +37,6 @@ class AuthServiceTest {
 
     @InjectMocks
     private AuthService authService;
-
-    private final String testAuthUrl = "https://accounts.google.com/o/oauth2/auth";
-    private final String testClientId = "test-client-id";
-    private final String testRedirectUri = "http://localhost:8080/test/callback";
-    private final String testScope = "email profile";
-
-    @Test
-    @DisplayName("구글 로그인 url 반환 테스트")
-    void getGoogleLoginUrl_ShouldReturnCorrectUrl() {
-        given(googleOAuthProperties.clientId()).willReturn(testClientId);
-        given(googleOAuthProperties.redirectUri()).willReturn(testRedirectUri);
-        given(googleOAuthProperties.authUrl()).willReturn(testAuthUrl);
-        given(googleOAuthProperties.scope()).willReturn(testScope);
-        UrlResponse urlResponse = authService.getGoogleLoginUrl();
-        assertThat(urlResponse.url()).isEqualTo(
-            testAuthUrl + "?client_id=" + testClientId + "&redirect_uri=" + testRedirectUri
-                + "&response_type=code&scope=" + testScope + "&access_type=offline&prompt=consent"
-        );
-    }
 
     @Test
     @DisplayName("로그인 콜백 테스트")

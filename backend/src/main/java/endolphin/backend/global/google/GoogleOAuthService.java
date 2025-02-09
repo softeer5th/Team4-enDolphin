@@ -1,7 +1,6 @@
 package endolphin.backend.global.google;
 
-import endolphin.backend.domain.user.UserService;
-import endolphin.backend.domain.user.entity.User;
+import endolphin.backend.domain.auth.dto.UrlResponse;
 import endolphin.backend.global.google.dto.GoogleTokens;
 import endolphin.backend.global.google.dto.GoogleUserInfo;
 import endolphin.backend.global.config.GoogleOAuthProperties;
@@ -23,9 +22,15 @@ import org.springframework.web.client.RestClient.RequestHeadersSpec.ConvertibleC
 @Slf4j
 public class GoogleOAuthService {
 
-    private final UserService userService;
     private final GoogleOAuthProperties googleOAuthProperties;
     private final RestClient restClient;
+
+    public UrlResponse getGoogleLoginUrl() {
+        return new UrlResponse(String.format(
+            "%s?client_id=%s&redirect_uri=%s&response_type=code&scope=%s&access_type=offline&prompt=consent",
+            googleOAuthProperties.authUrl(), googleOAuthProperties.clientId(),
+            googleOAuthProperties.redirectUri(), googleOAuthProperties.scope()));
+    }
 
     public GoogleTokens getGoogleTokens(String code) {
         MultiValueMap<String, String> params = getStringStringMultiValueMap();

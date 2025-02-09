@@ -6,9 +6,7 @@ import endolphin.backend.global.error.exception.OAuthException;
 import endolphin.backend.global.google.dto.GoogleTokens;
 import endolphin.backend.global.google.dto.GoogleUserInfo;
 import endolphin.backend.domain.auth.dto.OAuthResponse;
-import endolphin.backend.domain.auth.dto.UrlResponse;
 import endolphin.backend.domain.user.entity.User;
-import endolphin.backend.global.config.GoogleOAuthProperties;
 import endolphin.backend.global.google.GoogleOAuthService;
 import endolphin.backend.global.security.JwtProvider;
 import lombok.RequiredArgsConstructor;
@@ -19,17 +17,9 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class AuthService {
 
-    private final GoogleOAuthProperties googleOAuthProperties;
     private final GoogleOAuthService googleOAuthService;
     private final UserService userService;
     private final JwtProvider jwtProvider;
-
-    public UrlResponse getGoogleLoginUrl() {
-        return new UrlResponse(String.format(
-            "%s?client_id=%s&redirect_uri=%s&response_type=code&scope=%s&access_type=offline&prompt=consent",
-            googleOAuthProperties.authUrl(), googleOAuthProperties.clientId(),
-            googleOAuthProperties.redirectUri(), googleOAuthProperties.scope()));
-    }
 
     @Transactional
     public OAuthResponse oauth2Callback(String code) {
