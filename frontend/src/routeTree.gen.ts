@@ -25,6 +25,9 @@ import { Route as DiscussionCreateIdImport } from './routes/discussion/create/$i
 
 const LoginIndexLazyImport = createFileRoute('/login/')()
 const OauthRedirectIndexLazyImport = createFileRoute('/oauth/redirect/')()
+const MainUpcomingScheduleIndexLazyImport = createFileRoute(
+  '/_main/upcoming-schedule/',
+)()
 const MainMyScheduleIndexLazyImport = createFileRoute('/_main/my-schedule/')()
 const MainHomeIndexLazyImport = createFileRoute('/_main/home/')()
 
@@ -60,6 +63,15 @@ const OauthRedirectIndexLazyRoute = OauthRedirectIndexLazyImport.update({
 } as any).lazy(() =>
   import('./routes/oauth.redirect/index.lazy').then((d) => d.Route),
 )
+
+const MainUpcomingScheduleIndexLazyRoute =
+  MainUpcomingScheduleIndexLazyImport.update({
+    id: '/upcoming-schedule/',
+    path: '/upcoming-schedule/',
+    getParentRoute: () => MainRoute,
+  } as any).lazy(() =>
+    import('./routes/_main/upcoming-schedule/index.lazy').then((d) => d.Route),
+  )
 
 const MainMyScheduleIndexLazyRoute = MainMyScheduleIndexLazyImport.update({
   id: '/my-schedule/',
@@ -175,6 +187,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MainMyScheduleIndexLazyImport
       parentRoute: typeof MainImport
     }
+    '/_main/upcoming-schedule/': {
+      id: '/_main/upcoming-schedule/'
+      path: '/upcoming-schedule'
+      fullPath: '/upcoming-schedule'
+      preLoaderRoute: typeof MainUpcomingScheduleIndexLazyImport
+      parentRoute: typeof MainImport
+    }
     '/oauth/redirect/': {
       id: '/oauth/redirect/'
       path: '/oauth/redirect'
@@ -190,11 +209,13 @@ declare module '@tanstack/react-router' {
 interface MainRouteChildren {
   MainHomeIndexLazyRoute: typeof MainHomeIndexLazyRoute
   MainMyScheduleIndexLazyRoute: typeof MainMyScheduleIndexLazyRoute
+  MainUpcomingScheduleIndexLazyRoute: typeof MainUpcomingScheduleIndexLazyRoute
 }
 
 const MainRouteChildren: MainRouteChildren = {
   MainHomeIndexLazyRoute: MainHomeIndexLazyRoute,
   MainMyScheduleIndexLazyRoute: MainMyScheduleIndexLazyRoute,
+  MainUpcomingScheduleIndexLazyRoute: MainUpcomingScheduleIndexLazyRoute,
 }
 
 const MainRouteWithChildren = MainRoute._addFileChildren(MainRouteChildren)
@@ -210,6 +231,7 @@ export interface FileRoutesByFullPath {
   '/discussion/create': typeof DiscussionCreateIndexRoute
   '/home': typeof MainHomeIndexLazyRoute
   '/my-schedule': typeof MainMyScheduleIndexLazyRoute
+  '/upcoming-schedule': typeof MainUpcomingScheduleIndexLazyRoute
   '/oauth/redirect': typeof OauthRedirectIndexLazyRoute
 }
 
@@ -224,6 +246,7 @@ export interface FileRoutesByTo {
   '/discussion/create': typeof DiscussionCreateIndexRoute
   '/home': typeof MainHomeIndexLazyRoute
   '/my-schedule': typeof MainMyScheduleIndexLazyRoute
+  '/upcoming-schedule': typeof MainUpcomingScheduleIndexLazyRoute
   '/oauth/redirect': typeof OauthRedirectIndexLazyRoute
 }
 
@@ -239,6 +262,7 @@ export interface FileRoutesById {
   '/discussion/create/': typeof DiscussionCreateIndexRoute
   '/_main/home/': typeof MainHomeIndexLazyRoute
   '/_main/my-schedule/': typeof MainMyScheduleIndexLazyRoute
+  '/_main/upcoming-schedule/': typeof MainUpcomingScheduleIndexLazyRoute
   '/oauth/redirect/': typeof OauthRedirectIndexLazyRoute
 }
 
@@ -255,6 +279,7 @@ export interface FileRouteTypes {
     | '/discussion/create'
     | '/home'
     | '/my-schedule'
+    | '/upcoming-schedule'
     | '/oauth/redirect'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -268,6 +293,7 @@ export interface FileRouteTypes {
     | '/discussion/create'
     | '/home'
     | '/my-schedule'
+    | '/upcoming-schedule'
     | '/oauth/redirect'
   id:
     | '__root__'
@@ -281,6 +307,7 @@ export interface FileRouteTypes {
     | '/discussion/create/'
     | '/_main/home/'
     | '/_main/my-schedule/'
+    | '/_main/upcoming-schedule/'
     | '/oauth/redirect/'
   fileRoutesById: FileRoutesById
 }
@@ -337,7 +364,8 @@ export const routeTree = rootRoute
       "filePath": "_main.tsx",
       "children": [
         "/_main/home/",
-        "/_main/my-schedule/"
+        "/_main/my-schedule/",
+        "/_main/upcoming-schedule/"
       ]
     },
     "/landing/": {
@@ -364,6 +392,10 @@ export const routeTree = rootRoute
     },
     "/_main/my-schedule/": {
       "filePath": "_main/my-schedule/index.lazy.tsx",
+      "parent": "/_main"
+    },
+    "/_main/upcoming-schedule/": {
+      "filePath": "_main/upcoming-schedule/index.lazy.tsx",
       "parent": "/_main"
     },
     "/oauth/redirect/": {

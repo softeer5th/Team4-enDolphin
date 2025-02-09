@@ -1,19 +1,12 @@
-import { useNavigate } from '@tanstack/react-router';
-
-import Button from '@/components/Button';
 import { Flex } from '@/components/Flex';
 import { Text } from '@/components/Text';
+import CarouselControlButton from '@/features/shared-schedule/ui/UpcomingSchedules/ControlButton';
+import UpcomingCarousel from '@/features/shared-schedule/ui/UpcomingSchedules/UpcomingCarousel';
 
-import CarouselControlButton from './ControlButton';
 import { containerStyle } from './index.css';
-import UpcomingCarousel from './UpcomingCarousel';
 
-interface UpcomingSchedulesProps {
-  schedules: object[];
-}
-
-const UpcomingSchedules = ({ schedules }: UpcomingSchedulesProps) => {
-  const navigate = useNavigate();
+const UpcomingSchedulePage = () => {
+  const schedules = [{}, {}, {}, {}, {}];
   return (
     <Flex
       className={containerStyle}
@@ -29,12 +22,6 @@ const UpcomingSchedules = ({ schedules }: UpcomingSchedulesProps) => {
         <UpcomingCarousel schedules={schedules} />
         <Flex justify='space-between' width='full'>
           <Text typo='h2'>다가오는 일정</Text>
-          <Button 
-            onClick={() => navigate({ to: '/upcoming-schedule' })} 
-            style='borderless'
-          >
-            모두보기
-          </Button>
         </Flex>
         <Flex
           align='center'
@@ -48,6 +35,7 @@ const UpcomingSchedules = ({ schedules }: UpcomingSchedulesProps) => {
       </Flex>
     </Flex>
   );
+
 };
 
-export default UpcomingSchedules;
+export default UpcomingSchedulePage;
