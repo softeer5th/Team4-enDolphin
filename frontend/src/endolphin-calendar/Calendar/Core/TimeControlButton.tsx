@@ -2,11 +2,11 @@ import Button from '@/components/Button';
 import { ChevronLeft, ChevronRight } from '@/components/Icon';
 import { vars } from '@/theme/index.css';
 
-import { useCalendarContext } from '../context/CalendarTableContext';
+import { useCalendarTableContext } from '../context/CalendarTableContext';
 import { timeControlButtonStyle } from './index.css';
 
 export const TimeControlButton = ({ type }: { type: 'prev' | 'next' | 'today' }) => {
-  const { handleClickPrevWeek, handleClickNextWeek, handleClickToday } = useCalendarContext();
+  const { handleClickPrevWeek, handleClickNextWeek, handleClickToday } = useCalendarTableContext();
   switch (type) {
     case 'prev':
       return (

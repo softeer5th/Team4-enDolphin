@@ -1,6 +1,6 @@
+import { Text } from '@/components/Text';
 import type { WEEKDAY } from '@/constants/date';
 
-import { Text } from '../../Text';
 import { weekCellBoxStyle, weekCellStyle } from './index.css';
 
 interface WeekCellProps {

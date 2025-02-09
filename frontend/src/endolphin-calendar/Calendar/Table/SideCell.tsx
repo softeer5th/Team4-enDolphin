@@ -1,5 +1,6 @@
+import { Text } from '@/components/Text';
+
 import type { Time } from '../../../constants/date';
-import { Text } from '../../Text';
 import { sideCellStyle } from './index.css';
 
 export const SideCell = ({ time }: { time: Time }) => {

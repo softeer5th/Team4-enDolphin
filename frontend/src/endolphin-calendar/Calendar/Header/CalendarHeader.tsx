@@ -1,21 +1,21 @@
+import { useCalendarContext } from '@/endolphin-calendar/context/CalendarContext';
 import { isSameDate } from '@/utils/date';
 
-import { useCalendarContext } from '../context/CalendarTableContext';
 import { CalendarCell } from '../Table/CalendarCell';
 import { SideCell } from '../Table/SideCell';
 import { containerStyle } from './index.css';
 
 export const CalendarHeader = () => {
-  const { selected, dates } = useCalendarContext();
+  const { selectedDate, selectedWeek } = useCalendarContext();
 
   return (
     <div className={containerStyle}>
       <SideCell time='all' />
-      {dates.map((date) => 
+      {selectedWeek.map((date) => 
         <CalendarCell
           date={date}
           key={date.getTime()}
-          selected={isSameDate(selected, date)}
+          selected={isSameDate(selectedDate, date)}
           time='all'
         />)}
     </div>
