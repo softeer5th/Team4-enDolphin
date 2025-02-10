@@ -1,8 +1,6 @@
-import { useMemo } from 'react';
 
 import { formatDateToWeekDates } from '@/utils/date';
 import { getDateParts, getDaysInMonth } from '@/utils/date/calendar';
-import { generateMonthCalendar } from '@/utils/date/calendar/calendarGeneration';
 
 import { useHighlightRange } from './useHighlightRange';
 
@@ -19,10 +17,6 @@ export const useDatePickerSelect = ({
   gotoPrevMonth,
   gotoNextMonth,
 }: UseDatePickerSelectProps) => {
-  const calendarDates = useMemo(
-    () => generateMonthCalendar(baseDate ?? new Date()),
-    [baseDate],
-  );
   const { highlightRange, setHighlightRange } = useHighlightRange();
 
   const onDateCellClick = (date: Date) => {
@@ -43,5 +37,5 @@ export const useDatePickerSelect = ({
     setHighlightRange({ start: startOfWeek, end: endOfWeek });
   };
 
-  return { calendarDates, highlightRange, onDateCellClick };
+  return { highlightRange, onDateCellClick };
 };

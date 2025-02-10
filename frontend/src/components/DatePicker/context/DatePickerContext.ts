@@ -4,7 +4,6 @@ import type { CommonDatePickerProps, DatePickerType, HighlightRange  } from '..'
 
 export interface DatePickerContextProps extends CommonDatePickerProps {
   calendarType: DatePickerType;
-  calendarDates: Date[][];
   selectedDate: Date | null;
   highlightRange: HighlightRange;
   onDateCellClick: (date: Date) => void;

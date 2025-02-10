@@ -16,7 +16,7 @@ export interface DatePickerRange extends CommonDatePickerProps {
 
 const DatePickerRange = ({ highlightRange, ...props }: DatePickerRange) => {
   const [isOpen, setIsOpen] = useState(!props.trigger);
-  const { calendarDates, onDateCellClick } = useDatePickerRange({ 
+  const { onDateCellClick } = useDatePickerRange({ 
     highlightRange, ...props, 
   });
 
@@ -30,7 +30,6 @@ const DatePickerRange = ({ highlightRange, ...props }: DatePickerRange) => {
     <DatePickerContext.Provider 
       value={{
         calendarType: 'range',
-        calendarDates,
         onDateCellClick,
         isDateSelected,
         selectedDate: null,

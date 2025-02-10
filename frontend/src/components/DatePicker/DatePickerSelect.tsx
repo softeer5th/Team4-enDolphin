@@ -16,7 +16,7 @@ export interface DatePickerSelectProps extends CommonDatePickerProps {
 const DatePickerSelect = ({ selectedDate, ...props }: DatePickerSelectProps) => {
   const [isOpen, setIsOpen] = useState(!props.trigger);
   
-  const { calendarDates, highlightRange, onDateCellClick } = useDatePickerSelect(props);
+  const { highlightRange, onDateCellClick } = useDatePickerSelect(props);
 
   const isDateSelected = (date: Date) => selectedDate ? isSameDate(date, selectedDate) : false;
 
@@ -25,7 +25,6 @@ const DatePickerSelect = ({ selectedDate, ...props }: DatePickerSelectProps) => 
       value={{
         calendarType: 'select',
         selectedDate,
-        calendarDates,
         onDateCellClick,
         highlightRange,
         isDateSelected,
