@@ -1,12 +1,12 @@
 import { useState } from 'react';
 
-import { useDatePickerSelect } from '@/hooks/useDatePicker/useDatePickerSelect';
-import { isSameDate } from '@/utils/date';
+import { useClickOutside } from '@/hooks/useClickOutside';
 
+import { Flex } from '../Flex';
 import type { CommonDatePickerProps } from '.';
-import { DatePickerContext } from './context/DatePickerContext';
+import DatePickerSelectProvider from './context/DatePickerSelectProvider';
 import Header from './Header';
-import { defaultContainerStyle } from './index.css';
+import { defaultContainerStyle, triggerWrapperStyle } from './index.css';
 import RootContainer from './RootContainer';
 import Table from './Table';
 
@@ -14,36 +14,26 @@ export interface DatePickerSelectProps extends CommonDatePickerProps {
   selectedDate: Date | null;
   handleDateSelect: (date: Date) => void;
 }
-
-const DatePickerSelect = ({ className, selectedDate, ...props }: DatePickerSelectProps) => {
-  const [isOpen, setIsOpen] = useState(!props.trigger);
-  
-  const { highlightRange, onDateCellClick } = useDatePickerSelect(props);
-
-  const isDateSelected = (date: Date) => selectedDate ? isSameDate(date, selectedDate) : false;
+const DatePickerSelect = ({ 
+  className, selectedDate, trigger, ...props 
+}: DatePickerSelectProps) => {
+  const [isOpen, setIsOpen] = useState(!trigger);
+  const ref = useClickOutside<HTMLDivElement>(() => setIsOpen(false));
 
   return (
-    <DatePickerContext.Provider 
-      value={{
-        calendarType: 'select',
-        selectedDate,
-        onDateCellClick,
-        highlightRange,
-        isDateSelected,
-        ...props,
-      }}
-    >
-      <div onClick={() => setIsOpen(prev => !prev)}>
-        {props.trigger}
-      </div>
-      {isOpen && (
-        <RootContainer className={className ?? defaultContainerStyle}>
-          <Header />
-          <Table />
-        </RootContainer>
-      )}
-    </DatePickerContext.Provider>
-    
+    <DatePickerSelectProvider selectedDate={selectedDate} {...props}>
+      <Flex direction='column'>
+        <div className={triggerWrapperStyle} onClick={() => setIsOpen(true)}>
+          {trigger}
+          {isOpen && (
+            <RootContainer className={className ?? defaultContainerStyle} ref={ref}>
+              <Header />
+              <Table />
+            </RootContainer>
+          )}
+        </div>
+      </Flex>
+    </DatePickerSelectProvider>
   );
 };
 

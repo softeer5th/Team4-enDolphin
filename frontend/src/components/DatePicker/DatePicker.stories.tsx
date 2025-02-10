@@ -4,8 +4,9 @@ import { useState } from 'react';
 import { useHighlightRange } from '@/hooks/useDatePicker/useHighlightRange';
 import { useMonthNavigation } from '@/hooks/useDatePicker/useMonthNavigation';
 
+import Input from '../Input';
 import DatePicker from '.';
-import { injectedContainerStyle } from './datePicker.stories.css';
+import { injectedContainerStyle, inputStyle } from './datePicker.stories.css';
 
 const meta = {
   title: 'Calendar/DatePicker',
@@ -49,11 +50,34 @@ export const InjectedContainerStyle = () => {
 export const Range = () => {
   const { setBaseDate, ...monthNavigation } = useMonthNavigation();
   const highlightProps = useHighlightRange();
-
   return (
     <DatePicker.Range
       {...monthNavigation}
       {...highlightProps}
     />
+  );
+};
+/* <Input.Single 
+      label='날짜 선택'
+      placeholder='날짜를 선택하세요'
+      type='select'
+    /> */
+export const RangeWithTrigger = () => {
+  const { setBaseDate, ...monthNavigation } = useMonthNavigation();
+  const highlightProps = useHighlightRange();
+
+  return (
+    <Input.Multi label='날짜 선택' type='select'>
+      <DatePicker.Range
+        trigger={<Input.Multi.InputField />}
+        {...monthNavigation}
+        {...highlightProps}
+      />
+      <DatePicker.Range
+        trigger={<Input.Multi.InputField />}
+        {...monthNavigation}
+        {...highlightProps}
+      />
+    </Input.Multi>
   );
 };
