@@ -6,12 +6,14 @@ import endolphin.backend.global.error.exception.ErrorCode;
 import endolphin.backend.global.error.exception.OAuthException;
 import endolphin.backend.global.google.GoogleCalendarService;
 import endolphin.backend.global.google.dto.GoogleCalendarDto;
+import endolphin.backend.global.google.dto.GoogleEvent;
 import endolphin.backend.global.google.dto.GoogleTokens;
 import endolphin.backend.global.google.dto.GoogleUserInfo;
 import endolphin.backend.domain.auth.dto.OAuthResponse;
 import endolphin.backend.domain.user.entity.User;
 import endolphin.backend.global.google.GoogleOAuthService;
 import endolphin.backend.global.security.JwtProvider;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,12 +38,15 @@ public class AuthService {
         validateUserInfo(userInfo);
         User user = userService.upsertUser(userInfo, tokenResponse);
 
-        GoogleCalendarDto calender = googleCalendarService.getPrimaryCalendar(user.getAccessToken());
+        GoogleCalendarDto calendar = googleCalendarService.getPrimaryCalendar(
+            user.getAccessToken());
 
-        //TODO: 캘린더 db에 저장, googleCalendarService 호출
-        calendarService.getAllEvents(calender, user);
+        calendarService.createCalendar(calendar, user);
 
-        googleCalendarService.subscribeToCalendar(calender, user);
+        List<GoogleEvent> events = googleCalendarService.getCalendarEvents(calendar.id(), user);
+        //TODO: 이벤트 db에 저장
+
+        googleCalendarService.subscribeToCalendar(calendar, user);
 
         String accessToken = jwtProvider.createToken(user.getId(), user.getEmail());
         return new OAuthResponse(accessToken);
