@@ -99,8 +99,7 @@ public class PersonalEventService {
 
     public void preprocessPersonalEvents(User user, Discussion discussion) {
         List<PersonalEvent> personalEvents = personalEventRepository.findFilteredPersonalEvents(
-            user, discussion.getDateRangeStart(), discussion.getDateRangeEnd(),
-            discussion.getTimeRangeStart(), discussion.getTimeRangeEnd());
+            user, discussion.getDateRangeStart(), discussion.getDateRangeEnd());
 
         personalEventPreprocessor.preprocess(personalEvents, discussion, user);
     }

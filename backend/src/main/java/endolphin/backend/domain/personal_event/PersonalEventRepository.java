@@ -18,14 +18,12 @@ public interface PersonalEventRepository extends JpaRepository<PersonalEvent, Lo
 
     @Query("SELECT p FROM PersonalEvent p " +
         "WHERE p.user = :user " +
-        "   AND (CAST(p.startTime AS localdate) BETWEEN :startDate AND :endDate " +
+        "   AND ((CAST(p.startTime AS localdate) BETWEEN :startDate AND :endDate " +
         "   OR CAST(p.endTime AS localdate) BETWEEN :startDate AND :endDate) " +
-        "   AND (CAST(p.startTime AS localtime ) BETWEEN :startTime AND :endTime " +
-        "   OR CAST(p.endTime AS localtime) BETWEEN :startTime AND :endTime)")
+        "   OR ((CAST(p.startTime AS localdate) <= :startDate AND CAST(p.startTime AS localdate) <= :endDate) " +
+        "   AND (CAST(p.endTime AS localdate) >= :startDate AND CAST(p.endTime AS localdate) >= :endDate)))")
     List<PersonalEvent> findFilteredPersonalEvents(
         @Param("user") User user,
         @Param("startDate") LocalDate startDate,
-        @Param("endDate") LocalDate endDate,
-        @Param("startTime") LocalTime startTime,
-        @Param("endTime") LocalTime endTime);
+        @Param("endDate") LocalDate endDate);
 }
