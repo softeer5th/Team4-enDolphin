@@ -1,6 +1,7 @@
 package endolphin.backend.global.error;
 
 import endolphin.backend.global.error.exception.ApiException;
+import endolphin.backend.global.error.exception.CalendarException;
 import endolphin.backend.global.error.exception.ErrorCode;
 import endolphin.backend.global.error.exception.OAuthException;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +25,14 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(OAuthException.class)
     public ResponseEntity<ErrorResponse> handleOAuthException(OAuthException e) {
         log.error("[OAuth exception] Error code: {}, Message: {}",
+            e.getErrorCode(), e.getMessage(), e);
+        ErrorResponse response = ErrorResponse.of(e.getErrorCode());
+        return ResponseEntity.status(e.getErrorCode().getHttpStatus()).body(response);
+    }
+
+    @ExceptionHandler(CalendarException.class)
+    public ResponseEntity<ErrorResponse> handleCalendarException(CalendarException e) {
+        log.error("[Calendar exception] Error code: {}, Message: {}",
             e.getErrorCode(), e.getMessage(), e);
         ErrorResponse response = ErrorResponse.of(e.getErrorCode());
         return ResponseEntity.status(e.getErrorCode().getHttpStatus()).body(response);
