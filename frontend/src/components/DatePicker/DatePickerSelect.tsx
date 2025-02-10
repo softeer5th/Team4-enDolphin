@@ -6,6 +6,8 @@ import { isSameDate } from '@/utils/date';
 import type { CommonDatePickerProps } from '.';
 import { DatePickerContext } from './context/DatePickerContext';
 import Header from './Header';
+import { defaultContainerStyle } from './index.css';
+import RootContainer from './RootContainer';
 import Table from './Table';
 
 export interface DatePickerSelectProps extends CommonDatePickerProps {
@@ -13,7 +15,7 @@ export interface DatePickerSelectProps extends CommonDatePickerProps {
   handleDateSelect: (date: Date) => void;
 }
 
-const DatePickerSelect = ({ selectedDate, ...props }: DatePickerSelectProps) => {
+const DatePickerSelect = ({ className, selectedDate, ...props }: DatePickerSelectProps) => {
   const [isOpen, setIsOpen] = useState(!props.trigger);
   
   const { highlightRange, onDateCellClick } = useDatePickerSelect(props);
@@ -35,10 +37,10 @@ const DatePickerSelect = ({ selectedDate, ...props }: DatePickerSelectProps) => 
         {props.trigger}
       </div>
       {isOpen && (
-        <div className='containerStyle'>
+        <RootContainer className={className ?? defaultContainerStyle}>
           <Header />
           <Table />
-        </div>
+        </RootContainer>
       )}
     </DatePickerContext.Provider>
     

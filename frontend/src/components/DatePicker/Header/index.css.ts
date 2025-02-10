@@ -1,8 +1,10 @@
 import { style } from '@vanilla-extract/css';
 
+import { vars } from '@/theme/index.css';
+
 export const headerStyle = style({
   display: 'flex',
-  paddingLeft: '8px',
+  paddingLeft: vars.spacing[200],
   justifyContent: 'space-between',
   alignItems: 'center',
   alignSelf: 'stretch',

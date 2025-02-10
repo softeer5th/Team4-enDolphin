@@ -11,6 +11,7 @@ export interface CommonDatePickerProps {
   gotoNextMonth: () => void;
   gotoPrevMonth: () => void;
   trigger?: ReactNode;
+  className?: string;
 }
 
 const DatePicker = () => {

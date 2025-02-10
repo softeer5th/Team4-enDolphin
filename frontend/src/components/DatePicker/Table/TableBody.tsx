@@ -1,4 +1,5 @@
 
+import { Flex } from '@/components/Flex';
 import { useSafeContext } from '@/hooks/useSafeContext';
 import { generateMonthCalendar } from '@/utils/date/calendar/calendarGeneration';
 
@@ -9,12 +10,18 @@ const TableBody = () => {
   const { baseDate } = useSafeContext(DatePickerContext);
   const calendarDates = generateMonthCalendar(baseDate ?? new Date());
   return (
-    calendarDates.map((week) => (
-      <Row
-        key={`week-${week[0].toISOString()}`}
-        weekDates={week}
-      />
-    ))
+    <Flex
+      direction='column'
+      gap={100}
+      width='full'
+    >
+      {calendarDates.map((week) => (
+        <Row
+          key={`week-${week[0].toISOString()}`}
+          weekDates={week}
+        />
+      ))}
+    </Flex>
   );
 };
 

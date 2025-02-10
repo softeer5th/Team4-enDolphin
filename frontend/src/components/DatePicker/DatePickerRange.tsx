@@ -15,7 +15,7 @@ export interface DatePickerRange extends CommonDatePickerProps {
   setHighlightEnd: (date: Date | null) => void;
 }
 
-const DatePickerRange = ({ highlightRange, ...props }: DatePickerRange) => {
+const DatePickerRange = ({ className, highlightRange, ...props }: DatePickerRange) => {
   const [isOpen, setIsOpen] = useState(!props.trigger);
   const { onDateCellClick } = useDatePickerRange({ 
     highlightRange, ...props, 
@@ -42,7 +42,7 @@ const DatePickerRange = ({ highlightRange, ...props }: DatePickerRange) => {
         {props.trigger}
       </div>
       {isOpen && (
-        <div className='containerStyle'>
+        <div className={className}>
           <Header />
           <Table />
         </div>

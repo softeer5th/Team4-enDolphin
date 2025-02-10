@@ -5,6 +5,8 @@ import { vars } from '@/theme/index.css';
 export const highlightBoxStyle = recipe({
   base: {
     padding: vars.spacing[100],
+    width: 32,
+    height: 32,
   },
   variants: {
     highlightState: {
@@ -28,6 +30,7 @@ export const highlightBoxStyle = recipe({
 
 export const highlightGapStyle = recipe({
   base: {
+    height: 32,
     flexGrow: 1,
   },
   variants: {
