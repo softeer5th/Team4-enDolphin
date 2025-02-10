@@ -6,7 +6,9 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public record GoogleCalendarUrl(
     String calendarListUrl,
     String subscribeUrl,
-    String unsubscribeUrl
+    String unsubscribeUrl,
+    String webhookUrl,
+    String primaryCalendarUrl
 ) {
 
 }
