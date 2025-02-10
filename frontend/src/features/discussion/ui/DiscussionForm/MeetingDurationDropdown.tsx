@@ -3,6 +3,7 @@ import type { ChangeEvent } from 'react';
 import { Dropdown } from '@/components/Dropdown';
 import Input from '@/components/Input';
 import { MINUTES_HALF } from '@/constants/date';
+import { formatNumberToTimeString } from '@/utils/date';
 
 import { useFormContext } from './FormContext';
 import type { FormBaseValue } from './type';
@@ -14,7 +15,7 @@ const MeetingDurationDropdown = ({ name }: FormBaseValue) => {
     <Dropdown
       height={306}
       onChange={(value) => handleUpdateField(name, value)}
-      selectedValue={formState[name].toString()}
+      selectedValue={formState[name] as string}
       trigger={
         <Input.Single
           inputProps={{
@@ -30,7 +31,7 @@ const MeetingDurationDropdown = ({ name }: FormBaseValue) => {
       width={210}
     >
       {MINUTES_HALF(6, 30).map((minute) => (
-        <Dropdown.Item key={minute} value={minute.toString()}>
+        <Dropdown.Item key={minute} value={formatNumberToTimeString(minute)}>
           {minute}
           분
         </Dropdown.Item>

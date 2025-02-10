@@ -3,10 +3,10 @@ import type { ChangeEvent } from 'react';
 import { Dropdown } from '@/components/Dropdown';
 import Input from '@/components/Input';
 
+import type { DiscussionRequestDTO } from '../../model';
 import { useFormContext } from './FormContext';
-import type { MeetingFormValues } from './type';
 
-const MeetingMethodDropdown = ({ name }: { name: keyof MeetingFormValues }) => {
+const MeetingMethodDropdown = ({ name }: { name: keyof DiscussionRequestDTO }) => {
   const { formState, handleUpdateField } = useFormContext();
 
   return (
@@ -18,7 +18,7 @@ const MeetingMethodDropdown = ({ name }: { name: keyof MeetingFormValues }) => {
         <Input.Single
           inputProps={{
             name,
-            value: formState[name] as string,
+            value: formState[name] || '',
             onChange: (e: ChangeEvent<HTMLInputElement>) => handleUpdateField(name, e.target.value),
           }}
           label='미팅 방법'

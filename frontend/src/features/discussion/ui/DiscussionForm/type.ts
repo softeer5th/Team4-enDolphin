@@ -1,17 +1,8 @@
-export interface FormBaseValue {
-  name: keyof MeetingFormValues;
-  error?: string;
-}
+import type { DiscussionRequestDTO } from '../../model';
 
-export interface MeetingFormValues {
-  title: string;
-  startDate: Date;
-  endDate: Date;
-  startTime: string;
-  endTime: string;
-  meetingTime: string;
-  meetingMethod: string;
-  deadline: Date;
+export interface FormBaseValue {
+  name: keyof DiscussionRequestDTO;
+  error?: string;
 }
 
 export type FormType = 'add' | 'edit';
