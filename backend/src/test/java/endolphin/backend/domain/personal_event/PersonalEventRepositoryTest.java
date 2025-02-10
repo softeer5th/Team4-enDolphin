@@ -5,13 +5,16 @@ import static org.assertj.core.api.Assertions.*;
 import endolphin.backend.domain.personal_event.entity.PersonalEvent;
 import endolphin.backend.domain.user.UserRepository;
 import endolphin.backend.domain.user.entity.User;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
 @DataJpaTest
 class PersonalEventRepositoryTest {
@@ -21,6 +24,9 @@ class PersonalEventRepositoryTest {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private TestEntityManager entityManager;
 
     private User testUser;
 
@@ -66,5 +72,77 @@ class PersonalEventRepositoryTest {
         // then
         assertThat(personalEventList.size()).isEqualTo(2);
         assertThat(personalEventList.get(0).getTitle()).isEqualTo("Meeting");
+    }
+
+    @Test
+    @DisplayName("findFilteredPersonalEvents: 날짜 및 시간 필터 조건에 맞는 PersonalEvent 조회")
+    void testFindFilteredPersonalEvents() {
+        // Given: 테스트용 사용자 생성 및 persist
+        entityManager.persist(testUser);
+
+        // 필터링 조건
+        // 날짜 조건: 2025-02-09 (단일 날짜 범위)
+        LocalDate filterDate = LocalDate.of(2025, 2, 9);
+        // 시간 조건: 09:00 ~ 18:00
+        LocalTime filterStartTime = LocalTime.of(9, 0);
+        LocalTime filterEndTime = LocalTime.of(18, 0);
+
+        // PersonalEvent 생성
+        // 1) 조건에 부합하는 이벤트: 날짜 및 시간이 모두 범위 내
+        PersonalEvent matchingEvent = PersonalEvent.builder()
+            .user(testUser)
+            .title("Matching Event")
+            .startTime(LocalDateTime.of(2025, 2, 9, 10, 0))
+            .endTime(LocalDateTime.of(2025, 2, 9, 12, 0))
+            .build();
+
+        // 2) 날짜가 맞지 않는 이벤트
+        PersonalEvent nonMatchingDateEvent = PersonalEvent.builder()
+            .user(testUser)
+            .title("Non Matching Date Event")
+            .startTime(LocalDateTime.of(2025, 2, 8, 10, 0))
+            .endTime(LocalDateTime.of(2025, 2, 8, 12, 0))
+            .build();
+
+        // 3) 시간 조건에 맞지 않는 이벤트 (시간이 범위보다 빠름)
+        PersonalEvent nonMatchingTimeEvent = PersonalEvent.builder()
+            .user(testUser)
+            .title("Non Matching Time Event")
+            .startTime(LocalDateTime.of(2025, 2, 9, 8, 0))
+            .endTime(LocalDateTime.of(2025, 2, 9, 8, 30))
+            .build();
+
+        // 4) 조건에 걸치는 이벤트
+        PersonalEvent matchingEvent2 = PersonalEvent.builder()
+            .user(testUser)
+            .title("Matching Event2")
+            .startTime(LocalDateTime.of(2025, 2, 9, 7, 0))
+            .endTime(LocalDateTime.of(2025, 2, 9, 12, 0))
+            .build();
+
+        PersonalEvent matchingEvent3 = PersonalEvent.builder()
+            .user(testUser)
+            .title("Matching Event3")
+            .startTime(LocalDateTime.of(2025, 2, 9, 12, 0))
+            .endTime(LocalDateTime.of(2025, 2, 9, 20, 0))
+            .build();
+
+        entityManager.persist(matchingEvent);
+        entityManager.persist(nonMatchingDateEvent);
+        entityManager.persist(nonMatchingTimeEvent);
+        entityManager.persist(matchingEvent2);
+        entityManager.persist(matchingEvent3);
+        entityManager.flush();
+        entityManager.clear();
+
+        // When: 필터 조건에 따라 이벤트 조회
+        List<PersonalEvent> events = personalEventRepository.findFilteredPersonalEvents(
+            testUser, filterDate, filterDate, filterStartTime, filterEndTime);
+
+        // Then: "Matching Event"만 조회되어야 한다.
+        assertThat(events)
+            .hasSize(3)
+            .extracting(PersonalEvent::getTitle)
+            .containsExactly(matchingEvent.getTitle(), matchingEvent2.getTitle(), matchingEvent3.getTitle());
     }
 }
