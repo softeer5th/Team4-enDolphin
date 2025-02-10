@@ -22,6 +22,7 @@ public class PersonalEventService {
 
     private final PersonalEventRepository personalEventRepository;
     private final UserService userService;
+    private final PersonalEventPreprocessor personalEventPreprocessor;
 
     @Transactional(readOnly = true)
     public ListResponse<PersonalEventResponse> listPersonalEvents(LocalDateTime startDateTime,
@@ -94,5 +95,13 @@ public class PersonalEventService {
     public PersonalEvent getPersonalEvent(Long personalEventId) {
         return personalEventRepository.findById(personalEventId)
             .orElseThrow(() -> new RuntimeException("Personal event not found"));
+    }
+
+    public void preprocessPersonalEvents(User user, Discussion discussion) {
+        List<PersonalEvent> personalEvents = personalEventRepository.findFilteredPersonalEvents(
+            user, discussion.getDateRangeStart(), discussion.getDateRangeEnd(),
+            discussion.getTimeRangeStart(), discussion.getTimeRangeEnd());
+
+        personalEventPreprocessor.preprocess(personalEvents, discussion, user);
     }
 }
