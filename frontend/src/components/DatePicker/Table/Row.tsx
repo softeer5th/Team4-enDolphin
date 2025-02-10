@@ -1,25 +1,23 @@
 import { useSafeContext } from '@/hooks/useSafeContext';
 import { isSameDate } from '@/utils/date';
 
-import type { HighlightRange } from '..';
 import { DatePickerContext } from '../context/DatePickerContext';
 import { DateCell } from './Cell';
-import type { HighlightState } from './Highlight';
+import type { HighlightRange, HighlightState } from './Highlight';
 import HighlightBox from './Highlight/HighlightBox';
 import HighlightGap from './Highlight/HighlightGap';
 import RowContainer from './RowContainer';
 
 interface RowProps {
   weekDates: Date[];
-  baseDate: Date;
 }
 
-const Row = ({ weekDates: week, baseDate }: RowProps) => {
-  const { highlightRange, isDateSelected } = useSafeContext(DatePickerContext);
+const Row = ({ weekDates }: RowProps) => {
+  const { baseDate, highlightRange, isDateSelected } = useSafeContext(DatePickerContext);
 
   return (
     <RowContainer>
-      {week.map((day, index) => {
+      {weekDates.map((day, index) => {
         const highlightState = getHighlightState(day, highlightRange);
         const cell = (
           <HighlightBox highlightState={highlightState} key={`cell-${day.getTime()}`}>
@@ -32,7 +30,7 @@ const Row = ({ weekDates: week, baseDate }: RowProps) => {
           </HighlightBox>
         );
         // 마지막 셀 뒤에는 gap을 넣지 않음
-        if (index === week.length - 1) return cell;
+        if (index === weekDates.length - 1) return cell;
         const gap = (
           <HighlightGap 
             highlightState={getGapHighlightState(highlightState)} 

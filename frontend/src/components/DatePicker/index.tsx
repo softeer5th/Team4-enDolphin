@@ -6,11 +6,6 @@ import DatePickerSelect from './DatePickerSelect';
 
 export type DatePickerType = 'select' | 'range';
 
-export interface HighlightRange {
-  start: Date | null;
-  end: Date | null;
-}
-
 export interface CommonDatePickerProps {
   baseDate: Date;
   gotoNextMonth: () => void;

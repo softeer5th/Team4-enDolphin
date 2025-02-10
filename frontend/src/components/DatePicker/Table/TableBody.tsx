@@ -11,7 +11,6 @@ const TableBody = () => {
   return (
     calendarDates.map((week) => (
       <Row
-        baseDate={baseDate}
         key={`week-${week[0].toISOString()}`}
         weekDates={week}
       />

@@ -3,10 +3,11 @@ import { useCallback, useState } from 'react';
 import { useDatePickerRange } from '@/hooks/useDatePicker/useDatePickerRange';
 import { isSameDate } from '@/utils/date';
 
-import type { CommonDatePickerProps, HighlightRange } from '.';
+import type { CommonDatePickerProps } from '.';
 import { DatePickerContext } from './context/DatePickerContext';
 import Header from './Header';
 import Table from './Table';
+import type { HighlightRange } from './Table/Highlight';
 
 export interface DatePickerRange extends CommonDatePickerProps {
   highlightRange: HighlightRange;

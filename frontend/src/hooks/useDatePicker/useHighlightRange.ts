@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import type { HighlightRange } from '@/components/DatePicker';
+import type { HighlightRange } from '@/components/DatePicker/Table/Highlight';
 
 export const useHighlightRange = () => {
   const [highlightRange, setHighlightRange] = useState<HighlightRange>({ start: null, end: null });
