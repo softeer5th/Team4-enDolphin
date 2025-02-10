@@ -1,10 +1,9 @@
 import { useCallback, useState } from 'react';
 
 import { useDatePickerRange } from '@/hooks/useDatePicker/useDatePickerRange';
-import type { HighlightRange } from '@/hooks/useDatePicker/useHighlightRange';
 import { isSameDate } from '@/utils/date';
 
-import type { CommonDatePickerProps } from '.';
+import type { CommonDatePickerProps, HighlightRange } from '.';
 import { DatePickerContext } from './context/DatePickerContext';
 import Header from './Header';
 import Table from './Table';

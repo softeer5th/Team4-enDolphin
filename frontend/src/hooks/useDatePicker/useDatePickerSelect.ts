@@ -1,13 +1,14 @@
 import { useMemo } from 'react';
 
-import { useHighlightRange } from '@/hooks/useDatePicker/useHighlightRange';
 import { formatDateToWeekDates } from '@/utils/date';
 import { getDateParts, getDaysInMonth } from '@/utils/date/calendar';
 import { generateMonthCalendar } from '@/utils/date/calendar/calendarGeneration';
 
+import { useHighlightRange } from './useHighlightRange';
+
 interface UseDatePickerSelectProps {
   baseDate?: Date;
-  handleDateSelect: (date: Date | null) => void;
+  handleDateSelect: (date: Date) => void;
   gotoPrevMonth: () => void;
   gotoNextMonth: () => void;
 }
@@ -24,13 +25,7 @@ export const useDatePickerSelect = ({
   );
   const { highlightRange, setHighlightRange } = useHighlightRange();
 
-  const onDateCellClick = (date: Date | null) => {
-    if (!date) {
-      handleDateSelect(null);
-      setHighlightRange({ start: null, end: null });
-      return;
-    }
-
+  const onDateCellClick = (date: Date) => {
     const { year, month } = getDateParts(baseDate!);
     const daysInMonth = getDaysInMonth(baseDate!);
     const startOfCurrentMonth = new Date(year, month, 1);

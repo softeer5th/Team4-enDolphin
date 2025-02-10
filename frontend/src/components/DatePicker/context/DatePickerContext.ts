@@ -1,8 +1,6 @@
 import { createContext } from 'react';
 
-import type { HighlightRange } from '@/hooks/useDatePicker/useHighlightRange';
-
-import type { CommonDatePickerProps, DatePickerType } from '..';
+import type { CommonDatePickerProps, DatePickerType, HighlightRange  } from '..';
 
 export interface DatePickerContextProps extends CommonDatePickerProps {
   calendarType: DatePickerType;

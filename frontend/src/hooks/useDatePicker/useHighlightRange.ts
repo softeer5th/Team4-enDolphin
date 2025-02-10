@@ -1,9 +1,6 @@
 import { useState } from 'react';
 
-export interface HighlightRange {
-  start: Date | null;
-  end: Date | null;
-}
+import type { HighlightRange } from '@/components/DatePicker';
 
 export const useHighlightRange = () => {
   const [highlightRange, setHighlightRange] = useState<HighlightRange>({ start: null, end: null });

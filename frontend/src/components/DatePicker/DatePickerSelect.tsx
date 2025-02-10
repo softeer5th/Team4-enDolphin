@@ -10,7 +10,7 @@ import Table from './Table';
 
 export interface DatePickerSelectProps extends CommonDatePickerProps {
   selectedDate: Date | null;
-  handleDateSelect: (date: Date | null) => void;
+  handleDateSelect: (date: Date) => void;
 }
 
 const DatePickerSelect = ({ selectedDate, ...props }: DatePickerSelectProps) => {

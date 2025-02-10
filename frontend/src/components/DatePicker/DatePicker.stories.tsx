@@ -13,17 +13,12 @@ const meta = {
 
 export default meta;
 
-// export default meta;
-
-// type Story = StoryObj<typeof DatePicker.Select>;
-
 export const Default = () => {
   const { setBaseDate, ...monthNavigation } = useMonthNavigation();
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
   return (
     <DatePicker.Select
-      handleBaseDateChange={(date) => setBaseDate(date)}
       handleDateSelect={(date) => setSelectedDate(date)}
       selectedDate={selectedDate}
       {...monthNavigation}
@@ -37,7 +32,6 @@ export const Range = () => {
 
   return (
     <DatePicker.Range
-      handleBaseDateChange={(date) => setBaseDate(date)}
       {...monthNavigation}
       {...highlightProps}
     />

@@ -1,7 +1,7 @@
-import type { HighlightRange } from '@/hooks/useDatePicker/useHighlightRange';
 import { useSafeContext } from '@/hooks/useSafeContext';
 import { isSameDate } from '@/utils/date';
 
+import type { HighlightRange } from '..';
 import { DatePickerContext } from '../context/DatePickerContext';
 import { DateCell } from './Cell';
 import type { HighlightState } from './Highlight';

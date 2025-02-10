@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 
-import type { HighlightRange } from '@/hooks/useDatePicker/useHighlightRange';
+import type { HighlightRange } from '@/components/DatePicker';
 import { isSameDate } from '@/utils/date';
 import { generateMonthCalendar } from '@/utils/date/calendar/calendarGeneration';
 
