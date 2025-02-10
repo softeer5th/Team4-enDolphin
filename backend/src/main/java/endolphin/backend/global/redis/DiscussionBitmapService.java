@@ -68,7 +68,7 @@ public class DiscussionBitmapService {
 
         LocalDate currentDate = startDate;
 
-        while(currentDate.isBefore(endDate)) {
+        while(!currentDate.isAfter(endDate)) {
             LocalDateTime todayStartTime = currentDate.atTime(startTime);
             LocalDateTime todayEndTime = currentDate.atTime(endTime);
             while(todayStartTime.isBefore(todayEndTime)) {
