@@ -11,3 +11,7 @@ export * from "./component/Pencil.tsx";
 export * from "./component/Plus.tsx";
 export * from "./component/TriangleWarning.tsx";
 export * from "./component/TooltipArrow";
+export * from "./component/CalendarCheck.tsx";
+export * from "./component/Clock.tsx";
+export * from "./component/PinLocation.tsx";
+export * from "./component/UserTwo.tsx";
