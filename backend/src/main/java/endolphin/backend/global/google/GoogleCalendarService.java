@@ -149,14 +149,6 @@ public class GoogleCalendarService {
         }
     }
 
-
-    public void subscribeToAllCalendars(String accessToken, User user) {
-        List<GoogleCalendarDto> calendars = getUserCalendars(accessToken);
-        for (GoogleCalendarDto calendar : calendars) {
-            subscribeToCalendar(calendar, user);
-        }
-    }
-
     public GoogleCalendarDto getPrimaryCalendar(String accessToken) {
         try {
             Map<String, Object> response = restClient.get()
