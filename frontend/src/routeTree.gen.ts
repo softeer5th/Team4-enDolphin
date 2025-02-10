@@ -18,6 +18,7 @@ import { Route as IndexImport } from './routes/index'
 import { Route as LandingIndexImport } from './routes/landing/index'
 import { Route as DiscussionCreateIndexImport } from './routes/discussion/create/index'
 import { Route as DiscussionInviteIdImport } from './routes/discussion/invite/$id'
+import { Route as DiscussionEditIdImport } from './routes/discussion/edit/$id'
 import { Route as DiscussionCreateIdImport } from './routes/discussion/create/$id'
 
 // Create Virtual Routes
@@ -63,6 +64,12 @@ const DiscussionInviteIdRoute = DiscussionInviteIdImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const DiscussionEditIdRoute = DiscussionEditIdImport.update({
+  id: '/discussion/edit/$id',
+  path: '/discussion/edit/$id',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const DiscussionCreateIdRoute = DiscussionCreateIdImport.update({
   id: '/discussion/create/$id',
   path: '/discussion/create/$id',
@@ -99,6 +106,13 @@ declare module '@tanstack/react-router' {
       path: '/discussion/create/$id'
       fullPath: '/discussion/create/$id'
       preLoaderRoute: typeof DiscussionCreateIdImport
+      parentRoute: typeof rootRoute
+    }
+    '/discussion/edit/$id': {
+      id: '/discussion/edit/$id'
+      path: '/discussion/edit/$id'
+      fullPath: '/discussion/edit/$id'
+      preLoaderRoute: typeof DiscussionEditIdImport
       parentRoute: typeof rootRoute
     }
     '/discussion/invite/$id': {
@@ -142,6 +156,7 @@ export interface FileRoutesByFullPath {
   '': typeof MainRouteWithChildren
   '/landing': typeof LandingIndexRoute
   '/discussion/create/$id': typeof DiscussionCreateIdRoute
+  '/discussion/edit/$id': typeof DiscussionEditIdRoute
   '/discussion/invite/$id': typeof DiscussionInviteIdRoute
   '/discussion/create': typeof DiscussionCreateIndexRoute
   '/my-schedule': typeof MainMyScheduleIndexLazyRoute
@@ -152,6 +167,7 @@ export interface FileRoutesByTo {
   '': typeof MainRouteWithChildren
   '/landing': typeof LandingIndexRoute
   '/discussion/create/$id': typeof DiscussionCreateIdRoute
+  '/discussion/edit/$id': typeof DiscussionEditIdRoute
   '/discussion/invite/$id': typeof DiscussionInviteIdRoute
   '/discussion/create': typeof DiscussionCreateIndexRoute
   '/my-schedule': typeof MainMyScheduleIndexLazyRoute
@@ -163,6 +179,7 @@ export interface FileRoutesById {
   '/_main': typeof MainRouteWithChildren
   '/landing/': typeof LandingIndexRoute
   '/discussion/create/$id': typeof DiscussionCreateIdRoute
+  '/discussion/edit/$id': typeof DiscussionEditIdRoute
   '/discussion/invite/$id': typeof DiscussionInviteIdRoute
   '/discussion/create/': typeof DiscussionCreateIndexRoute
   '/_main/my-schedule/': typeof MainMyScheduleIndexLazyRoute
@@ -175,6 +192,7 @@ export interface FileRouteTypes {
     | ''
     | '/landing'
     | '/discussion/create/$id'
+    | '/discussion/edit/$id'
     | '/discussion/invite/$id'
     | '/discussion/create'
     | '/my-schedule'
@@ -184,6 +202,7 @@ export interface FileRouteTypes {
     | ''
     | '/landing'
     | '/discussion/create/$id'
+    | '/discussion/edit/$id'
     | '/discussion/invite/$id'
     | '/discussion/create'
     | '/my-schedule'
@@ -193,6 +212,7 @@ export interface FileRouteTypes {
     | '/_main'
     | '/landing/'
     | '/discussion/create/$id'
+    | '/discussion/edit/$id'
     | '/discussion/invite/$id'
     | '/discussion/create/'
     | '/_main/my-schedule/'
@@ -204,6 +224,7 @@ export interface RootRouteChildren {
   MainRoute: typeof MainRouteWithChildren
   LandingIndexRoute: typeof LandingIndexRoute
   DiscussionCreateIdRoute: typeof DiscussionCreateIdRoute
+  DiscussionEditIdRoute: typeof DiscussionEditIdRoute
   DiscussionInviteIdRoute: typeof DiscussionInviteIdRoute
   DiscussionCreateIndexRoute: typeof DiscussionCreateIndexRoute
 }
@@ -213,6 +234,7 @@ const rootRouteChildren: RootRouteChildren = {
   MainRoute: MainRouteWithChildren,
   LandingIndexRoute: LandingIndexRoute,
   DiscussionCreateIdRoute: DiscussionCreateIdRoute,
+  DiscussionEditIdRoute: DiscussionEditIdRoute,
   DiscussionInviteIdRoute: DiscussionInviteIdRoute,
   DiscussionCreateIndexRoute: DiscussionCreateIndexRoute,
 }
@@ -231,6 +253,7 @@ export const routeTree = rootRoute
         "/_main",
         "/landing/",
         "/discussion/create/$id",
+        "/discussion/edit/$id",
         "/discussion/invite/$id",
         "/discussion/create/"
       ]
@@ -249,6 +272,9 @@ export const routeTree = rootRoute
     },
     "/discussion/create/$id": {
       "filePath": "discussion/create/$id.tsx"
+    },
+    "/discussion/edit/$id": {
+      "filePath": "discussion/edit/$id.tsx"
     },
     "/discussion/invite/$id": {
       "filePath": "discussion/invite/$id.tsx"

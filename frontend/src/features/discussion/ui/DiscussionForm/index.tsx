@@ -6,15 +6,18 @@ import MeetingDurationDropdown from './MeedtingDurationDropdown';
 import MeetingMethodDropdown from './MeetingMethodDropdown';
 import MeetingTimeDropdowns from './MeetingTimeDropdowns';
 import MeetingTitle from './MeetingTitle';
+import type { FormType, MeetingFormValues } from './type';
 
-const DiscussionForm = () => (
-  <FormProvider initialValues={{
+const DiscussionForm = (
+  { type, initialValues }: { type: FormType; initialValues?: MeetingFormValues },
+) => (
+  <FormProvider initialValues={initialValues || {
     title: '',
     startDate: new Date(),
     endDate: new Date(),
-    startTime: '',
-    endTime: '',
-    meetingTime: '30',
+    startTime: '0',
+    endTime: '0',
+    meetingTime: '60',
     meetingMethod: '',
     deadline: new Date(),
   }}
@@ -28,7 +31,7 @@ const DiscussionForm = () => (
       <MeetingTimeDropdowns />
       <MeetingDurationDropdown name='meetingTime' />
       <MeetingMethodDropdown name='meetingMethod' />
-      <FormButton />
+      <FormButton type={type} />
     </Flex>
   </FormProvider>
 );

@@ -4,11 +4,12 @@ import { useFormContext } from './FormContext';
 import type { FormBaseValue } from './type';
 
 const MeetingTitle = ({ name }: FormBaseValue) => {
-  const { handleUpdateField } = useFormContext();
+  const { formState, handleUpdateField } = useFormContext();
   return (
     <Input.Single
       inputProps={{
         name,
+        value: formState[name].toString(),
         onChange: (e) => handleUpdateField(name, e.target.value),
       }}
       label='제목'

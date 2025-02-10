@@ -13,3 +13,5 @@ export interface MeetingFormValues {
   meetingMethod: string;
   deadline: Date;
 }
+
+export type FormType = 'add' | 'edit';
