@@ -1,7 +1,7 @@
 import { Flex } from '@/components/Flex';
 import { formatDateToString } from '@/utils/date/format';
 
-import type { DiscussionRequestDTO } from '../../model';
+import type { DiscussionRequest } from '../../model';
 import FormButton from './FormButton';
 import { FormProvider } from './FormProvider';
 import MeetingDurationDropdown from './MeetingDurationDropdown';
@@ -11,7 +11,7 @@ import MeetingTitle from './MeetingTitle';
 import type { FormType } from './type';
 
 const DiscussionForm = (
-  { type, initialValues }: { type: FormType; initialValues?: DiscussionRequestDTO },
+  { type, initialValues }: { type: FormType; initialValues?: DiscussionRequest },
 ) => {
   const SEVEN_DAYS = 7 * 24 * 60 * 60 * 1000;
   const today = new Date();

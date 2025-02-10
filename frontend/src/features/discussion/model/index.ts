@@ -1,8 +1,8 @@
 import { z } from 'zod';
 
-const MeetingMethodDTO = z.enum(['OFFLINE', 'ONLINE']);
+const MeetingMethodENUM = z.enum(['OFFLINE', 'ONLINE']);
 
-const DiscussionRequestDTO = z.object({
+const DiscussionRequest = z.object({
   title: z.string().min(1, '제목은 필수입니다')
     .max(15, '제목은 15자 이하로 입력해주세요'),
   dateRangeStart: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
@@ -11,10 +11,10 @@ const DiscussionRequestDTO = z.object({
   timeRangeEnd: z.string().regex(/^\d{2}:\d{2}$/),
   duration: z.number().int()
     .positive(),
-  meetingMethod: z.union([MeetingMethodDTO, z.null()]),
+  meetingMethod: z.union([MeetingMethodENUM, z.null()]),
   location: z.string().optional(),
   deadline: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
 });
 
-export type DiscussionRequestDTO = z.infer<typeof DiscussionRequestDTO>;
-export type MeetingMethodDTO = z.infer<typeof MeetingMethodDTO>;
+export type DiscussionRequest = z.infer<typeof DiscussionRequest>;
+export type MeetingMethodENUM = z.infer<typeof MeetingMethodENUM>;

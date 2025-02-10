@@ -2,15 +2,15 @@ import type { FormEvent, PropsWithChildren } from 'react';
 
 import { useFormState } from '@/hooks/useFormState';
 
-import type { DiscussionRequestDTO } from '../../model';
+import type { DiscussionRequest } from '../../model';
 import { FormContext } from './FormContext';
 
 interface FormProviderProps extends PropsWithChildren {
-  initialValues: DiscussionRequestDTO;
+  initialValues: DiscussionRequest;
 }
 
 export const FormProvider = ({ children, initialValues }: FormProviderProps) => {
-  const values = useFormState<DiscussionRequestDTO>(initialValues);
+  const values = useFormState<DiscussionRequest>(initialValues);
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     values.onSubmit();

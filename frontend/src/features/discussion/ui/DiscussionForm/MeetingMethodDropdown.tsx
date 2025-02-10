@@ -3,12 +3,12 @@ import type { ChangeEvent } from 'react';
 import { Dropdown } from '@/components/Dropdown';
 import Input from '@/components/Input';
 
-import type { DiscussionRequestDTO, MeetingMethodDTO } from '../../model';
+import type { DiscussionRequest, MeetingMethodENUM } from '../../model';
 import { useFormContext } from './FormContext';
 
-const MeetingMethodDropdown = ({ name }: { name: keyof DiscussionRequestDTO }) => {
+const MeetingMethodDropdown = ({ name }: { name: keyof DiscussionRequest }) => {
   const { formState, handleUpdateField } = useFormContext();
-  const methodMap: Record<MeetingMethodDTO, string> = {
+  const methodMap: Record<MeetingMethodENUM, string> = {
     OFFLINE: '만나서',
     ONLINE: '온라인 미팅',
   };
@@ -22,7 +22,7 @@ const MeetingMethodDropdown = ({ name }: { name: keyof DiscussionRequestDTO }) =
         <Input.Single
           inputProps={{
             name,
-            value: methodMap[formState[name] as MeetingMethodDTO] || '',
+            value: methodMap[formState[name] as MeetingMethodENUM] || '',
             onChange: (e: ChangeEvent<HTMLInputElement>) => handleUpdateField(name, e.target.value),
           }}
           label='미팅 방법'

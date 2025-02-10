@@ -9,7 +9,7 @@ import {
   formatTimeStringToNumber, 
 } from '@/utils/date';
 
-import type { DiscussionRequestDTO } from '../../model';
+import type { DiscussionRequest } from '../../model';
 import { useFormContext } from './FormContext';
 
 const MeetingTimeDropdowns = () => (
@@ -25,7 +25,7 @@ const MeetingTimeDropdowns = () => (
   </Input.Multi>
 );
 
-const TimeDropdown = ({ name }: { name: keyof DiscussionRequestDTO }) => {
+const TimeDropdown = ({ name }: { name: keyof DiscussionRequest }) => {
   const { formState, handleUpdateField } = useFormContext();
   return (
     <Dropdown

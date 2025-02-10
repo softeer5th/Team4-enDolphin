@@ -1,7 +1,7 @@
-import type { DiscussionRequestDTO } from '../../model';
+import type { DiscussionRequest } from '../../model';
 
 export interface FormBaseValue {
-  name: keyof DiscussionRequestDTO;
+  name: keyof DiscussionRequest;
   error?: string;
 }
 
