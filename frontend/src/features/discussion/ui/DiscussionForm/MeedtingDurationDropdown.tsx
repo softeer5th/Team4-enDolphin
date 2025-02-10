@@ -8,28 +8,19 @@ import { useFormContext } from './FormContext';
 import type { FormBaseValue } from './type';
 
 const MeetingDurationDropdown = ({ name }: FormBaseValue) => {
-  const { valuesRef, handleChange } = useFormContext();
+  const { formState, handleUpdateField } = useFormContext();
 
-  const handleChangeDropdown = (value: string) => {
-    if (valuesRef?.current) {
-      valuesRef.current[name] = value;
-    }
-    const event = {
-      target: { name, value },
-    } as ChangeEvent<HTMLInputElement>;
-    handleChange(event);
-  };
   return (
     <Dropdown
       height={306}
-      onChange={handleChangeDropdown}
-      selectedValue={valuesRef.current[name].toString()}
+      onChange={(value) => handleUpdateField(name, value)}
+      selectedValue={formState[name].toString()}
       trigger={
         <Input.Single
           inputProps={{
             name,
-            value: `${valuesRef.current[name]}분`,
-            onChange: handleChange,
+            value: `${formState[name]}분`,
+            onChange: (e: ChangeEvent<HTMLInputElement>) => handleUpdateField(name, e.target.value),
           }}
           label='미팅 시간'
           required

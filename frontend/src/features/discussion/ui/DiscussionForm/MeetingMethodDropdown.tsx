@@ -4,31 +4,22 @@ import { Dropdown } from '@/components/Dropdown';
 import Input from '@/components/Input';
 
 import { useFormContext } from './FormContext';
-import type { FormBaseValue } from './type';
+import type { MeetingFormValues } from './type';
 
-const MeetingMethodDropdown = ({ name }: FormBaseValue) => {
-  const { valuesRef, handleChange } = useFormContext();
+const MeetingMethodDropdown = ({ name }: { name: keyof MeetingFormValues }) => {
+  const { formState, handleUpdateField } = useFormContext();
 
-  const handleChangeDropdown = (value: string) => {
-    if (valuesRef?.current) {
-      valuesRef.current[name] = value;
-    }
-    const event = {
-      target: { name, value },
-    } as ChangeEvent<HTMLInputElement>;
-    handleChange(event);
-  };
-  
   return (
     <Dropdown
       height={138}
-      onChange={handleChangeDropdown}
-      selectedValue={valuesRef.current[name].toString()}
+      onChange={(value) => handleUpdateField(name, value)}
+      selectedValue={formState[name] as string}
       trigger={
         <Input.Single
           inputProps={{
             name,
-            onChange: handleChange,
+            value: formState[name] as string,
+            onChange: (e: ChangeEvent<HTMLInputElement>) => handleUpdateField(name, e.target.value),
           }}
           label='미팅 방법'
           type='select'

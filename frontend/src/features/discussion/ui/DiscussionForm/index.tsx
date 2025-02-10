@@ -1,5 +1,6 @@
 import { Flex } from '@/components/Flex';
 
+import FormButton from './FormButton';
 import { FormProvider } from './FormProvider';
 import MeetingDurationDropdown from './MeedtingDurationDropdown';
 import MeetingMethodDropdown from './MeetingMethodDropdown';
@@ -27,7 +28,7 @@ const DiscussionForm = () => (
       <MeetingTimeDropdowns />
       <MeetingDurationDropdown name='meetingTime' />
       <MeetingMethodDropdown name='meetingMethod' />
-
+      <FormButton />
     </Flex>
   </FormProvider>
 );

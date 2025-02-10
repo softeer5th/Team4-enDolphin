@@ -4,13 +4,13 @@ import { useFormContext } from './FormContext';
 import type { FormBaseValue } from './type';
 
 const MeetingTitle = ({ name }: FormBaseValue) => {
-  const { handleChange } = useFormContext();
+  const { handleUpdateField } = useFormContext();
   return (
     <Input.Single
       error='필수 항목입니다.'
       inputProps={{
         name,
-        onChange: handleChange,
+        onChange: (e) => handleUpdateField(name, e.target.value),
       }}
       label='제목'
       placeholder='일정 제목은 필수에요'

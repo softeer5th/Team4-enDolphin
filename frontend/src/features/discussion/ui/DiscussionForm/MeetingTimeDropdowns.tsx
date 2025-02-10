@@ -22,19 +22,17 @@ const MeetingTimeDropdowns = () => (
 );
 
 const TimeDropdown = ({ name }: { name: keyof MeetingFormValues }) => {
-  const { handleChange, valuesRef } = useFormContext();
+  const { formState, handleUpdateField } = useFormContext();
   return (
     <Dropdown
       height={168}
-      onChange={(value) => handleChange(
-        { target: { name, value } } as ChangeEvent<HTMLInputElement>,
-      )}
-      selectedValue={valuesRef.current[name].toString()}
+      onChange={(value) => handleUpdateField(name, value)}
+      selectedValue={formState.meetingTime}
       trigger={ 
         <Input.Multi.InputField
           name={name}
-          onChange={handleChange}
-          value={formatMinutesToTimeString(+valuesRef.current[name])}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => handleUpdateField(name, e.target.value)}
+          value={formatMinutesToTimeString(Number(formState[name]))}
         />
       }
       width='100%'

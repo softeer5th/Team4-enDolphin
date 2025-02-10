@@ -1,6 +1,6 @@
 import type { PropsWithChildren } from 'react';
 
-import { useFormRef } from '@/hooks/useFormRef';
+import { useFormState } from '@/hooks/useFormState';
 
 import { FormContext } from './FormContext';
 import type { MeetingFormValues } from './type';
@@ -10,7 +10,7 @@ interface FormProviderProps extends PropsWithChildren {
 }
 
 export const FormProvider = ({ children, initialValues }: FormProviderProps) => {
-  const values = useFormRef<MeetingFormValues>(initialValues);
+  const values = useFormState<MeetingFormValues>(initialValues);
   return(
     <FormContext.Provider value={values}>
       {children}
