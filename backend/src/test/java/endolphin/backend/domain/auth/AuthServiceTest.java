@@ -4,9 +4,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.Mockito.verify;
 
 import endolphin.backend.domain.auth.dto.OAuthResponse;
+import endolphin.backend.domain.calendar.CalendarService;
 import endolphin.backend.domain.user.UserService;
 import endolphin.backend.domain.user.entity.User;
 import endolphin.backend.global.google.GoogleCalendarService;
@@ -33,7 +35,10 @@ class AuthServiceTest {
     private GoogleOAuthService googleOAuthService;
 
     @Mock
-    private GoogleCalendarService googleCalendarService; // ✅ 추가된 Mock
+    private CalendarService calendarService;
+
+    @Mock
+    private GoogleCalendarService googleCalendarService;
 
     @Mock
     private JwtProvider jwtProvider;
@@ -68,8 +73,10 @@ class AuthServiceTest {
         given(userService.upsertUser(any(GoogleUserInfo.class), any(GoogleTokens.class)))
             .willReturn(user);
 
-        given(googleCalendarService.getPrimaryCalendar(user.getAccessToken())) // ✅ 캘린더 가져오기 Mock
+        given(googleCalendarService.getPrimaryCalendar(user.getAccessToken()))
             .willReturn(googleCalendarDto);
+
+        willDoNothing().given(calendarService).getAllEvents(any(GoogleCalendarDto.class), any(User.class));
 
         given(jwtProvider.createToken(user.getId(), user.getEmail()))
             .willReturn("test-jwt-token");

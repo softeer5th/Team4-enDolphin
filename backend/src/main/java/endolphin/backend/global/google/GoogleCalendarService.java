@@ -31,12 +31,8 @@ public class GoogleCalendarService {
     private final RestClient restClient;
     private final GoogleCalendarUrl googleCalendarUrl;
 
-    public void getAllCalendarEvents(User user) {
-        // TODO: 회원가입 시 모든 이벤트 정보 가져오기
-    }
-
     public void getCalendarEvents(String calendarId, User user) {
-
+        //TODO api 호출해서 Dto 리스트로 리턴
     }
 
     public void subscribeToAllCalendars(String accessToken, User user) {
@@ -141,28 +137,6 @@ public class GoogleCalendarService {
         }
     }
 
-    public void unsubscribeFromCalendar(String accessToken, String channelId, String resourceId) {
-        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
-        body.add("id", channelId);
-        body.add("resourceId", resourceId);
-
-        try {
-            restClient.post()
-                .uri(googleCalendarUrl.unsubscribeUrl())
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(body)
-                .retrieve()
-                .toBodilessEntity();
-
-            log.info("Successfully unsubscribed from calendar. Channel ID: {}, Resource ID: {}",
-                channelId, resourceId);
-        } catch (Exception e) {
-            throw new CalendarException(HttpStatus.INTERNAL_SERVER_ERROR,
-                "구독 해지 요청 중 오류 발생: " + e.getMessage());
-        }
-    }
-
     public ResponseEntity<String> processWebhookNotification(
         String channelId,
         String resourceId,
@@ -185,7 +159,7 @@ public class GoogleCalendarService {
                 // TODO: 동기화 시 db에 channelId, resourceId, channelExpiration 저장
             } else if ("exists".equals(resourceState)) {
                 log.info("📅 [EXISTS] Calendar ID: {}, User ID: {}", calendarId, userId);
-                // TODO: 업데이트된 이벤트 처리 로직
+                // TODO: 업데이트된 이벤트 처리 로직(변경사항 받아오기, personalEventService 호출)
             } else {
                 throw new CalendarException(HttpStatus.BAD_REQUEST,
                     "Unknown State: " + resourceState);

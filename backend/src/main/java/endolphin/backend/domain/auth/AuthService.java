@@ -1,5 +1,6 @@
 package endolphin.backend.domain.auth;
 
+import endolphin.backend.domain.calendar.CalendarService;
 import endolphin.backend.domain.user.UserService;
 import endolphin.backend.global.error.exception.ErrorCode;
 import endolphin.backend.global.error.exception.OAuthException;
@@ -21,6 +22,7 @@ public class AuthService {
 
     private final GoogleOAuthService googleOAuthService;
     private final GoogleCalendarService googleCalendarService;
+    private final CalendarService calendarService;
     private final UserService userService;
     private final JwtProvider jwtProvider;
 
@@ -34,9 +36,10 @@ public class AuthService {
         validateUserInfo(userInfo);
         User user = userService.upsertUser(userInfo, tokenResponse);
 
-        //TODO: 회원가입 시 모든 이벤트 정보 가져와서 저장
-
         GoogleCalendarDto calender = googleCalendarService.getPrimaryCalendar(user.getAccessToken());
+
+        //TODO: 캘린더 db에 저장, googleCalendarService 호출
+        calendarService.getAllEvents(calender, user);
 
         googleCalendarService.subscribeToCalendar(calender, user);
 
