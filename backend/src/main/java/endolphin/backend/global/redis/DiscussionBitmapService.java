@@ -1,7 +1,10 @@
 package endolphin.backend.global.redis;
 
+import endolphin.backend.domain.discussion.entity.Discussion;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.ZoneOffset;
 import java.util.concurrent.CompletableFuture;
 import lombok.RequiredArgsConstructor;
@@ -53,6 +56,26 @@ public class DiscussionBitmapService {
         } catch (RedisSystemException e) {
             //TODO: 예외 처리
             throw e;
+        }
+    }
+
+    public void initializeDiscussionBitmap(Discussion discussion) {
+        Long discussionId = discussion.getId();
+        LocalDate startDate = discussion.getDateRangeStart();
+        LocalDate endDate = discussion.getDateRangeEnd();
+        LocalTime startTime = discussion.getTimeRangeStart();
+        LocalTime endTime = discussion.getTimeRangeEnd();
+
+        LocalDate currentDate = startDate;
+
+        while(currentDate.isBefore(endDate)) {
+            LocalDateTime todayStartTime = currentDate.atTime(startTime);
+            LocalDateTime todayEndTime = currentDate.atTime(endTime);
+            while(todayStartTime.isBefore(todayEndTime)) {
+                initializeBitmap(discussionId, todayStartTime);
+                todayStartTime = todayStartTime.plusMinutes(30);
+            }
+            currentDate = currentDate.plusDays(1);
         }
     }
 
