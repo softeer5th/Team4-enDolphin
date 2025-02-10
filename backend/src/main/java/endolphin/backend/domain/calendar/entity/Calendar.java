@@ -4,8 +4,10 @@ import endolphin.backend.domain.user.entity.User;
 import endolphin.backend.global.base_entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @NoArgsConstructor
@@ -27,9 +29,10 @@ public class Calendar extends BaseTimeEntity {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "calendar_id")
+    @Column(name = "calendar_id", unique = true, nullable = false)
     private String calendarId;
 
+    @Setter
     @Column(name = "sync_token")
     private String syncToken;
 
@@ -42,11 +45,18 @@ public class Calendar extends BaseTimeEntity {
     @Column(name = "channel_expiration")
     private LocalDateTime channelExpiration;
 
+    @Builder
     public Calendar(User user, String name, String description, String calendarId) {
         this.user = user;
         this.name = name;
         this.description = description;
         this.calendarId = calendarId;
+    }
+
+    public void setWebhookProperties(String resourceId, String channelId, LocalDateTime channelExpiration) {
+        this.resourceId = resourceId;
+        this.channelId = channelId;
+        this.channelExpiration = channelExpiration;
     }
 }
 
