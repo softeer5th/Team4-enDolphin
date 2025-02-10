@@ -13,13 +13,13 @@ const DiscussionEditPage = () => (
     <DiscussionForm 
       initialValues={{
         title: '기업디(3) 첫 팀플',
-        startDate: new Date(),
-        endDate: new Date(),
-        startTime: '60',
-        endTime: '120',
-        meetingTime: '60',
-        meetingMethod: '온라인',
-        deadline: new Date(),
+        dateRangeStart: '2021-10-10',
+        dateRangeEnd: '2021-10-10',
+        timeRangeStart: '09:00',
+        timeRangeEnd: '12:00',
+        duration: 60,
+        meetingMethod: 'OFFLINE',
+        deadline: '2021-10-10',
       }}
       type='edit'
     />

@@ -9,7 +9,7 @@ const MeetingTitle = ({ name }: FormBaseValue) => {
     <Input.Single
       inputProps={{
         name,
-        value: formState[name].toString(),
+        value: formState[name] || '',
         onChange: (e) => handleUpdateField(name, e.target.value),
       }}
       label='제목'

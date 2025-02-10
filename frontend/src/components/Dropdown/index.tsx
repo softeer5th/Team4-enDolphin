@@ -10,7 +10,7 @@ import { dropdownContainerStyle, dropdownContentStyle, dropdownTriggerStyle } fr
 interface DropdownProps extends PropsWithChildren {
   trigger: ReactNode;
   width?: number | string;
-  height: number;
+  height?: number | string;
   onChange: ((value: string) => void);
   selectedValue: string;
 }
@@ -18,7 +18,7 @@ interface DropdownProps extends PropsWithChildren {
 export const Dropdown = ({ 
   trigger,
   width = 'auto',
-  height, 
+  height = 'auto',
   onChange, 
   selectedValue,
   children, 
