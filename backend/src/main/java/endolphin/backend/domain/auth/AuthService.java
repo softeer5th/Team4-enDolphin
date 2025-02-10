@@ -3,6 +3,8 @@ package endolphin.backend.domain.auth;
 import endolphin.backend.domain.user.UserService;
 import endolphin.backend.global.error.exception.ErrorCode;
 import endolphin.backend.global.error.exception.OAuthException;
+import endolphin.backend.global.google.GoogleCalendarService;
+import endolphin.backend.global.google.dto.GoogleCalendarDto;
 import endolphin.backend.global.google.dto.GoogleTokens;
 import endolphin.backend.global.google.dto.GoogleUserInfo;
 import endolphin.backend.domain.auth.dto.OAuthResponse;
@@ -18,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class AuthService {
 
     private final GoogleOAuthService googleOAuthService;
+    private final GoogleCalendarService googleCalendarService;
     private final UserService userService;
     private final JwtProvider jwtProvider;
 
@@ -30,6 +33,13 @@ public class AuthService {
         GoogleUserInfo userInfo = googleOAuthService.getUserInfo(tokenResponse.accessToken());
         validateUserInfo(userInfo);
         User user = userService.upsertUser(userInfo, tokenResponse);
+
+        //TODO: 회원가입 시 모든 이벤트 정보 가져와서 저장
+
+        GoogleCalendarDto calender = googleCalendarService.getPrimaryCalendar(user.getAccessToken());
+
+        googleCalendarService.subscribeToCalendar(calender, user);
+
         String accessToken = jwtProvider.createToken(user.getId(), user.getEmail());
         return new OAuthResponse(accessToken);
     }
