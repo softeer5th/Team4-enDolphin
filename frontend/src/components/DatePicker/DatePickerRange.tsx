@@ -6,6 +6,8 @@ import { isSameDate } from '@/utils/date';
 import type { CommonDatePickerProps } from '.';
 import { DatePickerContext } from './context/DatePickerContext';
 import Header from './Header';
+import { defaultContainerStyle } from './index.css';
+import RootContainer from './RootContainer';
 import Table from './Table';
 import type { HighlightRange } from './Table/Highlight';
 
@@ -42,10 +44,10 @@ const DatePickerRange = ({ className, highlightRange, ...props }: DatePickerRang
         {props.trigger}
       </div>
       {isOpen && (
-        <div className={className}>
+        <RootContainer className={className ?? defaultContainerStyle}>
           <Header />
           <Table />
-        </div>
+        </RootContainer>
       )}
     </DatePickerContext.Provider>
   );

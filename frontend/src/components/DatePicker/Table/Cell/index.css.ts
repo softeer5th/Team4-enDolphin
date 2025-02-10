@@ -10,8 +10,8 @@ export const cellWrapperStyle = recipe({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    width: '24px',
-    height: '24px',
+    width: 24,
+    height: 24,
   },
   variants: {
     cursorType: {

@@ -12,7 +12,6 @@ export const cellThemeVars = createThemeContract({
 export const calendarContainerStyle = style({
   display: 'flex',
   width: '100%',
-  height: '100%',
   flexDirection: 'column',
   justifyContent: 'space-between',
   alignItems: 'center',

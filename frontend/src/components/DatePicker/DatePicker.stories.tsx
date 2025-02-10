@@ -5,7 +5,7 @@ import { useHighlightRange } from '@/hooks/useDatePicker/useHighlightRange';
 import { useMonthNavigation } from '@/hooks/useDatePicker/useMonthNavigation';
 
 import DatePicker from '.';
-import { containerStyle } from './datePicker.stories.css';
+import { injectedContainerStyle } from './datePicker.stories.css';
 
 const meta = {
   title: 'Calendar/DatePicker',
@@ -31,13 +31,18 @@ export const InjectedContainerStyle = () => {
   const { setBaseDate, ...monthNavigation } = useMonthNavigation();
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   
+  // width: 228
+  // height: 300
   return (
-    <DatePicker.Select
-      className={containerStyle}
-      handleDateSelect={(date) => setSelectedDate(date)}
-      selectedDate={selectedDate}
-      {...monthNavigation}
-    />
+    <>
+      <DatePicker.Select
+        className={injectedContainerStyle}
+        handleDateSelect={(date) => setSelectedDate(date)}
+        selectedDate={selectedDate}
+        {...monthNavigation}
+      />
+      <div>----------------------------------</div>
+    </>
   );
 };
 
