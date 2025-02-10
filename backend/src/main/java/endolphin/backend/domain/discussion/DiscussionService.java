@@ -36,6 +36,7 @@ public class DiscussionService {
     private final DiscussionBitmapService discussionBitmapService;
 
     public DiscussionResponse createDiscussion(CreateDiscussionRequest request) {
+        User currentUser = userService.getCurrentUser();
 
         Discussion discussion = Discussion.builder()
             .title(request.title())
@@ -49,11 +50,11 @@ public class DiscussionService {
             .location(request.location())
             .build();
 
-        discussionRepository.save(discussion);
+        discussion = discussionRepository.save(discussion);
 
-        User currentUser = userService.getCurrentUser();
-
+        discussionBitmapService.initializeDiscussionBitmap(discussion);
         discussionParticipantService.addDiscussionParticipant(discussion, currentUser);
+        personalEventService.preprocessPersonalEvents(currentUser, discussion);
 
         return new DiscussionResponse(
             discussion.getId(),
