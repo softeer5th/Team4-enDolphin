@@ -1,5 +1,4 @@
 import { Flex } from '@/components/Flex';
-import { formatDateToTimeString } from '@/utils/date';
 import { formatDateToString } from '@/utils/date/format';
 
 import type { DiscussionRequestDTO } from '../../model';
