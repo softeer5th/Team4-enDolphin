@@ -1,4 +1,4 @@
-import type { PropsWithChildren } from 'react';
+import type { FormEvent, PropsWithChildren } from 'react';
 
 import { useFormState } from '@/hooks/useFormState';
 
@@ -11,9 +11,15 @@ interface FormProviderProps extends PropsWithChildren {
 
 export const FormProvider = ({ children, initialValues }: FormProviderProps) => {
   const values = useFormState<MeetingFormValues>(initialValues);
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    values.onSubmit();
+  };
   return(
     <FormContext.Provider value={values}>
-      {children}
+      <form className={values.name} onSubmit={handleSubmit}>
+        {children}
+      </form>
     </FormContext.Provider>
   );
 };

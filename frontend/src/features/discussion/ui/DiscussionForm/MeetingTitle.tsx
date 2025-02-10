@@ -7,7 +7,6 @@ const MeetingTitle = ({ name }: FormBaseValue) => {
   const { handleUpdateField } = useFormContext();
   return (
     <Input.Single
-      error='필수 항목입니다.'
       inputProps={{
         name,
         onChange: (e) => handleUpdateField(name, e.target.value),

@@ -14,7 +14,7 @@ const DiscussionForm = () => (
     endDate: new Date(),
     startTime: '',
     endTime: '',
-    meetingTime: '',
+    meetingTime: '30',
     meetingMethod: '',
     deadline: new Date(),
   }}

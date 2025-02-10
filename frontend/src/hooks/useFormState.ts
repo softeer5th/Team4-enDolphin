@@ -1,10 +1,12 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useId, useState } from 'react';
 
 export interface FormState<T> {
+  name: string;
   formState: T;
   handleUpdateField: <K extends keyof T>(key: K, value: T[K]) => void;
   resetForm: () => void;
   onSubmit: () => void;
+  isValid: boolean;
 }
 
 export const useFormState = <T>(initialState: T): FormState<T> => {
@@ -22,8 +24,11 @@ export const useFormState = <T>(initialState: T): FormState<T> => {
   }, [initialState]);
 
   const onSubmit = () => {
-    // console.log(formState);
+    // console.log(formState, isValid);
   };
 
-  return { formState, handleUpdateField, resetForm, onSubmit };
+  const isValid = Object.values(formState as Record<string, unknown>)
+    .every((value) => value !== '');
+
+  return { name: `form-${useId()}`, formState, handleUpdateField, resetForm, onSubmit, isValid };
 };
