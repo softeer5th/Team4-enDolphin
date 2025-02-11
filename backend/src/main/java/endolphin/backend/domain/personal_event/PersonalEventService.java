@@ -8,6 +8,8 @@ import endolphin.backend.domain.shared_event.dto.SharedEventDto;
 import endolphin.backend.domain.user.UserService;
 import endolphin.backend.domain.user.entity.User;
 import endolphin.backend.global.dto.ListResponse;
+import endolphin.backend.global.google.dto.GoogleEvent;
+import endolphin.backend.global.google.enums.GoogleEventStatus;
 import endolphin.backend.global.util.Validator;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -102,5 +104,36 @@ public class PersonalEventService {
             user, discussion.getDateRangeStart(), discussion.getDateRangeEnd());
 
         personalEventPreprocessor.preprocess(personalEvents, discussion, user);
+    }
+
+    public void syncWithGoogleCalendar(List<GoogleEvent> googleEvents) {
+        for (GoogleEvent googleEvent : googleEvents) {
+            if (googleEvent.status().equals(GoogleEventStatus.CONFIRMED)) {
+                updatePersonalEventByGoogleEvent(googleEvent);
+            } else if (googleEvent.status().equals(GoogleEventStatus.CANCELLED)) {
+                deletePersonalEventByGoogleEvent(googleEvent);
+            }
+        }
+    }
+
+    private void updatePersonalEventByGoogleEvent(GoogleEvent googleEvent) {
+        personalEventRepository.findByGoogleEventId(googleEvent.eventId())
+            .ifPresent(personalEvent -> {
+                PersonalEvent originEvent = personalEvent;
+                personalEvent.update(googleEvent.startDateTime(), googleEvent.endDateTime(),
+                    googleEvent.summary());
+                // TODO: 비트맵 수정
+                personalEventRepository.save(personalEvent);
+
+
+            });
+    }
+
+    private void deletePersonalEventByGoogleEvent(GoogleEvent googleEvent) {
+        personalEventRepository.findByGoogleEventId(googleEvent.eventId())
+            .ifPresent(personalEvent -> {
+                // TODO: 비트맵 삭제
+                personalEventRepository.delete(personalEvent);
+            });
     }
 }

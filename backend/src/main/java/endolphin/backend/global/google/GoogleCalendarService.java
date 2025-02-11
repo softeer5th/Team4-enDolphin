@@ -1,6 +1,7 @@
 package endolphin.backend.global.google;
 
 import endolphin.backend.domain.calendar.CalendarService;
+import endolphin.backend.domain.personal_event.PersonalEventService;
 import endolphin.backend.domain.user.UserService;
 import endolphin.backend.domain.user.entity.User;
 import endolphin.backend.global.config.GoogleCalendarUrl;
@@ -41,6 +42,7 @@ public class GoogleCalendarService {
     private final GoogleCalendarUrl googleCalendarUrl;
     private final CalendarService calendarService;
     private final UserService userService;
+    private final PersonalEventService personalEventService;
 
     public List<GoogleEvent> getCalendarEvents(String calendarId, User user) {
         try {
@@ -274,10 +276,8 @@ public class GoogleCalendarService {
 
                 User user = userService.getUser(userId);
                 List<GoogleEvent> events = syncWithCalendar(calendarId, user);
-                /* TODO: 업데이트된 이벤트 처리 로직(personalEventService 호출)
-                GoogleEvent.status = "confirmed" -> 추가 or 변경, "cancelled" -> 삭제 입니다.
-                 */
-
+                // TODO: 업데이트된 이벤트 처리 로직(personalEventService 호출)
+                personalEventService.syncWithGoogleCalendar(events);
             } else {
                 throw new CalendarException(HttpStatus.BAD_REQUEST,
                     "Unknown State: " + resourceState);
