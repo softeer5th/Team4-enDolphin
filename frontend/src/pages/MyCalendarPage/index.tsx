@@ -43,10 +43,10 @@ const MyCalendarPage = () => {
             />
             <Divider />
           </Flex>
-          <Calendar
-            {...calendar}
-            className={calendarStyle}
-          />
+          <Calendar {...calendar} className={calendarStyle}>
+            <Calendar.Core />
+            <Calendar.Table />
+          </Calendar>
         </SharedCalendarContext.Provider>
       </Flex>
     </div>
