@@ -19,7 +19,13 @@ public class DiscussionParticipantService {
 
     public void addDiscussionParticipant(Discussion discussion, User user) {
         Long offset = discussionParticipantRepository.findMaxOffsetByDiscussionId(discussion.getId());
+
         offset += 1;
+
+        if(offset >= 15) {
+            throw new ApiException(ErrorCode.DISCUSSION_PARTICIPANT_EXCEED_LIMIT);
+        }
+
         DiscussionParticipant participant;
         if (offset == 0) {
             participant = DiscussionParticipant.builder()

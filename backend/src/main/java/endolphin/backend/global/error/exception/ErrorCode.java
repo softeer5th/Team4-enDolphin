@@ -19,7 +19,8 @@ public enum ErrorCode {
     SHARED_EVENT_NOT_FOUND(HttpStatus.NOT_FOUND, "S001", "Shared Event not found"),
 
     // DiscussionParticipant
-    DISCUSSION_PARTICIPANT_NOT_FOUND(HttpStatus.NOT_FOUND, "DP001", "Discussion participant not found"),
+    DISCUSSION_PARTICIPANT_EXCEED_LIMIT(HttpStatus.FORBIDDEN, "DP001", "Discussion participant exceed limit"),
+    DISCUSSION_PARTICIPANT_NOT_FOUND(HttpStatus.NOT_FOUND, "DP002", "Discussion participant not found"),
 
     //Calendar
     CALENDAR_UNAUTHORIZED_ERROR(HttpStatus.UNAUTHORIZED, "CA001", "Unauthorized"),
