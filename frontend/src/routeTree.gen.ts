@@ -23,6 +23,7 @@ import { Route as DiscussionCreateIdImport } from './routes/discussion/create/$i
 
 // Create Virtual Routes
 
+const LoginIndexLazyImport = createFileRoute('/login/')()
 const MainMyScheduleIndexLazyImport = createFileRoute('/_main/my-schedule/')()
 
 // Create/Update Routes
@@ -37,6 +38,12 @@ const IndexRoute = IndexImport.update({
   path: '/',
   getParentRoute: () => rootRoute,
 } as any)
+
+const LoginIndexLazyRoute = LoginIndexLazyImport.update({
+  id: '/login/',
+  path: '/login/',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/login/index.lazy').then((d) => d.Route))
 
 const LandingIndexRoute = LandingIndexImport.update({
   id: '/landing/',
@@ -101,6 +108,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LandingIndexImport
       parentRoute: typeof rootRoute
     }
+    '/login/': {
+      id: '/login/'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginIndexLazyImport
+      parentRoute: typeof rootRoute
+    }
     '/discussion/create/$id': {
       id: '/discussion/create/$id'
       path: '/discussion/create/$id'
@@ -155,6 +169,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '': typeof MainRouteWithChildren
   '/landing': typeof LandingIndexRoute
+  '/login': typeof LoginIndexLazyRoute
   '/discussion/create/$id': typeof DiscussionCreateIdRoute
   '/discussion/edit/$id': typeof DiscussionEditIdRoute
   '/discussion/invite/$id': typeof DiscussionInviteIdRoute
@@ -166,6 +181,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '': typeof MainRouteWithChildren
   '/landing': typeof LandingIndexRoute
+  '/login': typeof LoginIndexLazyRoute
   '/discussion/create/$id': typeof DiscussionCreateIdRoute
   '/discussion/edit/$id': typeof DiscussionEditIdRoute
   '/discussion/invite/$id': typeof DiscussionInviteIdRoute
@@ -178,6 +194,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_main': typeof MainRouteWithChildren
   '/landing/': typeof LandingIndexRoute
+  '/login/': typeof LoginIndexLazyRoute
   '/discussion/create/$id': typeof DiscussionCreateIdRoute
   '/discussion/edit/$id': typeof DiscussionEditIdRoute
   '/discussion/invite/$id': typeof DiscussionInviteIdRoute
@@ -191,6 +208,7 @@ export interface FileRouteTypes {
     | '/'
     | ''
     | '/landing'
+    | '/login'
     | '/discussion/create/$id'
     | '/discussion/edit/$id'
     | '/discussion/invite/$id'
@@ -201,6 +219,7 @@ export interface FileRouteTypes {
     | '/'
     | ''
     | '/landing'
+    | '/login'
     | '/discussion/create/$id'
     | '/discussion/edit/$id'
     | '/discussion/invite/$id'
@@ -211,6 +230,7 @@ export interface FileRouteTypes {
     | '/'
     | '/_main'
     | '/landing/'
+    | '/login/'
     | '/discussion/create/$id'
     | '/discussion/edit/$id'
     | '/discussion/invite/$id'
@@ -223,6 +243,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   MainRoute: typeof MainRouteWithChildren
   LandingIndexRoute: typeof LandingIndexRoute
+  LoginIndexLazyRoute: typeof LoginIndexLazyRoute
   DiscussionCreateIdRoute: typeof DiscussionCreateIdRoute
   DiscussionEditIdRoute: typeof DiscussionEditIdRoute
   DiscussionInviteIdRoute: typeof DiscussionInviteIdRoute
@@ -233,6 +254,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   MainRoute: MainRouteWithChildren,
   LandingIndexRoute: LandingIndexRoute,
+  LoginIndexLazyRoute: LoginIndexLazyRoute,
   DiscussionCreateIdRoute: DiscussionCreateIdRoute,
   DiscussionEditIdRoute: DiscussionEditIdRoute,
   DiscussionInviteIdRoute: DiscussionInviteIdRoute,
@@ -252,6 +274,7 @@ export const routeTree = rootRoute
         "/",
         "/_main",
         "/landing/",
+        "/login/",
         "/discussion/create/$id",
         "/discussion/edit/$id",
         "/discussion/invite/$id",
@@ -269,6 +292,9 @@ export const routeTree = rootRoute
     },
     "/landing/": {
       "filePath": "landing/index.tsx"
+    },
+    "/login/": {
+      "filePath": "login/index.lazy.tsx"
     },
     "/discussion/create/$id": {
       "filePath": "discussion/create/$id.tsx"
