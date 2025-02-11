@@ -5,13 +5,8 @@ import { fadeHighlightProps } from '@/theme/animation.css';
 
 import { vars } from '../../../theme/index.css';
 
-export const containerStyle = style({
-  display: 'flex',
-  flexDirection: 'column',
-  gap: vars.spacing[400],
-});
-
 export const weekStyle = style({
+  width: '100%',
   display: 'flex',
   alignItems: 'stretch',
 });
