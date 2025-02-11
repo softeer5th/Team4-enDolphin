@@ -1,7 +1,7 @@
 package endolphin.backend.domain.candidate_event;
 
 import endolphin.backend.domain.candidate_event.dto.CandidateEvent;
-import endolphin.backend.domain.candidate_event.dto.GetCandidateEventsRequest;
+import endolphin.backend.domain.candidate_event.dto.CalendarViewRequest;
 import endolphin.backend.domain.discussion.DiscussionService;
 import endolphin.backend.domain.discussion.entity.Discussion;
 import endolphin.backend.global.redis.DiscussionBitmapService;
@@ -10,8 +10,10 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -22,16 +24,27 @@ public class CandidateEventService {
     private final DiscussionBitmapService discussionBitmapService;
     private final DiscussionService discussionService;
 
-    public List<CandidateEvent> getCandidateEvents(Long discussionId,
-        GetCandidateEventsRequest request, boolean forCalendarView) {
+    public List<CandidateEvent> getEventsOnCalendarView(Long discussionId,
+        CalendarViewRequest request) {
 
         Discussion discussion = discussionService.getDiscussionById(discussionId);
 
         List<CandidateEvent> events = searchCandidateEvents(discussion, 0);
 
-        int size = getReturnSize(discussion);
+        int returnSize = (request.size() != null) ? request.size() : getReturnSize(discussion);
 
-        return sortCandidateEvents(events, size);
+        events = sortCandidateEvents(events, returnSize);
+
+        if (request.startDate() != null && request.endDate() != null) {
+            return events.stream()
+                .filter(event ->
+                    event.startDateTime() >= convertToMinute(request.startDate().atStartOfDay())
+                        && event.endDateTime() <= convertToMinute(
+                        request.endDate().plusDays(1).atStartOfDay()))
+                .collect(Collectors.toList());
+        }
+
+        return events;
     }
 
     public List<CandidateEvent> searchCandidateEvents(Discussion discussion, int filter) {
@@ -100,24 +113,30 @@ public class CandidateEventService {
 
     public List<CandidateEvent> sortCandidateEvents(List<CandidateEvent> candidateEvents,
         int size) {
-        return null;
+
+        return candidateEvents.stream()
+            .sorted(Comparator
+                .comparingInt(CandidateEvent::userCount)
+                .thenComparingInt(CandidateEvent::totalTimeToAdjust)
+                .thenComparingLong(CandidateEvent::startDateTime))
+            .limit(size)
+            .collect(Collectors.toList());
     }
+
 
     private int getReturnSize(Discussion discussion) {
         LocalDate startDate = discussion.getDateRangeStart();
-        if(LocalDate.now().isAfter(startDate)) {
+        if (LocalDate.now().isAfter(startDate)) {
             startDate = LocalDate.now();
         }
 
         long between = ChronoUnit.DAYS.between(startDate, discussion.getDateRangeEnd()) + 1;
 
-        if(between < 1) {
+        if (between < 1) {
             return 0;
-        }
-        else if(between < 3) {
+        } else if (between < 3) {
             return 6;
-        }
-        else if(between < 15){
+        } else if (between < 15) {
             return 2 * (int) between;
         }
 
