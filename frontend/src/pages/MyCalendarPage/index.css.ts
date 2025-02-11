@@ -34,6 +34,5 @@ export const pickerStyle = style({
 
 export const calendarStyle = style({
   height: 'calc(100vh - 150px)',
-  paddingTop: vars.spacing[500],
   paddingRight: vars.spacing[500],
 });
