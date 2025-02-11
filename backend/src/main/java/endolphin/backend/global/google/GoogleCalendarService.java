@@ -55,7 +55,7 @@ public class GoogleCalendarService {
             Map<String, Object> response = restClient.get()
                 .uri(eventsUrl)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + user.getAccessToken())
-                .retrieve()
+                .retrieve() // TODO: access Token 만료 처리
                 .body(new ParameterizedTypeReference<>() {
                 });
 
@@ -104,7 +104,7 @@ public class GoogleCalendarService {
             Map<String, Object> response = restClient.get()
                 .uri(eventsUrl)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + user.getAccessToken())
-                .retrieve()
+                .retrieve() // TODO: access token 재발급 처리
                 .body(new ParameterizedTypeReference<>() {
                 });
 
@@ -155,7 +155,7 @@ public class GoogleCalendarService {
             Map<String, Object> response = restClient.get()
                 .uri(googleCalendarUrl.primaryCalendarUrl())
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
-                .retrieve()
+                .retrieve() // TODO: access token 재발급 처리
                 .body(new ParameterizedTypeReference<>() {
                 });
 
@@ -169,40 +169,6 @@ public class GoogleCalendarService {
             } else {
                 throw new CalendarException(HttpStatus.BAD_REQUEST, "Primary 캘린더 조회 실패");
             }
-        } catch (Exception e) {
-            throw new CalendarException(HttpStatus.BAD_REQUEST, e.getMessage());
-        }
-    }
-
-    public List<GoogleCalendarDto> getUserCalendars(String accessToken) {
-        try {
-            Map<String, Object> response = restClient.get()
-                .uri(googleCalendarUrl.calendarListUrl())
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
-                .retrieve()
-                .body(new ParameterizedTypeReference<>() {
-                });
-
-            List<GoogleCalendarDto> calendarDtos = new ArrayList<>();
-
-            if (response != null && response.containsKey("items")) {
-                List<Map<String, Object>> calendars = (List<Map<String, Object>>) response.get(
-                    "items");
-
-                for (Map<String, Object> calendar : calendars) {
-                    String id = (String) calendar.get("id");
-                    String summary = (String) calendar.get("summary");
-                    String timeZone = (String) calendar.get("timeZone");
-                    String accessRole = (String) calendar.get("accessRole");
-
-                    calendarDtos.add(new GoogleCalendarDto(id, summary, timeZone, accessRole));
-                }
-            } else {
-                throw new CalendarException(HttpStatus.BAD_REQUEST, "캘린더 목록 조회 실패");
-            }
-
-            return calendarDtos;
-
         } catch (Exception e) {
             throw new CalendarException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
