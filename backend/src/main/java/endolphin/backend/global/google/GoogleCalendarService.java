@@ -277,7 +277,7 @@ public class GoogleCalendarService {
                 User user = userService.getUser(userId);
                 List<GoogleEvent> events = syncWithCalendar(calendarId, user);
                 // TODO: 업데이트된 이벤트 처리 로직(personalEventService 호출)
-                personalEventService.syncWithGoogleCalendar(events);
+                personalEventService.syncWithGoogleCalendar(events, user);
             } else {
                 throw new CalendarException(HttpStatus.BAD_REQUEST,
                     "Unknown State: " + resourceState);

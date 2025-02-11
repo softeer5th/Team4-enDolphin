@@ -1,5 +1,6 @@
 package endolphin.backend.domain.personal_event;
 
+import endolphin.backend.domain.discussion.DiscussionParticipantService;
 import endolphin.backend.domain.discussion.entity.Discussion;
 import endolphin.backend.domain.personal_event.dto.PersonalEventRequest;
 import endolphin.backend.domain.personal_event.dto.PersonalEventResponse;
@@ -25,6 +26,7 @@ public class PersonalEventService {
     private final PersonalEventRepository personalEventRepository;
     private final UserService userService;
     private final PersonalEventPreprocessor personalEventPreprocessor;
+    private final DiscussionParticipantService discussionParticipantService;
 
     @Transactional(readOnly = true)
     public ListResponse<PersonalEventResponse> listPersonalEvents(LocalDateTime startDateTime,
@@ -106,33 +108,42 @@ public class PersonalEventService {
         personalEventPreprocessor.preprocess(personalEvents, discussion, user);
     }
 
-    public void syncWithGoogleCalendar(List<GoogleEvent> googleEvents) {
+    public void syncWithGoogleCalendar(List<GoogleEvent> googleEvents, User user) {
+        List<Discussion> discussions = discussionParticipantService.getDiscussionsByUserId(
+            user.getId());
         for (GoogleEvent googleEvent : googleEvents) {
             if (googleEvent.status().equals(GoogleEventStatus.CONFIRMED)) {
-                updatePersonalEventByGoogleEvent(googleEvent);
+                updatePersonalEventByGoogleEvent(googleEvent, discussions, user);
             } else if (googleEvent.status().equals(GoogleEventStatus.CANCELLED)) {
-                deletePersonalEventByGoogleEvent(googleEvent);
+                deletePersonalEventByGoogleEvent(googleEvent, discussions, user);
             }
         }
     }
 
-    private void updatePersonalEventByGoogleEvent(GoogleEvent googleEvent) {
+    private void updatePersonalEventByGoogleEvent(GoogleEvent googleEvent,
+        List<Discussion> discussions, User user) {
         personalEventRepository.findByGoogleEventId(googleEvent.eventId())
             .ifPresent(personalEvent -> {
-                PersonalEvent originEvent = personalEvent;
+                PersonalEvent oldEvent = personalEvent;
                 personalEvent.update(googleEvent.startDateTime(), googleEvent.endDateTime(),
                     googleEvent.summary());
-                // TODO: 비트맵 수정
                 personalEventRepository.save(personalEvent);
-
-
+                // 비트맵 수정
+                discussions.forEach(discussion -> {
+                    personalEventPreprocessor.preprocessOne(oldEvent, discussion, user, false);
+                    personalEventPreprocessor.preprocessOne(personalEvent, discussion, user, true);
+                });
             });
     }
 
-    private void deletePersonalEventByGoogleEvent(GoogleEvent googleEvent) {
+    private void deletePersonalEventByGoogleEvent(GoogleEvent googleEvent,
+        List<Discussion> discussions, User user) {
         personalEventRepository.findByGoogleEventId(googleEvent.eventId())
             .ifPresent(personalEvent -> {
-                // TODO: 비트맵 삭제
+                // 비트맵 삭제
+                discussions.forEach(discussion -> {
+                    personalEventPreprocessor.preprocessOne(personalEvent, discussion, user, false);
+                });
                 personalEventRepository.delete(personalEvent);
             });
     }

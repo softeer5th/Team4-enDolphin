@@ -31,6 +31,12 @@ public class PersonalEventPreprocessor {
         }
     }
 
+    public void preprocessOne(PersonalEvent personalEvent, Discussion discussion, User user, boolean value) {
+        Long index = discussionParticipantService.getDiscussionParticipantIndex(discussion.getId(),
+            user.getId());
+        convert(personalEvent, discussion, index, value);
+    }
+
     private void convert(PersonalEvent personalEvent, Discussion discussion, Long offset,
         boolean value) {
         Long discussionId = discussion.getId();
