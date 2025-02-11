@@ -124,7 +124,7 @@ public class PersonalEventService {
         List<Discussion> discussions, User user) {
         personalEventRepository.findByGoogleEventId(googleEvent.eventId())
             .ifPresent(personalEvent -> {
-                PersonalEvent oldEvent = personalEvent;
+                PersonalEvent oldEvent = personalEvent.copy();
                 personalEvent.update(googleEvent.startDateTime(), googleEvent.endDateTime(),
                     googleEvent.summary());
                 personalEventRepository.save(personalEvent);

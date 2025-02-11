@@ -69,4 +69,13 @@ public class PersonalEvent extends BaseTimeEntity {
         this.endTime = endDateTime;
         this.title = title;
     }
+
+    public PersonalEvent copy() {
+        return PersonalEvent.builder()
+            .title(this.title)
+            .startTime(this.startTime)
+            .endTime(this.endTime)
+            .user(this.user)
+            .build();
+    }
 }
