@@ -15,6 +15,8 @@ export const defaultContainerStyle = style({
   borderRadius: vars.spacing[200],
   backgroundColor: vars.color.Ref.Netural['White'],
   boxShadow: '0px 12px 32px 0px rgba(78, 89, 104, 0.02), 0px 12px 24px 0px rgba(78, 89, 104, 0.08)',
+
+  zIndex: 1,
 });
 
 export const rootContainerStyle = style({
