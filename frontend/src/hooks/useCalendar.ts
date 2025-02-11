@@ -14,7 +14,7 @@ export interface CalendarInfo {
 }
 
 export const useCalendar 
-= (outerContext: CalendarSharedInfo = {} as CalendarSharedInfo): CalendarInfo => {
+= (outerContext: Partial<CalendarSharedInfo> = {} as CalendarSharedInfo): CalendarInfo => {
   const WEEK_TIME = 7 * 24 * 60 * 60 * 1000;
   const today = new Date();
   const [selected, setSelected] = useState(today);

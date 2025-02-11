@@ -5,7 +5,7 @@ import { CalendarContext } from './CalendarContext';
 import type { CalendarSharedInfo } from './SharedCalendarContext';
 
 interface CalendarInfo extends PropsWithChildren {
-  outerContext?: CalendarSharedInfo;
+  outerContext: Partial<CalendarSharedInfo>;
 }
 
 export const CalendarProvider = ({ outerContext, children }: CalendarInfo) => {
