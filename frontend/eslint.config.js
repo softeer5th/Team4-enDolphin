@@ -1,5 +1,6 @@
 import js from '@eslint/js';
 import stylistic from '@stylistic/eslint-plugin';
+import pluginQuery from '@tanstack/eslint-plugin-query';
 import importPlugin from 'eslint-plugin-import';
 import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
@@ -9,6 +10,7 @@ import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
+  ...pluginQuery.configs['flat/recommended'],
   { ignores: ['dist', 'src/components/Icon'] },
   {
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
