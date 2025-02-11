@@ -1,6 +1,7 @@
 package endolphin.backend.domain.auth;
 
 import endolphin.backend.domain.calendar.CalendarService;
+import endolphin.backend.domain.calendar.entity.Calendar;
 import endolphin.backend.domain.user.UserService;
 import endolphin.backend.global.error.exception.ErrorCode;
 import endolphin.backend.global.error.exception.OAuthException;
@@ -13,6 +14,7 @@ import endolphin.backend.domain.auth.dto.OAuthResponse;
 import endolphin.backend.domain.user.entity.User;
 import endolphin.backend.global.google.GoogleOAuthService;
 import endolphin.backend.global.security.JwtProvider;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -38,15 +40,20 @@ public class AuthService {
         validateUserInfo(userInfo);
         User user = userService.upsertUser(userInfo, tokenResponse);
 
-        GoogleCalendarDto calendar = googleCalendarService.getPrimaryCalendar(
-            user.getAccessToken());
+        if (calendarService.isExistingCalendar(user.getId())) {
+            Calendar calendar = calendarService.getCalendarByUserId(user.getId());
+            if (!calendar.getChannelExpiration().isBefore(LocalDateTime.now())) {
+                googleCalendarService.subscribeToCalendar(calendar.getCalendarId(), user);
+            }
+        } else {
+            GoogleCalendarDto calendar = googleCalendarService.getPrimaryCalendar(
+                user.getAccessToken());
+            calendarService.createCalendar(calendar, user);
+            List<GoogleEvent> events = googleCalendarService.getCalendarEvents(calendar.id(), user);
+            //TODO: 이벤트 db에 저장
 
-        calendarService.createCalendar(calendar, user);
-
-        List<GoogleEvent> events = googleCalendarService.getCalendarEvents(calendar.id(), user);
-        //TODO: 이벤트 db에 저장
-
-        googleCalendarService.subscribeToCalendar(calendar, user);
+            googleCalendarService.subscribeToCalendar(calendar.id(), user);
+        }
 
         String accessToken = jwtProvider.createToken(user.getId(), user.getEmail());
         return new OAuthResponse(accessToken);

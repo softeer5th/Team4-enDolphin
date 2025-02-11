@@ -67,4 +67,13 @@ public class CalendarService {
         calendarRepository.save(calendar);
     }
 
+    public boolean isExistingCalendar(Long userId) {
+        return calendarRepository.existsByUserId(userId);
+    }
+
+    public Calendar getCalendarByUserId(Long userId) {
+        return calendarRepository.findByUserId(userId).orElseThrow(
+            () -> new CalendarException(ErrorCode.CALENDAR_NOT_FOUND_ERROR));
+    }
+
 }
