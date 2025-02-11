@@ -5,6 +5,7 @@ import type { DiscussionRequest } from '../../model';
 import FormButton from './FormButton';
 import { FormProvider } from './FormProvider';
 import MeetingDateDropdowns from './MeetingDateDropdowns';
+import MeetingDeadlineDropdown from './MeetingDeadlineDropdown';
 import MeetingDurationDropdown from './MeetingDurationDropdown';
 import MeetingMethodDropdown from './MeetingMethodDropdown';
 import MeetingTimeDropdowns from './MeetingTimeDropdowns';
@@ -39,6 +40,7 @@ const DiscussionForm = (
         <MeetingTimeDropdowns />
         <MeetingDurationDropdown name='duration' />
         <MeetingMethodDropdown name='meetingMethod' />
+        <MeetingDeadlineDropdown name='deadline' />
         <FormButton type={type} />
       </Flex>
     </FormProvider>

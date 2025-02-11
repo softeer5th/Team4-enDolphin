@@ -4,7 +4,6 @@ import { useMonthNavigation } from '@/hooks/useDatePicker/useMonthNavigation';
 import { formatDateToDotString } from '@/utils/date/format';
 
 import { useFormContext } from './FormContext';
-import { datepickerStyle } from './index.css';
 
 const MeetingDateDropdowns = () => {
   const { formState, handleUpdateField } = useFormContext();
@@ -13,7 +12,6 @@ const MeetingDateDropdowns = () => {
   return (
     <DatePicker.Range
       {...navigation}
-      className={datepickerStyle}
       highlightRange={{ 
         start: formState.dateRangeStart ? new Date(formState.dateRangeStart) : null,
         end: formState.dateRangeEnd ? new Date(formState.dateRangeEnd) : null, 
