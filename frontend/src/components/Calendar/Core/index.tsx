@@ -1,10 +1,15 @@
-import { containerStyle } from './index.css';
+import { Flex } from '@/components/Flex';
+
 import { SelectedWeek } from './SelectedWeek';
 import { TimeControl } from './TimeControl';
 
 export const Core = () => (
-  <div className={containerStyle}>
+  <Flex
+    direction='column'
+    gap={400}
+    width='100%'
+  >  
     <TimeControl />
     <SelectedWeek />
-  </div>
+  </Flex>
 );
