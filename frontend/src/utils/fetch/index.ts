@@ -7,6 +7,7 @@ type Method = 'GET' | 'POST' | 'PUT' | 'DELETE';
 export type RequestOptions = {
   headers?: HeadersInit;
 };
+
 const buildFetchOptions = (options?: RequestInit): RequestInit => {
   const defaultHeaders = {
     'Content-Type': 'application/json',
@@ -22,12 +23,13 @@ const buildFetchOptions = (options?: RequestInit): RequestInit => {
 
   return { ...defaultOptions, ...options, headers };
 };
-export const executeRequest = async<T = unknown> (
+
+export const executeRequest = async (
   method: Method,
   endpoint: string,
-  body?: unknown,
+  body?: BodyInit,
   options?: RequestOptions,
-): Promise<T> => {
+) => {
   const fetchOptions = buildFetchOptions(options);
 
   try {
@@ -42,7 +44,7 @@ export const executeRequest = async<T = unknown> (
     }
 
     const data = await response.json();
-    return data as T;
+    return data;
   } catch (error) {
     throw new Error(`Network Error : ${error}`);
   }
@@ -64,12 +66,8 @@ export const executeRequest = async<T = unknown> (
  * @property delete - 지정된 엔드포인트로 HTTP DELETE 요청을 보냅니다.
  */
 export const request = {
-  get: <T = unknown>(endpoint: string): Promise<T> =>
-    executeRequest<T>('GET', endpoint),
-  post: <T = unknown>(endpoint: string, body?: BodyInit): Promise<T> =>
-    executeRequest<T>('POST', endpoint, body),
-  put: <T = unknown>(endpoint: string, body?: BodyInit): Promise<T> =>
-    executeRequest<T>('PUT', endpoint, body),
-  delete: <T = unknown>(endpoint: string): Promise<T> =>
-    executeRequest<T>('DELETE', endpoint),
+  get: (endpoint: string) => executeRequest('GET', endpoint),
+  post: (endpoint: string, body?: BodyInit) => executeRequest('POST', endpoint, body),
+  put: (endpoint: string, body?: BodyInit) => executeRequest('PUT', endpoint, body),
+  delete: (endpoint: string) => executeRequest('DELETE', endpoint),
 };
