@@ -1,5 +1,6 @@
 
 import { useClickOutside } from '@/hooks/useClickOutside';
+import type { TimeInfo } from '@/hooks/useSelectTime';
 import { isSameDate } from '@/utils/date';
 
 import { useCalendarContext } from '../context/CalendarContext';
@@ -26,8 +27,8 @@ const CalendarContents = () => {
   );
 };
 
-export const CalendarTable = () => (
-  <TimeTableProvider>
+export const CalendarTable = ({ context }: { context?: TimeInfo }) => (
+  <TimeTableProvider outerContext={context}>
     <div className={containerStyle}>
       <CalendarSide />
       <CalendarContents />
