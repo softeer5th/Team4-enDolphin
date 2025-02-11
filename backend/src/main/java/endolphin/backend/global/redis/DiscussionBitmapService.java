@@ -1,7 +1,6 @@
 package endolphin.backend.global.redis;
 
 import endolphin.backend.domain.discussion.entity.Discussion;
-import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -13,7 +12,6 @@ import org.springframework.data.redis.connection.RedisCommandsProvider;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.RedisKeyCommands;
 import org.springframework.data.redis.core.Cursor;
-import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ScanOptions;
 import org.springframework.scheduling.annotation.Async;
@@ -59,26 +57,6 @@ public class DiscussionBitmapService {
         }
     }
 
-    public void initializeDiscussionBitmap(Discussion discussion) {
-        Long discussionId = discussion.getId();
-        LocalDate startDate = discussion.getDateRangeStart();
-        LocalDate endDate = discussion.getDateRangeEnd();
-        LocalTime startTime = discussion.getTimeRangeStart();
-        LocalTime endTime = discussion.getTimeRangeEnd();
-
-        LocalDate currentDate = startDate;
-
-        while(!currentDate.isAfter(endDate)) {
-            LocalDateTime todayStartTime = currentDate.atTime(startTime);
-            LocalDateTime todayEndTime = currentDate.atTime(endTime);
-            while(todayStartTime.isBefore(todayEndTime)) {
-                initializeBitmap(discussionId, todayStartTime);
-                todayStartTime = todayStartTime.plusMinutes(30);
-            }
-            currentDate = currentDate.plusDays(1);
-        }
-    }
-
     /**
      * 해당 논의의 특정 시각(분) 비트맵 데이터에서, 지정 오프셋의 비트를 수정합니다.
      *
@@ -92,6 +70,9 @@ public class DiscussionBitmapService {
         boolean value) {
         long minuteKey = convertToMinuteKey(dateTime);
         String redisKey = buildRedisKey(discussionId, minuteKey);
+        if (getBitmapData(discussionId, dateTime) == null) {
+            initializeBitmap(discussionId, dateTime);
+        }
         return redisTemplate.opsForValue().setBit(redisKey, bitOffset, value);
     }
 

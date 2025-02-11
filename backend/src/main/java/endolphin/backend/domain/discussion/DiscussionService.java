@@ -52,7 +52,6 @@ public class DiscussionService {
 
         discussion = discussionRepository.save(discussion);
 
-        discussionBitmapService.initializeDiscussionBitmap(discussion);
         discussionParticipantService.addDiscussionParticipant(discussion, currentUser);
         personalEventService.preprocessPersonalEvents(currentUser, discussion);
 
