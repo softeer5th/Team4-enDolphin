@@ -18,7 +18,12 @@ const GlobalNavBar = ({ children }: PropsWithChildren) => {
 
   return (
     <header className={containerStyle}>
-      <Logo clickable={true} onClick={onClickLogo} />
+      <Logo
+        clickable={true}
+        height={22}
+        onClick={onClickLogo}
+        width={80}
+      />
       <Flex direction='row'>
         {children}
       </Flex>
