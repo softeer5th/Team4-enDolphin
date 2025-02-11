@@ -25,14 +25,14 @@ public interface DiscussionParticipantRepository extends
         "where dp.discussion.id = :discussionId")
     List<User> findUsersByDiscussionId(@Param("discussionId") Long discussionId);
 
-    @Query("SELECT dp.index " +
+    @Query("SELECT dp.userOffset " +
         "FROM DiscussionParticipant dp " +
         "WHERE dp.discussion.id = :discussionId AND dp.user.id = :userId")
-    Optional<Long> findIndexByDiscussionIdAndUserId(@Param("discussionId") Long discussionId,
+    Optional<Long> findOffsetByDiscussionIdAndUserId(@Param("discussionId") Long discussionId,
         @Param("userId") Long userId);
 
-    @Query("SELECT COALESCE(MAX(dp.index), -1) " +
+    @Query("SELECT COALESCE(MAX(dp.userOffset), -1) " +
         "FROM DiscussionParticipant dp " +
         "WHERE dp.discussion.id = :discussionId")
-    Optional<Long> findMaxIndexByDiscussionId(@Param("discussionId") Long discussionId);
+    Long findMaxOffsetByDiscussionId(@Param("discussionId") Long discussionId);
 }

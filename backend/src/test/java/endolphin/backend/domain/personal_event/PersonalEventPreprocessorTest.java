@@ -1,6 +1,5 @@
 package endolphin.backend.domain.personal_event;
 
-import static org.assertj.core.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
 import endolphin.backend.domain.discussion.DiscussionParticipantService;
@@ -41,7 +40,7 @@ class PersonalEventPreprocessorTest {
         Discussion discussion = getDiscussion();
         User user = getUser();
 
-        given(discussionParticipantService.getDiscussionParticipantIndex(anyLong(), anyLong()))
+        given(discussionParticipantService.getDiscussionParticipantOffset(anyLong(), anyLong()))
             .willReturn(participantIndex);
 
         // count : 2
@@ -67,7 +66,7 @@ class PersonalEventPreprocessorTest {
         Discussion discussion = getDiscussion();
         User user = getUser();
 
-        given(discussionParticipantService.getDiscussionParticipantIndex(anyLong(), anyLong()))
+        given(discussionParticipantService.getDiscussionParticipantOffset(anyLong(), anyLong()))
             .willReturn(participantIndex);
 
         // count : 0
@@ -93,7 +92,7 @@ class PersonalEventPreprocessorTest {
         Discussion discussion = getDiscussion();
         User user = getUser();
 
-        given(discussionParticipantService.getDiscussionParticipantIndex(anyLong(), anyLong()))
+        given(discussionParticipantService.getDiscussionParticipantOffset(anyLong(), anyLong()))
             .willReturn(participantIndex);
 
         // count : 6 + 6 + 2 = 14
@@ -119,7 +118,7 @@ class PersonalEventPreprocessorTest {
         Discussion discussion = getDiscussion();
         User user = getUser();
 
-        given(discussionParticipantService.getDiscussionParticipantIndex(anyLong(), anyLong()))
+        given(discussionParticipantService.getDiscussionParticipantOffset(anyLong(), anyLong()))
             .willReturn(participantIndex);
 
         // count : 6 * 11
@@ -145,7 +144,7 @@ class PersonalEventPreprocessorTest {
         Discussion discussion = getDiscussion();
         User user = getUser();
 
-        given(discussionParticipantService.getDiscussionParticipantIndex(anyLong(), anyLong()))
+        given(discussionParticipantService.getDiscussionParticipantOffset(anyLong(), anyLong()))
             .willReturn(participantIndex);
 
         // count : 3 + 6 * 5

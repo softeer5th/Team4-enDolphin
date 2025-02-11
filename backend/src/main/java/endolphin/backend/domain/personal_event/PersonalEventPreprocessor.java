@@ -24,10 +24,10 @@ public class PersonalEventPreprocessor {
     private final DiscussionParticipantService discussionParticipantService;
 
     public void preprocess(List<PersonalEvent> personalEvents, Discussion discussion, User user) {
-        Long index = discussionParticipantService.getDiscussionParticipantIndex(discussion.getId(),
+        Long offset = discussionParticipantService.getDiscussionParticipantOffset(discussion.getId(),
             user.getId());
         for (PersonalEvent personalEvent : personalEvents) {
-            convert(personalEvent, discussion, index, true);
+            convert(personalEvent, discussion, offset, true);
         }
     }
 

@@ -29,15 +29,15 @@ public class DiscussionParticipant {
     @Column(name = "is_host", nullable = false)
     private boolean isHost;
 
-    @Column(name = "index", nullable = false)
-    private Long index;
+    @Column(name = "user_offfset", nullable = false)
+    private Long userOffset;
 
     @Builder
-    public DiscussionParticipant(Discussion discussion, User user, boolean isHost, Long index) {
+    public DiscussionParticipant(Discussion discussion, User user, boolean isHost, Long userOffset) {
         this.discussion = discussion;
         this.user = user;
         this.isHost = isHost;
-        this.index = index;
+        this.userOffset = userOffset;
     }
 }
 
