@@ -1,10 +1,10 @@
-import { Flex } from '../Flex';
+import clsx from '@/utils/clsx';
+
 import { CalendarProvider } from './context/CalendarProvider';
 import type { CalendarSharedInfo } from './context/SharedCalendarContext';
 import { TimeTableProvider } from './context/TimeTableProvider';
 import { Core } from './Core';
-import { CalendarHeader } from './Header/CalendarHeader';
-import { wrapperStyle } from './index.css';
+import { calendarStyle, wrapperStyle } from './index.css';
 import { CalendarTable } from './Table';
 
 interface CalendarProps extends CalendarSharedInfo {
@@ -13,18 +13,13 @@ interface CalendarProps extends CalendarSharedInfo {
 
 export const Calendar = ({ className, ...context }: CalendarProps) => (
   <CalendarProvider outerContext={context}>
-    <Flex
-      className={className}
-      direction='column'
-      width='100%'
-    >
+    <div className={clsx(className, calendarStyle)}>
       <Core />
       <TimeTableProvider>
         <div className={wrapperStyle}>
-          <CalendarHeader />
           <CalendarTable />
         </div>
       </TimeTableProvider>
-    </Flex>
+    </div>
   </CalendarProvider>
 );

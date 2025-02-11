@@ -1,3 +1,3 @@
 export * from './LoginLink';
-export * from './MyScheduleLink';
+export * from './MyCalendarLink';
 export * from './NewDiscussionLink';

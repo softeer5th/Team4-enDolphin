@@ -7,24 +7,30 @@ import { Text } from '@/components/Text';
 import { useMonthNavigation } from '@/hooks/useDatePicker/useMonthNavigation';
 import { useSharedCalendar } from '@/hooks/useSharedCalendar';
 
-import { calendarStyle, pickerStyle, sideBarStyle, titleContainerStyle } from './index.css';
+import { 
+  calendarStyle, 
+  containerStyle, 
+  contentStyle, 
+  pickerStyle, 
+  sideBarStyle, 
+  titleContainerStyle, 
+} from './index.css';
 
 const MyCalendarPage = () => {
   const calendar = useSharedCalendar();
   const monthNavigation = useMonthNavigation();
 
   return (
-    <>
+    <div className={containerStyle}>
       <Flex className={titleContainerStyle} justify='flex-start'>
         <Text typo='h2'>내 일정 관리</Text>
       </Flex>
       <Divider />
-      <Flex width='100%'>
+      <Flex className={contentStyle} width='100%'>
         <SharedCalendarContext.Provider value={calendar}>
           <Flex
             className={sideBarStyle}
             direction='column'
-            height='100vh'
             justify='flex-start'
             width='17.75rem'
           >
@@ -36,10 +42,13 @@ const MyCalendarPage = () => {
             />
             <div>조율 중인 일정</div>
           </Flex>
-          <Calendar {...calendar} className={calendarStyle} />
+          <Calendar
+            {...calendar}
+            className={calendarStyle}
+          />
         </SharedCalendarContext.Provider>
       </Flex>
-    </>
+    </div>
   );
 };
 

@@ -18,7 +18,7 @@ const DatePickerSelect = ({
   className, selectedDate, trigger, ...props 
 }: DatePickerSelectProps) => {
   const [isOpen, setIsOpen] = useState(!trigger);
-  const ref = useClickOutside<HTMLDivElement>(() => setIsOpen(false));
+  const ref = useClickOutside<HTMLDivElement>(() => setIsOpen(!trigger));
 
   return (
     <DatePickerSelectProvider selectedDate={selectedDate} {...props}>

@@ -6,7 +6,7 @@ import Avatar from '@/components/Avatar';
 import { Flex } from '@/components/Flex';
 import { Logo } from '@/components/Icon/component/Logo';
 
-import { LoginLink, MyScheduleLink, NewDiscussionLink } from './buttons';
+import { LoginLink, MyCalendarLink, NewDiscussionLink } from './buttons';
 import { containerStyle } from './index.css';
 
 interface GlobalNavBarProps extends PropsWithChildren {
@@ -36,7 +36,7 @@ const GlobalNavBar = ({ type, children }: GlobalNavBarProps) => {
 };
 
 GlobalNavBar.LoginLink = LoginLink;
-GlobalNavBar.MyScheduleLink = MyScheduleLink;
+GlobalNavBar.MyCalendarLink = MyCalendarLink;
 GlobalNavBar.NewDiscussionLink = NewDiscussionLink;
 GlobalNavBar.Avatar = Avatar;
 

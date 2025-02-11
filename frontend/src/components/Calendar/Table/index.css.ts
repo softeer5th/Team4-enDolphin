@@ -7,11 +7,7 @@ import { vars } from '../../../theme/index.css';
 
 export const containerStyle = style({
   width: '100%',
-  height: 784,
-  
   display: 'flex',
-  
-  overflowY: 'scroll',
 });
   
 export const contentsStyle = style({
