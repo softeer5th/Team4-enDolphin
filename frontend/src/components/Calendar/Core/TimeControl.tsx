@@ -3,7 +3,7 @@ import { formatDateToWeek } from '@/utils/date';
 
 import { Text } from '../../Text';
 import { useCalendarContext } from '../context/CalendarContext';
-import { timeControlButtonStyle } from './index.css';
+import { timeControlButtonStyle, timeControlStyle } from './index.css';
 import { TimeControlButton } from './TimeControlButton';
 
 export const TimeControl = () => {
@@ -14,6 +14,7 @@ export const TimeControl = () => {
   return  (
     <Flex
       align='center'
+      className={timeControlStyle}
       gap={200}
       justify='flex-start'
     >
