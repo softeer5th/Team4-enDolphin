@@ -18,11 +18,12 @@ public class DiscussionParticipantService {
     private final DiscussionParticipantRepository discussionParticipantRepository;
 
     public void addDiscussionParticipant(Discussion discussion, User user) {
-        Long offset = discussionParticipantRepository.findMaxOffsetByDiscussionId(discussion.getId());
+        Long offset = discussionParticipantRepository.findMaxOffsetByDiscussionId(
+            discussion.getId());
 
         offset += 1;
 
-        if(offset >= 15) {
+        if (offset >= 15) {
             throw new ApiException(ErrorCode.DISCUSSION_PARTICIPANT_EXCEED_LIMIT);
         }
 
@@ -46,13 +47,28 @@ public class DiscussionParticipantService {
     }
 
     @Transactional(readOnly = true)
-    public List<User> getUsersByDiscussionId(Long discussionId){
+    public List<User> getUsersByDiscussionId(Long discussionId) {
         return discussionParticipantRepository.findUsersByDiscussionId(discussionId);
     }
 
     @Transactional(readOnly = true)
     public Long getDiscussionParticipantOffset(Long discussionId, Long userId) {
-        return discussionParticipantRepository.findOffsetByDiscussionIdAndUserId(discussionId, userId)
+        return discussionParticipantRepository.findOffsetByDiscussionIdAndUserId(discussionId,
+                userId)
             .orElseThrow(() -> new ApiException(ErrorCode.DISCUSSION_PARTICIPANT_NOT_FOUND));
+    }
+
+    @Transactional(readOnly = true)
+    public int getFilter(Long discussionId, List<Long> userIds) {
+        List<Long> userOffsets = discussionParticipantRepository.findOffsetsByDiscussionIdAndUserIds(
+            discussionId, userIds);
+
+        int filter = 0;
+
+        for (Long offset : userOffsets) {
+            filter |= (1 << 15 - offset);
+        }
+
+        return filter;
     }
 }
