@@ -45,7 +45,7 @@ export const cellStyle = recipe({
         height: 58,
       },
       empty: {
-        height: 20,
+        height: 16,
       },
       default: {
         height: 66,
@@ -84,12 +84,12 @@ export const cellDetailStyle = recipe({
 export const sideCellStyle = recipe({
   base: {
     width: 72,
+    paddingTop: vars.spacing[200],
     paddingRight: vars.spacing[100],
   
     flexShrink: 0,
     display: 'flex',
     justifyContent: 'flex-end',
-    alignItems: 'center',
   
     backgroundColor: vars.color.Ref.Netural.White,
   },
@@ -97,10 +97,12 @@ export const sideCellStyle = recipe({
     time: {
       all: {
         height: 58,
+        paddingTop: 0,
+        alignItems: 'center',
         color: vars.color.Ref.Netural[600],
       },
       empty: {
-        height: 24,
+        height: 20,
         color: vars.color.Ref.Netural[500],
         marginTop: vars.spacing[500],
       },

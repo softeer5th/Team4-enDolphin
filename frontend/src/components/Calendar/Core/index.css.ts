@@ -29,6 +29,7 @@ export const weekStyle = style({
 });
 
 export const timeControlStyle = style({
+  paddingTop: vars.spacing[500],
   paddingLeft: vars.spacing[500],
 });
 
