@@ -153,3 +153,20 @@ export const isSaturday = (date: Date): boolean => date.getDay() === SATURDAY_CO
 export const isSunday = (date: Date): boolean => date.getDay() === SUNDAY_CODE;
 // TODO: 공휴일 OPEN API에 연결
 // export const isHoliday = (date: Date): boolean => false;
+
+export const getDateParts = (date: Date) => ({
+  year: date.getFullYear(),
+  month: date.getMonth(),
+  day: date.getDate(),
+});
+
+export const getDateRangeString = (startDate: Date, endDate: Date): string => {
+  const { year: startY, month: startM, day: startD } = getDateParts(startDate);
+  const { year: endY, month: endM, day: endD } = getDateParts(endDate);
+
+  const isSameYear = startY !== endY;
+  const format = (year: number, month: number, day: number): string =>
+    isSameYear ? `${year}년 ${month + 1}월 ${day}일` : `${month + 1}월 ${day}일`;
+
+  return `${format(startY, startM, startD)} ~ ${format(endY, endM, endD)}`;
+};

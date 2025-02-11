@@ -1,16 +1,14 @@
 import type { Meta } from '@storybook/react';
 import { useState } from 'react';
 
-import { useCalendar } from '@/hooks/useCalendar';
 import { useHighlightRange } from '@/hooks/useDatePicker/useHighlightRange';
 import { useMonthNavigation } from '@/hooks/useDatePicker/useMonthNavigation';
 import { useSharedCalendar } from '@/hooks/useSharedCalendar';
 
-import { CalendarContext } from '../Calendar/context/CalendarContext';
 import { SharedCalendarContext } from '../Calendar/context/SharedCalendarContext';
 import Input from '../Input';
 import DatePicker from '.';
-import { injectedContainerStyle, inputStyle } from './datePicker.stories.css';
+import { injectedContainerStyle } from './datePicker.stories.css';
 
 const meta = {
   title: 'Calendar/DatePicker',
