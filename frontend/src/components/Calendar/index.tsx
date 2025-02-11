@@ -7,9 +7,17 @@ import { CalendarHeader } from './Header/CalendarHeader';
 import { wrapperStyle } from './index.css';
 import { CalendarTable } from './Table';
 
-export const Calendar = (context?: CalendarSharedInfo) => (
+interface CalendarProps extends CalendarSharedInfo {
+  className?: string;
+}
+
+export const Calendar = ({ className, ...context }: CalendarProps) => (
   <CalendarProvider outerContext={context}>
-    <Flex direction='column' width='100%'>
+    <Flex
+      className={className}
+      direction='column'
+      width='100%'
+    >
       <Core />
       <TimeTableProvider>
         <div className={wrapperStyle}>

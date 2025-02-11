@@ -12,9 +12,7 @@ export const weekStyle = style({
 });
 
 export const timeControlStyle = style({
-  display: 'flex',
-  alignItems: 'center',
-  gap: vars.spacing[200],
+  paddingLeft: vars.spacing[500],
 });
 
 export const timeControlButtonWrapperStyle = style({
