@@ -42,6 +42,11 @@ const EnrollButton = ({ type }: { type: FormType }) => {
   };
 
   const isValidForm = Object.keys(formState as Record<string, unknown>).every((key) => {
+    if (key === 'title' || key === 'dateRangeStart' || key === 'dateRangeEnd'
+      || key === 'timeRangeStart' || key === 'timeRangeEnd' || key === 'duration'
+    ) {
+      if (!formState[key]) return false;
+    }
     const validateFn = validationRef.current[key as keyof DiscussionRequest];
     return !validateFn || validateFn?.(formState[key as keyof DiscussionRequest]);
   });
