@@ -1,6 +1,5 @@
 
 import type { HighlightRange } from '@/components/DatePicker/Table/Highlight';
-import { isSameDate } from '@/utils/date';
 
 interface UseDatePickerRangeProps {
   highlightRange: HighlightRange;
