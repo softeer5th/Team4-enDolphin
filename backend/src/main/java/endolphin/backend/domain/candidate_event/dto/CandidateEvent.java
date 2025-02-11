@@ -4,11 +4,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public record CandidateEvent(
-    LocalDateTime startDateTime,
-    LocalDateTime endDateTime,
+    long startDateTime,
+    long endDateTime,
     int userCount,
     int totalTimeToAdjust,
-    List<Long> userOffsetList
+    int usersData
 ) {
 
 }
