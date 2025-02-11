@@ -4,7 +4,13 @@ import { useFormContext } from './FormContext';
 import type { FormBaseValue } from './type';
 
 const MeetingTitle = ({ name }: FormBaseValue) => {
-  const { formState, validationRef, setValidation, handleUpdateField } = useFormContext();
+  const { 
+    formState, 
+    validationRef, 
+    setValidation, 
+    isSubmitted, 
+    handleUpdateField, 
+  } = useFormContext();
   setValidation(name, () => !!formState[name]);
 
   return (
@@ -15,7 +21,7 @@ const MeetingTitle = ({ name }: FormBaseValue) => {
         value: formState[name] || '',
         onChange: (e) => handleUpdateField(name, e.target.value),
       }}
-      isValid={validationRef.current[name]?.(formState[name])}
+      isValid={!isSubmitted || validationRef.current[name]?.(formState[name])}
       label='제목'
       placeholder='일정 제목은 필수에요'
       required

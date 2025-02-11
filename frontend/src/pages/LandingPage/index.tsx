@@ -2,7 +2,6 @@ import Button from '@/components/Button';
 import { Google } from '@/components/Icon';
 import { Image } from '@/components/Image';
 import { Text } from '@/components/Text';
-import GlobalNavBar from '@/layout/GlobalNavBar';
 import { vars } from '@/theme/index.css';
 
 import {
