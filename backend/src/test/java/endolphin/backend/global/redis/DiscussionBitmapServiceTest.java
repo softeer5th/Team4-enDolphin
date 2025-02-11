@@ -3,6 +3,7 @@ package endolphin.backend.global.redis;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDateTime;
+import java.util.BitSet;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.DisplayName;
@@ -69,5 +70,26 @@ public class DiscussionBitmapServiceTest {
         assertThat(afterDelete)
             .as("deleteDiscussionBitmapsUsingScan should remove the bitmap")
             .isNull();
+    }
+
+    @Test
+    @DisplayName("비트 설정 테스트")
+    public void testSetPersonalEventBitToBitmap() {
+        Long discussionId = 100L;
+        LocalDateTime dateTime = LocalDateTime.now();
+
+        // 초기화 전
+        byte[] bitmapData = bitmapService.getBitmapData(discussionId, dateTime);
+
+        assertThat(bitmapData).isNull();
+
+        // bit 설정
+        Boolean result = bitmapService.setBitValue(discussionId, dateTime, 3, true);
+        assertThat(result).isFalse();
+
+        bitmapData = bitmapService.getBitmapData(discussionId, dateTime);
+        assertThat(bitmapData).isNotNull();
+        BitSet bs = BitSet.valueOf(bitmapData);
+        assertThat(bs.get(3 + 1)).isTrue();
     }
 }

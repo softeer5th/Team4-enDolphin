@@ -1,7 +1,9 @@
 package endolphin.backend.global.redis;
 
-import java.io.IOException;
+import endolphin.backend.domain.discussion.entity.Discussion;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.ZoneOffset;
 import java.util.concurrent.CompletableFuture;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +12,6 @@ import org.springframework.data.redis.connection.RedisCommandsProvider;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.RedisKeyCommands;
 import org.springframework.data.redis.core.Cursor;
-import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ScanOptions;
 import org.springframework.scheduling.annotation.Async;
@@ -69,6 +70,9 @@ public class DiscussionBitmapService {
         boolean value) {
         long minuteKey = convertToMinuteKey(dateTime);
         String redisKey = buildRedisKey(discussionId, minuteKey);
+        if (getBitmapData(discussionId, dateTime) == null) {
+            initializeBitmap(discussionId, dateTime);
+        }
         return redisTemplate.opsForValue().setBit(redisKey, bitOffset, value);
     }
 
