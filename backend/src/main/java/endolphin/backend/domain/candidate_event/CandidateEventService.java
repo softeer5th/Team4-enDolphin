@@ -2,8 +2,10 @@ package endolphin.backend.domain.candidate_event;
 
 import endolphin.backend.domain.candidate_event.dto.CandidateEvent;
 import endolphin.backend.domain.candidate_event.dto.CalendarViewRequest;
+import endolphin.backend.domain.discussion.DiscussionParticipantService;
 import endolphin.backend.domain.discussion.DiscussionService;
 import endolphin.backend.domain.discussion.entity.Discussion;
+import endolphin.backend.domain.user.UserService;
 import endolphin.backend.global.redis.DiscussionBitmapService;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -23,13 +25,16 @@ public class CandidateEventService {
 
     private final DiscussionBitmapService discussionBitmapService;
     private final DiscussionService discussionService;
+    private final DiscussionParticipantService discussionParticipantService;
 
     public List<CandidateEvent> getEventsOnCalendarView(Long discussionId,
         CalendarViewRequest request) {
 
         Discussion discussion = discussionService.getDiscussionById(discussionId);
 
-        List<CandidateEvent> events = searchCandidateEvents(discussion, 0);
+        int filter = discussionParticipantService.getFilter(discussionId, request.selectedUserIdList());
+
+        List<CandidateEvent> events = searchCandidateEvents(discussion, filter);
 
         int returnSize = (request.size() != null) ? request.size() : getReturnSize(discussion);
 
