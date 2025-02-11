@@ -19,16 +19,17 @@ const DiscussionForm = (
   const today = new Date();
 
   return (
-    <FormProvider initialValues={initialValues || {
-      title: '',
-      dateRangeStart: formatDateToDotString(today),
-      dateRangeEnd: formatDateToDotString(new Date(today.getTime() + SEVEN_DAYS)),
-      timeRangeStart: '09:00',
-      timeRangeEnd: '09:00',
-      duration: 60,
-      meetingMethod: null,
-      deadline: formatDateToDotString(new Date(today.getTime() + SEVEN_DAYS)),
-    }}
+    <FormProvider 
+      initialValues={initialValues || {
+        title: '',
+        dateRangeStart: formatDateToDotString(today),
+        dateRangeEnd: formatDateToDotString(new Date(today.getTime() + SEVEN_DAYS)),
+        timeRangeStart: '09:00',
+        timeRangeEnd: '09:30',
+        duration: 60,
+        meetingMethod: null,
+        deadline: formatDateToDotString(new Date(today.getTime() + SEVEN_DAYS)),
+      }}
     >
       <Flex
         direction='column'
