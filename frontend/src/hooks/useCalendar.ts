@@ -20,7 +20,7 @@ export const useCalendar
   const [selected, setSelected] = useState(today);
 
   const handleChangeWeek = (date: Date) => {
-    if (isObjectEmpty(outerContext) && outerContext && outerContext.handleSelectDate) {
+    if (!isObjectEmpty(outerContext) && outerContext && outerContext.handleSelectDate) {
       outerContext.handleSelectDate(date);
       return;
     }
@@ -45,7 +45,7 @@ export const useCalendar
 
   return { 
     selected: outerContext?.selectedDate || selected,
-    dates: formatDateToWeekDates(outerContext?.selectedDate || selected),
+    dates: outerContext?.selectedWeek || formatDateToWeekDates(selected),
     handleClickToday, 
     handleClickPrevWeek, 
     handleClickNextWeek, 
