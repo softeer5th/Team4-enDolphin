@@ -1,14 +1,13 @@
-import { Calendar } from '@/components/Calendar';
 import { SharedCalendarContext } from '@/components/Calendar/context/SharedCalendarContext';
 import DatePicker from '@/components/DatePicker';
 import { Divider } from '@/components/Divider';
 import { Flex } from '@/components/Flex';
 import { Text } from '@/components/Text';
+import { MyCalendar } from '@/features/my-calendar/ui/MyCalendar';
 import { useMonthNavigation } from '@/hooks/useDatePicker/useMonthNavigation';
 import { useSharedCalendar } from '@/hooks/useSharedCalendar';
 
 import { 
-  calendarStyle, 
   containerStyle, 
   contentStyle, 
   pickerStyle, 
@@ -43,10 +42,7 @@ const MyCalendarPage = () => {
             />
             <Divider />
           </Flex>
-          <Calendar {...calendar} className={calendarStyle}>
-            <Calendar.Core />
-            <Calendar.Table />
-          </Calendar>
+          <MyCalendar />
         </SharedCalendarContext.Provider>
       </Flex>
     </div>
