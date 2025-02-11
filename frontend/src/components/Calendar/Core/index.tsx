@@ -1,15 +1,18 @@
 import { Flex } from '@/components/Flex';
 
+import { CalendarHeader } from './CalendarHeader';
+import { coreStyle } from './index.css';
 import { SelectedWeek } from './SelectedWeek';
 import { TimeControl } from './TimeControl';
 
 export const Core = () => (
   <Flex
+    className={coreStyle}
     direction='column'
-    gap={400}
     width='100%'
   >  
     <TimeControl />
     <SelectedWeek />
+    <CalendarHeader />
   </Flex>
 );

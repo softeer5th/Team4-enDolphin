@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 import type { CalendarSharedInfo } from '@/components/Calendar/context/SharedCalendarContext';
+import { isObjectEmpty } from '@/utils/common';
 import { formatDateToWeekDates } from '@/utils/date';
 
 export interface CalendarInfo {
@@ -12,13 +13,14 @@ export interface CalendarInfo {
   handleChangeWeek: (date: Date) => void;
 }
 
-export const useCalendar = (outerContext?: CalendarSharedInfo): CalendarInfo => {
+export const useCalendar 
+= (outerContext: CalendarSharedInfo = {} as CalendarSharedInfo): CalendarInfo => {
   const WEEK_TIME = 7 * 24 * 60 * 60 * 1000;
   const today = new Date();
   const [selected, setSelected] = useState(today);
 
   const handleChangeWeek = (date: Date) => {
-    if (outerContext) {
+    if (isObjectEmpty(outerContext) && outerContext && outerContext.handleSelectDate) {
       outerContext.handleSelectDate(date);
       return;
     }
@@ -30,12 +32,14 @@ export const useCalendar = (outerContext?: CalendarSharedInfo): CalendarInfo => 
   };
     
   const handleClickPrevWeek = () => {
-    const prevWeek = new Date(selected.getTime() - WEEK_TIME);
+    const selectedDate = outerContext?.selectedDate || selected;
+    const prevWeek = new Date(selectedDate.getTime() - WEEK_TIME);
     handleChangeWeek(prevWeek);
   };
     
   const handleClickNextWeek = () => {
-    const nextWeek = new Date(selected.getTime() + WEEK_TIME);
+    const selectedDate = outerContext?.selectedDate || selected;
+    const nextWeek = new Date(selectedDate.getTime() + WEEK_TIME);
     handleChangeWeek(nextWeek);
   };
 
