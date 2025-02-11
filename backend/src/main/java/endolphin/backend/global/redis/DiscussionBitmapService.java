@@ -1,10 +1,10 @@
 package endolphin.backend.global.redis;
 
-import endolphin.backend.domain.discussion.entity.Discussion;
-import java.time.LocalDate;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.ZoneOffset;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.RedisSystemException;
@@ -148,4 +148,36 @@ public class DiscussionBitmapService {
         return CompletableFuture.completedFuture(null);
     }
 
+    public Map<Long, byte[]> getDataOfDiscussionId(Long discussionId, Long startDateTime, Long endDateTime) {
+        String pattern = discussionId + ":*";
+        ScanOptions scanOptions = ScanOptions.scanOptions().match(pattern).count(1000).build();
+
+        return redisTemplate.execute((RedisConnection connection) -> {
+            RedisKeyCommands keyCommands = connection.keyCommands();
+            Map<Long, byte[]> map = new HashMap<>();
+
+            try (Cursor<byte[]> cursor = keyCommands.scan(scanOptions)) {
+                while (cursor.hasNext()) {
+                    byte[] rawKey = cursor.next();
+                    String keyStr = new String(rawKey, StandardCharsets.UTF_8);
+                    int colonIndex = keyStr.indexOf(':');
+
+                    if (colonIndex != -1 && colonIndex < keyStr.length() - 1) {
+                        String minuteKeyStr = keyStr.substring(colonIndex + 1);
+                        try {
+                            Long minuteKey = Long.parseLong(minuteKeyStr);
+
+                            if (minuteKey >= startDateTime && minuteKey <= endDateTime) {
+                                byte[] data = connection.stringCommands().get(rawKey);
+                                map.put(minuteKey, data);
+                            }
+                        } catch (NumberFormatException e) {
+                            // 예: log.warn("Invalid minuteKey: {}", minuteKeyStr, e);
+                        }
+                    }
+                }
+            }
+            return map;
+        });
+    }
 }
