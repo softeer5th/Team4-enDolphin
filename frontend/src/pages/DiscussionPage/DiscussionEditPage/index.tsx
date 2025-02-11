@@ -2,9 +2,12 @@ import { Flex } from '@/components/Flex';
 import DiscussionCreateTitle from '@/features/discussion/ui/DiscussionCreateTitle';
 import DiscussionForm from '@/features/discussion/ui/DiscussionForm';
 
+import { discussionContainerStyle } from '../index.css';
+
 const DiscussionEditPage = () => (
   <Flex
     align='center'
+    className={discussionContainerStyle}
     direction='column'
     gap={800}
     height='100vh'
