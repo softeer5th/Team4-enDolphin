@@ -1,11 +1,18 @@
 package endolphin.backend.global.google;
 
+import endolphin.backend.domain.calendar.CalendarService;
+import endolphin.backend.domain.user.UserService;
 import endolphin.backend.domain.user.entity.User;
 import endolphin.backend.global.config.GoogleCalendarUrl;
 import endolphin.backend.global.error.exception.CalendarException;
 import endolphin.backend.global.google.dto.GoogleCalendarDto;
+import endolphin.backend.global.google.dto.GoogleEvent;
 import java.time.Duration;
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,15 +37,115 @@ public class GoogleCalendarService {
 
     private final RestClient restClient;
     private final GoogleCalendarUrl googleCalendarUrl;
+    private final CalendarService calendarService;
+    private final UserService userService;
 
-    public void getCalendarEvents(String calendarId, User user) {
-        //TODO api 호출해서 Dto 리스트로 리턴
+    public List<GoogleEvent> getCalendarEvents(String calendarId, User user) {
+        try {
+            String eventsUrl = googleCalendarUrl.eventsUrl().replace("{calendarId}", calendarId);
+
+            String timeMin = LocalDateTime.now().atZone(ZoneOffset.UTC)
+                .format(DateTimeFormatter.ISO_INSTANT);
+            eventsUrl += "?timeMin=" + timeMin;
+
+            Map<String, Object> response = restClient.get()
+                .uri(eventsUrl)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + user.getAccessToken())
+                .retrieve()
+                .body(new ParameterizedTypeReference<>() {
+                });
+
+            List<GoogleEvent> events = new ArrayList<>();
+
+            if (response != null && response.containsKey("items")) {
+                List<Map<String, Object>> items = (List<Map<String, Object>>) response.get("items");
+
+                for (Map<String, Object> item : items) {
+                    String eventId = (String) item.get("id");
+                    String summary = (String) item.getOrDefault("summary", "No Title");
+
+                    Map<String, Object> start = (Map<String, Object>) item.get("start");
+                    Map<String, Object> end = (Map<String, Object>) item.get("end");
+
+                    LocalDateTime startDateTime = parseDateTime(start);
+                    LocalDateTime endDateTime = parseDateTime(end);
+
+                    events.add(new GoogleEvent(eventId, summary, startDateTime, endDateTime, null));
+                    System.out.println(
+                        "eventId: " + eventId + ", summary: " + summary + ", startDateTime: "
+                            + startDateTime + ", endDateTime: " + endDateTime);
+                }
+
+                // ✅ nextSyncToken을 받아서 저장
+                if (response.containsKey("nextSyncToken")) {
+                    String nextSyncToken = (String) response.get("nextSyncToken");
+                    calendarService.updateSyncToken(calendarId, nextSyncToken);
+                    System.out.println("nextSyncToken: " + nextSyncToken);
+                }
+            } else {
+                throw new CalendarException(HttpStatus.BAD_REQUEST, "캘린더 이벤트 조회 실패");
+            }
+
+            return events;
+        } catch (Exception e) {
+            throw new CalendarException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
     }
 
-    public void subscribeToAllCalendars(String accessToken, User user) {
-        List<GoogleCalendarDto> calendars = getUserCalendars(accessToken);
-        for (GoogleCalendarDto calendar : calendars) {
-            subscribeToCalendar(calendar, user);
+    public List<GoogleEvent> syncWithCalendar(String calendarId, User user) {
+        try {
+            String syncToken = calendarService.getSyncToken(calendarId);
+            String eventsUrl = googleCalendarUrl.eventsUrl().replace("{calendarId}", calendarId);
+
+            if (syncToken != null && !syncToken.isEmpty()) {
+                eventsUrl += "?syncToken=" + syncToken;
+            }
+
+            Map<String, Object> response = restClient.get()
+                .uri(eventsUrl)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + user.getAccessToken())
+                .retrieve()
+                .body(new ParameterizedTypeReference<>() {
+                });
+
+            List<GoogleEvent> events = new ArrayList<>();
+
+            if (response != null && response.containsKey("items")) {
+                List<Map<String, Object>> items = (List<Map<String, Object>>) response.get("items");
+
+                for (Map<String, Object> item : items) {
+                    String eventId = (String) item.get("id");
+                    String summary = (String) item.getOrDefault("summary", "No Title");
+                    String status = (String) item.getOrDefault("status", "confirmed");
+
+                    Map<String, Object> start = (Map<String, Object>) item.get("start");
+                    Map<String, Object> end = (Map<String, Object>) item.get("end");
+
+                    LocalDateTime startDateTime = parseDateTime(start);
+                    LocalDateTime endDateTime = parseDateTime(end);
+
+                    events.add(
+                        new GoogleEvent(eventId, summary, startDateTime, endDateTime, status));
+                }
+
+                if (response.containsKey("nextSyncToken")) {
+                    String nextSyncToken = (String) response.get("nextSyncToken");
+                    calendarService.updateSyncToken(calendarId, nextSyncToken);
+                }
+            } else {
+                throw new CalendarException(HttpStatus.BAD_REQUEST, "캘린더 이벤트 조회 실패");
+            }
+
+            return events;
+
+        } catch (Exception e) {
+            // syncToken 만료 시 초기화 후 재시도 (HTTP 410 처리)
+            if (e.getMessage().contains("410")) {
+                System.out.println("⚠️ syncToken 만료됨. 초기 동기화로 전환합니다.");
+                calendarService.clearSyncToken(calendarId);
+                return getCalendarEvents(calendarId, user);
+            }
+            throw new CalendarException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
     }
 
@@ -52,7 +159,6 @@ public class GoogleCalendarService {
                 });
 
             if (response != null && response.containsKey("id")) {
-                // Primary 캘린더 정보 추출
                 String id = (String) response.get("id");
                 String summary = (String) response.get("summary");
                 String timeZone = (String) response.get("timeZone");
@@ -109,7 +215,7 @@ public class GoogleCalendarService {
             googleCalendarUrl.webhookUrl()); //TODO: 실제 도메인 엔드포인트로 변경
         body.add("token", user.getId().toString());
 
-        long expirationTime = Instant.now().plus(Duration.ofMinutes(1)).toEpochMilli();
+        long expirationTime = Instant.now().plus(Duration.ofMinutes(3)).toEpochMilli();
         body.add("expiration", expirationTime); //TODO: 구독 만료 시간 설정, 현재 테스트용으로 5분
 
         String calendarId = calendarDto.id();
@@ -154,12 +260,19 @@ public class GoogleCalendarService {
             String calendarId = parseCalendarId(resourceUri);
 
             if ("sync".equals(resourceState)) {
-                log.info("🔄 [SYNC] Resource ID: {}, Channel ID: {}, User ID: {}", resourceId,
-                    channelId, userId);
-                // TODO: 동기화 시 db에 channelId, resourceId, channelExpiration 저장
+                log.info("🔄 [SYNC] Resource ID: {}, Channel ID: {}, User ID: {}, expiration : {}",
+                    resourceId,
+                    channelId, userId, channelExpiration);
+                calendarService.setWebhookProperties(calendarId, resourceId, channelId,
+                    channelExpiration);
             } else if ("exists".equals(resourceState)) {
                 log.info("📅 [EXISTS] Calendar ID: {}, User ID: {}", calendarId, userId);
-                // TODO: 업데이트된 이벤트 처리 로직(변경사항 받아오기, personalEventService 호출)
+
+                User user = userService.getUser(userId);
+                List<GoogleEvent> events = syncWithCalendar(calendarId, user);
+                /* TODO: 업데이트된 이벤트 처리 로직(personalEventService 호출)
+                GoogleEvent.status = "confirmed" -> 추가 or 변경, "cancelled" -> 삭제 입니다.
+                 */
             } else {
                 throw new CalendarException(HttpStatus.BAD_REQUEST,
                     "Unknown State: " + resourceState);
@@ -195,5 +308,25 @@ public class GoogleCalendarService {
             throw new CalendarException(HttpStatus.BAD_REQUEST,
                 "Failed to parse calendarId from resourceUri on webhook.");
         }
+    }
+
+    private LocalDateTime parseDateTime(Map<String, Object> dateTimeMap) {
+        if (dateTimeMap == null) {
+            return null;
+        }
+
+        try {
+            if (dateTimeMap.containsKey("dateTime")) {
+                String dateTimeStr = (String) dateTimeMap.get("dateTime");
+                return ZonedDateTime.parse(dateTimeStr, DateTimeFormatter.ISO_OFFSET_DATE_TIME)
+                    .toLocalDateTime();
+            } else if (dateTimeMap.containsKey("date")) {
+                String dateStr = (String) dateTimeMap.get("date");
+                return LocalDateTime.parse(dateStr + "T00:00:00");
+            }
+        } catch (Exception e) {
+            log.warn("⚠️ DateTime 파싱 실패: {}", dateTimeMap);
+        }
+        return null;
     }
 }

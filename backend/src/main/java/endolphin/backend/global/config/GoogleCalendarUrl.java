@@ -8,7 +8,8 @@ public record GoogleCalendarUrl(
     String subscribeUrl,
     String unsubscribeUrl,
     String webhookUrl,
-    String primaryCalendarUrl
+    String primaryCalendarUrl,
+    String eventsUrl
 ) {
 
 }

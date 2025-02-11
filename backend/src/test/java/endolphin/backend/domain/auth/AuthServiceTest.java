@@ -76,8 +76,6 @@ class AuthServiceTest {
         given(googleCalendarService.getPrimaryCalendar(user.getAccessToken()))
             .willReturn(googleCalendarDto);
 
-        willDoNothing().given(calendarService).getAllEvents(any(GoogleCalendarDto.class), any(User.class));
-
         given(jwtProvider.createToken(user.getId(), user.getEmail()))
             .willReturn("test-jwt-token");
 

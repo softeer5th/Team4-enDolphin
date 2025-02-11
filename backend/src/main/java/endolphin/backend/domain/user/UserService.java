@@ -26,6 +26,12 @@ public class UserService {
             .orElseThrow(() -> new ApiException(ErrorCode.USER_NOT_FOUND));
     }
 
+    @Transactional(readOnly = true)
+    public User getUser(Long userId) {
+        return userRepository.findById(userId)
+            .orElseThrow(() -> new ApiException(ErrorCode.USER_NOT_FOUND));
+    }
+
     public void updateAccessToken(User user, String accessToken) {
         user.setAccessToken(accessToken);
         userRepository.save(user);
