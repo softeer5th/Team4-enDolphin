@@ -2,14 +2,27 @@ import { style } from '@vanilla-extract/css';
 
 import { vars } from '@/theme/index.css';
 
-export const containerStyle = style({
-  display: 'inline-flex',
-  padding: '16px',
+export const defaultContainerStyle = style({
+  position: 'absolute',
+  left: 0,
+  top: '100%',
+  padding: vars.spacing[400],
+  width: 286,
+  display: 'flex',
   flexDirection: 'column',
-  alignItems: 'flex-start',
-  gap: '12px',
-  borderRadius: '8px',
+  gap: vars.spacing[300],
   border: `1px ${vars.color.Ref.Netural[100]}`,
-  background: vars.color.Ref.Netural['White'],
+  borderRadius: vars.spacing[200],
+  backgroundColor: vars.color.Ref.Netural['White'],
   boxShadow: '0px 12px 32px 0px rgba(78, 89, 104, 0.02), 0px 12px 24px 0px rgba(78, 89, 104, 0.08)',
+});
+
+export const rootContainerStyle = style({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: vars.spacing[300],
+});
+
+export const triggerWrapperStyle = style({
+  position: 'relative',
 });

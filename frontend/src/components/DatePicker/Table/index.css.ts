@@ -9,9 +9,9 @@ export const cellThemeVars = createThemeContract({
   selectedCellColor: '--selected-cell-color',
 });
 
-export const calendarStyle = style({
+export const calendarContainerStyle = style({
   display: 'flex',
-  width: '320px',
+  width: '100%',
   flexDirection: 'column',
   justifyContent: 'space-between',
   alignItems: 'center',
@@ -20,8 +20,8 @@ export const calendarStyle = style({
 export const rowContainerStyle = style({
   display: 'flex',
   width: '100%',
+  height: '100%',
   justifyContent: 'space-between',
-  padding: `${vars.spacing[100]} 0`,
 });
 
 export const dowCellWrapperStyle = style({

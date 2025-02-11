@@ -1,9 +1,9 @@
 
 import type { PropsWithChildren } from 'react';
 
+import { Text } from '@/components/Text';
 import clsx from '@/utils/clsx';
 
-import { Text } from '../../../Text';
 import { cellWrapperStyle } from './index.css';
 
 interface CellWrapperProps extends PropsWithChildren {

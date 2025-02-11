@@ -1,11 +1,11 @@
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 
-import { useDateSelect } from '@/hooks/useDatePicker/useDateSelect';
 import { useSafeContext } from '@/hooks/useSafeContext';
+import { vars } from '@/theme/index.css';
 import { isSameDate, isSaturday, isSunday } from '@/utils/date';
 
-import type { CalendarType } from '../..';
-import { DatePickerContext } from '../../DatePickerContext';
+import type { DatePickerType } from '../..';
+import { DatePickerContext } from '../../context/DatePickerContext';
 import type { HighlightState } from '../Highlight';
 import { cellThemeVars } from '../index.css';
 import CellWrapper from './CellWrapper';
@@ -25,12 +25,17 @@ export interface DateCellProps {
   highlightState: HighlightState;
 }
 
-export const DateCell = ({ date, selected, baseDate, highlightState }: DateCellProps) => {
-  const { 
-    calendarType,
-    todayCellStyle,
-    selectedCellStyle,
-  } = useSafeContext(DatePickerContext);
+type DateCellType = 'weekday' | 'saturday' | 'holiday' | 'otherMonth' | 'today' | 'selected';
+
+export const DateCell = ({ 
+  date,
+  selected, 
+  baseDate,
+  highlightState, 
+}: DateCellProps) => {
+  const { calendarType, onDateCellClick } = useSafeContext(DatePickerContext);
+  const todayCellStyle = getTodayCellStyle(calendarType);
+  const selectedCellStyle = getSelectedCellStyle(calendarType);
   const inlineCellStyles = assignInlineVars(cellThemeVars, {
     todayCellBackgroundColor: todayCellStyle.backgroundColor ?? 'transparent',
     todayCellColor: todayCellStyle.color ?? 'transparent',
@@ -39,19 +44,13 @@ export const DateCell = ({ date, selected, baseDate, highlightState }: DateCellP
   });
 
   const dateCellType = getDateCellType(date, calendarType, selected, baseDate, highlightState);
-  const selectDate = useDateSelect(date);
-  const handleDateCellClick = () => {
-    if (calendarType === 'range' && dateCellType === 'otherMonth') return;
-    selectDate();
-  };
-  // TODO: cell에 대한 cursor style과 컨트롤을 묶어서 처리할 방법 모색
+  const isDisabled = calendarType === 'range' && dateCellType === 'otherMonth';
+
   return (
     <CellWrapper 
       className={getDateCellStyle(dateCellType)}
-      cursorType={calendarType === 'range' && dateCellType === 'otherMonth' 
-        ? 'not-allowed' 
-        : 'pointer'}
-      onClick={handleDateCellClick}
+      cursorType={isDisabled  ? 'not-allowed' : 'pointer'}
+      onClick={() => !isDisabled && onDateCellClick(date)}
       style={inlineCellStyles}
     >
       {date.getDate()}
@@ -59,11 +58,9 @@ export const DateCell = ({ date, selected, baseDate, highlightState }: DateCellP
   );
 };
 
-type DateCellType = 'weekday' | 'saturday' | 'holiday' | 'otherMonth' | 'today' | 'selected';
-
 const getDateCellType = (
   date: Date,
-  calendarType: CalendarType,
+  calendarType: DatePickerType,
   selected: boolean,
   baseDate: Date,
   highlightState: HighlightState,
@@ -102,3 +99,11 @@ const getDateCellStyle = (
       return weekdayCellStyle;
   }
 };
+
+const getTodayCellStyle = (calendarType: DatePickerType) => calendarType === 'select'
+  ? { backgroundColor: vars.color.Ref.Primary[500], color: vars.color.Ref.Netural['White'] }
+  : { };
+
+const getSelectedCellStyle = (calendarType: DatePickerType) => calendarType === 'select'
+  ? { backgroundColor: vars.color.Ref.Primary[100], color: vars.color.Ref.Primary[500] }
+  : { backgroundColor: vars.color.Ref.Primary[500], color: vars.color.Ref.Netural['White'] };

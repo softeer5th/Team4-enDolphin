@@ -1,45 +1,24 @@
 
-import useDatePicker from '@/hooks/useDatePicker';
-import { vars } from '@/theme/index.css';
+import type { ReactNode } from '@tanstack/react-router';
 
-import { DatePickerContext } from './DatePickerContext';
-import Header from './Header';
-import { containerStyle } from './index.css';
-import Table from './Table';
+import DatePickerRange from './DatePickerRange';
+import DatePickerSelect from './DatePickerSelect';
 
-export interface CellStyleProps {
-  backgroundColor?: string;
-  color?: string;
+export type DatePickerType = 'select' | 'range';
+
+export interface CommonDatePickerProps {
+  baseDate: Date;
+  gotoNextMonth: () => void;
+  gotoPrevMonth: () => void;
+  trigger?: ReactNode;
+  className?: string;
 }
 
-export type CalendarType = 'select' | 'range';
-
-export interface DatePickerProps {
-  calendarType: CalendarType;
-}
-
-// TODO: container style 외부에서 주입할 수 있도록 구현
-const DatePicker = ({ calendarType }: DatePickerProps) => {
-  const useDatePickerReturns = useDatePicker();
-  const todayCellStyle = getTodayCellStyle(calendarType);
-  const selectedCellStyle = getSelectedCellStyle(calendarType);
-  return (
-    <DatePickerContext.Provider 
-      value={{ calendarType, todayCellStyle, selectedCellStyle, ...useDatePickerReturns }}
-    >
-      <div className={containerStyle}>
-        <Header />
-        <Table />
-      </div>
-    </DatePickerContext.Provider>
-  );
+const DatePicker = () => {
+  throw new Error('!!! DatePicker.Select, DatePicker.Range를 사용해주세요 !!!');
 };
 
-const getTodayCellStyle = (calendarType: CalendarType) => calendarType === 'select'
-  ? { backgroundColor: vars.color.Ref.Primary[500], color: vars.color.Ref.Netural['White'] }
-  : { };
+DatePicker.Select = DatePickerSelect;
+DatePicker.Range = DatePickerRange;
 
-const getSelectedCellStyle = (calendarType: CalendarType) => calendarType === 'select'
-  ? { backgroundColor: vars.color.Ref.Primary[100], color: vars.color.Ref.Primary[500] }
-  : { backgroundColor: vars.color.Ref.Primary[500], color: vars.color.Ref.Netural['White'] };
 export default DatePicker;
