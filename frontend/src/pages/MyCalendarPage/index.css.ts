@@ -29,7 +29,7 @@ export const sideBarStyle = style({
 });
 
 export const pickerStyle = style({
-
+  width: `calc(17.75rem - 2 * ${vars.spacing[500]})`,
 });
 
 export const calendarStyle = style({

@@ -31,6 +31,7 @@ const MyCalendarPage = () => {
           <Flex
             className={sideBarStyle}
             direction='column'
+            gap={400}
             justify='flex-start'
             width='17.75rem'
           >
@@ -40,7 +41,7 @@ const MyCalendarPage = () => {
               selectedDate={calendar.selectedDate}
               {...monthNavigation}
             />
-            <div>조율 중인 일정</div>
+            <Divider />
           </Flex>
           <Calendar
             {...calendar}
