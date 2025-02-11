@@ -7,6 +7,7 @@ import { FormProvider } from './FormProvider';
 import MeetingDateDropdowns from './MeetingDateDropdowns';
 import MeetingDeadlineDropdown from './MeetingDeadlineDropdown';
 import MeetingDurationDropdown from './MeetingDurationDropdown';
+import MeetingLocation from './MeetingLocation';
 import MeetingMethodDropdown from './MeetingMethodDropdown';
 import MeetingTimeDropdowns from './MeetingTimeDropdowns';
 import MeetingTitle from './MeetingTitle';
@@ -24,8 +25,8 @@ const DiscussionForm = (
         title: '',
         dateRangeStart: formatDateToDotString(today),
         dateRangeEnd: formatDateToDotString(new Date(today.getTime() + SEVEN_DAYS)),
-        timeRangeStart: '09:00',
-        timeRangeEnd: '09:30',
+        timeRangeStart: '20:00',
+        timeRangeEnd: '21:00',
         duration: 60,
         meetingMethod: null,
         deadline: formatDateToDotString(new Date(today.getTime() + SEVEN_DAYS)),
@@ -41,6 +42,7 @@ const DiscussionForm = (
         <MeetingTimeDropdowns />
         <MeetingDurationDropdown name='duration' />
         <MeetingMethodDropdown name='meetingMethod' />
+        <MeetingLocation name='location' />
         <MeetingDeadlineDropdown name='deadline' />
         <FormButton type={type} />
       </Flex>
