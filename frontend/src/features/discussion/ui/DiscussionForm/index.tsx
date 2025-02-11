@@ -1,9 +1,10 @@
 import { Flex } from '@/components/Flex';
-import { formatDateToString } from '@/utils/date/format';
+import { formatDateToDotString } from '@/utils/date/format';
 
 import type { DiscussionRequest } from '../../model';
 import FormButton from './FormButton';
 import { FormProvider } from './FormProvider';
+import MeetingDateDropdowns from './MeetingDateDropdowns';
 import MeetingDurationDropdown from './MeetingDurationDropdown';
 import MeetingMethodDropdown from './MeetingMethodDropdown';
 import MeetingTimeDropdowns from './MeetingTimeDropdowns';
@@ -19,13 +20,13 @@ const DiscussionForm = (
   return (
     <FormProvider initialValues={initialValues || {
       title: '',
-      dateRangeStart: formatDateToString(today),
-      dateRangeEnd: formatDateToString(today),
+      dateRangeStart: formatDateToDotString(today),
+      dateRangeEnd: formatDateToDotString(new Date(today.getTime() + SEVEN_DAYS)),
       timeRangeStart: '09:00',
       timeRangeEnd: '09:00',
       duration: 60,
       meetingMethod: null,
-      deadline: formatDateToString(new Date(today.getTime() + SEVEN_DAYS)),
+      deadline: formatDateToDotString(new Date(today.getTime() + SEVEN_DAYS)),
     }}
     >
       <Flex
@@ -34,6 +35,7 @@ const DiscussionForm = (
         width='27.875rem'
       >
         <MeetingTitle name='title' />
+        <MeetingDateDropdowns />
         <MeetingTimeDropdowns />
         <MeetingDurationDropdown name='duration' />
         <MeetingMethodDropdown name='meetingMethod' />
