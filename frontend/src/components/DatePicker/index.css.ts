@@ -2,11 +2,18 @@ import { style } from '@vanilla-extract/css';
 
 import { vars } from '@/theme/index.css';
 
-export const defaultContainerStyle = style({
+export const defaultWrapperStyle = style({
   position: 'absolute',
   left: 0,
   top: '100%',
+
+  paddingBottom: vars.spacing[800],
+  zIndex: 1,
+});
+
+export const defaultContainerStyle = style({
   padding: vars.spacing[400],
+  
   width: 286,
   display: 'flex',
   flexDirection: 'column',
@@ -15,8 +22,6 @@ export const defaultContainerStyle = style({
   borderRadius: vars.spacing[200],
   backgroundColor: vars.color.Ref.Netural['White'],
   boxShadow: '0px 12px 32px 0px rgba(78, 89, 104, 0.02), 0px 12px 24px 0px rgba(78, 89, 104, 0.08)',
-
-  zIndex: 1,
 });
 
 export const rootContainerStyle = style({
