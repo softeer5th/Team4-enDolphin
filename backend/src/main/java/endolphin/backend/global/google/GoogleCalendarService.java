@@ -75,16 +75,12 @@ public class GoogleCalendarService {
                     LocalDateTime endDateTime = parseDateTime(end);
 
                     events.add(new GoogleEvent(eventId, summary, startDateTime, endDateTime, null));
-                    System.out.println(
-                        "eventId: " + eventId + ", summary: " + summary + ", startDateTime: "
-                            + startDateTime + ", endDateTime: " + endDateTime);
                 }
 
                 // ✅ nextSyncToken을 받아서 저장
                 if (response.containsKey("nextSyncToken")) {
                     String nextSyncToken = (String) response.get("nextSyncToken");
                     calendarService.updateSyncToken(calendarId, nextSyncToken);
-                    System.out.println("nextSyncToken: " + nextSyncToken);
                 }
             } else {
                 throw new CalendarException(HttpStatus.BAD_REQUEST, "캘린더 이벤트 조회 실패");
@@ -147,7 +143,6 @@ public class GoogleCalendarService {
         } catch (Exception e) {
             // syncToken 만료 시 초기화 후 재시도 (HTTP 410 처리)
             if (e.getMessage().contains("410")) {
-                System.out.println("⚠️ syncToken 만료됨. 초기 동기화로 전환합니다.");
                 calendarService.clearSyncToken(calendarId);
                 return getCalendarEvents(calendarId, user);
             }
@@ -215,6 +210,7 @@ public class GoogleCalendarService {
 
     public void subscribeToCalendar(GoogleCalendarDto calendarDto, User user) {
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+        // TODO: 캘린더 서비스에서 채널만료기한을 조회해서 현재 시간 이후면 구독 하지 않음
         body.add("id", UUID.randomUUID().toString());
         body.add("type", "web_hook");
         body.add("address",
