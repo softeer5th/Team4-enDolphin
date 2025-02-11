@@ -9,7 +9,11 @@ import { Logo } from '@/components/Icon/component/Logo';
 import { LoginLink, MyScheduleLink, NewDiscussionLink } from './buttons';
 import { containerStyle } from './index.css';
 
-const GlobalNavBar = ({ children }: PropsWithChildren) => {
+interface GlobalNavBarProps extends PropsWithChildren {
+  type?: 'white' | 'transparent';
+} 
+
+const GlobalNavBar = ({ type, children }: GlobalNavBarProps) => {
   const navigate = useNavigate();
 
   const onClickLogo = () => {
@@ -17,7 +21,7 @@ const GlobalNavBar = ({ children }: PropsWithChildren) => {
   };
 
   return (
-    <header className={containerStyle}>
+    <header className={containerStyle({ type })}>
       <Logo
         clickable={true}
         height={22}

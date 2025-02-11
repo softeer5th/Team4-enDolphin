@@ -5,7 +5,7 @@ import DiscussionCreateFinishPage from '@/pages/DiscussionCreateFinishPage';
 
 const DiscussionCreateFinish = () => (
   <>
-    <GlobalNavBar>
+    <GlobalNavBar type='transparent'>
       <GlobalNavBar.MyScheduleLink />
     </GlobalNavBar>
     <DiscussionCreateFinishPage />
