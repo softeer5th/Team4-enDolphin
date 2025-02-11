@@ -7,6 +7,8 @@ import endolphin.backend.global.config.GoogleCalendarUrl;
 import endolphin.backend.global.error.exception.CalendarException;
 import endolphin.backend.global.google.dto.GoogleCalendarDto;
 import endolphin.backend.global.google.dto.GoogleEvent;
+import endolphin.backend.global.google.enums.GoogleEventStatus;
+import endolphin.backend.global.google.enums.GoogleResourceState;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -124,8 +126,10 @@ public class GoogleCalendarService {
                     LocalDateTime startDateTime = parseDateTime(start);
                     LocalDateTime endDateTime = parseDateTime(end);
 
+                    GoogleEventStatus eventStatus = GoogleEventStatus.valueOf(status);
+
                     events.add(
-                        new GoogleEvent(eventId, summary, startDateTime, endDateTime, status));
+                        new GoogleEvent(eventId, summary, startDateTime, endDateTime, eventStatus));
                 }
 
                 if (response.containsKey("nextSyncToken")) {
@@ -259,13 +263,13 @@ public class GoogleCalendarService {
 
             String calendarId = parseCalendarId(resourceUri);
 
-            if ("sync".equals(resourceState)) {
+            if (GoogleResourceState.SYNC.getValue().equals(resourceState)) {
                 log.info("🔄 [SYNC] Resource ID: {}, Channel ID: {}, User ID: {}, expiration : {}",
                     resourceId,
                     channelId, userId, channelExpiration);
                 calendarService.setWebhookProperties(calendarId, resourceId, channelId,
                     channelExpiration);
-            } else if ("exists".equals(resourceState)) {
+            } else if (GoogleResourceState.EXISTS.getValue().equals(resourceState)) {
                 log.info("📅 [EXISTS] Calendar ID: {}, User ID: {}", calendarId, userId);
 
                 User user = userService.getUser(userId);
@@ -273,6 +277,7 @@ public class GoogleCalendarService {
                 /* TODO: 업데이트된 이벤트 처리 로직(personalEventService 호출)
                 GoogleEvent.status = "confirmed" -> 추가 or 변경, "cancelled" -> 삭제 입니다.
                  */
+
             } else {
                 throw new CalendarException(HttpStatus.BAD_REQUEST,
                     "Unknown State: " + resourceState);
