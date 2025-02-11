@@ -8,9 +8,10 @@ import { useFormContext } from './FormContext';
 
 const MeetingMethodDropdown = ({ name }: { name: keyof DiscussionRequest }) => {
   const { formState, handleUpdateField } = useFormContext();
-  const methodMap: Record<MeetingMethodENUM, string> = {
+  const methodMap: Record<MeetingMethodENUM | '', string> = {
     OFFLINE: '만나서',
     ONLINE: '온라인 미팅',
+    '': '선택안함',
   };
 
   return (
@@ -33,6 +34,7 @@ const MeetingMethodDropdown = ({ name }: { name: keyof DiscussionRequest }) => {
     >
       <Dropdown.Item value='OFFLINE'>{methodMap.OFFLINE}</Dropdown.Item>
       <Dropdown.Item value='ONLINE'>{methodMap.ONLINE}</Dropdown.Item>
+      <Dropdown.Item value=''>{methodMap['']}</Dropdown.Item>
     </Dropdown>
   );
 };
