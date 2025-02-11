@@ -15,6 +15,8 @@ export const containerStyle = style({
   padding: '0 28px',
   height: 56,
   borderBottom: `1px solid ${vars.color.Ref.Netural[100]}`,
+
+  backgroundColor: vars.color.Ref.Netural.White,
 });
 
 export const linkStyle = style({
