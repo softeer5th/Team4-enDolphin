@@ -201,7 +201,7 @@ class PersonalEventServiceTest {
     }
 
     @Test
-    @DisplayName("")
+    @DisplayName("업데이트된 구글 일정을 개인 일정에 반영하는 테스트")
     public void testUpdatePersonalEventByGoogleSync_Success() {
         // given
         User user = createTestUser();
