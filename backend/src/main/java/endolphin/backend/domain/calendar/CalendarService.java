@@ -67,10 +67,12 @@ public class CalendarService {
         calendarRepository.save(calendar);
     }
 
+    @Transactional(readOnly = true)
     public boolean isExistingCalendar(Long userId) {
         return calendarRepository.existsByUserId(userId);
     }
 
+    @Transactional(readOnly = true)
     public Calendar getCalendarByUserId(Long userId) {
         return calendarRepository.findByUserId(userId).orElseThrow(
             () -> new CalendarException(ErrorCode.CALENDAR_NOT_FOUND_ERROR));
