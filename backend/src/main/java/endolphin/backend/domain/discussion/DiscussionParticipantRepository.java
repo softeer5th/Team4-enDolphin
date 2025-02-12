@@ -48,7 +48,7 @@ public interface DiscussionParticipantRepository extends
     @Query("SELECT dp.user.id " +
         "FROM DiscussionParticipant dp " +
         "WHERE dp.discussion.id = :discussionId " +
-        "AND dp.userOffset = :offset")
+        "AND dp.userOffset IN :offset")
     List<Long> findUserIdsByDiscussionIdAndOffset(
         @Param("discussionId") Long discussionId,
         @Param("offset") List<Long> offsets
