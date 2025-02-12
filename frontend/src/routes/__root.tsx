@@ -34,8 +34,6 @@ export const Route = createRootRoute({
         <Outlet />
         <TanStackRouterDevtools />
       </NotificationProvider>
-      //
-      {' '}
     </QueryClientProvider>
   ),
   notFoundComponent: () => (
