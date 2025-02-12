@@ -64,6 +64,11 @@ public class DiscussionParticipantService {
 
     @Transactional(readOnly = true)
     public int getFilter(Long discussionId, List<Long> userIds) {
+
+        if(userIds == null || userIds.isEmpty()) {
+            return 0XFFFF;
+        }
+
         List<Long> userOffsets = discussionParticipantRepository.findOffsetsByDiscussionIdAndUserIds(
             discussionId, userIds);
 
@@ -78,6 +83,10 @@ public class DiscussionParticipantService {
 
     @Transactional(readOnly = true)
     public List<UserIdNameDto> getUsersFromData(Long discussionId, int data) {
+        if(data == 0) {
+            return new ArrayList<>();
+        }
+
         List<Long> userOffsets = new ArrayList<>();
 
         for (int i = 0; i < 16; i++) {
