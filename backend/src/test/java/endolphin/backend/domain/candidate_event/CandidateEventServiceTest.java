@@ -7,6 +7,8 @@ import static org.mockito.BDDMockito.when;
 import endolphin.backend.domain.candidate_event.dto.CalendarViewRequest;
 import endolphin.backend.domain.candidate_event.dto.CalendarViewResponse;
 import endolphin.backend.domain.candidate_event.dto.CandidateEventResponse;
+import endolphin.backend.domain.candidate_event.dto.RankViewRequest;
+import endolphin.backend.domain.candidate_event.dto.RankViewResponse;
 import endolphin.backend.domain.discussion.DiscussionParticipantService;
 import endolphin.backend.domain.discussion.DiscussionService;
 import endolphin.backend.domain.discussion.entity.Discussion;
@@ -16,6 +18,7 @@ import java.time.LocalTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
@@ -129,6 +132,36 @@ public class CandidateEventServiceTest {
 
         // 추가로, 여러 이벤트가 생성되었음을 확인 (예: 2개 이상)
         assertThat(events.size()).isGreaterThanOrEqualTo(2);
+    }
+
+    @Test
+    @DisplayName("기본 순위와 시간순 정렬이 올바르게 구성되어야 한다.")
+    public void testGetEventsOnRankView() {
+        RankViewRequest request = new RankViewRequest(new ArrayList<>());
+
+        // when
+        RankViewResponse response = candidateEventService.getEventsOnRankView(discussionId, request);
+
+        // then
+        assertThat(response).isNotNull();
+
+        List<CandidateEventResponse> defaultRanked = response.eventsRankedDefault();
+        List<CandidateEventResponse> timeRanked = response.eventsRankedOfTime();
+
+        assertThat(defaultRanked)
+            .as("기본 순위 후보 이벤트 목록은 비어있지 않아야 합니다.")
+            .isNotEmpty();
+        assertThat(timeRanked)
+            .as("시간순 정렬 후보 이벤트 목록은 비어있지 않아야 합니다.")
+            .isNotEmpty();
+
+        // timeRanked 는 시작 시간 기준 오름차순 정렬되어 있어야 합니다.
+        List<CandidateEventResponse> sortedByTime = new ArrayList<>(timeRanked);
+        sortedByTime.sort(Comparator.comparing(CandidateEventResponse::startDateTime));
+        assertThat(timeRanked).isEqualTo(sortedByTime);
+
+        //  기본 순위 목록과 시간순 정렬 목록이 동일 요소를 포함하는지 검증
+        assertThat(defaultRanked).containsAll(timeRanked);
     }
 
     @TestConfiguration
