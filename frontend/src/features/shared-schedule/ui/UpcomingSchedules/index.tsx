@@ -3,6 +3,7 @@ import { useNavigate } from '@tanstack/react-router';
 import Button from '@/components/Button';
 import { Flex } from '@/components/Flex';
 import { Text } from '@/components/Text';
+import { useCarouselControl } from '@/hooks/useCarousel';
 
 import CarouselControlButton from './ControlButton';
 import { containerStyle } from './index.css';
@@ -14,6 +15,7 @@ interface UpcomingSchedulesProps {
 
 const UpcomingSchedules = ({ schedules }: UpcomingSchedulesProps) => {
   const navigate = useNavigate();
+  const offsetX = 0;
   return (
     <Flex
       className={containerStyle}
@@ -26,7 +28,7 @@ const UpcomingSchedules = ({ schedules }: UpcomingSchedulesProps) => {
         justify='space-between'
         width='full'
       >
-        <UpcomingCarousel schedules={schedules} />
+        <UpcomingCarousel offsetX={offsetX} schedules={schedules} />
         <Flex justify='space-between' width='full'>
           <Text typo='h2'>다가오는 일정</Text>
           <Button 
