@@ -81,7 +81,7 @@ class AuthServiceTest {
         given(calendarService.isExistingCalendar(any())).willReturn(false);
 
 
-        given(googleCalendarService.getPrimaryCalendar(user.getAccessToken()))
+        given(googleCalendarService.getPrimaryCalendar(user))
             .willReturn(googleCalendarDto);
 
         given(jwtProvider.createToken(user.getId(), user.getEmail()))
@@ -94,7 +94,7 @@ class AuthServiceTest {
         assertThat(response.accessToken()).isEqualTo("test-jwt-token");
 
         // ✅ 추가된 메서드 호출 검증
-        verify(googleCalendarService).getPrimaryCalendar(user.getAccessToken());
+        verify(googleCalendarService).getPrimaryCalendar(user);
         verify(googleCalendarService).subscribeToCalendar(googleCalendarDto.id(), user);
     }
 

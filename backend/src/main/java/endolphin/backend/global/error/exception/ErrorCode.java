@@ -35,6 +35,9 @@ public enum ErrorCode {
     OAUTH_FORBIDDEN_ERROR(HttpStatus.FORBIDDEN, "O003", "OAuth Forbidden Error"),
     INVALID_OAUTH_CODE(HttpStatus.UNAUTHORIZED, "O004", "Invalid OAuth Code"),
     INVALID_OAUTH_USER_INFO(HttpStatus.UNAUTHORIZED, "O005", "Invalid OAuth User Info"),
+
+    // Google Calendar
+    EXPIRED_SYNC_TOKEN(HttpStatus.GONE, "GC001", "Expired Sync Token"),
     ;
     private final HttpStatus httpStatus;
     private final String code;

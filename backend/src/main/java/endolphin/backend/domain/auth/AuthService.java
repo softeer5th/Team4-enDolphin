@@ -47,7 +47,7 @@ public class AuthService {
             }
         } else {
             GoogleCalendarDto calendar = googleCalendarService.getPrimaryCalendar(
-                user.getAccessToken());
+                user);
             calendarService.createCalendar(calendar, user);
             List<GoogleEvent> events = googleCalendarService.getCalendarEvents(calendar.id(), user);
             //TODO: 이벤트 db에 저장
