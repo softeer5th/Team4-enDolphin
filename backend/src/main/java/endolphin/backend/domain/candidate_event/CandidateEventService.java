@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -44,6 +45,8 @@ public class CandidateEventService {
 
         events = sortCandidateEvents(events, returnSize);
 
+        log.info("events: {}", events);
+
         if (request.startDate() != null && request.endDate() != null) {
             events = events.stream()
                 .filter(event ->
@@ -70,7 +73,7 @@ public class CandidateEventService {
         int duration = discussion.getDuration();
 
         if (now > endDateTime) {
-            return null;
+            return Collections.emptyList();
         }
 
         if (now >= startDateTime) {
@@ -93,25 +96,26 @@ public class CandidateEventService {
                 continue;
             }
 
+            int data;
+            int totalTime;
+
             if (!dataBlocks.containsKey(minuteKey)) {
-                minuteKey += 30;
-                continue;
+                data = 0;
+                totalTime = 0;
+            } else {
+                data = toInt(dataBlocks.get(minuteKey)) & filter;
+                totalTime = Integer.bitCount(data);
             }
 
-            int data = toInt(dataBlocks.get(minuteKey)) & filter;
-            int totalTime = Integer.bitCount(data);
             long nextMinuteKey = minuteKey + 30;
             long endKey = minuteKey + duration;
 
-            for (long i = nextMinuteKey; i < endKey + duration; i += 30) {
+            for (long i = nextMinuteKey; i < endKey; i += 30) {
                 if (dataBlocks.containsKey(i)) {
                     int nextData = toInt(dataBlocks.get(i)) & filter;
-                    data &= nextData;
+                    data |= nextData;
                     totalTime += Integer.bitCount(nextData);
                     log.info("add: {}", convertToLocalDateTime(i));
-                }
-                else if(i == nextMinuteKey) {
-                    nextMinuteKey += 30;
                 }
             }
 
@@ -121,7 +125,7 @@ public class CandidateEventService {
             minuteKey = nextMinuteKey;
         }
 
-        return events.isEmpty() ? null : events;
+        return events;
     }
 
     public List<CandidateEvent> sortCandidateEvents(List<CandidateEvent> candidateEvents,
