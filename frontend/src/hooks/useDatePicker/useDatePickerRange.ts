@@ -1,6 +1,5 @@
 
 import type { HighlightRange } from '@/components/DatePicker/Table/Highlight';
-import { isSameDate } from '@/utils/date';
 
 interface UseDatePickerRangeProps {
   highlightRange: HighlightRange;
@@ -19,17 +18,12 @@ export const useDatePickerRange = ({
       setHighlightStart(date);
       return;
     }
-  
     if (!end) {
-      if (date < start) {
-        setHighlightStart(date);
-      } else if (isSameDate(date, start)) {
-        setHighlightStart(null);
-      } else {
-        setHighlightEnd(date);
-      }
+      if (date < start) setHighlightStart(date);
+      else setHighlightEnd(date);
       return;
     }
+
     setHighlightStart(null);
     setHighlightEnd(null);
   };

@@ -1,14 +1,16 @@
 import type { PropsWithChildren, ReactNode } from 'react';
 import { useId, useState } from 'react';
 
+import { useClickOutside } from '@/hooks/useClickOutside';
+
 import { DropdownContext } from './DropdownContext';
 import { DropdownItem } from './DropdownItem';
-import { dropdownContainerStyle, dropdownContentStyle } from './index.css';
+import { dropdownContainerStyle, dropdownContentStyle, dropdownTriggerStyle } from './index.css';
 
 interface DropdownProps extends PropsWithChildren {
   trigger: ReactNode;
   width?: number | string;
-  height: number;
+  height?: number | string;
   onChange: ((value: string) => void);
   selectedValue: string;
 }
@@ -16,13 +18,14 @@ interface DropdownProps extends PropsWithChildren {
 export const Dropdown = ({ 
   trigger,
   width = 'auto',
-  height, 
+  height = 'auto',
   onChange, 
   selectedValue,
   children, 
 }: DropdownProps) => {
   const defaultId = `dropdown-${useId()}`;
   const [isOpen, setIsOpen] = useState(false);
+  const ref = useClickOutside<HTMLDivElement>(() => setIsOpen(false));
 
   return (
     <DropdownContext.Provider 
@@ -36,9 +39,10 @@ export const Dropdown = ({
       <div
         className={dropdownContainerStyle}
         id={defaultId}
+        ref={ref}
         style={{ width }}
       >
-        <div onClick={() => setIsOpen((prev) => !prev)}>
+        <div className={dropdownTriggerStyle} onClick={() => setIsOpen((prev) => !prev)}>
           {trigger}
         </div>
         {

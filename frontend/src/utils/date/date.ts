@@ -170,3 +170,16 @@ export const getDateRangeString = (startDate: Date, endDate: Date): string => {
 
   return `${format(startY, startM, startD)} ~ ${format(endY, endM, endD)}`;
 };
+
+/**
+ * 날짜 객체를 year, month, day로 분리합니다.
+ * @param date - 날짜 객체
+ * @returns { year, month, day } 형태의 객체
+ */
+export const getYearMonthDay = (date: Date) => {
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+  
+  return { year, month, day };
+};

@@ -1,20 +1,36 @@
 import { style } from '@vanilla-extract/css';
+import { recipe } from '@vanilla-extract/recipes';
 
 import { vars } from '@/theme/index.css';
 
-export const containerStyle = style({
-  width: '100vw',
+export const containerStyle = recipe({
+  base: {
+    width: '100vw',
 
-  position: 'fixed',
-  left: 0,
-  top: 0,
+    position: 'fixed',
+    left: 0,
+    top: 0,
 
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'space-between',
-  padding: '0 28px',
-  height: 56,
-  borderBottom: `1px solid ${vars.color.Ref.Netural[100]}`,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: '0 28px',
+    height: 56,
+    borderBottom: `1px solid ${vars.color.Ref.Netural[100]}`,
+  },
+  variants: {
+    type: {
+      white: {
+        backgroundColor: vars.color.Ref.Netural.White,
+      },
+      transparent: {
+        backgroundColor: 'transparent',
+      },
+    },
+  },
+  defaultVariants: {
+    type: 'white',
+  },
 });
 
 export const linkStyle = style({

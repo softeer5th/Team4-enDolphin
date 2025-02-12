@@ -1,9 +1,9 @@
    
 import type { IconProps } from '../Icon.d.ts';
 
-export const GoogleCalendar = ({ clickable = false, className, width = 24 , fill = "white", ...rest }: IconProps) => {
+export const GoogleCalendar = ({ clickable = false, className, width = 24, height = 24 , fill = "white", ...rest }: IconProps) => {
     return (
-        <svg width={width} height={width} viewBox="0 0 24 24"  xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" aria-label="google-calendar icon" fill="none" className={className} style={{ cursor: clickable ? "pointer": "default", ...rest.style }} {...rest}>
+        <svg width={width} height={height || width} viewBox="0 0 24 24"  xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" aria-label="google-calendar icon" fill="none" className={className} style={{ cursor: clickable ? "pointer": "default", ...rest.style }} {...rest}>
 <rect width="24" height="24" fill="url(#pattern0_387_28254)"/>
 <defs>
 <pattern id="pattern0_387_28254" patternContentUnits="objectBoundingBox" width="1" height="1">

@@ -1,3 +1,5 @@
+const HOUR = 60;
+
 export const formatDateToTimeString = (date: Date): string => {
   const hours = date.getHours().toString()
     .padStart(2, '0');
@@ -20,4 +22,25 @@ export const getTimeRangeString = (startTime: Date, endTime: Date): string => {
     minute === 0 ? `${hour}시` : `${hour}시 ${minute}분`;
 
   return `${format(startHour, startMinute)} ~ ${format(endHour, endMinute)}`;
+};
+
+export const formatMinutesToTimeString = (minutes: number): string => {
+  const hours = Math.floor(minutes / HOUR);
+  const restMinutes = (minutes % HOUR);
+  const minutesString = restMinutes ? ` ${restMinutes.toString().padStart(2, '0')}분` : '';
+  const amOrPm = hours >= 12 ? '오후' : '오전';
+
+  return `${amOrPm} ${hours}시${minutesString}`;
+};
+
+export const formatNumberToTimeString = (number: number): string => {
+  const hours = Math.floor(number / HOUR).toString();
+  const minutes = (number % HOUR).toString().padStart(2, '0');
+
+  return `${hours}:${minutes}`;
+};
+
+export const formatTimeStringToNumber = (timeString: string): number => {
+  const [hours, minutes] = timeString.split(':');
+  return Number(hours) * HOUR + Number(minutes);
 };

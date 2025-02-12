@@ -2,11 +2,18 @@ import { style } from '@vanilla-extract/css';
 
 import { vars } from '@/theme/index.css';
 
-export const defaultContainerStyle = style({
+export const defaultWrapperStyle = style({
   position: 'absolute',
   left: 0,
   top: '100%',
+
+  paddingBottom: vars.spacing[800],
+  zIndex: 1,
+});
+
+export const defaultContainerStyle = style({
   padding: vars.spacing[400],
+  
   width: 286,
   display: 'flex',
   flexDirection: 'column',

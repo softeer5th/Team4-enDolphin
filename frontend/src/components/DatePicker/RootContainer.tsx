@@ -5,7 +5,7 @@ import clsx from '@/utils/clsx';
 import { rootContainerStyle } from './index.css';
 
 interface RootContainerProps extends PropsWithChildren {
-  ref: RefObject<HTMLDivElement | null>;
+  ref?: RefObject<HTMLDivElement | null>;
   className?: string;
 }
 
