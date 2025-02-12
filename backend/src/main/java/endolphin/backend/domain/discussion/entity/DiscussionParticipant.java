@@ -1,6 +1,7 @@
 package endolphin.backend.domain.discussion.entity;
 
 import endolphin.backend.domain.user.entity.User;
+import endolphin.backend.global.base_entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @Table(name = "discussion_participant")
-public class DiscussionParticipant {
+public class DiscussionParticipant extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
