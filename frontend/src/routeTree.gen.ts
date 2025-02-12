@@ -24,6 +24,7 @@ import { Route as DiscussionCreateIdImport } from './routes/discussion/create/$i
 // Create Virtual Routes
 
 const LoginIndexLazyImport = createFileRoute('/login/')()
+const OauthRedirectIndexLazyImport = createFileRoute('/oauth/redirect/')()
 const MainMyScheduleIndexLazyImport = createFileRoute('/_main/my-schedule/')()
 
 // Create/Update Routes
@@ -50,6 +51,14 @@ const LandingIndexRoute = LandingIndexImport.update({
   path: '/landing/',
   getParentRoute: () => rootRoute,
 } as any)
+
+const OauthRedirectIndexLazyRoute = OauthRedirectIndexLazyImport.update({
+  id: '/oauth/redirect/',
+  path: '/oauth/redirect/',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() =>
+  import('./routes/oauth.redirect/index.lazy').then((d) => d.Route),
+)
 
 const MainMyScheduleIndexLazyRoute = MainMyScheduleIndexLazyImport.update({
   id: '/my-schedule/',
@@ -150,6 +159,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MainMyScheduleIndexLazyImport
       parentRoute: typeof MainImport
     }
+    '/oauth/redirect/': {
+      id: '/oauth/redirect/'
+      path: '/oauth/redirect'
+      fullPath: '/oauth/redirect'
+      preLoaderRoute: typeof OauthRedirectIndexLazyImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -175,6 +191,7 @@ export interface FileRoutesByFullPath {
   '/discussion/invite/$id': typeof DiscussionInviteIdRoute
   '/discussion/create': typeof DiscussionCreateIndexRoute
   '/my-schedule': typeof MainMyScheduleIndexLazyRoute
+  '/oauth/redirect': typeof OauthRedirectIndexLazyRoute
 }
 
 export interface FileRoutesByTo {
@@ -187,6 +204,7 @@ export interface FileRoutesByTo {
   '/discussion/invite/$id': typeof DiscussionInviteIdRoute
   '/discussion/create': typeof DiscussionCreateIndexRoute
   '/my-schedule': typeof MainMyScheduleIndexLazyRoute
+  '/oauth/redirect': typeof OauthRedirectIndexLazyRoute
 }
 
 export interface FileRoutesById {
@@ -200,6 +218,7 @@ export interface FileRoutesById {
   '/discussion/invite/$id': typeof DiscussionInviteIdRoute
   '/discussion/create/': typeof DiscussionCreateIndexRoute
   '/_main/my-schedule/': typeof MainMyScheduleIndexLazyRoute
+  '/oauth/redirect/': typeof OauthRedirectIndexLazyRoute
 }
 
 export interface FileRouteTypes {
@@ -214,6 +233,7 @@ export interface FileRouteTypes {
     | '/discussion/invite/$id'
     | '/discussion/create'
     | '/my-schedule'
+    | '/oauth/redirect'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -225,6 +245,7 @@ export interface FileRouteTypes {
     | '/discussion/invite/$id'
     | '/discussion/create'
     | '/my-schedule'
+    | '/oauth/redirect'
   id:
     | '__root__'
     | '/'
@@ -236,6 +257,7 @@ export interface FileRouteTypes {
     | '/discussion/invite/$id'
     | '/discussion/create/'
     | '/_main/my-schedule/'
+    | '/oauth/redirect/'
   fileRoutesById: FileRoutesById
 }
 
@@ -248,6 +270,7 @@ export interface RootRouteChildren {
   DiscussionEditIdRoute: typeof DiscussionEditIdRoute
   DiscussionInviteIdRoute: typeof DiscussionInviteIdRoute
   DiscussionCreateIndexRoute: typeof DiscussionCreateIndexRoute
+  OauthRedirectIndexLazyRoute: typeof OauthRedirectIndexLazyRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -259,6 +282,7 @@ const rootRouteChildren: RootRouteChildren = {
   DiscussionEditIdRoute: DiscussionEditIdRoute,
   DiscussionInviteIdRoute: DiscussionInviteIdRoute,
   DiscussionCreateIndexRoute: DiscussionCreateIndexRoute,
+  OauthRedirectIndexLazyRoute: OauthRedirectIndexLazyRoute,
 }
 
 export const routeTree = rootRoute
@@ -278,7 +302,8 @@ export const routeTree = rootRoute
         "/discussion/create/$id",
         "/discussion/edit/$id",
         "/discussion/invite/$id",
-        "/discussion/create/"
+        "/discussion/create/",
+        "/oauth/redirect/"
       ]
     },
     "/": {
@@ -311,6 +336,9 @@ export const routeTree = rootRoute
     "/_main/my-schedule/": {
       "filePath": "_main/my-schedule/index.lazy.tsx",
       "parent": "/_main"
+    },
+    "/oauth/redirect/": {
+      "filePath": "oauth.redirect/index.lazy.tsx"
     }
   }
 }
