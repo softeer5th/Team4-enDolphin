@@ -163,10 +163,10 @@ public class GoogleCalendarService {
         } catch (OAuthException e) {
             String accessToken = googleOAuthService.reissueAccessToken(user.getAccessToken());
             userService.updateAccessToken(user, accessToken);
-            return getCalendarEvents(calendarId, user);
+            return syncWithCalendar(calendarId, user);
         } catch (CalendarException e) {
             calendarService.clearSyncToken(calendarId);
-            return getCalendarEvents(calendarId, user);
+            return syncWithCalendar(calendarId, user);
         } catch (Exception e) {
             throw new CalendarException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
@@ -243,11 +243,9 @@ public class GoogleCalendarService {
                     "캘린더 구독 실패: " + googleCalendarId);
             }
         } catch (OAuthException e) {
-            if (e.getErrorCode() == ErrorCode.OAUTH_UNAUTHORIZED_ERROR) {
-                String accessToken = googleOAuthService.reissueAccessToken(user.getAccessToken());
-                userService.updateAccessToken(user, accessToken);
-                subscribeToCalendar(googleCalendarId, user);
-            }
+            String accessToken = googleOAuthService.reissueAccessToken(user.getAccessToken());
+            userService.updateAccessToken(user, accessToken);
+            subscribeToCalendar(googleCalendarId, user);
         } catch (Exception e) {
             throw new CalendarException(HttpStatus.FORBIDDEN, e.getMessage());
         }
