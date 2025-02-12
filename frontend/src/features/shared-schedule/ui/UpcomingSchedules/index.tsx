@@ -1,5 +1,4 @@
 import { useNavigate } from '@tanstack/react-router';
-import { useRef } from 'react';
 
 import Button from '@/components/Button';
 import { Flex } from '@/components/Flex';
@@ -15,13 +14,9 @@ interface UpcomingSchedulesProps {
 }
 
 const UpcomingSchedules = ({ schedules }: UpcomingSchedulesProps) => {
-  const trackRef = useRef<HTMLDivElement | null>(null);
   const navigate = useNavigate();
   const { offsetX, translateCarousel, canTranslateLeft, canTranslateRight } = useCarouselControl({ 
-    totalCards: schedules.length, 
-    trackRef,
-    baseLeftOffset: 50,
-    baseRightOffset: 100,
+    totalCards: schedules.length,
   });
   return (
     <Flex
@@ -35,7 +30,6 @@ const UpcomingSchedules = ({ schedules }: UpcomingSchedulesProps) => {
       <UpcomingCarousel
         offsetX={offsetX}
         schedules={schedules}
-        trackRef={trackRef}
       />
       <Flex justify='space-between' width='full'>
         <Text typo='h2'>다가오는 일정</Text>
