@@ -151,7 +151,11 @@ export const isDateInRange = (
   return targetTime >= startTime && targetTime <= endTime;
 };
 
-export const isSaturday = (date: Date): boolean => date.getDay() === SATURDAY_CODE;
+export const isSaturday = (date: Date | null): boolean => {
+  if (!date) return false;
+  return  date.getDay() === SATURDAY_CODE;
+};
+
 export const isSunday = (date: Date): boolean => date.getDay() === SUNDAY_CODE;
 // TODO: 공휴일 OPEN API에 연결
 // export const isHoliday = (date: Date): boolean => false;

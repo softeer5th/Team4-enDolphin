@@ -19,10 +19,6 @@ export const containerStyle = style({
 
   border: `1px solid ${vars.color.Ref.Netural[200]}`,
   borderRadius: vars.radius[500],
-
-  position: 'absolute',
-  bottom: 0,
-  right: 0,
 });
 
 export const titleStyle = style({

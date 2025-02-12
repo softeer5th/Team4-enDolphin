@@ -30,7 +30,7 @@ export const CalendarDetailCell = ({ date }: { date: Date }) => {
       onClick={()=>handleClick(date)}
       onMouseDown={()=>handleMouseDown(date)}
       onMouseEnter={()=>handleMouseEnter(date)}
-      onMouseUp={handleMouseUp}
+      onMouseUp={()=>handleMouseUp()}
     />
   );
 };
