@@ -54,7 +54,7 @@ public class GoogleCalendarService {
     public void upsertGoogleCalendar(User user) {
         if (calendarService.isExistingCalendar(user.getId())) {
             Calendar calendar = calendarService.getCalendarByUserId(user.getId());
-            if (!calendar.getChannelExpiration().isBefore(LocalDateTime.now())) {
+            if (!calendar.getChannelExpiration().isAfter(LocalDateTime.now())) {
                 subscribeToCalendar(calendar, user);
             }
         } else {
@@ -227,8 +227,10 @@ public class GoogleCalendarService {
     }
 
     public void subscribeToCalendar(Calendar calendar, User user) {
+        if (calendar.getChannelExpiration() != null && calendar.getChannelExpiration().isBefore(LocalDateTime.now())) {
+            return;
+        }
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
-        // TODO: 캘린더 서비스에서 채널만료기한을 조회해서 현재 시간 이후면 구독 하지 않음
         body.add("id", UUID.randomUUID().toString());
         body.add("type", "web_hook");
         body.add("address",

@@ -46,7 +46,7 @@ class GoogleCalendarServiceTest {
     private GoogleCalendarService googleCalendarService;
 
     @Test
-    @DisplayName("사용자에게 캘린더가 이미 존재하고 구독 채널이 아직 유효할 경우")
+    @DisplayName("사용자에게 캘린더가 이미 존재하고 구독 채널이 만료되지 않은 경우")
     void upsertGoogleCalendar_existingCalendar_validExpiration() {
         // Given
         User user = Mockito.mock(User.class);
@@ -57,7 +57,7 @@ class GoogleCalendarServiceTest {
 
         // 채널 만료시간이 현재보다 이후인 캘린더를 리턴하도록 stub 처리
         Calendar calendar = Mockito.mock(Calendar.class);
-        given(calendar.getChannelExpiration()).willReturn(LocalDateTime.now().minusDays(1));
+        given(calendar.getChannelExpiration()).willReturn(LocalDateTime.now().plusDays(1));
 
         given(calendarService.getCalendarByUserId(eq(user.getId()))).willReturn(calendar);
 
@@ -110,14 +110,14 @@ class GoogleCalendarServiceTest {
     }
 
     @Test
-    @DisplayName("사용자에게 캘린더가 이미 존재하고 구독 채널이 만료되었을 경우")
+    @DisplayName("사용자에게 캘린더가 이미 존재하고 구독 채널이 만료된 경우")
     void upsertGoogleCalendar_existingCalendar_expired() {
         // Given
         User user = Mockito.mock(User.class);
         given(user.getId()).willReturn(1L);
         given(calendarService.isExistingCalendar(user.getId())).willReturn(true);
         Calendar calendar = Mockito.mock(Calendar.class);
-        given(calendar.getChannelExpiration()).willReturn(LocalDateTime.now().plusDays(1));
+        given(calendar.getChannelExpiration()).willReturn(LocalDateTime.now().minusDays(1));
         given(calendarService.getCalendarByUserId(user.getId())).willReturn(calendar);
 
         doNothing().when(googleCalendarService).subscribeToCalendar(calendar, user);
