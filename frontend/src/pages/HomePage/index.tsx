@@ -4,12 +4,16 @@ import UpcomingSchedules from '@/features/shared-schedule/ui/UpcomingSchedules';
 
 import { containerStyle } from './index.css';
 
-const HomePage = () => (
-  <div className={containerStyle}>
-    <UpcomingSchedules schedules={[]} />
-    <UnConfirmedSchedules />
-    <ExpiredSchedules />
-  </div>
-);
+const HomePage = () => {
+  const schedules = [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}];
+
+  return (
+    <div className={containerStyle}>
+      <UpcomingSchedules schedules={schedules} />
+      <UnConfirmedSchedules />
+      <ExpiredSchedules />
+    </div>
+  );
+};
 
 export default HomePage;
