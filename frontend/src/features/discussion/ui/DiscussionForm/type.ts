@@ -1,7 +1,7 @@
 import type { DiscussionRequest } from '../../model';
 
 export interface FormBaseValue {
-  name: keyof DiscussionRequest;
+  name: Extract<DiscussionRequest, 'string'>;
   error?: string;
 }
 

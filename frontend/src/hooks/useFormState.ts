@@ -11,9 +11,10 @@ export interface FormState<T> {
   setValidation: (key: keyof T, validateFn: () => boolean) => void;
   validationRef: RefObject<Validation<T>>;
   isSubmitted: boolean;
+  isValid: () => boolean;
 }
 
-export const useFormState = <T>(initialState: T): FormState<T> => {
+export const useFormState = <T extends object>(initialState: T): FormState<T> => {
   const [formState, setFormState] = useState<T>(initialState);
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
   const validationRef = useRef<Validation<T>>({} as Validation<T>);
@@ -33,6 +34,12 @@ export const useFormState = <T>(initialState: T): FormState<T> => {
     validationRef.current[key] = validateFn;
   }, []);
 
+  const isValid = () => Object.keys(formState)
+    .every((key) => {
+      const validateFn = validationRef.current[key as keyof T];
+      return !validateFn || validateFn(formState[key as keyof T]);
+    });
+
   return {
     name: `form-${useId()}`, 
     formState, 
@@ -41,5 +48,6 @@ export const useFormState = <T>(initialState: T): FormState<T> => {
     setValidation, 
     isSubmitted,
     validationRef,
+    isValid,
   };
 };

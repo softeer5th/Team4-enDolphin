@@ -5,10 +5,10 @@ import Input from '@/components/Input';
 import { MINUTES_HALF } from '@/constants/date';
 import { formatTimeStringToNumber } from '@/utils/date';
 
+import type { DiscussionRequest } from '../../model';
 import { useFormContext } from './FormContext';
-import type { FormBaseValue } from './type';
 
-const MeetingDurationDropdown = ({ name }: FormBaseValue) => {
+const MeetingDurationDropdown = ({ name }: { name: keyof DiscussionRequest }) => {
   const { formState, validationRef, setValidation, handleUpdateField } = useFormContext();
 
   const validateDuration = () => {

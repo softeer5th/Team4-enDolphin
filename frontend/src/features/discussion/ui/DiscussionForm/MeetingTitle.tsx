@@ -1,9 +1,9 @@
 import Input from '@/components/Input';
 
+import type { DiscussionRequest } from '../../model';
 import { useFormContext } from './FormContext';
-import type { FormBaseValue } from './type';
 
-const MeetingTitle = ({ name }: FormBaseValue) => {
+const MeetingTitle = ({ name }: { name: keyof DiscussionRequest }) => {
   const { 
     formState, 
     validationRef, 
