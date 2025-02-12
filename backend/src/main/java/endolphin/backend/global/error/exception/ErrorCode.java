@@ -16,6 +16,10 @@ public enum ErrorCode {
     DISCUSSION_NOT_FOUND(HttpStatus.NOT_FOUND, "D001", "Discussion not found"),
     DISCUSSION_NOT_ONGOING(HttpStatus.BAD_REQUEST, "D002", "Discussion not ongoing"),
 
+    // PersonalEvent
+    PERSONAL_EVENT_NOT_FOUND(HttpStatus.NOT_FOUND, "P001", "Personal Event not found"),
+    INVALID_PERSONAL_EVENT_USER(HttpStatus.FORBIDDEN, "P002", "Not allowed to update this personal event"),
+
     //SharedEvent
     SHARED_EVENT_NOT_FOUND(HttpStatus.NOT_FOUND, "S001", "Shared Event not found"),
 

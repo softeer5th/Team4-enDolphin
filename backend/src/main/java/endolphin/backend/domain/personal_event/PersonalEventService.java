@@ -10,6 +10,8 @@ import endolphin.backend.domain.shared_event.dto.SharedEventDto;
 import endolphin.backend.domain.user.UserService;
 import endolphin.backend.domain.user.entity.User;
 import endolphin.backend.global.dto.ListResponse;
+import endolphin.backend.global.error.exception.ApiException;
+import endolphin.backend.global.error.exception.ErrorCode;
 import endolphin.backend.global.google.dto.GoogleEvent;
 import endolphin.backend.global.google.enums.GoogleEventStatus;
 import endolphin.backend.global.util.Validator;
@@ -79,9 +81,7 @@ public class PersonalEventService {
 
         Validator.validateDateTimeRange(request.startDateTime(), request.endDateTime());
 
-        if (!personalEvent.getUser().equals(user)) {
-            throw new RuntimeException("You are not allowed to update this personal event");
-        }
+        validatePersonalEventUser(personalEvent, user);
 
         personalEvent.update(request);
         personalEventRepository.save(personalEvent);
@@ -91,15 +91,14 @@ public class PersonalEventService {
     public void deletePersonalEvent(Long personalEventId) {
         PersonalEvent personalEvent = getPersonalEvent(personalEventId);
         User user = userService.getCurrentUser();
-        if (!personalEvent.getUser().equals(user)) {
-            throw new RuntimeException("You are not allowed to delete this personal event");
-        }
+        validatePersonalEventUser(personalEvent, user);
+
         personalEventRepository.delete(personalEvent);
     }
 
     public PersonalEvent getPersonalEvent(Long personalEventId) {
         return personalEventRepository.findById(personalEventId)
-            .orElseThrow(() -> new RuntimeException("Personal event not found"));
+            .orElseThrow(() -> new ApiException(ErrorCode.PERSONAL_EVENT_NOT_FOUND));
     }
 
     public void preprocessPersonalEvents(User user, Discussion discussion) {
@@ -118,6 +117,12 @@ public class PersonalEventService {
             } else if (googleEvent.status().equals(GoogleEventStatus.CANCELLED)) {
                 deletePersonalEventByGoogleEvent(googleEvent, discussions, user);
             }
+        }
+    }
+
+    private void validatePersonalEventUser(PersonalEvent personalEvent, User user) {
+        if (!personalEvent.getUser().equals(user)) {
+            throw new ApiException(ErrorCode.INVALID_PERSONAL_EVENT_USER);
         }
     }
 
