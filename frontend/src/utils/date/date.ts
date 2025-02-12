@@ -76,7 +76,9 @@ export const formatDateToWeek = (date: Date): DateWeekType => {
  * @param date - 날짜 객체.
  * @returns - 특정 날짜가 포함된 주의 날짜 객체 배열.
  */
-export const formatDateToWeekDates = (date: Date): Date[] => {
+export const formatDateToWeekDates = (date: Date | null): Date[] => {
+  if (!date) return [];
+
   const selected = new Date(date);
   const firstDateOfWeek = new Date(selected.setDate(selected.getDate() - selected.getDay())); 
   const dates = new Array(7).fill(0)

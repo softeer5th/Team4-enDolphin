@@ -1,23 +1,20 @@
 import { SharedCalendarContext } from '@/components/Calendar/context/SharedCalendarContext';
-import DatePicker from '@/components/DatePicker';
 import { Divider } from '@/components/Divider';
 import { Flex } from '@/components/Flex';
 import { Text } from '@/components/Text';
 import { MyCalendar } from '@/features/my-calendar/ui/MyCalendar';
-import { useMonthNavigation } from '@/hooks/useDatePicker/useMonthNavigation';
+import { MyDatePicker } from '@/features/my-calendar/ui/MyDatePicker';
 import { useSharedCalendar } from '@/hooks/useSharedCalendar';
 
 import { 
   containerStyle, 
   contentStyle, 
-  pickerStyle, 
   sideBarStyle, 
   titleContainerStyle, 
 } from './index.css';
 
 const MyCalendarPage = () => {
   const calendar = useSharedCalendar();
-  const monthNavigation = useMonthNavigation();
 
   return (
     <div className={containerStyle}>
@@ -34,12 +31,7 @@ const MyCalendarPage = () => {
             justify='flex-start'
             width='17.75rem'
           >
-            <DatePicker.Select
-              className={pickerStyle}
-              handleDateSelect={calendar.handleSelectDate}
-              selectedDate={calendar.selectedDate}
-              {...monthNavigation}
-            />
+            <MyDatePicker />
             <Divider />
           </Flex>
           <MyCalendar />
