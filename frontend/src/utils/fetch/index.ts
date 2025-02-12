@@ -18,13 +18,14 @@ const buildFetchOptions = (options?: RequestInit): RequestInit => {
   const defaultOptions: RequestInit = {
     headers,
     mode: 'cors',
+    // accessToken을 쿠키로 관리하기 위한 설정
     credentials: 'include',
   };
 
   return { ...defaultOptions, ...options, headers };
 };
 
-export const executeRequest = async (
+export const executeFetch = async (
   method: Method,
   endpoint: string,
   body?: BodyInit,
@@ -66,8 +67,8 @@ export const executeRequest = async (
  * @property delete - 지정된 엔드포인트로 HTTP DELETE 요청을 보냅니다.
  */
 export const request = {
-  get: (endpoint: string) => executeRequest('GET', endpoint),
-  post: (endpoint: string, body?: BodyInit) => executeRequest('POST', endpoint, body),
-  put: (endpoint: string, body?: BodyInit) => executeRequest('PUT', endpoint, body),
-  delete: (endpoint: string) => executeRequest('DELETE', endpoint),
+  get: (endpoint: string) => executeFetch('GET', endpoint),
+  post: (endpoint: string, body?: BodyInit) => executeFetch('POST', endpoint, body),
+  put: (endpoint: string, body?: BodyInit) => executeFetch('PUT', endpoint, body),
+  delete: (endpoint: string) => executeFetch('DELETE', endpoint),
 };
