@@ -1,11 +1,12 @@
 package endolphin.backend.domain.candidate_event;
 
+import endolphin.backend.domain.candidate_event.dto.CalendarViewResponse;
 import endolphin.backend.domain.candidate_event.dto.CandidateEvent;
 import endolphin.backend.domain.candidate_event.dto.CalendarViewRequest;
+import endolphin.backend.domain.candidate_event.dto.CandidateEventResponse;
 import endolphin.backend.domain.discussion.DiscussionParticipantService;
 import endolphin.backend.domain.discussion.DiscussionService;
 import endolphin.backend.domain.discussion.entity.Discussion;
-import endolphin.backend.domain.user.UserService;
 import endolphin.backend.global.redis.DiscussionBitmapService;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -17,8 +18,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CandidateEventService {
@@ -27,12 +30,13 @@ public class CandidateEventService {
     private final DiscussionService discussionService;
     private final DiscussionParticipantService discussionParticipantService;
 
-    public List<CandidateEvent> getEventsOnCalendarView(Long discussionId,
+    public CalendarViewResponse getEventsOnCalendarView(Long discussionId,
         CalendarViewRequest request) {
 
         Discussion discussion = discussionService.getDiscussionById(discussionId);
 
-        int filter = discussionParticipantService.getFilter(discussionId, request.selectedUserIdList());
+        int filter = discussionParticipantService.getFilter(discussionId,
+            request.selectedUserIdList());
 
         List<CandidateEvent> events = searchCandidateEvents(discussion, filter);
 
@@ -41,7 +45,7 @@ public class CandidateEventService {
         events = sortCandidateEvents(events, returnSize);
 
         if (request.startDate() != null && request.endDate() != null) {
-            return events.stream()
+            events = events.stream()
                 .filter(event ->
                     event.startDateTime() >= convertToMinute(request.startDate().atStartOfDay())
                         && event.endDateTime() <= convertToMinute(
@@ -49,7 +53,7 @@ public class CandidateEventService {
                 .collect(Collectors.toList());
         }
 
-        return events;
+        return convertToResponse(discussionId, events);
     }
 
     public List<CandidateEvent> searchCandidateEvents(Discussion discussion, int filter) {
@@ -69,19 +73,20 @@ public class CandidateEventService {
             return null;
         }
 
-        if (now < startDateTime) {
-            minuteKey = now;
+        if (now >= startDateTime) {
+            minuteKey = convertToMinute(LocalDate.now().atTime(discussion.getTimeRangeStart()));
         }
 
         long maxTime = endDateTime % 1440 - duration;
 
         Map<Long, byte[]> dataBlocks = discussionBitmapService.getDataOfDiscussionId(
-            discussion.getId(), startDateTime, endDateTime);
+            discussion.getId(), minuteKey, endDateTime);
         long day = 0;
 
         List<CandidateEvent> events = new ArrayList<>();
 
         while (minuteKey < endDateTime) {
+            log.info("minuteKey: {}", convertToLocalDateTime(minuteKey));
 
             if (minuteKey % 1440 >= maxTime) {
                 minuteKey = ++day * 1440 + startDateTime;
@@ -103,13 +108,16 @@ public class CandidateEventService {
                     int nextData = toInt(dataBlocks.get(i)) & filter;
                     data &= nextData;
                     totalTime += Integer.bitCount(nextData);
-                } else {
+                    log.info("add: {}", convertToLocalDateTime(i));
+                }
+                else if(i == nextMinuteKey) {
                     nextMinuteKey += 30;
                 }
             }
 
             events.add(
                 new CandidateEvent(minuteKey, endKey, Integer.bitCount(data), totalTime, data));
+
             minuteKey = nextMinuteKey;
         }
 
@@ -153,6 +161,22 @@ public class CandidateEventService {
     }
 
     private Long convertToMinute(LocalDateTime dateTime) {
-        return dateTime.toEpochSecond(ZoneOffset.ofHours(9)) / 60;
+        return dateTime.toEpochSecond(ZoneOffset.UTC) / 60;
+    }
+
+    private CalendarViewResponse convertToResponse(Long discussionId, List<CandidateEvent> events) {
+        List<CandidateEventResponse> responses = events.stream()
+            .map(event -> new CandidateEventResponse(
+                convertToLocalDateTime(event.startDateTime()),
+                convertToLocalDateTime(event.endDateTime()),
+                discussionParticipantService.getUsersFromData(discussionId, event.usersData())
+            ))
+            .collect(Collectors.toList());
+        return new CalendarViewResponse(responses);
+    }
+
+    private LocalDateTime convertToLocalDateTime(long minuteKey) {
+        long epochSeconds = minuteKey * 60;
+        return LocalDateTime.ofEpochSecond(epochSeconds, 0, ZoneOffset.UTC);
     }
 }
