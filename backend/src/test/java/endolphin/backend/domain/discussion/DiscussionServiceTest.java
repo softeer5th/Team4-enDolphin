@@ -13,6 +13,7 @@ import static org.mockito.Mockito.when;
 import endolphin.backend.domain.discussion.dto.CreateDiscussionRequest;
 import endolphin.backend.domain.discussion.dto.DiscussionResponse;
 import endolphin.backend.domain.discussion.entity.Discussion;
+import endolphin.backend.domain.discussion.enums.DiscussionStatus;
 import endolphin.backend.domain.discussion.enums.MeetingMethod;
 import endolphin.backend.domain.personal_event.PersonalEventService;
 import endolphin.backend.domain.shared_event.SharedEventService;
@@ -21,6 +22,8 @@ import endolphin.backend.domain.shared_event.dto.SharedEventDto;
 import endolphin.backend.domain.shared_event.dto.SharedEventWithDiscussionInfoResponse;
 import endolphin.backend.domain.user.UserService;
 import endolphin.backend.domain.user.entity.User;
+import endolphin.backend.global.error.exception.ApiException;
+import endolphin.backend.global.error.exception.ErrorCode;
 import endolphin.backend.global.redis.DiscussionBitmapService;
 import endolphin.backend.global.security.PasswordEncoder;
 import java.time.Duration;
@@ -117,6 +120,8 @@ public class DiscussionServiceTest {
             .meetingMethod(MeetingMethod.ONLINE)
             .build();
 
+        discussion.setDiscussionStatus(DiscussionStatus.ONGOING);
+
         SharedEventRequest request = new SharedEventRequest(
             LocalDateTime.of(2025, 3, 1, 10, 0),
             LocalDateTime.of(2025, 3, 1, 12, 0)
@@ -174,6 +179,8 @@ public class DiscussionServiceTest {
             .meetingMethod(MeetingMethod.ONLINE)
             .build();
 
+        discussion.setDiscussionStatus(DiscussionStatus.ONGOING);
+
         SharedEventRequest request = new SharedEventRequest(
             LocalDateTime.of(2025, 3, 1, 10, 0),
             LocalDateTime.of(2025, 3, 1, 12, 0)
@@ -217,6 +224,32 @@ public class DiscussionServiceTest {
         );
         verify(discussionBitmapService).deleteDiscussionBitmapsUsingScan(discussionId);
     }
+
+    @DisplayName("논의 확정 시 논의 상태가 ONGOING이 아닌 경우 예외 발생")
+    @Test
+    public void confirmSchedule_whenDiscussionNotOngoing_throwsApiException() {
+        // Given
+        Long discussionId = 1L;
+        // ONGOING이 아닌 상태로 설정 (예: CREATED)
+        Discussion discussion = Discussion.builder()
+            .title("Test Discussion")
+            .meetingMethod(MeetingMethod.ONLINE)
+            .build();
+
+        discussion.setDiscussionStatus(DiscussionStatus.FINISHED);
+        when(discussionRepository.findById(discussionId)).thenReturn(Optional.of(discussion));
+
+        SharedEventRequest request = new SharedEventRequest(
+            LocalDateTime.of(2025, 3, 1, 10, 0),
+            LocalDateTime.of(2025, 3, 1, 12, 0)
+        );
+
+        // When & Then
+        assertThatThrownBy(() -> discussionService.confirmSchedule(discussionId, request))
+            .isInstanceOf(ApiException.class)
+            .hasFieldOrPropertyWithValue("errorCode", ErrorCode.DISCUSSION_NOT_ONGOING);
+    }
+
 
     @DisplayName("Discussion 생성 시 password 처리 테스트")
     @Test
