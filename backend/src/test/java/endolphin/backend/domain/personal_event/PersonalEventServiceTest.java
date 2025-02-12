@@ -205,36 +205,47 @@ class PersonalEventServiceTest {
     public void testUpdatePersonalEventByGoogleSync_Success() {
         // given
         User user = createTestUser();
-        GoogleEvent updatedGoogleEvent = createGoogleEvent("testEventId1","testTitle1",
+        GoogleEvent updatedGoogleEvent = createGoogleEvent("testEventId1", "testTitle1",
             LocalDateTime.of(2024, 3, 10, 10, 0),
             LocalDateTime.of(2024, 3, 10, 12, 0), GoogleEventStatus.CONFIRMED);
 
-        GoogleEvent deletedGoogleEvent = createGoogleEvent("testEventId2","testTitle2",
+        GoogleEvent deletedGoogleEvent = createGoogleEvent("testEventId2", "testTitle2",
             LocalDateTime.of(2024, 5, 10, 7, 0),
             LocalDateTime.of(2024, 5, 10, 12, 0), GoogleEventStatus.CANCELLED);
         Discussion discussion = createDiscussion();
         Discussion anotherDiscussion = createDiscussion();
-        given(discussionParticipantService.getDiscussionsByUserId(anyLong())).willReturn(List.of(discussion, anotherDiscussion));
+        given(discussionParticipantService.getDiscussionsByUserId(anyLong())).willReturn(
+            List.of(discussion, anotherDiscussion));
 
-        PersonalEvent existingEvent = createPersonalEvent("Old Title");
+        PersonalEvent existingEvent = createPersonalEvent("new Title");
+        given(existingEvent.getStartTime()).willReturn(LocalDateTime.of(2024, 3, 10, 10, 0));
         PersonalEvent oldExistingEvent = createPersonalEvent("Old Title");
         given(existingEvent.copy()).willReturn(oldExistingEvent);
         PersonalEvent existingEvent2 = createPersonalEvent("Old Title2");
 
-        given(personalEventRepository.findByGoogleEventId(eq(updatedGoogleEvent.eventId()))).willReturn(Optional.of(existingEvent));
-        given(personalEventRepository.findByGoogleEventId(eq(deletedGoogleEvent.eventId()))).willReturn(Optional.of(existingEvent2));
+        given(personalEventRepository.findByGoogleEventId(
+            eq(updatedGoogleEvent.eventId()))).willReturn(Optional.of(existingEvent));
+        given(personalEventRepository.findByGoogleEventId(
+            eq(deletedGoogleEvent.eventId()))).willReturn(Optional.of(existingEvent2));
 
         // when
-        personalEventService.syncWithGoogleEvents(List.of(updatedGoogleEvent, deletedGoogleEvent), user);
+        personalEventService.syncWithGoogleEvents(List.of(updatedGoogleEvent, deletedGoogleEvent),
+            user);
 
         // then
-        then(personalEventPreprocessor).should(times(1)).preprocessOne(eq(oldExistingEvent), eq(discussion), any(User.class), eq(false));
-        then(personalEventPreprocessor).should(times(1)).preprocessOne(eq(oldExistingEvent), eq(anotherDiscussion), any(User.class), eq(false));
-        then(personalEventPreprocessor).should(times(1)).preprocessOne(eq(existingEvent), eq(discussion), any(User.class), eq(true));
-        then(personalEventPreprocessor).should(times(1)).preprocessOne(eq(existingEvent), eq(anotherDiscussion), any(User.class), eq(true));
+        then(personalEventPreprocessor).should(times(1))
+            .preprocessOne(eq(oldExistingEvent), eq(discussion), any(User.class), eq(false));
+        then(personalEventPreprocessor).should(times(1))
+            .preprocessOne(eq(oldExistingEvent), eq(anotherDiscussion), any(User.class), eq(false));
+        then(personalEventPreprocessor).should(times(1))
+            .preprocessOne(eq(existingEvent), eq(discussion), any(User.class), eq(true));
+        then(personalEventPreprocessor).should(times(1))
+            .preprocessOne(eq(existingEvent), eq(anotherDiscussion), any(User.class), eq(true));
 
-        then(personalEventPreprocessor).should(times(1)).preprocessOne(eq(existingEvent2), eq(discussion), any(User.class), eq(false));
-        then(personalEventPreprocessor).should(times(1)).preprocessOne(eq(existingEvent2), eq(anotherDiscussion), any(User.class), eq(false));
+        then(personalEventPreprocessor).should(times(1))
+            .preprocessOne(eq(existingEvent2), eq(discussion), any(User.class), eq(false));
+        then(personalEventPreprocessor).should(times(1))
+            .preprocessOne(eq(existingEvent2), eq(anotherDiscussion), any(User.class), eq(false));
     }
 
     PersonalEvent createPersonalEvent(String title, int minusHour, User user) {
