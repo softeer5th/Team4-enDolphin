@@ -2,6 +2,7 @@ package endolphin.backend.domain.personal_event;
 
 import endolphin.backend.domain.discussion.DiscussionParticipantService;
 import endolphin.backend.domain.discussion.entity.Discussion;
+import endolphin.backend.domain.discussion.enums.DiscussionStatus;
 import endolphin.backend.domain.personal_event.dto.PersonalEventRequest;
 import endolphin.backend.domain.personal_event.dto.PersonalEventResponse;
 import endolphin.backend.domain.personal_event.entity.PersonalEvent;
@@ -254,7 +255,9 @@ class PersonalEventServiceTest {
     }
 
     Discussion createDiscussion() {
-        return Mockito.mock(Discussion.class);
+        Discussion discussion = Mockito.mock(Discussion.class);
+        given(discussion.getDiscussionStatus()).willReturn(DiscussionStatus.ONGOING);
+        return discussion;
     }
 
     PersonalEvent createPersonalEvent(String title) {
