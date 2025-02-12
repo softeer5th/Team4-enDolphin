@@ -1,8 +1,8 @@
 import { request } from '@/utils/fetch';
 
-import type { RequestGoogleLoginResponse } from '../model';
+import type { RequestGoogleLoginUrlResponse } from '../model';
 
-export const requestGoogleLogin = async (): Promise<RequestGoogleLoginResponse> => {
+export const requestGoogleLoginUrl = async (): Promise<RequestGoogleLoginUrlResponse> => {
   const response = await request.get('/api/v1/google');
   return response;
 };

@@ -35,6 +35,7 @@ const GlobalNavBar = ({ type, children }: GlobalNavBarProps) => {
   );
 };
 
+// TODO: 로그인 상태에 따라 로그인 버튼 | 다른 버튼들 + 아바타 표시
 GlobalNavBar.LoginLink = LoginLink;
 GlobalNavBar.MyScheduleLink = MyScheduleLink;
 GlobalNavBar.NewDiscussionLink = NewDiscussionLink;
