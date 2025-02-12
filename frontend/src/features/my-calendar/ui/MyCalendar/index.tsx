@@ -2,6 +2,7 @@ import { useState } from 'react';
 
 import { Calendar } from '@/components/Calendar';
 import { useSharedCalendarContext } from '@/components/Calendar/context/SharedCalendarContext';
+import { useClickOutside } from '@/hooks/useClickOutside';
 import { useSelectTime } from '@/hooks/useSelectTime';
 
 import { CalendarCardList } from '../CalendarCardList';
@@ -19,16 +20,19 @@ const CalendarTable = () => {
   const [open, setOpen] = useState(false);
   const [cards, setCards] = useState<DateRange[]>([]);
 
-  const handleMouseUpAddSchedule = ({ startDate, endDate }: DateRange) => {
-    setCards([...cards, { startDate, endDate }]);
+  const handleMouseUpAddSchedule = () => {
     setOpen(true);
   };
 
   return (
     <div className={containerStyle}>
       <SchedulePopover
-        isOpen={open}  
+        cards={cards}
+        endDate={time.doneEndTime}
+        isOpen={open}
+        setCards={setCards}
         setIsOpen={setOpen}
+        startDate={time.doneStartTime}
         type='add'
       />
       <CalendarCardList cards={cards} />
