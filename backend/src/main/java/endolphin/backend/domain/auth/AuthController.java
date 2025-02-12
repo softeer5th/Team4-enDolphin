@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.UriComponentsBuilder;
 
 @Tag(name = "Auth", description = "인증 관리 API")
 @RestController
@@ -39,9 +40,13 @@ public class AuthController {
         cookie.setMaxAge(60 * 60);
         cookie.setPath("/");
         cookie.setDomain(domain);
-        
+
         response.addCookie(cookie);
 
-        response.sendRedirect(String.format("%s%s", frontendUrl, frontendCallback));
+        String redirectUrl = UriComponentsBuilder.fromUriString(frontendUrl)
+            .path(frontendCallback)
+            .build().toUriString();
+
+        response.sendRedirect(redirectUrl);
     }
 }
