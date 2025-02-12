@@ -7,6 +7,8 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
 import endolphin.backend.domain.discussion.entity.Discussion;
+import endolphin.backend.domain.user.UserService;
+import endolphin.backend.domain.user.dto.UserIdNameDto;
 import endolphin.backend.domain.user.entity.User;
 import endolphin.backend.global.error.exception.ApiException;
 import endolphin.backend.global.error.exception.ErrorCode;
@@ -29,6 +31,9 @@ class DiscussionParticipantServiceTest {
 
     @Mock
     private DiscussionParticipantRepository discussionParticipantRepository;
+
+    @Mock
+    private UserService userService;
 
     @InjectMocks
     private DiscussionParticipantService discussionParticipantService;
@@ -155,7 +160,7 @@ class DiscussionParticipantServiceTest {
         // Given
         Long discussionId = 1L;
         List<Long> userIds = Arrays.asList(1L, 2L, 3L);
-        List<Long> offsets = Arrays.asList(0L, 3L, 8L); // Offset: 0, 3, 8
+        List<Long> offsets = Arrays.asList(0L, 3L, 8L);
 
         given(discussionParticipantRepository.findOffsetsByDiscussionIdAndUserIds(discussionId, userIds))
             .willReturn(offsets);
@@ -166,5 +171,32 @@ class DiscussionParticipantServiceTest {
         // Then
         int expectedFilter = (1 << 15) | (1 << 12) | (1 << 7); // 0, 3, 8에 해당하는 비트만 1인 필터
         assertThat(filter).isEqualTo(expectedFilter);
+    }
+
+    @Test
+    @DisplayName("논의 참여자 데이터로부터 사용자 목록 반환")
+    void getUsersFromData_ShouldReturnUserIdNameDtos() {
+        // Given
+        Long discussionId = 1L;
+        // 테스트용 data: 오프셋 0, 3, 8이 set되어 있다고 가정
+        int data = (1 << 15) | (1 << 12) | (1 << 7);
+        // 위의 data를 바탕으로, 내부에서 생성되는 userOffsets는 [0, 3, 8]이어야 함.
+        List<Long> expectedOffsets = Arrays.asList(0L, 3L, 8L);
+        List<Long> userIds = Arrays.asList(10L, 20L, 30L);
+        given(discussionParticipantRepository.findUserIdsByDiscussionIdAndOffset(discussionId, expectedOffsets))
+            .willReturn(userIds);
+
+        List<UserIdNameDto> dtos = Arrays.asList(
+            new UserIdNameDto(10L, "User10"),
+            new UserIdNameDto(20L, "User20"),
+            new UserIdNameDto(30L, "User30")
+        );
+        given(userService.getUserIdNameInIds(userIds)).willReturn(dtos);
+
+        // When
+        List<UserIdNameDto> result = discussionParticipantService.getUsersFromData(discussionId, data);
+
+        // Then
+        assertThat(result).isEqualTo(dtos);
     }
 }
