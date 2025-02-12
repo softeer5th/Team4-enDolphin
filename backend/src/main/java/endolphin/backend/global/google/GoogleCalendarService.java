@@ -1,6 +1,7 @@
 package endolphin.backend.global.google;
 
 import endolphin.backend.domain.calendar.CalendarService;
+import endolphin.backend.domain.calendar.entity.Calendar;
 import endolphin.backend.domain.personal_event.PersonalEventService;
 import endolphin.backend.domain.user.UserService;
 import endolphin.backend.domain.user.entity.User;
@@ -28,6 +29,7 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClient;
@@ -38,6 +40,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 @Slf4j
 public class GoogleCalendarService {
 
@@ -47,6 +50,23 @@ public class GoogleCalendarService {
     private final UserService userService;
     private final PersonalEventService personalEventService;
     private final GoogleOAuthService googleOAuthService;
+
+    public void upsertGoogleCalendar(User user) {
+        if (calendarService.isExistingCalendar(user.getId())) {
+            Calendar calendar = calendarService.getCalendarByUserId(user.getId());
+            if (!calendar.getChannelExpiration().isBefore(LocalDateTime.now())) {
+                subscribeToCalendar(calendar, user);
+            }
+        } else {
+            GoogleCalendarDto googleCalendarDto = getPrimaryCalendar(
+                user);
+            Calendar calendar = calendarService.createCalendar(googleCalendarDto, user);
+            List<GoogleEvent> events = getCalendarEvents(googleCalendarDto.id(), user);
+
+            personalEventService.syncWithGoogleEvents(events, user);
+            subscribeToCalendar(calendar, user);
+        }
+    }
 
     public List<GoogleEvent> getCalendarEvents(String calendarId, User user) {
         try {
@@ -206,7 +226,7 @@ public class GoogleCalendarService {
         }
     }
 
-    public void subscribeToCalendar(String googleCalendarId, User user) {
+    public void subscribeToCalendar(Calendar calendar, User user) {
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
         // TODO: 캘린더 서비스에서 채널만료기한을 조회해서 현재 시간 이후면 구독 하지 않음
         body.add("id", UUID.randomUUID().toString());
@@ -220,7 +240,7 @@ public class GoogleCalendarService {
 
         try {
             String subscribeUrl = googleCalendarUrl.subscribeUrl()
-                .replace("{calendarId}", googleCalendarId);
+                .replace("{calendarId}", calendar.getCalendarId());
 
             Map<String, Object> response = restClient.post()
                 .uri(subscribeUrl)
@@ -237,15 +257,15 @@ public class GoogleCalendarService {
                 });
 
             if (response != null) {
-                log.info("Successfully subscribed to calendar: {}", googleCalendarId);
+                log.info("Successfully subscribed to calendar: {}", calendar.getCalendarId());
             } else {
                 throw new CalendarException(HttpStatus.BAD_REQUEST,
-                    "캘린더 구독 실패: " + googleCalendarId);
+                    "캘린더 구독 실패: " + calendar.getCalendarId());
             }
         } catch (OAuthException e) {
             String accessToken = googleOAuthService.reissueAccessToken(user.getAccessToken());
             userService.updateAccessToken(user, accessToken);
-            subscribeToCalendar(googleCalendarId, user);
+            subscribeToCalendar(calendar, user);
         } catch (Exception e) {
             throw new CalendarException(HttpStatus.FORBIDDEN, e.getMessage());
         }
@@ -278,7 +298,6 @@ public class GoogleCalendarService {
 
                 User user = userService.getUser(userId);
                 List<GoogleEvent> events = syncWithCalendar(calendarId, user);
-                // TODO: 업데이트된 이벤트 처리 로직(personalEventService 호출)
                 personalEventService.syncWithGoogleEvents(events, user);
             } else {
                 throw new CalendarException(HttpStatus.BAD_REQUEST,
