@@ -1,3 +1,6 @@
+
+import { useNavigate } from '@tanstack/react-router';
+
 import Button from '@/components/Button';
 import { Google } from '@/components/Icon';
 import { Image } from '@/components/Image';
@@ -30,8 +33,9 @@ const LandingImages = () => (
 );
 
 const LandingPage = () => {
+  const navigate = useNavigate();
   const handleClickGoogleLogin = () => { 
-    // Do something
+    navigate({ to: '/login' });
   };
   
   return (
