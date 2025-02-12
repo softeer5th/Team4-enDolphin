@@ -7,6 +7,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,6 +19,15 @@ public class AuthController {
 
     private final AuthService authService;
 
+    @Value("${app.frontend.url}")
+    private String frontendUrl;
+
+    @Value("${app.frontend.callback}")
+    private String frontendCallback;
+
+    @Value("${app.server.domain}")
+    private String domain;
+
     @Operation(summary = "구글 로그인 콜백", description = "사용자가 Google 계정으로 로그인하여 JWT 토큰을 발급받습니다.")
     @GetMapping("/oauth2/callback")
     public void oauthCallback(@RequestParam("code") String code,
@@ -28,8 +38,10 @@ public class AuthController {
         cookie.setHttpOnly(true);
         cookie.setMaxAge(60 * 60);
         cookie.setPath("/");
+        cookie.setDomain(domain);
+        
         response.addCookie(cookie);
 
-        response.sendRedirect("http://localhost:5173");
+        response.sendRedirect(String.format("%s%s", frontendUrl, frontendCallback));
     }
 }
