@@ -61,7 +61,7 @@ public interface DiscussionParticipantRepository extends
         "WHERE dp.user.id = :userId")
     List<Discussion> findDiscussionsByUserId(@Param("userId") Long userId);
 
-    @Query("SELECT dp.user "
+    @Query("SELECT dp "
         + "FROM DiscussionParticipant dp "
         + "JOIN FETCH dp.user "
         + "WHERE dp.discussion.id = :discussionId "
