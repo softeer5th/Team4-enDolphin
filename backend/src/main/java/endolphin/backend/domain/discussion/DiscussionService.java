@@ -13,6 +13,7 @@ import endolphin.backend.domain.user.entity.User;
 import endolphin.backend.global.error.exception.ApiException;
 import endolphin.backend.global.error.exception.ErrorCode;
 import endolphin.backend.global.redis.DiscussionBitmapService;
+import endolphin.backend.global.security.PasswordEncoder;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -34,6 +35,7 @@ public class DiscussionService {
     private final SharedEventService sharedEventService;
     private final DiscussionParticipantService discussionParticipantService;
     private final DiscussionBitmapService discussionBitmapService;
+    private final PasswordEncoder passwordEncoder;
 
     public DiscussionResponse createDiscussion(CreateDiscussionRequest request) {
         User currentUser = userService.getCurrentUser();
@@ -51,6 +53,11 @@ public class DiscussionService {
             .build();
 
         discussion = discussionRepository.save(discussion);
+
+        if (request.password() != null) {
+            discussion.setPassword(passwordEncoder.encode(discussion.getId(), request.password()));
+            discussion = discussionRepository.save(discussion);
+        }
 
         discussionParticipantService.addDiscussionParticipant(discussion, currentUser);
         personalEventService.preprocessPersonalEvents(currentUser, discussion);
