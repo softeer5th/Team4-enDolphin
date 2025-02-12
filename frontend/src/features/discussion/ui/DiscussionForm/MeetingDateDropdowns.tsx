@@ -13,7 +13,7 @@ const MeetingDateDropdowns = () => {
   const validateDateRange = () => {
     const today = new Date();
     const dateRangeStart = new Date(formState.dateRangeStart);
-    if (!formState.dateRangeStart) return true;
+    if (!formState.dateRangeStart || !formState.dateRangeEnd) return false;
     if (isSameDate(today, dateRangeStart)) return true;
     return today < dateRangeStart;
   };
