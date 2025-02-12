@@ -25,3 +25,4 @@ export const MINUTES_HALF = (totalTime: number, startTime: number) => Object.fre
   new Array(totalTime * 2).fill(0)
     .map((_, i) => startTime + i * 30),
 );
+export const TIME_HEIGHT = 66;
