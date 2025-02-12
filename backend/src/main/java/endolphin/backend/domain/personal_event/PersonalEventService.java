@@ -125,7 +125,7 @@ public class PersonalEventService {
         List<Discussion> discussions, User user) {
         personalEventRepository.findByGoogleEventId(googleEvent.eventId())
             .ifPresentOrElse(personalEvent -> {
-                    if (isChangedGoogleEvent(personalEvent, googleEvent)) {
+                    if (hasChangedGoogleEvent(personalEvent, googleEvent)) {
                         PersonalEvent oldEvent = personalEvent.copy();
                         personalEvent.update(googleEvent.startDateTime(), googleEvent.endDateTime(),
                             googleEvent.summary());
@@ -168,7 +168,7 @@ public class PersonalEventService {
             });
     }
 
-    private boolean isChangedGoogleEvent(PersonalEvent personalEvent, GoogleEvent googleEvent) {
+    private boolean hasChangedGoogleEvent(PersonalEvent personalEvent, GoogleEvent googleEvent) {
         if (!personalEvent.getStartTime().equals(googleEvent.startDateTime())) {
             return true;
         }
