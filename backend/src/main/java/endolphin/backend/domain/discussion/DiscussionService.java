@@ -3,6 +3,7 @@ package endolphin.backend.domain.discussion;
 import endolphin.backend.domain.discussion.dto.CreateDiscussionRequest;
 import endolphin.backend.domain.discussion.dto.DiscussionResponse;
 import endolphin.backend.domain.discussion.entity.Discussion;
+import endolphin.backend.domain.discussion.enums.DiscussionStatus;
 import endolphin.backend.domain.personal_event.PersonalEventService;
 import endolphin.backend.domain.shared_event.SharedEventService;
 import endolphin.backend.domain.shared_event.dto.SharedEventRequest;
@@ -79,6 +80,10 @@ public class DiscussionService {
         Discussion discussion = discussionRepository.findById(discussionId)
             .orElseThrow(() -> new ApiException(ErrorCode.DISCUSSION_NOT_FOUND));
 
+        if(discussion.getDiscussionStatus() != DiscussionStatus.ONGOING) {
+            throw new ApiException(ErrorCode.DISCUSSION_NOT_ONGOING);
+        }
+
         SharedEventDto sharedEventDto = sharedEventService.createSharedEvent(discussion,
             request);
 
@@ -89,6 +94,10 @@ public class DiscussionService {
 
         personalEventService.createPersonalEventsForParticipants(participants, discussion,
             sharedEventDto);
+
+        discussion.setDiscussionStatus(DiscussionStatus.UPCOMING);
+
+        discussionRepository.save(discussion);
 
         discussionBitmapService.deleteDiscussionBitmapsUsingScan(discussionId)
             .thenRun(() -> log.info("Redis keys deleted successfully for discussionId : {}",
