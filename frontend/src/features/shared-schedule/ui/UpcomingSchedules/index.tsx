@@ -15,9 +15,14 @@ interface UpcomingSchedulesProps {
 }
 
 const UpcomingSchedules = ({ schedules }: UpcomingSchedulesProps) => {
+  const trackRef = useRef<HTMLDivElement | null>(null);
   const navigate = useNavigate();
-  const trackRef = useRef<HTMLDivElement>(null);
-  const { offsetX, translateCarousel } = useCarouselControl({ trackRef });
+  const { offsetX, translateCarousel, canTranslateLeft, canTranslateRight } = useCarouselControl({ 
+    totalCards: schedules.length, 
+    trackRef,
+    baseLeftOffset: 50,
+    baseRightOffset: 100,
+  });
   return (
     <Flex
       className={containerStyle}
@@ -34,20 +39,30 @@ const UpcomingSchedules = ({ schedules }: UpcomingSchedulesProps) => {
       />
       <Flex justify='space-between' width='full'>
         <Text typo='h2'>다가오는 일정</Text>
-        <Button 
+        <Button
           onClick={() => navigate({ to: '/upcoming-schedule' })} 
           style='borderless'
         >
           모두보기
         </Button>
       </Flex>
-      <ControlButtons translateCarousel={translateCarousel} />
+      <ControlButtons 
+        canTranslateLeft={canTranslateLeft} 
+        canTranslateRight={canTranslateRight} 
+        translateCarousel={translateCarousel}
+      />
     </Flex>
   );
 };
 
-const ControlButtons = ({ translateCarousel }: {
+const ControlButtons = ({ 
+  translateCarousel, 
+  canTranslateLeft,
+  canTranslateRight,
+}: {
   translateCarousel: (direction: 'left' | 'right') => void;
+  canTranslateLeft: boolean;
+  canTranslateRight: boolean;
 }) => (
   <Flex
     align='center'
@@ -56,12 +71,12 @@ const ControlButtons = ({ translateCarousel }: {
     width='full'
   >
     <LeftControlButton
-      isAvailable={true}
-      translateCarousel={translateCarousel}
+      isAvailable={canTranslateLeft}
+      onClick={() => translateCarousel('left')}
     />
     <RightControlButton
-      isAvailable={true}
-      translateCarousel={translateCarousel}
+      isAvailable={canTranslateRight}
+      onClick={() => translateCarousel('right')}
     />
   </Flex>
 );

@@ -17,5 +17,4 @@ export const carouselTrackStyle = style({
   display: 'flex',
   gap: vars.spacing[600],
   transition: 'transform 0.3s ease-in-out',
-  // 트랙은 실제로 'translateX'로 움직일 예정
 });

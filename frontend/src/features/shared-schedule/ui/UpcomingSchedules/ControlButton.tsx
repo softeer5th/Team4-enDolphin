@@ -5,13 +5,14 @@ import { controlButtonStyle } from './index.css';
 
 interface ControlButtonProps {
   isAvailable: boolean;
-  translateCarousel: (direction: 'left' | 'right') => void;
+  onClick: () => void;
 }
 
-export const LeftControlButton = ({ isAvailable, translateCarousel }: ControlButtonProps) => (
+export const LeftControlButton = ({ isAvailable, onClick }: ControlButtonProps) => (
   <button
     className={controlButtonStyle({ available: isAvailable })}
-    onClick={() => translateCarousel('left')}
+    disabled={!isAvailable}
+    onClick={onClick}
   >
     <ChevronLeft
       clickable={isAvailable}
@@ -20,10 +21,11 @@ export const LeftControlButton = ({ isAvailable, translateCarousel }: ControlBut
   </button>
 );
 
-export const RightControlButton = ({ isAvailable, translateCarousel }: ControlButtonProps) => (
+export const RightControlButton = ({ isAvailable, onClick }: ControlButtonProps) => (
   <button
-    className={controlButtonStyle({ available: isAvailable })} 
-    onClick={() => translateCarousel('right')}
+    className={controlButtonStyle({ available: isAvailable })}
+    disabled={!isAvailable} 
+    onClick={onClick}
   >
     <ChevronRight
       clickable={isAvailable}
