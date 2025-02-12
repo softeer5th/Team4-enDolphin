@@ -20,7 +20,7 @@ export const CalendarCardList = ({ cards }: { cards: DateRange[] }) => {
       {cards.map((card, idx) => {
         const { x: sx, y: sy } = calcPositionByDate(card.startDate);
         const { y: ey } = calcPositionByDate(card.endDate);
-        const height = ey + (TIME_HEIGHT / 4) - sy;
+        const height = ey - sy;
           
         return (
           <CalendarCard

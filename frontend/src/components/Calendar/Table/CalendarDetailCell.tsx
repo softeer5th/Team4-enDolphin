@@ -14,8 +14,13 @@ export const CalendarDetailCell = ({ date }: { date: Date }) => {
     handleMouseUp,
     handleClick,
   } = useTimeTableContext();
-  const selected = isDateInRange(date, selectedStartTime, selectedEndTime);
-  const done = isDateInRange(date, doneStartTime, doneEndTime);
+  const OFFSET = 15 * 60 * 1000;
+  const formatEndTime = (endTime: Date | null) => {
+    if (!endTime) return null;
+    return new Date(endTime.getTime() - OFFSET);
+  };
+  const selected = isDateInRange(date, selectedStartTime, formatEndTime(selectedEndTime));
+  const done = isDateInRange(date, doneStartTime, formatEndTime(doneEndTime));
 
   const stateStyle = (() => {
     if (done) return 'done';
