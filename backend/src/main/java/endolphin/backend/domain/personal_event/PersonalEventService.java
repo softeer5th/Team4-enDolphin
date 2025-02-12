@@ -125,18 +125,20 @@ public class PersonalEventService {
         List<Discussion> discussions, User user) {
         personalEventRepository.findByGoogleEventId(googleEvent.eventId())
             .ifPresentOrElse(personalEvent -> {
-                    PersonalEvent oldEvent = personalEvent.copy();
-                    personalEvent.update(googleEvent.startDateTime(), googleEvent.endDateTime(),
-                        googleEvent.summary());
-                    personalEventRepository.save(personalEvent);
-                    // 비트맵 수정
-                    discussions.forEach(discussion -> {
-                        if (discussion.getDiscussionStatus().equals(DiscussionStatus.ONGOING)) {
-                            personalEventPreprocessor.preprocessOne(oldEvent, discussion, user, false);
-                            personalEventPreprocessor.preprocessOne(personalEvent, discussion, user,
-                                true);
-                        }
-                    });
+                    if (isChangedGoogleEvent(personalEvent, googleEvent)) {
+                        PersonalEvent oldEvent = personalEvent.copy();
+                        personalEvent.update(googleEvent.startDateTime(), googleEvent.endDateTime(),
+                            googleEvent.summary());
+                        personalEventRepository.save(personalEvent);
+                        // 비트맵 수정
+                        discussions.forEach(discussion -> {
+                            if (discussion.getDiscussionStatus().equals(DiscussionStatus.ONGOING)) {
+                                personalEventPreprocessor.preprocessOne(oldEvent, discussion, user, false);
+                                personalEventPreprocessor.preprocessOne(personalEvent, discussion, user,
+                                    true);
+                            }
+                        });
+                    }
                 },
                 () -> {
                     PersonalEvent personalEvent = PersonalEvent.from(googleEvent, user);
@@ -164,5 +166,18 @@ public class PersonalEventService {
                 });
                 personalEventRepository.delete(personalEvent);
             });
+    }
+
+    private boolean isChangedGoogleEvent(PersonalEvent personalEvent, GoogleEvent googleEvent) {
+        if (!personalEvent.getStartTime().equals(googleEvent.startDateTime())) {
+            return true;
+        }
+        if (!personalEvent.getEndTime().equals(googleEvent.endDateTime())) {
+            return true;
+        }
+        if (!personalEvent.getTitle().equals(googleEvent.summary())) {
+            return true;
+        }
+        return false;
     }
 }
