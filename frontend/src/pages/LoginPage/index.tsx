@@ -2,6 +2,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useTransition } from 'react';
 
 import { Flex } from '@/components/Flex';
+import googleLoginIcon from '@/components/Icon/png/google-login-icon.png';
 import { Modal } from '@/components/Modal';
 import { Text } from '@/components/Text';
 import { requestGoogleLoginUrl } from '@/features/login/api';
@@ -55,7 +56,7 @@ const GoogleLoginButton = ({ onClick, disabled }: { onClick: () => void; disable
     <img
       alt='Google 로그인 아이콘'
       height='20px'
-      src='src/components/Icon/png/google-login-icon.png'
+      src={googleLoginIcon}
       width='20px'
     />
     <Text color={vars.color.Ref.Netural[400]} typo='t3'>Google로 시작하기</Text>
