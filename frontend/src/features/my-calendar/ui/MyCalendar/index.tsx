@@ -4,7 +4,7 @@ import { Calendar } from '@/components/Calendar';
 import { useSharedCalendarContext } from '@/components/Calendar/context/SharedCalendarContext';
 import { useSelectTime } from '@/hooks/useSelectTime';
 
-import { CalendarCardList } from '../CalendarCadList';
+import { CalendarCardList } from '../CalendarCardList';
 import { SchedulePopover } from '../SchedulePopover';
 import { calendarStyle, containerStyle } from './index.css';
 
