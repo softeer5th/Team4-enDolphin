@@ -4,6 +4,8 @@ import endolphin.backend.domain.candidate_event.dto.CalendarViewResponse;
 import endolphin.backend.domain.candidate_event.dto.CandidateEvent;
 import endolphin.backend.domain.candidate_event.dto.CalendarViewRequest;
 import endolphin.backend.domain.candidate_event.dto.CandidateEventResponse;
+import endolphin.backend.domain.candidate_event.dto.RankViewRequest;
+import endolphin.backend.domain.candidate_event.dto.RankViewResponse;
 import endolphin.backend.domain.discussion.DiscussionParticipantService;
 import endolphin.backend.domain.discussion.DiscussionService;
 import endolphin.backend.domain.discussion.entity.Discussion;
@@ -19,10 +21,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CandidateEventService {
@@ -45,8 +45,6 @@ public class CandidateEventService {
 
         events = sortCandidateEvents(events, returnSize);
 
-        log.info("events: {}", events);
-
         if (request.startDate() != null && request.endDate() != null) {
             events = events.stream()
                 .filter(event ->
@@ -57,6 +55,26 @@ public class CandidateEventService {
         }
 
         return convertToResponse(discussionId, events);
+    }
+
+    public RankViewResponse getEventsOnRankView(Long discussionId, RankViewRequest request) {
+        Discussion discussion = discussionService.getDiscussionById(discussionId);
+
+        int filter = discussionParticipantService.getFilter(discussionId,
+            request.selectedUserIdList());
+
+        List<CandidateEvent> events = searchCandidateEvents(discussion, filter);
+
+        events = sortCandidateEvents(events, getReturnSize(discussion));
+
+        List<CandidateEventResponse> eventsRankedDefault = convertToResponse(discussionId, events)
+            .events();
+
+        List<CandidateEventResponse> eventsRankedOfTime = eventsRankedDefault.stream()
+            .sorted(Comparator.comparing(CandidateEventResponse::startDateTime))
+            .toList();
+
+        return new RankViewResponse(eventsRankedDefault, eventsRankedOfTime);
     }
 
     public List<CandidateEvent> searchCandidateEvents(Discussion discussion, int filter) {
@@ -89,8 +107,6 @@ public class CandidateEventService {
         List<CandidateEvent> events = new ArrayList<>();
 
         while (minuteKey < endDateTime) {
-            log.info("minuteKey: {}", convertToLocalDateTime(minuteKey));
-
             if (minuteKey % 1440 >= maxTime) {
                 minuteKey = ++day * 1440 + startDateTime;
                 continue;
@@ -115,7 +131,6 @@ public class CandidateEventService {
                     int nextData = toInt(dataBlocks.get(i)) & filter;
                     data |= nextData;
                     totalTime += Integer.bitCount(nextData);
-                    log.info("add: {}", convertToLocalDateTime(i));
                 }
             }
 
