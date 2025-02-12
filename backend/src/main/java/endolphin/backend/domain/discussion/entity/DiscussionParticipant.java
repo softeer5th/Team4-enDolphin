@@ -29,7 +29,7 @@ public class DiscussionParticipant {
     @Column(name = "is_host", nullable = false)
     private boolean isHost;
 
-    @Column(name = "user_offfset", nullable = false)
+    @Column(name = "user_offset", nullable = false)
     private Long userOffset;
 
     @Builder
