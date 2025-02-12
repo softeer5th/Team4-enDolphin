@@ -225,7 +225,7 @@ class PersonalEventServiceTest {
         given(personalEventRepository.findByGoogleEventId(eq(deletedGoogleEvent.eventId()))).willReturn(Optional.of(existingEvent2));
 
         // when
-        personalEventService.syncWithGoogleCalendar(List.of(updatedGoogleEvent, deletedGoogleEvent), user);
+        personalEventService.syncWithGoogleEvents(List.of(updatedGoogleEvent, deletedGoogleEvent), user);
 
         // then
         then(personalEventPreprocessor).should(times(1)).preprocessOne(eq(oldExistingEvent), eq(discussion), any(User.class), eq(false));

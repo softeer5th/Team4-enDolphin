@@ -109,7 +109,7 @@ public class PersonalEventService {
         personalEventPreprocessor.preprocess(personalEvents, discussion, user);
     }
 
-    public void syncWithGoogleCalendar(List<GoogleEvent> googleEvents, User user) {
+    public void syncWithGoogleEvents(List<GoogleEvent> googleEvents, User user) {
         List<Discussion> discussions = discussionParticipantService.getDiscussionsByUserId(
             user.getId());
         for (GoogleEvent googleEvent : googleEvents) {
