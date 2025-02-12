@@ -2,9 +2,12 @@ package endolphin.backend.domain.discussion;
 
 import endolphin.backend.domain.discussion.entity.Discussion;
 import endolphin.backend.domain.discussion.entity.DiscussionParticipant;
+import endolphin.backend.domain.user.UserService;
+import endolphin.backend.domain.user.dto.UserIdNameDto;
 import endolphin.backend.domain.user.entity.User;
 import endolphin.backend.global.error.exception.ApiException;
 import endolphin.backend.global.error.exception.ErrorCode;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class DiscussionParticipantService {
 
     private final DiscussionParticipantRepository discussionParticipantRepository;
+    private final UserService userService;
 
     public void addDiscussionParticipant(Discussion discussion, User user) {
         Long offset = discussionParticipantRepository.findMaxOffsetByDiscussionId(
@@ -70,5 +74,21 @@ public class DiscussionParticipantService {
         }
 
         return filter;
+    }
+
+    @Transactional(readOnly = true)
+    public List<UserIdNameDto> getUsersFromData(Long discussionId, int data) {
+        List<Long> userOffsets = new ArrayList<>();
+
+        for (int i = 0; i < 16; i++) {
+            if ((data & (1 << (15 - i))) != 0) {
+                userOffsets.add((long) i);
+            }
+        }
+
+        List<Long> userIds = discussionParticipantRepository.findUserIdsByDiscussionIdAndOffset(
+            discussionId, userOffsets);
+
+        return userService.getUserIdNameInIds(userIds);
     }
 }
