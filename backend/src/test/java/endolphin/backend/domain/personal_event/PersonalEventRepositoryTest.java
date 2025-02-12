@@ -138,4 +138,68 @@ class PersonalEventRepositoryTest {
         assertThat(events)
             .hasSize(4);
     }
+
+    @Test
+    @DisplayName("findAllByUserAndDateTimeRange: 날짜 필터 조건에 맞는 PersonalEvent를 정렬해서 조회")
+    void testFindAllByUserAndDateTimeRange() {
+        // Given: 테스트용 사용자 생성 및 persist
+        entityManager.persist(testUser);
+
+        // 필터링 조건
+        // 날짜 조건: 2025-02-09 (단일 날짜 범위)
+        LocalDateTime filterStartDate = LocalDateTime.of(2025, 2, 9, 7, 0);
+        LocalDateTime filterEndDate = LocalDateTime.of(2025, 2, 9, 15, 0);
+
+        // PersonalEvent 생성
+        PersonalEvent matchingEvent1 = PersonalEvent.builder()
+            .user(testUser)
+            .title("Matching Event")
+            .startTime(LocalDateTime.of(2025, 2, 9, 9, 0))
+            .endTime(LocalDateTime.of(2025, 2, 9, 11, 0))
+            .build();
+
+        PersonalEvent nonMatchingDateEvent = PersonalEvent.builder()
+            .user(testUser)
+            .title("Non Matching Date Event")
+            .startTime(LocalDateTime.of(2025, 2, 8, 10, 0))
+            .endTime(LocalDateTime.of(2025, 2, 8, 12, 0))
+            .build();
+
+        PersonalEvent matchingEvent2 = PersonalEvent.builder()
+            .user(testUser)
+            .title("Matching Time Event")
+            .startTime(LocalDateTime.of(2025, 2, 9, 8, 0))
+            .endTime(LocalDateTime.of(2025, 2, 20, 8, 30))
+            .build();
+
+
+        PersonalEvent matchingEvent3 = PersonalEvent.builder()
+            .user(testUser)
+            .title("Matching Event2")
+            .startTime(LocalDateTime.of(2025, 2, 9, 1, 0))
+            .endTime(LocalDateTime.of(2025, 2, 9, 7, 30))
+            .build();
+
+        PersonalEvent matchingEvent4 = PersonalEvent.builder()
+            .user(testUser)
+            .title("Matching Event3")
+            .startTime(LocalDateTime.of(2025, 2, 9, 14, 0))
+            .endTime(LocalDateTime.of(2025, 2, 9, 15, 0))
+            .build();
+
+        entityManager.persist(matchingEvent1);
+        entityManager.persist(nonMatchingDateEvent);
+        entityManager.persist(matchingEvent2);
+        entityManager.persist(matchingEvent3);
+        entityManager.persist(matchingEvent4);
+        entityManager.flush();
+        entityManager.clear();
+
+        // When: 필터 조건에 따라 이벤트 조회
+        List<PersonalEvent> events = personalEventRepository.findAllByUserAndDateTimeRange(
+            testUser.getId(), filterStartDate, filterEndDate);
+
+        // Then: "Matching Event"만 조회되어야 한다.
+        assertThat(events.size()).isEqualTo(4);
+    }
 }
