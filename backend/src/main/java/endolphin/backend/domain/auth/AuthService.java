@@ -2,6 +2,7 @@ package endolphin.backend.domain.auth;
 
 import endolphin.backend.domain.calendar.CalendarService;
 import endolphin.backend.domain.calendar.entity.Calendar;
+import endolphin.backend.domain.personal_event.PersonalEventService;
 import endolphin.backend.domain.user.UserService;
 import endolphin.backend.global.error.exception.ErrorCode;
 import endolphin.backend.global.error.exception.OAuthException;
@@ -29,6 +30,7 @@ public class AuthService {
     private final CalendarService calendarService;
     private final UserService userService;
     private final JwtProvider jwtProvider;
+    private final PersonalEventService personalEventService;
 
     @Transactional
     public OAuthResponse oauth2Callback(String code) {
@@ -50,8 +52,8 @@ public class AuthService {
                 user);
             calendarService.createCalendar(calendar, user);
             List<GoogleEvent> events = googleCalendarService.getCalendarEvents(calendar.id(), user);
-            //TODO: 이벤트 db에 저장
 
+            personalEventService.syncWithGoogleEvents(events, user);
             googleCalendarService.subscribeToCalendar(calendar.id(), user);
         }
 

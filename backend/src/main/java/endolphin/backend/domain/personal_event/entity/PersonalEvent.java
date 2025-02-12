@@ -3,6 +3,7 @@ package endolphin.backend.domain.personal_event.entity;
 import endolphin.backend.domain.personal_event.dto.PersonalEventRequest;
 import endolphin.backend.domain.user.entity.User;
 import endolphin.backend.global.base_entity.BaseTimeEntity;
+import endolphin.backend.global.google.dto.GoogleEvent;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -76,6 +77,16 @@ public class PersonalEvent extends BaseTimeEntity {
             .startTime(this.startTime)
             .endTime(this.endTime)
             .user(this.user)
+            .build();
+    }
+
+    public static PersonalEvent from(GoogleEvent googleEvent, User user) {
+        return PersonalEvent.builder()
+            .title(googleEvent.summary())
+            .startTime(googleEvent.startDateTime())
+            .endTime(googleEvent.endDateTime())
+            .googleEventId(googleEvent.eventId())
+            .user(user)
             .build();
     }
 }

@@ -114,30 +114,41 @@ public class PersonalEventService {
             user.getId());
         for (GoogleEvent googleEvent : googleEvents) {
             if (googleEvent.status().equals(GoogleEventStatus.CONFIRMED)) {
-                updatePersonalEventByGoogleEvent(googleEvent, discussions, user);
+                upsertPersonalEventByGoogleEvent(googleEvent, discussions, user);
             } else if (googleEvent.status().equals(GoogleEventStatus.CANCELLED)) {
                 deletePersonalEventByGoogleEvent(googleEvent, discussions, user);
             }
         }
     }
 
-    private void updatePersonalEventByGoogleEvent(GoogleEvent googleEvent,
+    private void upsertPersonalEventByGoogleEvent(GoogleEvent googleEvent,
         List<Discussion> discussions, User user) {
         personalEventRepository.findByGoogleEventId(googleEvent.eventId())
-            .ifPresent(personalEvent -> {
-                PersonalEvent oldEvent = personalEvent.copy();
-                personalEvent.update(googleEvent.startDateTime(), googleEvent.endDateTime(),
-                    googleEvent.summary());
-                personalEventRepository.save(personalEvent);
-                // 비트맵 수정
-                discussions.forEach(discussion -> {
-                    if (discussion.getDiscussionStatus().equals(DiscussionStatus.ONGOING)) {
-                        personalEventPreprocessor.preprocessOne(oldEvent, discussion, user, false);
-                        personalEventPreprocessor.preprocessOne(personalEvent, discussion, user,
-                            true);
-                    }
+            .ifPresentOrElse(personalEvent -> {
+                    PersonalEvent oldEvent = personalEvent.copy();
+                    personalEvent.update(googleEvent.startDateTime(), googleEvent.endDateTime(),
+                        googleEvent.summary());
+                    personalEventRepository.save(personalEvent);
+                    // 비트맵 수정
+                    discussions.forEach(discussion -> {
+                        if (discussion.getDiscussionStatus().equals(DiscussionStatus.ONGOING)) {
+                            personalEventPreprocessor.preprocessOne(oldEvent, discussion, user, false);
+                            personalEventPreprocessor.preprocessOne(personalEvent, discussion, user,
+                                true);
+                        }
+                    });
+                },
+                () -> {
+                    PersonalEvent personalEvent = PersonalEvent.from(googleEvent, user);
+                    personalEventRepository.save(personalEvent);
+                    // 비트맵 수정
+                    discussions.forEach(discussion -> {
+                        if (discussion.getDiscussionStatus().equals(DiscussionStatus.ONGOING)) {
+                            personalEventPreprocessor.preprocessOne(personalEvent, discussion, user,
+                                true);
+                        }
+                    });
                 });
-            });
     }
 
     private void deletePersonalEventByGoogleEvent(GoogleEvent googleEvent,
@@ -147,7 +158,8 @@ public class PersonalEventService {
                 // 비트맵 삭제
                 discussions.forEach(discussion -> {
                     if (discussion.getDiscussionStatus().equals(DiscussionStatus.ONGOING)) {
-                        personalEventPreprocessor.preprocessOne(personalEvent, discussion, user, false);
+                        personalEventPreprocessor.preprocessOne(personalEvent, discussion, user,
+                            false);
                     }
                 });
                 personalEventRepository.delete(personalEvent);
