@@ -4,6 +4,7 @@ import { isSaturday } from '@/utils/date';
 import { calcPositionByDate } from '@/utils/date/position';
 
 import type { PopoverType } from '../../model';
+import { FormProvider } from './FormProvider';
 import { containerStyle } from './index.css';
 import { PopoverButton } from './PopoverButton';
 import { PopoverForm } from './PopoverForm';
@@ -52,13 +53,15 @@ export const SchedulePopover = (
         top: 16 + sy,
       }}
     >
-      <Title type={type} />
-      <PopoverForm endDate={endDate} startDate={startDate} />
-      <PopoverButton
-        onClickDelete={handleClickDelete}
-        onClickSave={handleClickSave}
-        type={type}
-      />
+      <FormProvider initialValues={{}}>
+        <Title type={type} />
+        <PopoverForm endDate={endDate} startDate={startDate} />
+        <PopoverButton
+          onClickDelete={handleClickDelete}
+          onClickSave={handleClickSave}
+          type={type}
+        />
+      </FormProvider>
     </dialog>
   ); 
 };

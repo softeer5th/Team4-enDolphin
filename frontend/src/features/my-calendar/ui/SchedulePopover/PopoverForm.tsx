@@ -1,3 +1,5 @@
+import { useRef } from 'react';
+
 import { Checkbox } from '@/components/Checkbox';
 import { Flex } from '@/components/Flex';
 import Input from '@/components/Input';
@@ -13,9 +15,12 @@ interface PopoverFormProps {
   endDate: Date | null;
 }
 
-export const PopoverForm = ({ startDate, endDate }: PopoverFormProps) => 
-  // form 관리
-  (
+export const PopoverForm = ({ startDate, endDate }: PopoverFormProps) => {
+  const titleRef = useRef<HTMLInputElement>(null);
+  const startTime = formatDateToTimeString(startDate);
+  const endTime = formatDateToTimeString(endDate);
+  
+  return (
     <>
       <Flex
         align='flex-end'
@@ -23,15 +28,19 @@ export const PopoverForm = ({ startDate, endDate }: PopoverFormProps) =>
         direction='column'
         gap={400}
       >
-        <input className={inputStyle} placeholder='새 일정' />
+        <input
+          className={inputStyle}
+          placeholder='새 일정'
+          ref={titleRef}
+        />
         <Input.Multi
           borderPlacement='container'
           label='시간 설정'
           separator='~'
           type='text'
         >
-          <Input.Multi.InputField value={formatDateToTimeString(startDate)} />
-          <Input.Multi.InputField value={formatDateToTimeString(endDate)} />
+          <Input.Multi.InputField defaultValue={startTime} readOnly />
+          <Input.Multi.InputField defaultValue={endTime} readOnly />
         </Input.Multi>
         <Checkbox size='sm'>시간 조정 가능</Checkbox>
       </Flex>
@@ -40,5 +49,5 @@ export const PopoverForm = ({ startDate, endDate }: PopoverFormProps) =>
         <Toggle />
       </Flex>
     </>
-  )
-;
+  );
+};
