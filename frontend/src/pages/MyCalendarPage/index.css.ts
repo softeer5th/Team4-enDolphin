@@ -28,10 +28,6 @@ export const sideBarStyle = style({
   backgroundColor: vars.color.Ref.Netural[50],
 });
 
-export const pickerStyle = style({
-  width: `calc(17.75rem - 2 * ${vars.spacing[500]})`,
-});
-
 export const calendarStyle = style({
   height: 'calc(100vh - 150px)',
   paddingRight: vars.spacing[500],
