@@ -4,6 +4,7 @@ import endolphin.backend.domain.discussion.DiscussionParticipantService;
 import endolphin.backend.domain.discussion.entity.Discussion;
 import endolphin.backend.domain.personal_event.dto.PersonalEventRequest;
 import endolphin.backend.domain.personal_event.dto.PersonalEventResponse;
+import endolphin.backend.domain.personal_event.dto.PersonalEventWithStatus;
 import endolphin.backend.domain.personal_event.entity.PersonalEvent;
 import endolphin.backend.domain.shared_event.dto.SharedEventDto;
 import endolphin.backend.domain.user.UserService;
@@ -176,5 +177,12 @@ public class PersonalEventService {
             return false;
         }
         return true;
+    }
+
+    @Transactional(readOnly = true)
+    public List<PersonalEvent> findPersonalEventsByDateTimeRange(User user, LocalDateTime startTime,
+        LocalDateTime endTime) {
+        return personalEventRepository.findAllByUserAndDateTimeRange(
+            user.getId(), startTime, endTime);
     }
 }
