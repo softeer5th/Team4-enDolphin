@@ -2,7 +2,6 @@ package endolphin.backend.domain.personal_event;
 
 import endolphin.backend.domain.discussion.DiscussionParticipantService;
 import endolphin.backend.domain.discussion.entity.Discussion;
-import endolphin.backend.domain.discussion.enums.DiscussionStatus;
 import endolphin.backend.domain.personal_event.dto.PersonalEventRequest;
 import endolphin.backend.domain.personal_event.dto.PersonalEventResponse;
 import endolphin.backend.domain.personal_event.entity.PersonalEvent;
@@ -129,7 +128,8 @@ public class PersonalEventService {
 
     private void upsertPersonalEventByGoogleEvent(GoogleEvent googleEvent,
         List<Discussion> discussions, User user, String googleCalendarId) {
-        personalEventRepository.findByGoogleEventIdAndCalendarId(googleEvent.eventId(), googleCalendarId)
+        personalEventRepository.findByGoogleEventIdAndCalendarId(googleEvent.eventId(),
+                googleCalendarId)
             .ifPresentOrElse(personalEvent -> {
                     if (hasChangedGoogleEvent(personalEvent, googleEvent)) {
                         PersonalEvent oldEvent = personalEvent.copy();
@@ -138,11 +138,10 @@ public class PersonalEventService {
                         personalEventRepository.save(personalEvent);
                         // 비트맵 수정
                         discussions.forEach(discussion -> {
-                            if (discussion.getDiscussionStatus() == DiscussionStatus.ONGOING) {
-                                personalEventPreprocessor.preprocessOne(oldEvent, discussion, user, false);
-                                personalEventPreprocessor.preprocessOne(personalEvent, discussion, user,
-                                    true);
-                            }
+                            personalEventPreprocessor.
+                                preprocessOne(oldEvent, discussion, user, false);
+                            personalEventPreprocessor
+                                .preprocessOne(personalEvent, discussion, user, true);
                         });
                     }
                 },
@@ -151,24 +150,20 @@ public class PersonalEventService {
                     personalEventRepository.save(personalEvent);
                     // 비트맵 수정
                     discussions.forEach(discussion -> {
-                        if (discussion.getDiscussionStatus() == DiscussionStatus.ONGOING) {
-                            personalEventPreprocessor.preprocessOne(personalEvent, discussion, user,
-                                true);
-                        }
+                        personalEventPreprocessor.preprocessOne(personalEvent, discussion, user,
+                            true);
                     });
                 });
     }
 
     private void deletePersonalEventByGoogleEvent(GoogleEvent googleEvent,
         List<Discussion> discussions, User user, String googleCalendarId) {
-        personalEventRepository.findByGoogleEventIdAndCalendarId(googleEvent.eventId(), googleCalendarId)
+        personalEventRepository.findByGoogleEventIdAndCalendarId(googleEvent.eventId(),
+                googleCalendarId)
             .ifPresent(personalEvent -> {
                 // 비트맵 삭제
                 discussions.forEach(discussion -> {
-                    if (discussion.getDiscussionStatus().equals(DiscussionStatus.ONGOING)) {
-                        personalEventPreprocessor.preprocessOne(personalEvent, discussion, user,
-                            false);
-                    }
+                    personalEventPreprocessor.preprocessOne(personalEvent, discussion, user, false);
                 });
                 personalEventRepository.delete(personalEvent);
             });

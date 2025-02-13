@@ -2,6 +2,7 @@ package endolphin.backend.domain.personal_event;
 
 import endolphin.backend.domain.discussion.DiscussionParticipantService;
 import endolphin.backend.domain.discussion.entity.Discussion;
+import endolphin.backend.domain.discussion.enums.DiscussionStatus;
 import endolphin.backend.domain.personal_event.entity.PersonalEvent;
 import endolphin.backend.domain.user.entity.User;
 import endolphin.backend.global.redis.DiscussionBitmapService;
@@ -28,13 +29,20 @@ public class PersonalEventPreprocessor {
             user.getId());
         for (PersonalEvent personalEvent : personalEvents) {
             convert(personalEvent, discussion, offset, true);
+            if (discussion.getDiscussionStatus() == DiscussionStatus.ONGOING
+                && isTimeRangeOverlapping(discussion, personalEvent)) {
+                convert(personalEvent, discussion, index, true);
+            }
         }
     }
 
     public void preprocessOne(PersonalEvent personalEvent, Discussion discussion, User user, boolean value) {
         Long index = discussionParticipantService.getDiscussionParticipantIndex(discussion.getId(),
             user.getId());
-        convert(personalEvent, discussion, index, value);
+        if (discussion.getDiscussionStatus() == DiscussionStatus.ONGOING
+            && isTimeRangeOverlapping(discussion, personalEvent)) {
+            convert(personalEvent, discussion, index, value);
+        }
     }
 
     private void convert(PersonalEvent personalEvent, Discussion discussion, Long offset,
@@ -126,5 +134,13 @@ public class PersonalEventPreprocessor {
             time = time.plusMinutes(60 - minute);
         }
         return time;
+    }
+
+    private boolean isTimeRangeOverlapping(
+        Discussion discussion, PersonalEvent personalEvent) {
+        LocalDate eventStart = personalEvent.getStartTime().toLocalDate();
+        LocalDate eventEnd = personalEvent.getEndTime().toLocalDate();
+        return eventStart.isBefore(discussion.getDateRangeEnd())
+            && eventEnd.isAfter(discussion.getDateRangeStart());
     }
 }

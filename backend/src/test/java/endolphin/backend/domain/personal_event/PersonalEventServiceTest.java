@@ -268,7 +268,6 @@ class PersonalEventServiceTest {
 
     Discussion createDiscussion() {
         Discussion discussion = Mockito.mock(Discussion.class);
-        given(discussion.getDiscussionStatus()).willReturn(DiscussionStatus.ONGOING);
         return discussion;
     }
 
