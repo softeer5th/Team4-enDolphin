@@ -66,7 +66,7 @@ public class DiscussionParticipantService {
     public int getFilter(Long discussionId, List<Long> userIds) {
 
         if(userIds == null || userIds.isEmpty()) {
-            return 0XFFFF;
+            return 0;
         }
 
         List<Long> userOffsets = discussionParticipantRepository.findOffsetsByDiscussionIdAndUserIds(

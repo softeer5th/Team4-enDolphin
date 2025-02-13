@@ -39,6 +39,10 @@ public class CandidateEventService {
         int filter = discussionParticipantService.getFilter(discussionId,
             request.selectedUserIdList());
 
+        if(filter == 0) {
+            return new CalendarViewResponse(Collections.emptyList());
+        }
+
         List<CandidateEvent> events = searchCandidateEvents(discussion, filter);
 
         int returnSize = (request.size() != null) ? request.size() : getReturnSize(discussion);
@@ -62,6 +66,10 @@ public class CandidateEventService {
 
         int filter = discussionParticipantService.getFilter(discussionId,
             request.selectedUserIdList());
+
+        if(filter == 0) {
+            return new RankViewResponse(Collections.emptyList(), Collections.emptyList());
+        }
 
         List<CandidateEvent> events = searchCandidateEvents(discussion, filter);
 
