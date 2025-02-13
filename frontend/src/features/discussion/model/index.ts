@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+import { UserDTO } from '@/features/user/model';
+
 const MeetingMethodENUM = z.enum(['OFFLINE', 'ONLINE']);
 
 const DiscussionRequest = z.object({
@@ -16,5 +18,11 @@ const DiscussionRequest = z.object({
   deadline: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
 });
 
+const DiscussionParticipantResponse = z.object({
+  host: UserDTO,
+  data: z.array(UserDTO),
+});
+
 export type DiscussionRequest = z.infer<typeof DiscussionRequest>;
+export type DiscussionParticipantResponse = z.infer<typeof DiscussionParticipantResponse>;
 export type MeetingMethodENUM = z.infer<typeof MeetingMethodENUM>;

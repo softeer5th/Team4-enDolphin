@@ -16,6 +16,7 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as MainImport } from './routes/_main'
 import { Route as IndexImport } from './routes/index'
 import { Route as LandingIndexImport } from './routes/landing/index'
+import { Route as DiscussionIdImport } from './routes/discussion/$id'
 import { Route as DiscussionCreateIndexImport } from './routes/discussion/create/index'
 import { Route as DiscussionInviteIdImport } from './routes/discussion/invite/$id'
 import { Route as DiscussionEditIdImport } from './routes/discussion/edit/$id'
@@ -62,6 +63,12 @@ const LoginIndexLazyRoute = LoginIndexLazyImport.update({
 const LandingIndexRoute = LandingIndexImport.update({
   id: '/landing/',
   path: '/landing/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const DiscussionIdRoute = DiscussionIdImport.update({
+  id: '/discussion/$id',
+  path: '/discussion/$id',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -138,6 +145,13 @@ declare module '@tanstack/react-router' {
       path: ''
       fullPath: ''
       preLoaderRoute: typeof MainImport
+      parentRoute: typeof rootRoute
+    }
+    '/discussion/$id': {
+      id: '/discussion/$id'
+      path: '/discussion/$id'
+      fullPath: '/discussion/$id'
+      preLoaderRoute: typeof DiscussionIdImport
       parentRoute: typeof rootRoute
     }
     '/landing/': {
@@ -239,6 +253,7 @@ const MainRouteWithChildren = MainRoute._addFileChildren(MainRouteChildren)
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '': typeof MainRoute
+  '/discussion/$id': typeof DiscussionIdRoute
   '/landing': typeof LandingIndexRoute
   '/login': typeof LoginIndexLazyRoute
   '/my-calendar': typeof MyCalendarIndexLazyRoute
@@ -255,6 +270,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '': typeof MainRoute
+  '/discussion/$id': typeof DiscussionIdRoute
   '/landing': typeof LandingIndexRoute
   '/login': typeof LoginIndexLazyRoute
   '/my-calendar': typeof MyCalendarIndexLazyRoute
@@ -272,6 +288,7 @@ export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
   '/_main': typeof MainRoute
+  '/discussion/$id': typeof DiscussionIdRoute
   '/landing/': typeof LandingIndexRoute
   '/login/': typeof LoginIndexLazyRoute
   '/my-calendar/': typeof MyCalendarIndexLazyRoute
@@ -290,6 +307,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | ''
+    | '/discussion/$id'
     | '/landing'
     | '/login'
     | '/my-calendar'
@@ -305,6 +323,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | ''
+    | '/discussion/$id'
     | '/landing'
     | '/login'
     | '/my-calendar'
@@ -320,6 +339,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_main'
+    | '/discussion/$id'
     | '/landing/'
     | '/login/'
     | '/my-calendar/'
@@ -337,6 +357,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   MainRoute: typeof MainRoute
+  DiscussionIdRoute: typeof DiscussionIdRoute
   LandingIndexRoute: typeof LandingIndexRoute
   LoginIndexLazyRoute: typeof LoginIndexLazyRoute
   MyCalendarIndexLazyRoute: typeof MyCalendarIndexLazyRoute
@@ -350,6 +371,7 @@ export interface RootRouteChildren {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   MainRoute: MainRoute,
+  DiscussionIdRoute: DiscussionIdRoute,
   LandingIndexRoute: LandingIndexRoute,
   LoginIndexLazyRoute: LoginIndexLazyRoute,
   MyCalendarIndexLazyRoute: MyCalendarIndexLazyRoute,
@@ -372,6 +394,7 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/_main",
+        "/discussion/$id",
         "/landing/",
         "/login/",
         "/my-calendar/",
@@ -393,6 +416,9 @@ export const routeTree = rootRoute
         "/_main/upcoming-schedule/"
       ]
       "filePath": "_main.tsx"
+    },
+    "/discussion/$id": {
+      "filePath": "discussion/$id.tsx"
     },
     "/landing/": {
       "filePath": "landing/index.tsx"
