@@ -3,11 +3,11 @@ import { Flex } from '@/components/Flex';
 import { Text } from '@/components/Text';
 import { vars } from '@/theme/index.css';
 
-import {
-  detailsContainerStyle, 
+import { 
+  detailsContainerStyle,
   scheduleItemContainerStyle,
-  updateIndicatorStyle, 
-} from './unconfirmedScheduleListItem.css';
+  updateIndicatorStyle,
+} from './unconfirmedscheduleListItem.css';
 
 interface UnconfirmedScheduleListItemProps {
   scheduleTitle: string;

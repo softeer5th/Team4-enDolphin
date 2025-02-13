@@ -1,9 +1,8 @@
 import { Flex } from '@/components/Flex';
 import { Text } from '@/components/Text';
-import CarouselControlButton from '@/features/shared-schedule/ui/UpcomingSchedules/ControlButton';
-import UpcomingCarousel from '@/features/shared-schedule/ui/UpcomingSchedules/UpcomingCarousel';
-import UpcomingScheduleList from 
-  '@/features/shared-schedule/ui/UpcomingSchedules/UpcomingScheduleList';
+import UpcomingSchedules from '@/features/shared-schedule/ui/UpcomingSchedules';
+import UpcomingScheduleList 
+  from '@/features/shared-schedule/ui/UpcomingSchedules/UpcomingScheduleList';
 
 import { containerStyle } from './index.css';
 
@@ -21,7 +20,7 @@ const UpcomingSchedulePage = () => {
         justify='space-between'
         width='full'
       >
-        <UpcomingCarousel schedules={schedules} />
+        <UpcomingSchedules schedules={schedules} />
         <Flex justify='space-between' width='full'>
           <Text typo='h2'>다가오는 일정</Text>
         </Flex>
@@ -31,8 +30,6 @@ const UpcomingSchedulePage = () => {
           justify='flex-end'
           width='full'
         >
-          <CarouselControlButton direction='left' isAvailable={true} />
-          <CarouselControlButton direction='right' isAvailable={true} />
         </Flex>
       </Flex>
       <UpcomingScheduleList schedules={schedules} />
