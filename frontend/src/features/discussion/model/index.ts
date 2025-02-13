@@ -1,6 +1,7 @@
 import { z } from 'zod';
+export * from './candidateSchedule';
 
-import { DATE_BAR, TIME } from '@/constants/regex';
+import { DATE_BAR, TIME  } from '@/constants/regex';
 import { UserDTO } from '@/features/user/model';
 
 const MeetingMethodENUM = z.enum(['OFFLINE', 'ONLINE']);
