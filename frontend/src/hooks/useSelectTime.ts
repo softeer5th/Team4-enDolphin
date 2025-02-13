@@ -32,6 +32,21 @@ const resetDoneTime = () => ({
   endTime: null,
 });
 
+const calcDoneTimeRange = (selectedTime: TimeRange, date?: Date) => {
+  const OFFSET = 15 * 60 * 1000;
+  if (!selectedTime.startTime && date) {
+    return {
+      startTime: date,
+      endTime: new Date(date.getTime() + OFFSET),
+    };
+  }
+  const { startDate, endDate } = sortDate(selectedTime.startTime, selectedTime.endTime);
+  return {
+    startTime: date || startDate,
+    endTime: date || endDate,
+  };
+};
+
 const selectReducer = (state: State, action: Action) => {
   switch (action.type) {
     case 'SELECT_START':
@@ -47,21 +62,16 @@ const selectReducer = (state: State, action: Action) => {
       };
 
     case 'SELECT_END': {
-      const { startDate, endDate }
-         = sortDate(state.selectedTime.startTime, state.selectedTime.endTime);
-      if (typeof action.callback === 'function') action.callback({ startDate, endDate });
+      const doneTime = calcDoneTimeRange(state.selectedTime, action.date);
+      if (typeof action.callback === 'function') action.callback(doneTime);
       return {
         selectedTime: resetSelectedTime(),
-        doneTime: {
-          startTime: action.date || startDate,
-          endTime: action.date || endDate,
-        },
+        doneTime,
         isSelecting: false,
       };
     }
 
     case 'SELECT_CANCEL':
-      if (typeof action.callback === 'function') action.callback();
       return {
         selectedTime: resetSelectedTime(),
         doneTime: resetDoneTime(),
