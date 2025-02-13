@@ -7,14 +7,14 @@ import { timeControlButtonStyle, timeControlStyle } from './index.css';
 import { TimeControlButton } from './TimeControlButton';
 
 export const TimeControl = () => {
-  const { selected } = useCalendarContext();
+  const { selected, isTableUsed } = useCalendarContext();
   const { year, month, week } = formatDateToWeek(selected);
   const weekString = `${year}년 ${month}월 ${week}`;
 
   return  (
     <Flex
       align='center'
-      className={timeControlStyle}
+      className={timeControlStyle({ isTableUsed })}
       gap={200}
       justify='flex-start'
     >

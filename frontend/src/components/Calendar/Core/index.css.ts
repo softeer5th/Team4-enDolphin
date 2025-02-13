@@ -20,9 +20,18 @@ export const weekStyle = style({
   alignItems: 'stretch',
 });
 
-export const timeControlStyle = style({
-  paddingTop: vars.spacing[500],
-  paddingLeft: vars.spacing[500],
+export const timeControlStyle = recipe({
+  base: { paddingTop: vars.spacing[500] },
+  variants: {
+    isTableUsed: {
+      true: {
+        paddingLeft: vars.spacing[500],
+      },
+      false: {
+        paddingLeft: 0,
+      },
+    },
+  },
 });
 
 export const timeControlButtonWrapperStyle = style({
