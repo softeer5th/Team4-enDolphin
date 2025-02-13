@@ -23,6 +23,8 @@ import { Route as DiscussionCreateIdImport } from './routes/discussion/create/$i
 
 // Create Virtual Routes
 
+const LoginIndexLazyImport = createFileRoute('/login/')()
+const OauthRedirectIndexLazyImport = createFileRoute('/oauth/redirect/')()
 const MainMyScheduleIndexLazyImport = createFileRoute('/_main/my-schedule/')()
 
 // Create/Update Routes
@@ -38,11 +40,25 @@ const IndexRoute = IndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const LoginIndexLazyRoute = LoginIndexLazyImport.update({
+  id: '/login/',
+  path: '/login/',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/login/index.lazy').then((d) => d.Route))
+
 const LandingIndexRoute = LandingIndexImport.update({
   id: '/landing/',
   path: '/landing/',
   getParentRoute: () => rootRoute,
 } as any)
+
+const OauthRedirectIndexLazyRoute = OauthRedirectIndexLazyImport.update({
+  id: '/oauth/redirect/',
+  path: '/oauth/redirect/',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() =>
+  import('./routes/oauth.redirect/index.lazy').then((d) => d.Route),
+)
 
 const MainMyScheduleIndexLazyRoute = MainMyScheduleIndexLazyImport.update({
   id: '/my-schedule/',
@@ -101,6 +117,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LandingIndexImport
       parentRoute: typeof rootRoute
     }
+    '/login/': {
+      id: '/login/'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginIndexLazyImport
+      parentRoute: typeof rootRoute
+    }
     '/discussion/create/$id': {
       id: '/discussion/create/$id'
       path: '/discussion/create/$id'
@@ -136,6 +159,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MainMyScheduleIndexLazyImport
       parentRoute: typeof MainImport
     }
+    '/oauth/redirect/': {
+      id: '/oauth/redirect/'
+      path: '/oauth/redirect'
+      fullPath: '/oauth/redirect'
+      preLoaderRoute: typeof OauthRedirectIndexLazyImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -155,22 +185,26 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '': typeof MainRouteWithChildren
   '/landing': typeof LandingIndexRoute
+  '/login': typeof LoginIndexLazyRoute
   '/discussion/create/$id': typeof DiscussionCreateIdRoute
   '/discussion/edit/$id': typeof DiscussionEditIdRoute
   '/discussion/invite/$id': typeof DiscussionInviteIdRoute
   '/discussion/create': typeof DiscussionCreateIndexRoute
   '/my-schedule': typeof MainMyScheduleIndexLazyRoute
+  '/oauth/redirect': typeof OauthRedirectIndexLazyRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '': typeof MainRouteWithChildren
   '/landing': typeof LandingIndexRoute
+  '/login': typeof LoginIndexLazyRoute
   '/discussion/create/$id': typeof DiscussionCreateIdRoute
   '/discussion/edit/$id': typeof DiscussionEditIdRoute
   '/discussion/invite/$id': typeof DiscussionInviteIdRoute
   '/discussion/create': typeof DiscussionCreateIndexRoute
   '/my-schedule': typeof MainMyScheduleIndexLazyRoute
+  '/oauth/redirect': typeof OauthRedirectIndexLazyRoute
 }
 
 export interface FileRoutesById {
@@ -178,11 +212,13 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_main': typeof MainRouteWithChildren
   '/landing/': typeof LandingIndexRoute
+  '/login/': typeof LoginIndexLazyRoute
   '/discussion/create/$id': typeof DiscussionCreateIdRoute
   '/discussion/edit/$id': typeof DiscussionEditIdRoute
   '/discussion/invite/$id': typeof DiscussionInviteIdRoute
   '/discussion/create/': typeof DiscussionCreateIndexRoute
   '/_main/my-schedule/': typeof MainMyScheduleIndexLazyRoute
+  '/oauth/redirect/': typeof OauthRedirectIndexLazyRoute
 }
 
 export interface FileRouteTypes {
@@ -191,31 +227,37 @@ export interface FileRouteTypes {
     | '/'
     | ''
     | '/landing'
+    | '/login'
     | '/discussion/create/$id'
     | '/discussion/edit/$id'
     | '/discussion/invite/$id'
     | '/discussion/create'
     | '/my-schedule'
+    | '/oauth/redirect'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | ''
     | '/landing'
+    | '/login'
     | '/discussion/create/$id'
     | '/discussion/edit/$id'
     | '/discussion/invite/$id'
     | '/discussion/create'
     | '/my-schedule'
+    | '/oauth/redirect'
   id:
     | '__root__'
     | '/'
     | '/_main'
     | '/landing/'
+    | '/login/'
     | '/discussion/create/$id'
     | '/discussion/edit/$id'
     | '/discussion/invite/$id'
     | '/discussion/create/'
     | '/_main/my-schedule/'
+    | '/oauth/redirect/'
   fileRoutesById: FileRoutesById
 }
 
@@ -223,20 +265,24 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   MainRoute: typeof MainRouteWithChildren
   LandingIndexRoute: typeof LandingIndexRoute
+  LoginIndexLazyRoute: typeof LoginIndexLazyRoute
   DiscussionCreateIdRoute: typeof DiscussionCreateIdRoute
   DiscussionEditIdRoute: typeof DiscussionEditIdRoute
   DiscussionInviteIdRoute: typeof DiscussionInviteIdRoute
   DiscussionCreateIndexRoute: typeof DiscussionCreateIndexRoute
+  OauthRedirectIndexLazyRoute: typeof OauthRedirectIndexLazyRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   MainRoute: MainRouteWithChildren,
   LandingIndexRoute: LandingIndexRoute,
+  LoginIndexLazyRoute: LoginIndexLazyRoute,
   DiscussionCreateIdRoute: DiscussionCreateIdRoute,
   DiscussionEditIdRoute: DiscussionEditIdRoute,
   DiscussionInviteIdRoute: DiscussionInviteIdRoute,
   DiscussionCreateIndexRoute: DiscussionCreateIndexRoute,
+  OauthRedirectIndexLazyRoute: OauthRedirectIndexLazyRoute,
 }
 
 export const routeTree = rootRoute
@@ -252,10 +298,12 @@ export const routeTree = rootRoute
         "/",
         "/_main",
         "/landing/",
+        "/login/",
         "/discussion/create/$id",
         "/discussion/edit/$id",
         "/discussion/invite/$id",
-        "/discussion/create/"
+        "/discussion/create/",
+        "/oauth/redirect/"
       ]
     },
     "/": {
@@ -269,6 +317,9 @@ export const routeTree = rootRoute
     },
     "/landing/": {
       "filePath": "landing/index.tsx"
+    },
+    "/login/": {
+      "filePath": "login/index.lazy.tsx"
     },
     "/discussion/create/$id": {
       "filePath": "discussion/create/$id.tsx"
@@ -285,6 +336,9 @@ export const routeTree = rootRoute
     "/_main/my-schedule/": {
       "filePath": "_main/my-schedule/index.lazy.tsx",
       "parent": "/_main"
+    },
+    "/oauth/redirect/": {
+      "filePath": "oauth.redirect/index.lazy.tsx"
     }
   }
 }

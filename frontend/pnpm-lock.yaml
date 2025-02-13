@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@tanstack/react-query':
+        specifier: ^5.66.0
+        version: 5.66.0(react@19.0.0)
       '@tanstack/react-router':
         specifier: ^1.99.0
         version: 1.99.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -57,6 +60,9 @@ importers:
       '@stylistic/eslint-plugin':
         specifier: ^2.13.0
         version: 2.13.0(eslint@9.19.0)(typescript@5.6.3)
+      '@tanstack/eslint-plugin-query':
+        specifier: ^5.66.1
+        version: 5.66.1(eslint@9.19.0)(typescript@5.6.3)
       '@tanstack/router-devtools':
         specifier: ^1.99.0
         version: 1.99.0(@tanstack/react-router@1.99.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(csstype@3.1.3)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -1052,9 +1058,22 @@ packages:
     peerDependencies:
       eslint: '>=8.40.0'
 
+  '@tanstack/eslint-plugin-query@5.66.1':
+    resolution: {integrity: sha512-pYMVTGgJ7yPk9Rm6UWEmbY6TX0EmMmxJqYkthgeDCwEznToy2m+W928nUODFirtZBZlhBsqHy33LO0kyTlgf0w==}
+    peerDependencies:
+      eslint: ^8.57.0 || ^9.0.0
+
   '@tanstack/history@1.99.0':
     resolution: {integrity: sha512-MQS1Lg8D+1vpasEJKf4zs1sxhxbXcoejmVCZDbo0bq2wq+xVK+kRixj5Pae2kb2APzdXYga4u236GBbgCKTcnQ==}
     engines: {node: '>=12'}
+
+  '@tanstack/query-core@5.66.0':
+    resolution: {integrity: sha512-J+JeBtthiKxrpzUu7rfIPDzhscXF2p5zE/hVdrqkACBP8Yu0M96mwJ5m/8cPPYQE9aRNvXztXHlNwIh4FEeMZw==}
+
+  '@tanstack/react-query@5.66.0':
+    resolution: {integrity: sha512-z3sYixFQJe8hndFnXgWu7C79ctL+pI0KAelYyW+khaNJ1m22lWrhJU2QrsTcRKMuVPtoZvfBYrTStIdKo+x0Xw==}
+    peerDependencies:
+      react: ^18 || ^19
 
   '@tanstack/react-router@1.99.0':
     resolution: {integrity: sha512-MwKQxckJMdxpYwpZsItM1SCodcAKu1bqWha2s2d5/Iy1F/9XzqT8gZXpZW5fvC7+21YOuwMxvJmwbSPkpVeWRw==}
@@ -3848,7 +3867,22 @@ snapshots:
       - supports-color
       - typescript
 
+  '@tanstack/eslint-plugin-query@5.66.1(eslint@9.19.0)(typescript@5.6.3)':
+    dependencies:
+      '@typescript-eslint/utils': 8.21.0(eslint@9.19.0)(typescript@5.6.3)
+      eslint: 9.19.0
+    transitivePeerDependencies:
+      - supports-color
+      - typescript
+
   '@tanstack/history@1.99.0': {}
+
+  '@tanstack/query-core@5.66.0': {}
+
+  '@tanstack/react-query@5.66.0(react@19.0.0)':
+    dependencies:
+      '@tanstack/query-core': 5.66.0
+      react: 19.0.0
 
   '@tanstack/react-router@1.99.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
     dependencies:

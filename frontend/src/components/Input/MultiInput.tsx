@@ -2,7 +2,7 @@ import type { JSX, PropsWithChildren, ReactNode } from 'react';
 import { isValidElement } from 'react';
 
 import clsx from '@/utils/clsx';
-import { intersperseElement } from '@/utils/jsxUtils';
+import { intersperseElement } from '@/utils/jsx';
 
 import { Text } from '../Text';
 import { type CommonInputProps, ICON_WIDTH } from '.';
