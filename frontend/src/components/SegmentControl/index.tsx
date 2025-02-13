@@ -49,7 +49,7 @@ const SegmentControl = ({
           >
             {option.label}
           </Button>
-        ); 
+        );
       })}
     </div>
   );

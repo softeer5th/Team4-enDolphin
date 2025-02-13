@@ -21,4 +21,4 @@ export const gradient = {
       strong: 'linear-gradient(180deg, #2272eb 0%, #1957c2 50%, #2272eb 100%)',
     },
   },
-};
+} as const;

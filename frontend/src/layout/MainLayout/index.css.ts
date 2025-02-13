@@ -1,11 +1,16 @@
 import { style } from '@vanilla-extract/css';
 
-import { vars } from '@/theme/index.css';
-
 export const containerStyle = style({
-  width: '100vw',
-  maxWidth: 1288,
+  width: '100%',
+  minWidth: '1284px',
   minHeight: '100vh',
-  overflowX: 'scroll',
-  padding: `56px ${vars.spacing[700]}`,
+  margin: '56px 0',
+  padding: '0 28px',
+  display: 'flex',
+  overflow: 'hidden',
+  justifyContent: 'center',
+});
+
+export const contentWrapperStyle = style({  
+  width: '1288px',
 });

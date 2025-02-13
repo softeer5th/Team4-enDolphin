@@ -15,7 +15,7 @@ export const containerStyle = recipe({
         color: vars.color.Ref.Primary[500],
       },
       secondary: {
-        color: vars.color.Ref.Netural[700],
+        color: vars.color.Ref.Netural[800],
       },
       destructive: {
         color: vars.color.Ref.Red[500],
@@ -101,7 +101,7 @@ export const containerStyle = recipe({
         style: 'filled',
       },
       style: {
-        backgroundColor: vars.color.Ref.Netural[700],
+        backgroundColor: vars.color.Ref.Netural[800],
       },
     },
     {

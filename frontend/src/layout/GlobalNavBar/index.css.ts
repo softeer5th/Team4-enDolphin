@@ -10,26 +10,25 @@ export const containerStyle = recipe({
     position: 'fixed',
     left: 0,
     top: 0,
-
+    
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
     padding: '0 28px',
     height: 56,
     borderBottom: `1px solid ${vars.color.Ref.Netural[100]}`,
+  
+    zIndex: 1000,
   },
   variants: {
-    type: {
+    background: {
       white: {
-        backgroundColor: vars.color.Ref.Netural.White,
+        backgroundColor: vars.color.Ref.Netural['White'],
       },
       transparent: {
         backgroundColor: 'transparent',
       },
     },
-  },
-  defaultVariants: {
-    type: 'white',
   },
 });
 

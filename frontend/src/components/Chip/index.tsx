@@ -5,7 +5,7 @@ import { Text } from '../Text';
 import { chipStyle } from './index.css';
 
 interface ChipProps extends PropsWithChildren {
-  color: 'blue' | 'green' | 'red' | 'black';
+  color: 'blue' | 'green' | 'red' | 'black' | 'coolGray';
   style?: 'borderless' | 'weak' | 'filled';
   radius?: 'round' | 'max';
   size?: 'sm' | 'md' | 'lg';

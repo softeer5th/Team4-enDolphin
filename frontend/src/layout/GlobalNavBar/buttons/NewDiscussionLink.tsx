@@ -14,5 +14,3 @@ export const NewDiscussionLink = () => (
     새 일정 조율 추가
   </Button>
 );
-
-export default NewDiscussionLink;
