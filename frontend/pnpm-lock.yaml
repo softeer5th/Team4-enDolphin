@@ -61,7 +61,7 @@ importers:
         specifier: ^2.13.0
         version: 2.13.0(eslint@9.19.0)(typescript@5.6.3)
       '@tanstack/eslint-plugin-query':
-        specifier: ^5.66.1
+        specifier: ^5.66.0
         version: 5.66.1(eslint@9.19.0)(typescript@5.6.3)
       '@tanstack/router-devtools':
         specifier: ^1.99.0
