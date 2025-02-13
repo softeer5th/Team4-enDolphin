@@ -3,6 +3,7 @@ import { useCalendarContext } from '@/components/Calendar/context/CalendarContex
 import { Flex } from '@/components/Flex';
 
 import type { DiscussionResponse } from '../../model';
+import { calendarTableStyle, dayStyle } from './index.css';
 
 const data: DiscussionResponse = {
   events: [
@@ -40,8 +41,14 @@ const data: DiscussionResponse = {
 export const CalendarTable = () => {
   const { selected, dates } = useCalendarContext();
   return (
-    <Flex justify='space-between' width='100%'>
-      {dates.map((date) => <div key={date.getTime()}>{date.toDateString()}</div>)}
+    <Flex
+      className={calendarTableStyle}
+      height='36.5rem'
+      width='100%'
+    >
+      {dates.map((date) => 
+        <div className={dayStyle} key={date.getTime()}></div>,
+      )}
     </Flex>
   );
 };

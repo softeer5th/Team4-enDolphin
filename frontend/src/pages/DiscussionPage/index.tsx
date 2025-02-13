@@ -3,10 +3,20 @@ import DiscussionMemberCheckbox from '@/features/discussion/ui/DiscussionMemberC
 import DiscussionTab from '@/features/discussion/ui/DiscussionTab';
 import DiscussionTitle from '@/features/discussion/ui/DiscussionTitle';
 
+import { containerStyle } from './index.css';
+
 const DiscussionPage = () =>(
-  <Flex direction='column'>
+  <Flex
+    className={containerStyle}
+    direction='column'
+    height='calc(100vh - 112px)'
+  >
     <DiscussionTitle />
-    <Flex gap={700} width='100%'>
+    <Flex
+      gap={700}
+      height='100%'
+      width='100%'
+    >
       <DiscussionMemberCheckbox members={[
         { id: 1, name: '김동권', email: 'a@naver.com', picture: 'https://picsum.photos/200' },
         { id: 2, name: '김동현', email: 'b@naver.com', picture: 'https://picsum.photos/200' },
