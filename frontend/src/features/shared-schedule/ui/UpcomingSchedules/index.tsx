@@ -1,20 +1,17 @@
-import { useNavigate } from '@tanstack/react-router';
+import type { PropsWithChildren } from 'react';
 
-import Button from '@/components/Button';
 import { Flex } from '@/components/Flex';
-import { Text } from '@/components/Text';
 import { useCarouselControl } from '@/hooks/useCarousel';
 
-import { LeftControlButton, RightControlButton } from './ControlButton';
+import ControlButtons from './ControlButton';
 import { containerStyle } from './index.css';
 import UpcomingCarousel from './UpcomingCarousel';
 
-interface UpcomingSchedulesProps {
+interface UpcomingSchedulesProps extends PropsWithChildren {
   schedules: object[];
 }
 
-const UpcomingSchedules = ({ schedules }: UpcomingSchedulesProps) => {
-  const navigate = useNavigate();
+const UpcomingSchedules = ({ schedules, children }: UpcomingSchedulesProps) => {
   const { offsetX, translateCarousel, canTranslateLeft, canTranslateRight } = useCarouselControl({ 
     totalCards: schedules.length,
   });
@@ -27,20 +24,14 @@ const UpcomingSchedules = ({ schedules }: UpcomingSchedulesProps) => {
       justify='space-between'
       width='full'
     > 
+      <Flex justify='space-between' width='full'>
+        {children}
+      </Flex>
       <UpcomingCarousel
         offsetX={offsetX}
         schedules={schedules}
       />
-      <Flex justify='space-between' width='full'>
-        <Text typo='h2'>다가오는 일정</Text>
-        <Button
-          onClick={() => navigate({ to: '/upcoming-schedule' })} 
-          style='borderless'
-        >
-          모두보기
-        </Button>
-      </Flex>
-      <ControlButtons 
+      <ControlButtons
         canTranslateLeft={canTranslateLeft} 
         canTranslateRight={canTranslateRight} 
         translateCarousel={translateCarousel}
@@ -48,31 +39,5 @@ const UpcomingSchedules = ({ schedules }: UpcomingSchedulesProps) => {
     </Flex>
   );
 };
-
-const ControlButtons = ({ 
-  translateCarousel, 
-  canTranslateLeft,
-  canTranslateRight,
-}: {
-  translateCarousel: (direction: 'left' | 'right') => void;
-  canTranslateLeft: boolean;
-  canTranslateRight: boolean;
-}) => (
-  <Flex
-    align='center'
-    gap={400}
-    justify='flex-end'
-    width='full'
-  >
-    <LeftControlButton
-      isAvailable={canTranslateLeft}
-      onClick={() => translateCarousel('left')}
-    />
-    <RightControlButton
-      isAvailable={canTranslateRight}
-      onClick={() => translateCarousel('right')}
-    />
-  </Flex>
-);
 
 export default UpcomingSchedules;

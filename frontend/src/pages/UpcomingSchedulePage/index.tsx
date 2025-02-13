@@ -14,28 +14,13 @@ const UpcomingSchedulePage = () => {
       direction='column'
       gap={700}
     > 
-      <Flex
-        direction='column'
-        height={448}
-        justify='space-between'
-        width='full'
-      >
-        <UpcomingSchedules schedules={schedules} />
-        <Flex justify='space-between' width='full'>
-          <Text typo='h2'>다가오는 일정</Text>
-        </Flex>
-        <Flex
-          align='center'
-          gap={400}
-          justify='flex-end'
-          width='full'
-        >
-        </Flex>
-      </Flex>
+      <UpcomingSchedules schedules={schedules}>
+        <Text typo='h2'>다가오는 일정</Text>
+
+      </UpcomingSchedules>
       <UpcomingScheduleList schedules={schedules} />
     </Flex>
   );
-
 };
 
 export default UpcomingSchedulePage;
