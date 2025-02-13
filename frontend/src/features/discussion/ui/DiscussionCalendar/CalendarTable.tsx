@@ -54,7 +54,7 @@ const groupByDayOfWeek = (data: DiscussionDTO[]) =>
   );
 
 export const CalendarTable = () => {
-  const { selected, dates } = useCalendarContext();
+  const { dates } = useCalendarContext();
   const groupMap = groupByDayOfWeek(data);
 
   return (
