@@ -6,7 +6,7 @@ import DiscussionInvitePage from '@/pages/DiscussionInvitePage';
 const DiscussionInvite = () => (
   <>
     <GlobalNavBar>
-      <GlobalNavBar.MyScheduleLink />
+      <GlobalNavBar.MyCalendarLink />
       <GlobalNavBar.NewDiscussionLink />
     </GlobalNavBar>
     <DiscussionInvitePage />

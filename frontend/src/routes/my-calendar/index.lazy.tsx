@@ -1,16 +1,17 @@
 import { createLazyFileRoute } from '@tanstack/react-router';
 
 import GlobalNavBar from '@/layout/GlobalNavBar';
-import MySchedulePage from '@/pages/MySchedulePage';
+import MyCalendarPage from '@/pages/MyCalendarPage';
 
-const MySchedule = () => (
+const MyCalendar = () => (
   <>
     <GlobalNavBar>
       <GlobalNavBar.NewDiscussionLink />
     </GlobalNavBar>
-    <MySchedulePage />
+    <MyCalendarPage />
   </>
 );
-export const Route = createLazyFileRoute('/_main/my-schedule/')({
-  component: MySchedule,
+
+export const Route = createLazyFileRoute('/my-calendar/')({
+  component: MyCalendar,
 });

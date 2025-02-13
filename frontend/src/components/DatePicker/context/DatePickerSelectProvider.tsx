@@ -10,12 +10,10 @@ interface DatePickerRangeProviderProps extends PropsWithChildren, DatePickerSele
 
 const DatePickerSelectProvider = ({ 
   children,
-  selectedDate,
   ...props
 }: DatePickerRangeProviderProps) => {
-
   const { highlightRange, onDateCellClick } = useDatePickerSelect(props);
-
+  const selectedDate = props.selectedDate;
   const isDateSelected = (date: Date) => selectedDate ? isSameDate(date, selectedDate) : false;
 
   return (
@@ -24,7 +22,6 @@ const DatePickerSelectProvider = ({
         calendarType: 'select',
         onDateCellClick,
         isDateSelected,
-        selectedDate,
         highlightRange,
         ...props,
       }}

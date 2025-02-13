@@ -14,11 +14,6 @@ export const CalendarDay = memo(({ date, selected }: CalendarDayProps) => (
     <CalendarCell
       date={date}
       selected={selected}
-      time='all'
-    />
-    <CalendarCell
-      date={date}
-      selected={selected}
       time='empty'
     />
     {TIMES.map((time) => (

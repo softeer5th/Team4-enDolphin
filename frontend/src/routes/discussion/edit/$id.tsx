@@ -6,7 +6,7 @@ import DiscussionEditPage from '@/pages/DiscussionPage/DiscussionEditPage';
 const DiscussionEdit = () => (
   <>
     <GlobalNavBar>
-      <GlobalNavBar.MyScheduleLink />
+      <GlobalNavBar.MyCalendarLink />
     </GlobalNavBar>
     <DiscussionEditPage />
   </>

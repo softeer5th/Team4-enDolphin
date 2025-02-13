@@ -1,14 +1,29 @@
 import { style } from '@vanilla-extract/css';
+import { recipe } from '@vanilla-extract/recipes';
 
 import { vars } from '@/theme/index.css';
 
-export const defaultWrapperStyle = style({
-  position: 'absolute',
-  left: 0,
-  top: '100%',
+export const containerStyle = style({
+  position: 'relative',
+});
 
-  paddingBottom: vars.spacing[800],
-  zIndex: 1,
+export const defaultWrapperStyle = recipe({
+  base: {},
+  variants: {
+    trigger: {
+      true: {
+        position: 'absolute',
+        left: 0,
+        top: '100%',
+      
+        paddingBottom: vars.spacing[800],
+        zIndex: 1,
+      },
+      false: {
+        position: 'relative',
+      },
+    },
+  },
 });
 
 export const defaultContainerStyle = style({
@@ -28,8 +43,4 @@ export const rootContainerStyle = style({
   display: 'flex',
   flexDirection: 'column',
   gap: vars.spacing[300],
-});
-
-export const triggerWrapperStyle = style({
-  position: 'relative',
 });

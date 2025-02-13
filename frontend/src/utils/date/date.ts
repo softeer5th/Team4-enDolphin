@@ -76,7 +76,9 @@ export const formatDateToWeek = (date: Date): DateWeekType => {
  * @param date - 날짜 객체.
  * @returns - 특정 날짜가 포함된 주의 날짜 객체 배열.
  */
-export const formatDateToWeekDates = (date: Date): Date[] => {
+export const formatDateToWeekDates = (date: Date | null): Date[] => {
+  if (!date) return [];
+
   const selected = new Date(date);
   const firstDateOfWeek = new Date(selected.setDate(selected.getDate() - selected.getDay())); 
   const dates = new Array(7).fill(0)
@@ -149,7 +151,11 @@ export const isDateInRange = (
   return targetTime >= startTime && targetTime <= endTime;
 };
 
-export const isSaturday = (date: Date): boolean => date.getDay() === SATURDAY_CODE;
+export const isSaturday = (date: Date | null): boolean => {
+  if (!date) return false;
+  return  date.getDay() === SATURDAY_CODE;
+};
+
 export const isSunday = (date: Date): boolean => date.getDay() === SUNDAY_CODE;
 // TODO: 공휴일 OPEN API에 연결
 // export const isHoliday = (date: Date): boolean => false;
@@ -182,4 +188,11 @@ export const getYearMonthDay = (date: Date) => {
   const day = date.getDate();
   
   return { year, month, day };
+};
+
+export const isAllday = (startDate: Date | null, endDate: Date | null): boolean => {
+  const ALL_DAY = 24 * 60 * 60 * 1000;
+
+  if (!startDate || !endDate) return false;
+  return endDate.getTime() - startDate.getTime() >= ALL_DAY;
 };

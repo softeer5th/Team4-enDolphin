@@ -2,24 +2,35 @@ import { style } from '@vanilla-extract/css';
 import { recipe } from '@vanilla-extract/recipes';
 
 import { fadeHighlightProps } from '@/theme/animation.css';
+import { vars } from '@/theme/index.css';
 
-import { vars } from '../../../theme/index.css';
+export const coreStyle = style({
+  position: 'sticky',
+  top: 0,
+  left: 0,
+  zIndex: 1,
 
-export const containerStyle = style({
+  backgroundColor: vars.color.Ref.Netural.White,
+});
+
+export const headerStyle = style({
+  width: '100%',
   display: 'flex',
-  flexDirection: 'column',
-  gap: vars.spacing[400],
+
+  borderTop: `1px solid ${vars.color.Ref.Netural[200]}`,
+  borderBottom: `2px solid ${vars.color.Ref.Netural[200]}`,
 });
 
 export const weekStyle = style({
+  width: '100%',
+  paddingTop: vars.spacing[400],
   display: 'flex',
   alignItems: 'stretch',
 });
 
 export const timeControlStyle = style({
-  display: 'flex',
-  alignItems: 'center',
-  gap: vars.spacing[200],
+  paddingTop: vars.spacing[500],
+  paddingLeft: vars.spacing[500],
 });
 
 export const timeControlButtonWrapperStyle = style({
