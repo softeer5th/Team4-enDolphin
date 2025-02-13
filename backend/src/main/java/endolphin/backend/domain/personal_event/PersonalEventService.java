@@ -138,7 +138,7 @@ public class PersonalEventService {
                         personalEventRepository.save(personalEvent);
                         // 비트맵 수정
                         discussions.forEach(discussion -> {
-                            if (discussion.getDiscussionStatus().equals(DiscussionStatus.ONGOING)) {
+                            if (discussion.getDiscussionStatus() == DiscussionStatus.ONGOING) {
                                 personalEventPreprocessor.preprocessOne(oldEvent, discussion, user, false);
                                 personalEventPreprocessor.preprocessOne(personalEvent, discussion, user,
                                     true);
@@ -151,7 +151,7 @@ public class PersonalEventService {
                     personalEventRepository.save(personalEvent);
                     // 비트맵 수정
                     discussions.forEach(discussion -> {
-                        if (discussion.getDiscussionStatus().equals(DiscussionStatus.ONGOING)) {
+                        if (discussion.getDiscussionStatus() == DiscussionStatus.ONGOING) {
                             personalEventPreprocessor.preprocessOne(personalEvent, discussion, user,
                                 true);
                         }
