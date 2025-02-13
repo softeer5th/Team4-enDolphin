@@ -6,6 +6,7 @@ export * from "./component/ChevronLeft.tsx";
 export * from "./component/ChevronRight.tsx";
 export * from "./component/CircleCheck.tsx";
 export * from "./component/Clock.tsx";
+export * from "./component/Close.tsx";
 export * from "./component/GoogleCalendar.tsx";
 export * from "./component/Google.tsx";
 export * from "./component/IconDotsMono.tsx";
