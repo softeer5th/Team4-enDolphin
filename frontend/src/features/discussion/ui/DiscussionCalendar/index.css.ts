@@ -11,6 +11,7 @@ export const calendarTableStyle = style({
 
 export const dayStyle = style({
   height: '100%',
+  padding: vars.spacing[200],
   flexGrow: 1,
 
   borderTop: `3px solid ${vars.color.Ref.Netural[200]}`,

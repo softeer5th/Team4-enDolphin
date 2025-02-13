@@ -36,4 +36,6 @@ const DiscussionParticipantResponse = z.object({
 export type DiscussionRequest = z.infer<typeof DiscussionRequest>;
 export type DiscussionResponse = z.infer<typeof DiscussionResponse>;
 export type DiscussionParticipantResponse = z.infer<typeof DiscussionParticipantResponse>;
+
 export type MeetingMethodENUM = z.infer<typeof MeetingMethodENUM>;
+export type DiscussionDTO = z.infer<typeof DiscussionDTO>;
