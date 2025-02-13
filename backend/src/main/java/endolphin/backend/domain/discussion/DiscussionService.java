@@ -1,24 +1,32 @@
 package endolphin.backend.domain.discussion;
 
+import endolphin.backend.domain.discussion.dto.CandidateEventDetailsRequest;
+import endolphin.backend.domain.discussion.dto.CandidateEventDetailsResponse;
 import endolphin.backend.domain.discussion.dto.CreateDiscussionRequest;
 import endolphin.backend.domain.discussion.dto.DiscussionResponse;
 import endolphin.backend.domain.discussion.entity.Discussion;
 import endolphin.backend.domain.discussion.enums.DiscussionStatus;
 import endolphin.backend.domain.personal_event.PersonalEventService;
+import endolphin.backend.domain.personal_event.dto.PersonalEventWithStatus;
+import endolphin.backend.domain.personal_event.enums.PersonalEventStatus;
 import endolphin.backend.domain.shared_event.SharedEventService;
 import endolphin.backend.domain.shared_event.dto.SharedEventRequest;
 import endolphin.backend.domain.shared_event.dto.SharedEventWithDiscussionInfoResponse;
 import endolphin.backend.domain.shared_event.dto.SharedEventDto;
 import endolphin.backend.domain.user.UserService;
+import endolphin.backend.domain.user.dto.UserInfoWithPersonalEvents;
 import endolphin.backend.domain.user.entity.User;
 import endolphin.backend.global.error.exception.ApiException;
 import endolphin.backend.global.error.exception.ErrorCode;
 import endolphin.backend.global.redis.DiscussionBitmapService;
 import endolphin.backend.global.security.PasswordEncoder;
+import endolphin.backend.global.util.Validator;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -116,6 +124,48 @@ public class DiscussionService {
         );
     }
 
+    @Transactional(readOnly = true)
+    public CandidateEventDetailsResponse retrieveCandidateEventDetails(
+        Long discussionId, CandidateEventDetailsRequest request) {
+        final int TIME_OFFSET = 4;
+
+        LocalDateTime startTime = request.startDateTime();
+        LocalDateTime endTime = request.endDateTime();
+
+        Validator.validateDateTimeRange(startTime, endTime);
+
+        LocalDateTime midTime = calculateMidTime(startTime, endTime);
+
+        LocalDateTime searchStartTime = midTime.minusHours(TIME_OFFSET);
+        LocalDateTime searchEndTime = midTime.plusHours(TIME_OFFSET);
+
+        User currentUser = userService.getCurrentUser();
+        List<User> participants = discussionParticipantService.getUsersByDiscussionIdOrderByCreatedAt(
+            discussionId);
+
+        if (!participants.contains(currentUser)) {
+            throw new ApiException(ErrorCode.DISCUSSION_PARTICIPANT_NOT_FOUND);
+        }
+
+        List<UserInfoWithPersonalEvents> userInfoWithPersonalEvents = new ArrayList<>();
+        UserInfoWithPersonalEvents result0 = personalEventService.createUserInfoWithPersonalEvents(currentUser,
+            searchStartTime, searchEndTime,
+            request.selectedUserIdList());
+
+        userInfoWithPersonalEvents.add(result0);
+        for (User participant : participants) {
+            if (participant.getId().equals(currentUser.getId())) {
+                continue;
+            }
+            UserInfoWithPersonalEvents result = personalEventService.createUserInfoWithPersonalEvents(participant,
+                searchStartTime, searchEndTime, request.selectedUserIdList());
+
+            userInfoWithPersonalEvents.add(result);
+        }
+        return new CandidateEventDetailsResponse(discussionId, startTime, endTime,
+            userInfoWithPersonalEvents);
+    }
+
     private long calculateTimeLeft(LocalDate deadline) {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime deadlineDateTime = deadline.atTime(23, 59, 59);
@@ -128,5 +178,12 @@ public class DiscussionService {
     public Discussion getDiscussionById(Long discussionId) {
         return discussionRepository.findById(discussionId)
             .orElseThrow(() -> new ApiException(ErrorCode.DISCUSSION_NOT_FOUND));
+    }
+
+    private LocalDateTime calculateMidTime(LocalDateTime startTime, LocalDateTime endTime) {
+        Duration duration = Duration.between(startTime, endTime);
+        duration = duration.dividedBy(2);
+
+        return startTime.plus(duration);
     }
 }

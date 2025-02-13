@@ -5,6 +5,8 @@ import endolphin.backend.domain.candidate_event.dto.CalendarViewRequest;
 import endolphin.backend.domain.candidate_event.dto.CalendarViewResponse;
 import endolphin.backend.domain.candidate_event.dto.RankViewRequest;
 import endolphin.backend.domain.candidate_event.dto.RankViewResponse;
+import endolphin.backend.domain.discussion.dto.CandidateEventDetailsRequest;
+import endolphin.backend.domain.discussion.dto.CandidateEventDetailsResponse;
 import endolphin.backend.domain.discussion.dto.CreateDiscussionRequest;
 import endolphin.backend.domain.discussion.dto.DiscussionResponse;
 import endolphin.backend.domain.shared_event.dto.SharedEventRequest;
@@ -112,6 +114,18 @@ public class DiscussionController {
 
         RankViewResponse response = candidateEventService.getEventsOnRankView(discussionId,
             request);
+        return ResponseEntity.ok(response);
+    }
+
+    @Operation(summary = "후보 일정 상세 정보", description = "후보 일정의 상세 정보를 조회합니다.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "후보 일정 상세 정보 조회 성공",
+            content = @Content(schema = @Schema(implementation = CandidateEventDetailsResponse.class)))
+    })
+    @PostMapping("/{discussionId}/candidate-event/details")
+    public ResponseEntity<CandidateEventDetailsResponse> getCandidateEventDetails(@PathVariable("discussionId") @Min(1) Long discussionId,
+        @Valid @RequestBody CandidateEventDetailsRequest request) {
+        CandidateEventDetailsResponse response = discussionService.retrieveCandidateEventDetails(discussionId, request);
         return ResponseEntity.ok(response);
     }
 }

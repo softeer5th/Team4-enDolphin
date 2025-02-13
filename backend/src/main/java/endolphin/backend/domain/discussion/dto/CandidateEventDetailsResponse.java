@@ -8,7 +8,6 @@ public record CandidateEventDetailsResponse(
     Long discussionId,
     LocalDateTime startDateTime,
     LocalDateTime endDateTime,
-    int numOfAdjustment,
     List<UserInfoWithPersonalEvents> participants
 ) {
 
