@@ -8,7 +8,7 @@ export const NewDiscussionLink = () => (
     radius='roundCorner'
     size='md'
     style='filled'
-    to='/new-discussion'
+    to='/discussion/create'
     variant='primary'
   >
     새 일정 조율 추가
