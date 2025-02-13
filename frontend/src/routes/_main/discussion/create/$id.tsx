@@ -6,12 +6,12 @@ import DiscussionCreateFinishPage from '@/pages/DiscussionCreateFinishPage';
 const DiscussionCreateFinish = () => (
   <>
     <GlobalNavBar background='transparent'>
-      <GlobalNavBar.MyScheduleLink />
+      <GlobalNavBar.MyCalendarLink />
     </GlobalNavBar>
     <DiscussionCreateFinishPage />
   </>
 );
 
-export const Route = createFileRoute('/discussion/create/$id')({
+export const Route = createFileRoute('/_main/discussion/create/$id')({
   component: DiscussionCreateFinish,
 });

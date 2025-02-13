@@ -13,6 +13,6 @@ const DiscussionInvite = () => (
   </>
 );
 
-export const Route = createFileRoute('/discussion/invite/$id')({
+export const Route = createFileRoute('/_main/discussion/invite/$id')({
   component: DiscussionInvite,
 });

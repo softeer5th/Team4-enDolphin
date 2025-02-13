@@ -1,5 +1,5 @@
-import { Calendar } from '@/components/Calendar';
 import { Flex } from '@/components/Flex';
+import DiscussionCalendar from '@/features/discussion/ui/DiscussionCalendar';
 import DiscussionMemberCheckbox from '@/features/discussion/ui/DiscussionMemberCheckbox';
 
 const DiscussionPage = () =>(
@@ -11,7 +11,7 @@ const DiscussionPage = () =>(
       { id: 4, name: '이현영', email: 'd@naver.com', picture: 'https://picsum.photos/200' },
     ]}
     />
-    <Calendar />
+    <DiscussionCalendar />
   </Flex>
 );
 
