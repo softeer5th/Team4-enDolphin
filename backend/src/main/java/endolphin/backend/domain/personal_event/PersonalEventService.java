@@ -8,6 +8,7 @@ import endolphin.backend.domain.personal_event.dto.PersonalEventWithStatus;
 import endolphin.backend.domain.personal_event.entity.PersonalEvent;
 import endolphin.backend.domain.shared_event.dto.SharedEventDto;
 import endolphin.backend.domain.user.UserService;
+import endolphin.backend.domain.user.dto.UserInfoWithPersonalEvents;
 import endolphin.backend.domain.user.entity.User;
 import endolphin.backend.global.dto.ListResponse;
 import endolphin.backend.global.error.exception.ApiException;
@@ -17,6 +18,7 @@ import endolphin.backend.global.google.enums.GoogleEventStatus;
 import endolphin.backend.global.util.Validator;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -180,7 +182,20 @@ public class PersonalEventService {
     }
 
     @Transactional(readOnly = true)
-    public List<PersonalEvent> findPersonalEventsByDateTimeRange(User user, LocalDateTime startTime,
+    public UserInfoWithPersonalEvents createUserInfoWithPersonalEvents(User user,
+        LocalDateTime startTime, LocalDateTime endTime, List<Long> userIdList) {
+        List<PersonalEventWithStatus> personalEventWithStatuses = findPersonalEventsByDateTimeRange(
+            user, startTime, endTime).stream().map(p -> {
+            return PersonalEventWithStatus.from(p, startTime, endTime);
+        }).collect(Collectors.toList());
+
+        boolean selected = userIdList.contains(user.getId());
+
+        return new UserInfoWithPersonalEvents(user.getId(), user.getName(), user.getPicture(),
+            selected, personalEventWithStatuses);
+    }
+
+    private List<PersonalEvent> findPersonalEventsByDateTimeRange(User user, LocalDateTime startTime,
         LocalDateTime endTime) {
         return personalEventRepository.findAllByUserAndDateTimeRange(
             user.getId(), startTime, endTime);
