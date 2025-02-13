@@ -5,13 +5,16 @@ import endolphin.backend.domain.discussion.entity.Discussion;
 import endolphin.backend.domain.discussion.enums.DiscussionStatus;
 import endolphin.backend.domain.personal_event.dto.PersonalEventRequest;
 import endolphin.backend.domain.personal_event.dto.PersonalEventResponse;
+import endolphin.backend.domain.personal_event.dto.PersonalEventWithStatus;
 import endolphin.backend.domain.personal_event.entity.PersonalEvent;
+import endolphin.backend.domain.personal_event.enums.PersonalEventStatus;
 import endolphin.backend.domain.user.UserService;
 import endolphin.backend.domain.user.entity.User;
 import endolphin.backend.global.dto.ListResponse;
 import endolphin.backend.global.google.dto.GoogleEvent;
 import endolphin.backend.global.google.enums.GoogleEventStatus;
 import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -280,5 +283,150 @@ class PersonalEventServiceTest {
         User user = Mockito.mock(User.class);
         given(user.getId()).willReturn(1L);
         return user;
+    }
+
+    @Test
+    @DisplayName("사용자별 개인 일정 상태를 조회한다")
+    void findPersonalEventStatusesByUsers() {
+        // given
+        LocalDateTime now = LocalDateTime.of(2024, 2, 13, 12, 0);
+        LocalDateTime searchStartTime = now.minusHours(3);
+        LocalDateTime searchEndTime = now.plusHours(3);
+        LocalDateTime startTime = now.minusHours(1);
+        LocalDateTime endTime = now.plusHours(1);
+
+        // Mock User 객체 생성 및 설정
+        User user1 = mock(User.class);
+        User user2 = mock(User.class);
+        given(user1.getId()).willReturn(1L);
+        given(user2.getId()).willReturn(2L);
+
+        List<User> users = List.of(user1, user2);
+
+        // Mock PersonalEvent 객체 생성 및 설정
+        PersonalEvent event1 = mock(PersonalEvent.class);
+        PersonalEvent event2 = mock(PersonalEvent.class);
+
+        given(event1.getUser()).willReturn(user1);
+        given(event1.getStartTime()).willReturn(now.minusHours(1));
+        given(event1.getEndTime()).willReturn(now.plusHours(1));
+
+        given(event2.getUser()).willReturn(user2);
+        given(event2.getStartTime()).willReturn(now.minusHours(2));
+        given(event2.getEndTime()).willReturn(now.plusHours(2));
+
+        // Repository mock 설정
+        given(personalEventRepository.findAllByUsersAndDateTimeRange(
+            List.of(1L, 2L),
+            searchStartTime,
+            searchEndTime
+        )).willReturn(List.of(event1, event2));
+
+        // when
+        Map<Long, List<PersonalEventWithStatus>> result = personalEventService
+            .findPersonalEventStatusesByUsers(users, searchStartTime, searchEndTime, startTime, endTime);
+
+        // then
+        assertThat(result).isNotNull();
+        assertThat(result).hasSize(2);
+
+        // user1의 일정 검증
+        List<PersonalEventWithStatus> user1Events = result.get(1L);
+        assertThat(user1Events)
+            .isNotNull()
+            .hasSize(1);
+        assertThat(user1Events.get(0).id()).isEqualTo(event1.getId());
+
+        // user2의 일정 검증
+        List<PersonalEventWithStatus> user2Events = result.get(2L);
+        assertThat(user2Events)
+            .isNotNull()
+            .hasSize(1);
+        assertThat(user2Events.get(0).id()).isEqualTo(event2.getId());
+
+        // Repository 호출 검증
+        verify(personalEventRepository).findAllByUsersAndDateTimeRange(
+            List.of(1L, 2L),
+            searchStartTime,
+            searchEndTime
+        );
+    }
+
+    @Test
+    @DisplayName("검색 기간 내 일정이 없는 경우 빈 맵을 반환한다")
+    void findPersonalEventStatusesByUsers_returnsEmptyMap_whenNoEvents() {
+        // given
+        LocalDateTime now = LocalDateTime.of(2024, 2, 13, 12, 0);
+        LocalDateTime searchStartTime = now.minusHours(3);
+        LocalDateTime searchEndTime = now.plusHours(3);
+        LocalDateTime startTime = now.minusHours(1);
+        LocalDateTime endTime = now.plusHours(1);
+
+        User user1 = mock(User.class);
+        User user2 = mock(User.class);
+        given(user1.getId()).willReturn(1L);
+        given(user2.getId()).willReturn(2L);
+
+        List<User> users = List.of(user1, user2);
+
+        // Repository가 빈 리스트를 반환하도록 설정
+        given(personalEventRepository.findAllByUsersAndDateTimeRange(
+            List.of(1L, 2L),
+            searchStartTime,
+            searchEndTime
+        )).willReturn(List.of());
+
+        // when
+        Map<Long, List<PersonalEventWithStatus>> result = personalEventService
+            .findPersonalEventStatusesByUsers(users, searchStartTime, searchEndTime, startTime, endTime);
+
+        // then
+        assertThat(result).isEmpty();
+
+        // Repository 호출 검증
+        verify(personalEventRepository).findAllByUsersAndDateTimeRange(
+            List.of(1L, 2L),
+            searchStartTime,
+            searchEndTime
+        );
+    }
+
+    @Test
+    @DisplayName("일정의 상태를 올바르게 계산한다")
+    void findPersonalEventStatusesByUsers_calculatesEventStatus() {
+        // given
+        LocalDateTime now = LocalDateTime.of(2024, 2, 13, 12, 0);
+        LocalDateTime searchStartTime = now.minusHours(3);
+        LocalDateTime searchEndTime = now.plusHours(3);
+        LocalDateTime startTime = now.minusHours(1);
+        LocalDateTime endTime = now.plusHours(1);
+
+        User user = mock(User.class);
+        given(user.getId()).willReturn(1L);
+
+        PersonalEvent event = mock(PersonalEvent.class);
+        given(event.getUser()).willReturn(user);
+        given(event.getStartTime()).willReturn(startTime);
+        given(event.getEndTime()).willReturn(endTime);
+        given(event.getIsAdjustable()).willReturn(true);
+
+        given(personalEventRepository.findAllByUsersAndDateTimeRange(
+            List.of(1L),
+            searchStartTime,
+            searchEndTime
+        )).willReturn(List.of(event));
+
+        // when
+        Map<Long, List<PersonalEventWithStatus>> result = personalEventService
+            .findPersonalEventStatusesByUsers(List.of(user), searchStartTime, searchEndTime, startTime, endTime);
+
+        // then
+        List<PersonalEventWithStatus> userEvents = result.get(1L);
+        assertThat(userEvents).hasSize(1);
+
+        PersonalEventWithStatus eventWithStatus = userEvents.get(0);
+        assertThat(eventWithStatus.id()).isEqualTo(event.getId());
+        assertThat(eventWithStatus.status()).isEqualTo(PersonalEventStatus.ADJUSTABLE);
+//        assertThat(eventWithStatus.getEndDateTime()).isEqualTo(endTime);
     }
 }

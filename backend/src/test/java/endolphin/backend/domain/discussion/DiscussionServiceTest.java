@@ -2,15 +2,13 @@ package endolphin.backend.domain.discussion;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.assertj.core.api.Assertions.tuple;
 import static org.assertj.core.api.Assertions.within;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.atLeast;
 import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -22,6 +20,7 @@ import endolphin.backend.domain.discussion.entity.Discussion;
 import endolphin.backend.domain.discussion.enums.DiscussionStatus;
 import endolphin.backend.domain.discussion.enums.MeetingMethod;
 import endolphin.backend.domain.personal_event.PersonalEventService;
+import endolphin.backend.domain.personal_event.dto.PersonalEventWithStatus;
 import endolphin.backend.domain.shared_event.SharedEventService;
 import endolphin.backend.domain.shared_event.dto.SharedEventRequest;
 import endolphin.backend.domain.shared_event.dto.SharedEventDto;
@@ -39,16 +38,16 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -313,109 +312,82 @@ public class DiscussionServiceTest {
     }
 
     @Test
-    @DisplayName("후보 일정 상세 정보 가져오기 테스트 성공")
-    public void testRetrieveCandidateEventDetails() {
-        // Given
+    @DisplayName("토론 참여자별 일정 상세 정보를 조회한다")
+    void retrieveCandidateEventDetails() {
+        // given
         Long discussionId = 1L;
-        LocalDateTime startDateTime = LocalDateTime.of(2025, 2, 12, 10, 0);
-        LocalDateTime endDateTime = LocalDateTime.of(2025, 2, 12, 12, 0);
-        List<Long> selectedUserIdList = Arrays.asList(1L, 3L);
-        CandidateEventDetailsRequest request = new CandidateEventDetailsRequest(startDateTime,
-            endDateTime, selectedUserIdList);
+        LocalDateTime now = LocalDateTime.of(2024, 2, 13, 12, 0);
+        LocalDateTime startTime = now;
+        LocalDateTime endTime = now.plusHours(2);
+        LocalDateTime searchStartTime = now.minusHours(4);
+        LocalDateTime searchEndTime = now.plusHours(6);
 
-        User currentUser = Mockito.mock(User.class);
+        // Mock 사용자 데이터 생성
+        User currentUser = mock(User.class);
+        User participant1 = mock(User.class);
+        User participant2 = mock(User.class);
+
+        // Mock 사용자 데이터 설정
         given(currentUser.getId()).willReturn(1L);
-        given(currentUser.getName()).willReturn("Alice");
-        given(currentUser.getPicture()).willReturn("alicePicUrl");
+        given(currentUser.getName()).willReturn("Current User");
+        given(currentUser.getPicture()).willReturn("current.jpg");
 
-        User otherUser = Mockito.mock(User.class);
-        given(otherUser.getId()).willReturn(2L);
-        given(otherUser.getName()).willReturn("Bob");
-        given(otherUser.getPicture()).willReturn("bobPicUrl");
+        given(participant1.getId()).willReturn(2L);
+        given(participant1.getName()).willReturn("Participant 1");
+        given(participant1.getPicture()).willReturn("p1.jpg");
 
+        given(participant2.getId()).willReturn(3L);
+        given(participant2.getName()).willReturn("Participant 2");
+        given(participant2.getPicture()).willReturn("p2.jpg");
+
+        // 요청 객체 생성
+        CandidateEventDetailsRequest request = new CandidateEventDetailsRequest(startTime, endTime,
+            List.of(1L,
+                2L, 3L));
+        List<User> participants = List.of(currentUser, participant1, participant2);
+
+        // Mock 서비스 동작 설정
         given(userService.getCurrentUser()).willReturn(currentUser);
         given(discussionParticipantService.getUsersByDiscussionIdOrderByCreatedAt(discussionId))
-            .willReturn(Arrays.asList(currentUser, otherUser));
+            .willReturn(participants);
 
-        // candidateEventDetailsService 내부에서 personalEventService.createUserInfoWithPersonalEvents()를 호출하므로,
-        // stub으로 dummy 객체를 반환하도록 설정합니다.
-        UserInfoWithPersonalEvents dummyUserInfo =
-            new UserInfoWithPersonalEvents(currentUser.getId(), currentUser.getName(),
-                currentUser.getPicture(), true, Collections.emptyList());
-        given(personalEventService.createUserInfoWithPersonalEvents(
-            eq(currentUser), any(LocalDateTime.class), any(LocalDateTime.class), anyList()))
-            .willReturn(dummyUserInfo);
+        // Mock 개인 일정 데이터 설정
+        Map<Long, List<PersonalEventWithStatus>> personalEvents = new HashMap<>();
+        personalEvents.put(1L, List.of(mock(PersonalEventWithStatus.class)));
+        personalEvents.put(2L, List.of(mock(PersonalEventWithStatus.class)));
+        personalEvents.put(3L, List.of(mock(PersonalEventWithStatus.class)));
 
-        UserInfoWithPersonalEvents dummyUserInfo2 =
-            new UserInfoWithPersonalEvents(otherUser.getId(), otherUser.getName(),
-                otherUser.getPicture(), true, Collections.emptyList());
-        given(personalEventService.createUserInfoWithPersonalEvents(
-            eq(otherUser), any(LocalDateTime.class), any(LocalDateTime.class), anyList()))
-            .willReturn(dummyUserInfo2);
+        given(personalEventService.findPersonalEventStatusesByUsers(
+            eq(participants),
+            any(LocalDateTime.class),
+            any(LocalDateTime.class),
+            eq(startTime),
+            eq(endTime)
+        )).willReturn(personalEvents);
 
-        // When
-        CandidateEventDetailsResponse response =
-            discussionService.retrieveCandidateEventDetails(discussionId, request);
+        // when
+        CandidateEventDetailsResponse response = discussionService
+            .retrieveCandidateEventDetails(discussionId, request);
 
-        // Then
-        assertThat(response)
-            .isNotNull()
-            .extracting("discussionId", "startDateTime", "endDateTime")
-            .containsExactly(discussionId, startDateTime, endDateTime);
+        // then
+        assertThat(response).isNotNull();
+        assertThat(response.discussionId()).isEqualTo(discussionId);
+        assertThat(response.startDateTime()).isEqualTo(startTime);
+        assertThat(response.endDateTime()).isEqualTo(endTime);
 
-        List<UserInfoWithPersonalEvents> participantInfos = response.participants();
+        List<UserInfoWithPersonalEvents> users = response.participants();
+        assertThat(users).hasSize(3);
 
-        assertThat(participantInfos).hasSize(2);
-        assertThat(participantInfos)
-            .extracting(UserInfoWithPersonalEvents::id, UserInfoWithPersonalEvents::name,
-                UserInfoWithPersonalEvents::picture, UserInfoWithPersonalEvents::selected)
-            .containsExactlyInAnyOrder(
-                tuple(currentUser.getId(), currentUser.getName(), currentUser.getPicture(), true),
-                tuple(otherUser.getId(), otherUser.getName(), otherUser.getPicture(), true)
-            );
+        // 현재 사용자가 첫 번째로 정렬되었는지 확인
+        assertThat(users.get(0).id()).isEqualTo(currentUser.getId());
+        assertThat(users.get(0).name()).isEqualTo(currentUser.getName());
+        assertThat(users.get(0).picture()).isEqualTo(currentUser.getPicture());
 
-        // 각 UserInfoWithPersonalEvents의 events 목록이 빈 리스트임을 확인
-        participantInfos.forEach(userInfo ->
-            assertThat(userInfo.events()).isNotNull().isEmpty()
-        );
-
-        // midTime 관련 검증
-        // candidateEventDetailsService 내부에서는 아래와 같이 계산됨:
-        //   midTime = startDateTime + (endDateTime - startDateTime) / 2
-        //   searchStartTime = midTime.minusHours(TIME_OFFSET)  (TIME_OFFSET = 4)
-        //   searchEndTime   = midTime.plusHours(TIME_OFFSET)
-        LocalDateTime expectedMidTime = startDateTime.plus(
-            Duration.between(startDateTime, endDateTime).dividedBy(2)
-        );
-        LocalDateTime expectedSearchStartTime = expectedMidTime.minusHours(4);
-        LocalDateTime expectedSearchEndTime = expectedMidTime.plusHours(4);
-
-        // ArgumentCaptor를 사용해  personalEventService.createUserInfoWithPersonalEvents의 인자를 캡처
-        ArgumentCaptor<LocalDateTime> startCaptor = ArgumentCaptor.forClass(LocalDateTime.class);
-        ArgumentCaptor<LocalDateTime> endCaptor = ArgumentCaptor.forClass(LocalDateTime.class);
-
-        then(personalEventService).should(times(2))
-            .createUserInfoWithPersonalEvents(any(User.class), startCaptor.capture(),
-                endCaptor.capture(), anyList());
-
-        List<LocalDateTime> capturedStartTimes = startCaptor.getAllValues();
-        List<LocalDateTime> capturedEndTimes = endCaptor.getAllValues();
-
-        assertThat(capturedStartTimes)
-            .as("searchStartTime should be midTime minus 4 hours")
-            .allSatisfy(time -> assertThat(time).isEqualTo(expectedSearchStartTime));
-
-        assertThat(capturedEndTimes)
-            .as("searchEndTime should be midTime plus 4 hours")
-            .allSatisfy(time -> assertThat(time).isEqualTo(expectedSearchEndTime));
-
-        // personalEventService.createUserInfoWithPersonalEvents가 각 사용자에 대해 한 번씩 호출되었는지 검증
-        then(personalEventService).should()
-            .createUserInfoWithPersonalEvents(eq(currentUser), any(LocalDateTime.class),
-                any(LocalDateTime.class), anyList());
-        then(personalEventService).should()
-            .createUserInfoWithPersonalEvents(eq(otherUser), any(LocalDateTime.class),
-                any(LocalDateTime.class), anyList());
+        // 나머지 참여자들이 순서대로 정렬되었는지 확인
+        assertThat(users.get(1).id()).isEqualTo(participant1.getId());
+        assertThat(users.get(1).name()).isEqualTo(participant1.getName());
+        assertThat(users.get(2).id()).isEqualTo(participant2.getId());
+        assertThat(users.get(2).name()).isEqualTo(participant2.getName());
     }
 
     @Test
@@ -452,9 +424,9 @@ public class DiscussionServiceTest {
         CandidateEventDetailsRequest request = new CandidateEventDetailsRequest(startDateTime,
             endDateTime, selectedUserIdList);
 
-        User currentUser = Mockito.mock(User.class);
+        User currentUser = mock(User.class);
 
-        User otherUser = Mockito.mock(User.class);
+        User otherUser = mock(User.class);
 
         given(userService.getCurrentUser()).willReturn(currentUser);
         given(discussionParticipantService.getUsersByDiscussionIdOrderByCreatedAt(discussionId))

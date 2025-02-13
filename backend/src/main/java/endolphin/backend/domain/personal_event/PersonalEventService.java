@@ -17,7 +17,10 @@ import endolphin.backend.global.google.dto.GoogleEvent;
 import endolphin.backend.global.google.enums.GoogleEventStatus;
 import endolphin.backend.global.util.Validator;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -182,22 +185,20 @@ public class PersonalEventService {
     }
 
     @Transactional(readOnly = true)
-    public UserInfoWithPersonalEvents createUserInfoWithPersonalEvents(User user,
-        LocalDateTime startTime, LocalDateTime endTime, List<Long> userIdList) {
-        List<PersonalEventWithStatus> personalEventWithStatuses = findPersonalEventsByDateTimeRange(
-            user, startTime, endTime).stream().map(p -> {
-            return PersonalEventWithStatus.from(p, startTime, endTime);
-        }).collect(Collectors.toList());
+    public Map<Long, List<PersonalEventWithStatus>> findPersonalEventStatusesByUsers(
+        List<User> users, LocalDateTime searchStartTime, LocalDateTime searchEndTime,
+        LocalDateTime startTime, LocalDateTime endTime
+    ) {
+        List<Long> userIdList = users.stream().map(User::getId).toList();
+        List<PersonalEvent> personalEvents =
+            personalEventRepository.findAllByUsersAndDateTimeRange(userIdList, searchStartTime,
+                    searchEndTime);
+        Map<Long, List<PersonalEventWithStatus>> personalEventsByUserId = new HashMap<>();
 
-        boolean selected = userIdList.contains(user.getId());
-
-        return new UserInfoWithPersonalEvents(user.getId(), user.getName(), user.getPicture(),
-            selected, personalEventWithStatuses);
-    }
-
-    private List<PersonalEvent> findPersonalEventsByDateTimeRange(User user, LocalDateTime startTime,
-        LocalDateTime endTime) {
-        return personalEventRepository.findAllByUserAndDateTimeRange(
-            user.getId(), startTime, endTime);
+        for (PersonalEvent ps : personalEvents) {
+            personalEventsByUserId.computeIfAbsent(ps.getUser().getId(), k -> new ArrayList<>())
+                .add(PersonalEventWithStatus.from(ps, startTime, endTime));
+        }
+        return personalEventsByUserId;
     }
 }

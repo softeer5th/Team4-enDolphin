@@ -8,7 +8,6 @@ import endolphin.backend.domain.discussion.entity.Discussion;
 import endolphin.backend.domain.discussion.enums.DiscussionStatus;
 import endolphin.backend.domain.personal_event.PersonalEventService;
 import endolphin.backend.domain.personal_event.dto.PersonalEventWithStatus;
-import endolphin.backend.domain.personal_event.enums.PersonalEventStatus;
 import endolphin.backend.domain.shared_event.SharedEventService;
 import endolphin.backend.domain.shared_event.dto.SharedEventRequest;
 import endolphin.backend.domain.shared_event.dto.SharedEventWithDiscussionInfoResponse;
@@ -25,8 +24,10 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -147,23 +148,43 @@ public class DiscussionService {
             throw new ApiException(ErrorCode.DISCUSSION_PARTICIPANT_NOT_FOUND);
         }
 
-        List<UserInfoWithPersonalEvents> userInfoWithPersonalEvents = new ArrayList<>();
-        UserInfoWithPersonalEvents result0 = personalEventService.createUserInfoWithPersonalEvents(currentUser,
-            searchStartTime, searchEndTime,
-            request.selectedUserIdList());
-
-        userInfoWithPersonalEvents.add(result0);
-        for (User participant : participants) {
-            if (participant.getId().equals(currentUser.getId())) {
-                continue;
-            }
-            UserInfoWithPersonalEvents result = personalEventService.createUserInfoWithPersonalEvents(participant,
-                searchStartTime, searchEndTime, request.selectedUserIdList());
-
-            userInfoWithPersonalEvents.add(result);
+        Map<Long, Integer> selectedUserIdMap = new HashMap<>();
+        for (int i = 0; i < request.selectedUserIdList().size(); i++) {
+            selectedUserIdMap.put(request.selectedUserIdList().get(i), i);
         }
+
+        Map<Long, List<PersonalEventWithStatus>> result0 =
+            personalEventService.findPersonalEventStatusesByUsers(
+                participants, searchStartTime, searchEndTime, startTime, endTime);
+
+        List<UserInfoWithPersonalEvents> currentUserList = new ArrayList<>();
+        List<UserInfoWithPersonalEvents> selectedUsersList = new ArrayList<>();
+        List<UserInfoWithPersonalEvents> othersList = new ArrayList<>();
+
+        for (User user : participants) {
+            UserInfoWithPersonalEvents userinfo =
+                new UserInfoWithPersonalEvents(user.getId(), user.getName(), user.getPicture(),
+                    selectedUserIdMap.containsKey(user.getId()), result0.get(user.getId()));
+            if (user.getId().equals(currentUser.getId())) {
+                currentUserList.add(userinfo);
+            } else if (selectedUserIdMap.containsKey(user.getId())) {
+                selectedUsersList.add(userinfo);
+            } else {
+                othersList.add(userinfo);
+            }
+        }
+
+        selectedUsersList.sort(Comparator.comparingInt(info ->
+            selectedUserIdMap.get(info.id())
+        ));
+
+        List<UserInfoWithPersonalEvents> sortedResult = new ArrayList<>();
+        sortedResult.addAll(currentUserList);
+        sortedResult.addAll(selectedUsersList);
+        sortedResult.addAll(othersList);
+
         return new CandidateEventDetailsResponse(discussionId, startTime, endTime,
-            userInfoWithPersonalEvents);
+            sortedResult);
     }
 
     private long calculateTimeLeft(LocalDate deadline) {
