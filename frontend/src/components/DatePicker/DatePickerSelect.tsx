@@ -18,26 +18,29 @@ const DatePickerSelect = ({
   className, selectedDate, trigger, ...props 
 }: DatePickerSelectProps) => {
   const [isOpen, setIsOpen] = useState(!trigger);
-  const ref = useClickOutside<HTMLDivElement>(() => setIsOpen(!trigger));
+  const ref = useClickOutside<HTMLDivElement>(() => setIsOpen(false));
 
   return (
     <DatePickerSelectProvider selectedDate={selectedDate} {...props}>
       <Flex direction='column'>
-        <div
-          className={triggerWrapperStyle}
-          onClick={() => setIsOpen((prev) => !prev)}
-          ref={ref}
-        >
-          {trigger}
-          {isOpen && (
-            <div className={defaultWrapperStyle}>
-              <RootContainer className={className ?? defaultContainerStyle}>
-                <Header />
-                <Table />
-              </RootContainer>
-            </div>
-          )}
-        </div>
+        {
+          trigger && 
+          <div
+            className={triggerWrapperStyle}
+            onClick={() => setIsOpen((prev) => !prev)}
+            ref={ref}
+          >
+            {trigger}
+          </div>
+        }
+        {isOpen && (
+          <div className={defaultWrapperStyle({ trigger })}>
+            <RootContainer className={className ?? defaultContainerStyle}>
+              <Header />
+              <Table />
+            </RootContainer>
+          </div>
+        )}
       </Flex>
     </DatePickerSelectProvider>
   );
