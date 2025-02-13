@@ -5,7 +5,7 @@ import { vars } from '@/theme/index.css';
 import { formatDateToTimeString } from '@/utils/date';
 
 import type { DiscussionDTO } from '../../model';
-import { chipContainerStyle, containerStyle } from './card.css';
+import { containerStyle } from './card.css';
 
 const DiscussionCard = ({ discussion }: { discussion: DiscussionDTO }) => {
   const ADJUSTMENT_LENGTH = discussion.usersForAdjust.length;
@@ -21,7 +21,9 @@ const DiscussionCard = ({ discussion }: { discussion: DiscussionDTO }) => {
       <Flex direction='column' gap={50}>
         <Text color={vars.color.Ref.Netural[600]} typo='b3R'>
           {formatDateToTimeString(discussion.startDateTime)}
-          -
+          {' '}
+          - 
+          {' '}
           {formatDateToTimeString(discussion.endDateTime)}
         </Text>
         {isRecommend ? 

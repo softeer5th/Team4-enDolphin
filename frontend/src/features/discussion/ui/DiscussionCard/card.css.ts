@@ -26,7 +26,3 @@ export const containerStyle = recipe({
     },
   },
 });
-
-export const chipContainerStyle = style({
-  paddingTop: vars.spacing[250],
-});
