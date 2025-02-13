@@ -170,15 +170,11 @@ public class PersonalEventService {
     }
 
     private boolean hasChangedGoogleEvent(PersonalEvent personalEvent, GoogleEvent googleEvent) {
-        if (!personalEvent.getStartTime().equals(googleEvent.startDateTime())) {
-            return true;
+        if (personalEvent.getStartTime().equals(googleEvent.startDateTime())
+            && personalEvent.getEndTime().equals(googleEvent.endDateTime())
+            && personalEvent.getTitle().equals(googleEvent.summary())) {
+            return false;
         }
-        if (!personalEvent.getEndTime().equals(googleEvent.endDateTime())) {
-            return true;
-        }
-        if (!personalEvent.getTitle().equals(googleEvent.summary())) {
-            return true;
-        }
-        return false;
+        return true;
     }
 }
