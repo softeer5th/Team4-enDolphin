@@ -10,7 +10,7 @@ export const calendarTableStyle = style({
 });
 
 export const dayStyle = style({
-  height: '100%',
+  overflowY: 'scroll',
   padding: vars.spacing[200],
   flexGrow: 1,
 
