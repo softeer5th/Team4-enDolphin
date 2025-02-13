@@ -5,6 +5,7 @@ import clsx from '@/utils/clsx';
 import { CalendarProvider } from './context/CalendarProvider';
 import type { CalendarSharedInfo } from './context/SharedCalendarContext';
 import { Core } from './Core';
+import { CalendarHeader } from './Header/CalendarHeader';
 import { calendarStyle } from './index.css';
 import { CalendarTable } from './Table';
 
@@ -21,4 +22,5 @@ export const Calendar = ({ className, children, ...context }: CalendarProps) => 
 );
 
 Calendar.Core = Core;
+Calendar.Header = CalendarHeader;
 Calendar.Table = CalendarTable;

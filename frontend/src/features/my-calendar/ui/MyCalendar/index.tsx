@@ -50,6 +50,7 @@ export const MyCalendar = () => {
   return (
     <Calendar {...calendar} className={calendarStyle}>
       <Calendar.Core />
+      <Calendar.Header />
       <CalendarTable />
     </Calendar>
   );

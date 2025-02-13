@@ -14,4 +14,5 @@ export const calendarStyle = style({
   flexDirection: 'column',
 
   overflowY: 'scroll',
+  position: 'relative',
 });

@@ -13,14 +13,6 @@ export const coreStyle = style({
   backgroundColor: vars.color.Ref.Netural.White,
 });
 
-export const headerStyle = style({
-  width: '100%',
-  display: 'flex',
-
-  borderTop: `1px solid ${vars.color.Ref.Netural[200]}`,
-  borderBottom: `2px solid ${vars.color.Ref.Netural[200]}`,
-});
-
 export const weekStyle = style({
   width: '100%',
   paddingTop: vars.spacing[400],
