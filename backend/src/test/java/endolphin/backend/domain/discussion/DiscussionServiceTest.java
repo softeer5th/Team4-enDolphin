@@ -436,7 +436,7 @@ public class DiscussionServiceTest {
         assertThatThrownBy(
             () -> discussionService.retrieveCandidateEventDetails(discussionId, request))
             .isInstanceOf(ApiException.class)
-            .hasFieldOrPropertyWithValue("errorCode", ErrorCode.DISCUSSION_PARTICIPANT_NOT_FOUND);
+            .hasFieldOrPropertyWithValue("errorCode", ErrorCode.INVALID_DISCUSSION_PARTICIPANT);
 
         // 날짜 범위 검증 단계에서 예외가 발생하므로 다른 서비스들은 호출되지 않아야 함
         then(personalEventService).shouldHaveNoInteractions();
