@@ -227,7 +227,7 @@ public class GoogleCalendarService {
     }
 
     public void subscribeToCalendar(Calendar calendar, User user) {
-        if (calendar.getChannelExpiration() != null && calendar.getChannelExpiration().isBefore(LocalDateTime.now())) {
+        if (calendar.getChannelExpiration() != null && !calendar.getChannelExpiration().isBefore(LocalDateTime.now())) {
             return;
         }
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
