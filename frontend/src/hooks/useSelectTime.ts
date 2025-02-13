@@ -7,8 +7,7 @@ export interface TimeRange {
   endTime: Date | null;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type Callback = (props?: any) => void;
+type Callback<T = TimeRange> = (props?: T) => void;
 
 type State = {
   selectedTime: TimeRange;
