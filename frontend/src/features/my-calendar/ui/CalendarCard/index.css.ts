@@ -98,7 +98,9 @@ export const cardTitleStyle = recipe({
         overflow: 'hidden',
         textOverflow: 'ellipsis',
       },
-      lg: {},
+      lg: {
+        height: '1.5rem',
+      },
     },
   },
 });
