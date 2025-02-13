@@ -21,4 +21,8 @@ export const dayStyle = style({
   ':last-child': {
     borderRight: 'none',
   },
+
+  '::-webkit-scrollbar': {
+    display: 'none',
+  },
 });
