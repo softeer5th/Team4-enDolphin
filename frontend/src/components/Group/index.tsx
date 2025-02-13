@@ -20,7 +20,7 @@ export const Group = ({
 }: GroupProps) => {
 
   const defaultId = `group-${useId()}`;
-  const { checkedList, isAllChecked, handleToggleCheck, handleToggleAllCheck } = groupInfos;
+  const { checkedList, isAllChecked, handleToggleCheck, handleToggleAllCheck, reset } = groupInfos;
 
   return (
     <GroupContext.Provider 
@@ -30,6 +30,7 @@ export const Group = ({
         onToggleCheck: handleToggleCheck,
         onToggleAllCheck: handleToggleAllCheck,
         isAllChecked,
+        reset,
       }}
     >
       {children}
