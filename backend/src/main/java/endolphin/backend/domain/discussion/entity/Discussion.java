@@ -4,6 +4,7 @@ import endolphin.backend.domain.discussion.enums.DiscussionStatus;
 import endolphin.backend.domain.discussion.enums.MeetingMethod;
 import endolphin.backend.global.base_entity.BaseTimeEntity;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import java.util.Optional;
 import lombok.Builder;
 import lombok.Getter;
@@ -59,6 +60,8 @@ public class Discussion extends BaseTimeEntity {
     private DiscussionStatus discussionStatus;
 
     @Setter
+    @Column(length = 255)
+    @Size(min = 4, max = 100)
     private String password;
 
     @Builder
