@@ -6,6 +6,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
 import org.springframework.stereotype.Component;
+import java.util.Arrays;
+import jakarta.servlet.http.Cookie;
 
 import java.io.IOException;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -19,12 +21,22 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         this.jwtProvider = jwtProvider;
     }
 
+    private String getTokenFromCookie(Cookie[] cookies) {
+    return Arrays.stream(cookies)
+        .filter(cookie -> "accessToken".equals(cookie.getName()))
+        .map(Cookie::getValue)
+        .findFirst()
+        .orElse(null);
+    }
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
         FilterChain filterChain) throws ServletException, IOException {
         String authHeader = request.getHeader("Authorization");
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            String token = authHeader.substring(7);
+        Cookie[] cookies = request.getCookies();
+
+        if (cookies != null) {
+            String token = getTokenFromCookie(cookies);
 
             try {
                 var signedJwt = jwtProvider.validateToken(token);
@@ -66,6 +78,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             "/h2-console" // prod profile에서는 h2-console 접근 불가
         );
 
-        return excludedPaths.stream().anyMatch(path::startsWith);
+        return "OPTIONS".equalsIgnoreCase(request.getMethod()) || 
+           excludedPaths.stream().anyMatch(path::startsWith);
     }
 }
