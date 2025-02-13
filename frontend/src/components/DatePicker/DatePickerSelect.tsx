@@ -6,7 +6,7 @@ import { Flex } from '../Flex';
 import type { CommonDatePickerProps } from '.';
 import DatePickerSelectProvider from './context/DatePickerSelectProvider';
 import Header from './Header';
-import { defaultContainerStyle, defaultWrapperStyle, triggerWrapperStyle } from './index.css';
+import { containerStyle, defaultContainerStyle, defaultWrapperStyle } from './index.css';
 import RootContainer from './RootContainer';
 import Table from './Table';
 
@@ -22,19 +22,15 @@ const DatePickerSelect = ({
 
   return (
     <DatePickerSelectProvider selectedDate={selectedDate} {...props}>
-      <Flex direction='column'>
+      <Flex className={containerStyle} direction='column'>
         {
           trigger && 
-          <div
-            className={triggerWrapperStyle}
-            onClick={() => setIsOpen((prev) => !prev)}
-            ref={ref}
-          >
+          <div onClick={() => setIsOpen((prev) => !prev)} ref={ref}>
             {trigger}
           </div>
         }
         {isOpen && (
-          <div className={defaultWrapperStyle({ trigger })}>
+          <div className={defaultWrapperStyle({ trigger: !!trigger  })}>
             <RootContainer className={className ?? defaultContainerStyle}>
               <Header />
               <Table />

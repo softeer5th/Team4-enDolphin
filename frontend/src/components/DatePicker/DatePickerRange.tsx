@@ -5,7 +5,7 @@ import { useClickOutside } from '@/hooks/useClickOutside';
 import type { CommonDatePickerProps } from '.';
 import DatePickerRangeProvider from './context/DatePickerRangeProvider';
 import Header from './Header';
-import { defaultContainerStyle, defaultWrapperStyle, triggerWrapperStyle } from './index.css';
+import { containerStyle, defaultContainerStyle, defaultWrapperStyle } from './index.css';
 import RootContainer from './RootContainer';
 import Table from './Table';
 import type { HighlightRange } from './Table/Highlight';
@@ -27,14 +27,15 @@ const DatePickerRange = ({
       highlightRange={highlightRange}
       {...props}
     >
-      <div
-        className={triggerWrapperStyle}
-        onClick={() => setIsOpen((prev) => !prev)}
-        ref={ref}
-      >
-        {trigger}
+      <div className={containerStyle}>
+        {
+          trigger &&
+          <div onClick={() => setIsOpen((prev) => !prev)} ref={ref}>
+            {trigger}
+          </div>
+        }
         {isOpen && (
-          <div className={defaultWrapperStyle}>
+          <div className={defaultWrapperStyle({ trigger: !!trigger })}>
             <RootContainer className={className ?? defaultContainerStyle}>
               <Header />
               <Table />

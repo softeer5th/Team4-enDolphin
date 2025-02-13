@@ -3,6 +3,10 @@ import { recipe } from '@vanilla-extract/recipes';
 
 import { vars } from '@/theme/index.css';
 
+export const containerStyle = style({
+  position: 'relative',
+});
+
 export const defaultWrapperStyle = recipe({
   base: {},
   variants: {
@@ -39,8 +43,4 @@ export const rootContainerStyle = style({
   display: 'flex',
   flexDirection: 'column',
   gap: vars.spacing[300],
-});
-
-export const triggerWrapperStyle = style({
-  position: 'relative',
 });
