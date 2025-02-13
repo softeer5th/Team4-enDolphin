@@ -1,18 +1,24 @@
+import type { PropsWithChildren } from 'react';
+
+import clsx from '@/utils/clsx';
+
 import { CalendarProvider } from './context/CalendarProvider';
-import { TimeTableProvider } from './context/TimeTableProvider';
+import type { CalendarSharedInfo } from './context/SharedCalendarContext';
 import { Core } from './Core';
-import { CalendarHeader } from './Header/CalendarHeader';
-import { wrapperStyle } from './index.css';
+import { calendarStyle } from './index.css';
 import { CalendarTable } from './Table';
 
-export const Calendar = () => (
-  <CalendarProvider>
-    <Core />
-    <TimeTableProvider>
-      <div className={wrapperStyle}>
-        <CalendarHeader />
-        <CalendarTable />
-      </div>
-    </TimeTableProvider>
+interface CalendarProps extends Partial<CalendarSharedInfo>, PropsWithChildren {
+  className?: string;
+}
+
+export const Calendar = ({ className, children, ...context }: CalendarProps) => (
+  <CalendarProvider outerContext={context}>
+    <div className={clsx(className, calendarStyle)}>
+      {children}
+    </div>
   </CalendarProvider>
 );
+
+Calendar.Core = Core;
+Calendar.Table = CalendarTable;

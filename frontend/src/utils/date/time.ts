@@ -1,6 +1,8 @@
 const HOUR = 60;
 
-export const formatDateToTimeString = (date: Date): string => {
+export const formatDateToTimeString = (date: Date | null): string => {
+  if (!date) return '';
+
   const hours = date.getHours().toString()
     .padStart(2, '0');
   const minutes = date.getMinutes().toString()

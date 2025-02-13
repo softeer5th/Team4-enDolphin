@@ -6,7 +6,7 @@ import DiscussionCreatePage from '@/pages/DiscussionPage/DiscussionCreatePage';
 const DiscussionCreate = () => (
   <>
     <GlobalNavBar>
-      <GlobalNavBar.MyScheduleLink />
+      <GlobalNavBar.MyCalendarLink />
     </GlobalNavBar>
     <DiscussionCreatePage />
   </>

@@ -1,10 +1,18 @@
-import { containerStyle } from './index.css';
+import { Flex } from '@/components/Flex';
+
+import { CalendarHeader } from './CalendarHeader';
+import { coreStyle } from './index.css';
 import { SelectedWeek } from './SelectedWeek';
 import { TimeControl } from './TimeControl';
 
 export const Core = () => (
-  <div className={containerStyle}>
+  <Flex
+    className={coreStyle}
+    direction='column'
+    width='100%'
+  >  
     <TimeControl />
     <SelectedWeek />
-  </div>
+    <CalendarHeader />
+  </Flex>
 );
