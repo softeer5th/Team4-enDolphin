@@ -4,6 +4,7 @@ import static org.mockito.BDDMockito.*;
 
 import endolphin.backend.domain.discussion.DiscussionParticipantService;
 import endolphin.backend.domain.discussion.entity.Discussion;
+import endolphin.backend.domain.discussion.enums.DiscussionStatus;
 import endolphin.backend.domain.personal_event.entity.PersonalEvent;
 import endolphin.backend.domain.user.entity.User;
 import endolphin.backend.global.redis.DiscussionBitmapService;
@@ -63,7 +64,7 @@ class PersonalEventPreprocessorTest {
         Long userId = 200L;
         Long participantIndex = 2L;
         // Discussion, User, PersonalEvent 모킹
-        Discussion discussion = getDiscussion();
+        Discussion discussion = getAnotherDiscussion();
         User user = getUser();
 
         given(discussionParticipantService.getDiscussionParticipantOffset(anyLong(), anyLong()))
@@ -73,10 +74,9 @@ class PersonalEventPreprocessorTest {
         PersonalEvent personalEvent = mock(PersonalEvent.class);
         given(personalEvent.getStartTime()).willReturn(LocalDateTime.of(2024, 3, 8, 8, 0, 0));
         given(personalEvent.getEndTime()).willReturn(LocalDateTime.of(2024, 3, 10, 12, 0, 0));
-        given(personalEvent.getId()).willReturn(2L);
 
         // when
-        preprocessor.preprocess(List.of(personalEvent), discussion, user);
+        preprocessor.preprocessOne(personalEvent, discussion, user, true);
 
         // then
         then(discussionBitmapService).should(times(0)).setBitValue(anyLong(), any(LocalDateTime.class), anyLong(), anyBoolean());
@@ -163,10 +163,20 @@ class PersonalEventPreprocessorTest {
     private Discussion getDiscussion() {
         Discussion discussion = Mockito.mock(Discussion.class);
         given(discussion.getId()).willReturn(1L);
+        given(discussion.getDiscussionStatus()).willReturn(DiscussionStatus.ONGOING);
         given(discussion.getDateRangeStart()).willReturn(LocalDate.of(2024, 3, 10));
         given(discussion.getDateRangeEnd()).willReturn(LocalDate.of(2024, 3, 20));
         given(discussion.getTimeRangeStart()).willReturn(LocalTime.of(12, 0));
         given(discussion.getTimeRangeEnd()).willReturn(LocalTime.of(15, 0));
+        return discussion;
+    }
+
+    private Discussion getAnotherDiscussion() {
+        Discussion discussion = Mockito.mock(Discussion.class);
+        given(discussion.getId()).willReturn(1L);
+        given(discussion.getDiscussionStatus()).willReturn(DiscussionStatus.ONGOING);
+        given(discussion.getDateRangeStart()).willReturn(LocalDate.of(2024, 3, 10));
+        given(discussion.getDateRangeEnd()).willReturn(LocalDate.of(2024, 3, 20));
         return discussion;
     }
 
