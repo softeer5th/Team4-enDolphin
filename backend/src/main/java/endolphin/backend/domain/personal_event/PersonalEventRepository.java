@@ -33,8 +33,8 @@ public interface PersonalEventRepository extends JpaRepository<PersonalEvent, Lo
     @Query("SELECT p "
         + "FROM PersonalEvent p "
         + "WHERE p.user.id = :userId "
-        + "AND (p.startTime BETWEEN :startDateTime AND :endDateTime "
-        + "OR p.endTime BETWEEN :startDateTime AND :endDateTime)")
+        + "AND p.startTime <= :endDateTime "
+        + "AND p.endTime >= :startDateTime")
     List<PersonalEvent> findAllByUserAndDateTimeRange(
         @Param("userId") Long userId,
         @Param("startDateTime") LocalDateTime start,
