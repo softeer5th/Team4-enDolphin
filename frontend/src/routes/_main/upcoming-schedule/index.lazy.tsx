@@ -6,7 +6,7 @@ import UpcomingSchedulePage from '@/pages/UpcomingSchedulePage';
 const UpcomingSchedule = () => (
   <>
     <GlobalNavBar>
-      <GlobalNavBar.MyScheduleLink />
+      <GlobalNavBar.MyCalendarLink />
       <GlobalNavBar.NewDiscussionLink />
     </GlobalNavBar>
     <UpcomingSchedulePage />

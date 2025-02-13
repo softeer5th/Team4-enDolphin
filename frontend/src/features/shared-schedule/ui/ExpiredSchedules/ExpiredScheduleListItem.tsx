@@ -25,7 +25,6 @@ const ExpiredScheduleListItem = ({
   meetingPlace,
   startDate,
   endDate,
-  onClick,
 }: ExpiredScheduleListItemProps) => (
   <Flex
     className={scheduleItemContainerStyle}

@@ -23,7 +23,7 @@ const UnconfirmedScheduleList = ({ schedules }: UnconfirmedScheduleListProps) =>
       justify='flex-start'
       width='full'
     >
-      {schedules.map((schedule, index) => (
+      {schedules.map((_, index) => (
         <UnconfimredScheduleListItem
           key={index}
           participantImageUrls={['https://picsum.photos/200']}

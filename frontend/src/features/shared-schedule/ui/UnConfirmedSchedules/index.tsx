@@ -15,7 +15,7 @@ const segmentOptions = [
   { label: '공유 받은 일정', value: 'shared' },
 ];
 const UnConfirmedSchedules = () => {
-  const [selectedSegment, setSelectedSegment] = useState('all');
+  const [_, setSelectedSegment] = useState('all');
   const schedules = [{}, {}, {}];
   const currentSchedule = {};
 

@@ -25,7 +25,6 @@ const UpcomingScheduleListItem = ({
   meetingPlace,
   startDate,
   endDate,
-  onClick,
 }: UpcomingScheduleListItemProps) => (
   <Flex
     className={scheduleItemContainerStyle}

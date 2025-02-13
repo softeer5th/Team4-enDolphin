@@ -11,11 +11,11 @@ import {
   subTextContainerStyle, 
 } from './ScheduleDetails.css';
 
-interface ScheduleDetailsProps {
-  schedule: object;
-}
+// interface ScheduleDetailsProps {
+//   schedule: object;
+// }
 
-const ScheduleContents = ({ schedule }: ScheduleDetailsProps) => (
+const ScheduleContents = () => (
   <Flex
     className={containerStyle}
     direction='column'

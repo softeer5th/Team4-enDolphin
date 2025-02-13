@@ -23,7 +23,6 @@ const UnconfimredScheduleListItem = ({
   participantImageUrls,
   selected,
   isUpdated = false,
-  onClick,
 }: UnconfirmedScheduleListItemProps) => (
   <Flex
     className={scheduleItemContainerStyle({ selected })}
