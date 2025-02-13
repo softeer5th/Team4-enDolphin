@@ -7,15 +7,18 @@ import { weekStyle } from './index.css';
 import { WeekCell } from './WeekCell';
 
 export const SelectedWeek = () => {
-  const { selected, dates } = useCalendarContext();
+  const { selected, dates, isTableUsed } = useCalendarContext();
   const today = new Date();
 
   return (
     <div className={weekStyle}>
-      <div className={sideCellStyle({
-        time: 'default', 
-      })}
-      />
+      {
+        isTableUsed && 
+        <div className={sideCellStyle({
+          time: 'default', 
+        })}
+        />
+      }
       {WEEK.map((day, i) => 
         <WeekCell
           date={dates[i]}

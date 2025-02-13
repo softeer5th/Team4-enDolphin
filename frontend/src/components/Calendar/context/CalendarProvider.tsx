@@ -6,12 +6,13 @@ import type { CalendarSharedInfo } from './SharedCalendarContext';
 
 interface CalendarInfo extends PropsWithChildren {
   outerContext: Partial<CalendarSharedInfo>;
+  isTableUsed: boolean;
 }
 
-export const CalendarProvider = ({ outerContext, children }: CalendarInfo) => {
+export const CalendarProvider = ({ outerContext, isTableUsed, children }: CalendarInfo) => {
   const calendar = useCalendar(outerContext);
   return (
-    <CalendarContext.Provider value={calendar}>
+    <CalendarContext.Provider value={{ ...calendar, isTableUsed }}>
       {children}
     </CalendarContext.Provider>
   );
