@@ -108,14 +108,15 @@ public class PersonalEventService {
         personalEventPreprocessor.preprocess(personalEvents, discussion, user);
     }
 
-    public void syncWithGoogleEvents(List<GoogleEvent> googleEvents, User user) {
+    public void syncWithGoogleEvents(List<GoogleEvent> googleEvents, User user,
+        String googleCalendarId) {
         List<Discussion> discussions = discussionParticipantService.getDiscussionsByUserId(
             user.getId());
         for (GoogleEvent googleEvent : googleEvents) {
             if (googleEvent.status().equals(GoogleEventStatus.CONFIRMED)) {
-                upsertPersonalEventByGoogleEvent(googleEvent, discussions, user);
+                upsertPersonalEventByGoogleEvent(googleEvent, discussions, user, googleCalendarId);
             } else if (googleEvent.status().equals(GoogleEventStatus.CANCELLED)) {
-                deletePersonalEventByGoogleEvent(googleEvent, discussions, user);
+                deletePersonalEventByGoogleEvent(googleEvent, discussions, user, googleCalendarId);
             }
         }
     }
@@ -127,8 +128,8 @@ public class PersonalEventService {
     }
 
     private void upsertPersonalEventByGoogleEvent(GoogleEvent googleEvent,
-        List<Discussion> discussions, User user) {
-        personalEventRepository.findByGoogleEventId(googleEvent.eventId())
+        List<Discussion> discussions, User user, String googleCalendarId) {
+        personalEventRepository.findByGoogleEventIdAndCalendarId(googleEvent.eventId(), googleCalendarId)
             .ifPresentOrElse(personalEvent -> {
                     if (hasChangedGoogleEvent(personalEvent, googleEvent)) {
                         PersonalEvent oldEvent = personalEvent.copy();
@@ -159,8 +160,8 @@ public class PersonalEventService {
     }
 
     private void deletePersonalEventByGoogleEvent(GoogleEvent googleEvent,
-        List<Discussion> discussions, User user) {
-        personalEventRepository.findByGoogleEventId(googleEvent.eventId())
+        List<Discussion> discussions, User user, String googleCalendarId) {
+        personalEventRepository.findByGoogleEventIdAndCalendarId(googleEvent.eventId(), googleCalendarId)
             .ifPresent(personalEvent -> {
                 // 비트맵 삭제
                 discussions.forEach(discussion -> {

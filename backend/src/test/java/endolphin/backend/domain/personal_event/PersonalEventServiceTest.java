@@ -205,6 +205,7 @@ class PersonalEventServiceTest {
     public void testUpdatePersonalEventByGoogleSync_Success() {
         // given
         User user = createTestUser();
+        String googleCalendarId = "testGoogleCalendarId";
         GoogleEvent updatedGoogleEvent = createGoogleEvent("testEventId1", "testTitle1",
             LocalDateTime.of(2024, 3, 10, 10, 0),
             LocalDateTime.of(2024, 3, 10, 12, 0), GoogleEventStatus.CONFIRMED);
@@ -223,14 +224,14 @@ class PersonalEventServiceTest {
         given(existingEvent.copy()).willReturn(oldExistingEvent);
         PersonalEvent existingEvent2 = createPersonalEvent("Old Title2");
 
-        given(personalEventRepository.findByGoogleEventId(
-            eq(updatedGoogleEvent.eventId()))).willReturn(Optional.of(existingEvent));
-        given(personalEventRepository.findByGoogleEventId(
-            eq(deletedGoogleEvent.eventId()))).willReturn(Optional.of(existingEvent2));
+        given(personalEventRepository.findByGoogleEventIdAndCalendarId(
+            eq(updatedGoogleEvent.eventId()), eq(googleCalendarId))).willReturn(Optional.of(existingEvent));
+        given(personalEventRepository.findByGoogleEventIdAndCalendarId(
+            eq(deletedGoogleEvent.eventId()), eq(googleCalendarId))).willReturn(Optional.of(existingEvent2));
 
         // when
         personalEventService.syncWithGoogleEvents(List.of(updatedGoogleEvent, deletedGoogleEvent),
-            user);
+            user, googleCalendarId);
 
         // then
         then(personalEventPreprocessor).should(times(1))

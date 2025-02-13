@@ -1,7 +1,7 @@
 package endolphin.backend.global.google;
 
-import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
@@ -71,7 +71,7 @@ class GoogleCalendarServiceTest {
         // 신규 캘린더 생성, 이벤트 동기화, 캘린더 채널 구독은 발생하지 않아야 합니다.
         then(googleCalendarService).should(never()).subscribeToCalendar(any(), any());
         then(calendarService).should(never()).createCalendar(any(), eq(user));
-        then(personalEventService).should(never()).syncWithGoogleEvents(any(), eq(user));
+        then(personalEventService).should(never()).syncWithGoogleEvents(any(), eq(user), anyString());
     }
 
     @Test
@@ -90,7 +90,8 @@ class GoogleCalendarServiceTest {
         doReturn(googleCalendarDto).when(googleCalendarService).getPrimaryCalendar(user);
 
         // 캘린더 생성시 stub 처리
-        Calendar calendar = new Calendar();
+        Calendar calendar = Mockito.mock(Calendar.class);
+        given(calendar.getCalendarId()).willReturn("primary");
         given(calendarService.createCalendar(googleCalendarDto, user)).willReturn(calendar);
 
         // 내부 메서드 getCalendarEvents()도 stub 처리
@@ -106,7 +107,7 @@ class GoogleCalendarServiceTest {
         then(googleCalendarService).should().getPrimaryCalendar(user);
         then(calendarService).should().createCalendar(googleCalendarDto, user);
         then(googleCalendarService).should().getCalendarEvents(googleCalendarDto.id(), user);
-        then(personalEventService).should().syncWithGoogleEvents(events, user);
+        then(personalEventService).should().syncWithGoogleEvents(events, user, googleCalendarDto.id());
     }
 
     @Test
@@ -129,6 +130,6 @@ class GoogleCalendarServiceTest {
         then(calendarService).should().getCalendarByUserId(user.getId());
         // 만료된 캘린더의 경우, 아무런 추가 작업도 하지 않아야 합니다.
         then(calendarService).should(never()).createCalendar(any(), eq(user));
-        then(personalEventService).should(never()).syncWithGoogleEvents(any(), eq(user));
+        then(personalEventService).should(never()).syncWithGoogleEvents(any(), eq(user), anyString());
     }
 }

@@ -63,7 +63,7 @@ public class GoogleCalendarService {
             Calendar calendar = calendarService.createCalendar(googleCalendarDto, user);
             List<GoogleEvent> events = getCalendarEvents(googleCalendarDto.id(), user);
 
-            personalEventService.syncWithGoogleEvents(events, user);
+            personalEventService.syncWithGoogleEvents(events, user, calendar.getCalendarId());
             subscribeToCalendar(calendar, user);
         }
     }
@@ -300,7 +300,7 @@ public class GoogleCalendarService {
 
                 User user = userService.getUser(userId);
                 List<GoogleEvent> events = syncWithCalendar(calendarId, user);
-                personalEventService.syncWithGoogleEvents(events, user);
+                personalEventService.syncWithGoogleEvents(events, user, calendarId);
             } else {
                 throw new CalendarException(HttpStatus.BAD_REQUEST,
                     "Unknown State: " + resourceState);

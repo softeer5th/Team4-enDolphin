@@ -29,5 +29,5 @@ public interface PersonalEventRepository extends JpaRepository<PersonalEvent, Lo
         @Param("startDate") LocalDate startDate,
         @Param("endDate") LocalDate endDate);
 
-    Optional<PersonalEvent> findByGoogleEventId(String googleEventId);
+    Optional<PersonalEvent> findByGoogleEventIdAndCalendarId(String googleEventId, String calendarId);
 }
