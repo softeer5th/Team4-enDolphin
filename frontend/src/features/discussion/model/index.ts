@@ -1,5 +1,6 @@
 import { z } from 'zod';
 
+import { DATE_BAR, TIME } from '@/constants/regex';
 import { UserDTO } from '@/features/user/model';
 
 const MeetingMethodENUM = z.enum(['OFFLINE', 'ONLINE']);
@@ -13,15 +14,15 @@ const DiscussionDTO = z.object({
 const DiscussionRequest = z.object({
   title: z.string().min(1, '제목은 필수입니다')
     .max(15, '제목은 15자 이하로 입력해주세요'),
-  dateRangeStart: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
-  dateRangeEnd: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
-  timeRangeStart: z.string().regex(/^\d{2}:\d{2}$/),
-  timeRangeEnd: z.string().regex(/^\d{2}:\d{2}$/),
+  dateRangeStart: z.string().regex(DATE_BAR),
+  dateRangeEnd: z.string().regex(DATE_BAR),
+  timeRangeStart: z.string().regex(TIME),
+  timeRangeEnd: z.string().regex(TIME),
   duration: z.number().int()
     .positive(),
   meetingMethod: z.union([MeetingMethodENUM, z.null()]),
   location: z.string().optional(),
-  deadline: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  deadline: z.string().regex(DATE_BAR),
 });
 
 const DiscussionResponse = z.object({
