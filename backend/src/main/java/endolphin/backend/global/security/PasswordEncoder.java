@@ -1,5 +1,7 @@
 package endolphin.backend.global.security;
 
+import endolphin.backend.global.error.exception.ApiException;
+import endolphin.backend.global.error.exception.ErrorCode;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -25,7 +27,7 @@ public class PasswordEncoder {
             byte[] hash = factory.generateSecret(spec).getEncoded();
             return Base64.getEncoder().encodeToString(hash);
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-            throw new RuntimeException("Error during password encryption", e);
+            throw new ApiException(ErrorCode.INTERNAL_ERROR);
         }
     }
 
