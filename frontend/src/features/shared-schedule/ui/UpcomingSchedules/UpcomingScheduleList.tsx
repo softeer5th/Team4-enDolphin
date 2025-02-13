@@ -22,7 +22,7 @@ const UpcomingScheduleList = ({ schedules }: ScheduleListProps) => (
       justify='flex-start'
       width='full'
     >
-      {schedules.map((schedule, index) => (
+      {schedules.map((_, index) => (
         <UpcomingScheduleListItem
           endDate={new Date()}
           key={index}

@@ -3,6 +3,10 @@ import { createContext } from 'react';
 import type { CalendarInfo } from '@/hooks/useCalendar';
 import { useSafeContext } from '@/hooks/useSafeContext';
 
-export const CalendarContext = createContext<CalendarInfo | null>(null);
+interface CalendarContextProps extends CalendarInfo {
+  isTableUsed: boolean;
+}
 
-export const useCalendarContext = (): CalendarInfo => useSafeContext(CalendarContext);
+export const CalendarContext = createContext<CalendarContextProps | null>(null);
+
+export const useCalendarContext = (): CalendarContextProps => useSafeContext(CalendarContext);

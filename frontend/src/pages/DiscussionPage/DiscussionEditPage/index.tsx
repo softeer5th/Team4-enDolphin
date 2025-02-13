@@ -10,7 +10,7 @@ const DiscussionEditPage = () => (
     className={discussionContainerStyle}
     direction='column'
     gap={800}
-    height='100vh'
+    justify='flex-start'
   >
     <DiscussionCreateTitle title='일정 조율 수정' />
     <DiscussionForm 

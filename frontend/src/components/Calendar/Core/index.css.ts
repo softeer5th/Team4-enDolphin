@@ -13,14 +13,6 @@ export const coreStyle = style({
   backgroundColor: vars.color.Ref.Netural.White,
 });
 
-export const headerStyle = style({
-  width: '100%',
-  display: 'flex',
-
-  borderTop: `1px solid ${vars.color.Ref.Netural[200]}`,
-  borderBottom: `2px solid ${vars.color.Ref.Netural[200]}`,
-});
-
 export const weekStyle = style({
   width: '100%',
   paddingTop: vars.spacing[400],
@@ -28,9 +20,18 @@ export const weekStyle = style({
   alignItems: 'stretch',
 });
 
-export const timeControlStyle = style({
-  paddingTop: vars.spacing[500],
-  paddingLeft: vars.spacing[500],
+export const timeControlStyle = recipe({
+  base: { paddingTop: vars.spacing[500] },
+  variants: {
+    isTableUsed: {
+      true: {
+        paddingLeft: vars.spacing[500],
+      },
+      false: {
+        paddingLeft: 0,
+      },
+    },
+  },
 });
 
 export const timeControlButtonWrapperStyle = style({

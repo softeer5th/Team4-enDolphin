@@ -51,7 +51,7 @@ export const Checkbox = ({
   return(
     <div className={containerStyle} onClick={handleClickCheck}>
       <span className={checkboxStyle({ size, style: checkStyleName })}>
-        {checked && <Check width={16} />}
+        {checked && <Check clickable width={16} />}
       </span>
       <CheckboxLabel
         id={id}

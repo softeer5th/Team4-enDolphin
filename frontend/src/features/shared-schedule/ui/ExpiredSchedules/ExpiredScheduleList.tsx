@@ -23,7 +23,7 @@ const ScheduleList = ({ schedules }: ScheduleListProps) => (
       justify='flex-start'
       width='full'
     >
-      {schedules.map((schedule, index) => (
+      {schedules.map((_, index) => (
         <ExpiredScheduleListItem
           endDate={new Date()}
           key={index}

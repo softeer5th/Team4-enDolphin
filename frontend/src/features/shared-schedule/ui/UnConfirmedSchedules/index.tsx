@@ -15,9 +15,8 @@ const segmentOptions = [
   { label: '공유 받은 일정', value: 'shared' },
 ];
 const UnConfirmedSchedules = () => {
-  const [selectedSegment, setSelectedSegment] = useState('all');
+  const [_, setSelectedSegment] = useState('all');
   const schedules = [{}, {}, {}];
-  const currentSchedule = {};
 
   return  (
     <Flex
@@ -30,7 +29,7 @@ const UnConfirmedSchedules = () => {
       <SegmentControl onChange={(value) => setSelectedSegment(value)} options={segmentOptions} />
       <div className={mainContainerStyle}>
         <UnconfirmedScheduleList schedules={schedules} />
-        <ScheduleContents schedule={currentSchedule} />
+        <ScheduleContents />
       </div >
     </Flex>
   );

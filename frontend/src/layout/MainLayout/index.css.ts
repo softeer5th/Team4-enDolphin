@@ -4,13 +4,8 @@ export const containerStyle = style({
   width: '100%',
   minWidth: '1284px',
   minHeight: '100vh',
-  margin: '56px 0',
-  padding: '0 28px',
+  padding: '56px 28px',
   display: 'flex',
   overflow: 'hidden',
   justifyContent: 'center',
-});
-
-export const contentWrapperStyle = style({  
-  width: '1288px',
 });

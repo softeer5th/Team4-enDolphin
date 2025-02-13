@@ -7,7 +7,8 @@ type State = {
 
 type Action = 
   | { type: 'TOGGLE_ITEM'; id: number; itemIds: number[] }
-  | { type: 'TOGGLE_ALL'; itemIds: number[] };
+  | { type: 'TOGGLE_ALL'; itemIds: number[] }
+  | { type: 'RESET' };
   
 const reducer = (state: State, action: Action): State => {
   switch (action.type) {
@@ -21,12 +22,18 @@ const reducer = (state: State, action: Action): State => {
       const isAllChecked = newCheckedList.size === action.itemIds.length;
       return { checkedList: newCheckedList, isAllChecked };
     }
+
     case 'TOGGLE_ALL': {
       if (state.isAllChecked) {
         return { isAllChecked: false, checkedList: new Set() };
       }
       return { isAllChecked: true, checkedList: new Set(action.itemIds) };
     }
+
+    case 'RESET': {
+      return { checkedList: new Set(), isAllChecked: false };
+    }
+
     default:
       return state;
   }
@@ -42,6 +49,7 @@ export interface GroupStateReturn {
   handleToggleCheck: (id: number) => void;
   isAllChecked: boolean;
   handleToggleAllCheck: () => void;
+  reset: () => void;
 }
 
 export const useGroup = ({ 
@@ -60,10 +68,15 @@ export const useGroup = ({
     dispatch({ type: 'TOGGLE_ALL', itemIds });
   };
 
+  const reset = () => {
+    dispatch({ type: 'RESET' });
+  };
+
   return { 
     checkedList: state.checkedList, 
     handleToggleCheck, 
     isAllChecked: state.isAllChecked,
     handleToggleAllCheck, 
+    reset,
   };
 };
