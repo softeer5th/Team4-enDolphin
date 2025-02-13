@@ -10,6 +10,7 @@ const DiscussionPage = () =>(
     className={containerStyle}
     direction='column'
     height='calc(100vh - 112px)'
+    width='100%'
   >
     <DiscussionTitle />
     <Flex

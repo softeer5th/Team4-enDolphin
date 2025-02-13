@@ -10,6 +10,7 @@ const DiscussionCreatePage = () => (
     className={discussionContainerStyle}
     direction='column'
     gap={800}
+    justify='flex-start'
   >
     <DiscussionCreateTitle
       subtitle='일정 조율에는 최대 15명이 참여가능해요'

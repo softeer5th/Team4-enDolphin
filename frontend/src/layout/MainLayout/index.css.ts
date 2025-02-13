@@ -10,7 +10,3 @@ export const containerStyle = style({
   overflow: 'hidden',
   justifyContent: 'center',
 });
-
-export const contentWrapperStyle = style({  
-  width: '1288px',
-});
