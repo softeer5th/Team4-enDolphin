@@ -130,6 +130,10 @@ public class DiscussionService {
         Long discussionId, CandidateEventDetailsRequest request) {
         final int TIME_OFFSET = 4;
 
+        if (request.selectedUserIdList().isEmpty()) {
+            throw new ApiException(ErrorCode.EMPTY_SELECTED_USER_IDS);
+        }
+
         LocalDateTime startTime = request.startDateTime();
         LocalDateTime endTime = request.endDateTime();
 
@@ -145,7 +149,7 @@ public class DiscussionService {
             discussionId);
 
         if (!participants.contains(currentUser)) {
-            throw new ApiException(ErrorCode.DISCUSSION_PARTICIPANT_NOT_FOUND);
+            throw new ApiException(ErrorCode.INVALID_DISCUSSION_PARTICIPANT);
         }
 
         Map<Long, Integer> selectedUserIdMap = new HashMap<>();
