@@ -73,7 +73,7 @@ class PersonalEventPreprocessorTest {
         // count : 0
         PersonalEvent personalEvent = mock(PersonalEvent.class);
         given(personalEvent.getStartTime()).willReturn(LocalDateTime.of(2024, 3, 8, 8, 0, 0));
-        given(personalEvent.getEndTime()).willReturn(LocalDateTime.of(2024, 3, 10, 12, 0, 0));
+        given(personalEvent.getEndTime()).willReturn(LocalDateTime.of(2024, 3, 9, 12, 0, 0));
 
         // when
         preprocessor.preprocessOne(personalEvent, discussion, user, true);

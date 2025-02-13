@@ -140,7 +140,7 @@ public class PersonalEventPreprocessor {
         Discussion discussion, PersonalEvent personalEvent) {
         LocalDate eventStart = personalEvent.getStartTime().toLocalDate();
         LocalDate eventEnd = personalEvent.getEndTime().toLocalDate();
-        return eventStart.isBefore(discussion.getDateRangeEnd())
-            && eventEnd.isAfter(discussion.getDateRangeStart());
+        return !eventStart.isAfter(discussion.getDateRangeEnd())
+            && !eventEnd.isBefore(discussion.getDateRangeStart());
     }
 }
