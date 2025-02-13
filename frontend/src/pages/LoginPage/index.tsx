@@ -1,5 +1,4 @@
 import { useMutation } from '@tanstack/react-query';
-import { useTransition } from 'react';
 
 import { Flex } from '@/components/Flex';
 import googleLoginIcon from '@/components/Icon/png/google-login-icon.png';
@@ -11,13 +10,10 @@ import { vars } from '@/theme/index.css';
 import { backdropStyle, googleLoginButtonStyle } from './index.css';
 
 const LoginPage = () => {
-  const [isRedirectPending, startRedirectTransition] = useTransition();
   const googleLogin = useMutation({
     mutationFn: requestGoogleLoginUrl,
     onSuccess: ({ url }) => {
-      startRedirectTransition(async () => {
-        window.location.href = url;
-      });
+      window.location.href = url;
     },
   });
 
@@ -35,19 +31,18 @@ const LoginPage = () => {
         title='언제만나 시작하기'
       >
         <Modal.Footer>
-          <GoogleLoginButton disabled={isRedirectPending} onClick={onGoogleLoginButtonClick} />
+          <GoogleLoginButton onClick={onGoogleLoginButtonClick} />
         </Modal.Footer>
       </Modal>
     </div>
   );
 };
 
-const GoogleLoginButton = ({ onClick, disabled }: { onClick: () => void; disabled: boolean }) => (
+const GoogleLoginButton = ({ onClick }: { onClick: () => void }) => (
   <Flex
     align='center'
     as='button'
     className={googleLoginButtonStyle}
-    disabled={disabled}
     gap={200}
     justify='center'
     onClick={onClick}
