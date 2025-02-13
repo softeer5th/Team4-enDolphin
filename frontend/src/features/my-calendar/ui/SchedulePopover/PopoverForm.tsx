@@ -30,8 +30,8 @@ export const PopoverForm = ({ startDate, endDate }: PopoverFormProps) =>
           separator='~'
           type='text'
         >
-          <Input.Multi.InputField value={formatDateToTimeString(startDate)} />
-          <Input.Multi.InputField value={formatDateToTimeString(endDate)} />
+          <Input.Multi.InputField readOnly value={formatDateToTimeString(startDate)} />
+          <Input.Multi.InputField readOnly value={formatDateToTimeString(endDate)} />
         </Input.Multi>
         <Checkbox size='sm'>시간 조정 가능</Checkbox>
       </Flex>
