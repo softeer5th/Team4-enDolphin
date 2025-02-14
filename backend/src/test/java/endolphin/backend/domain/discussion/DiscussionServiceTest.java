@@ -20,6 +20,7 @@ import endolphin.backend.domain.discussion.dto.CreateDiscussionRequest;
 import endolphin.backend.domain.discussion.dto.DiscussionInfo;
 import endolphin.backend.domain.discussion.dto.DiscussionResponse;
 import endolphin.backend.domain.discussion.dto.InvitationInfo;
+import endolphin.backend.domain.discussion.dto.JoinDiscussionRequest;
 import endolphin.backend.domain.discussion.entity.Discussion;
 import endolphin.backend.domain.discussion.enums.DiscussionStatus;
 import endolphin.backend.domain.discussion.enums.MeetingMethod;
@@ -601,7 +602,7 @@ public class DiscussionServiceTest {
             true);
 
         // When
-        boolean result = discussionService.joinDiscussion(discussionId, correctPassword);
+        boolean result = discussionService.joinDiscussion(discussionId, new JoinDiscussionRequest(correctPassword));
 
         // Then
         assertThat(result).isTrue();
@@ -634,7 +635,7 @@ public class DiscussionServiceTest {
             false);
 
         // When
-        boolean result = discussionService.joinDiscussion(discussionId, incorrectPassword);
+        boolean result = discussionService.joinDiscussion(discussionId, new JoinDiscussionRequest(incorrectPassword));
 
         // Then
         assertThat(result).isFalse();
@@ -659,7 +660,7 @@ public class DiscussionServiceTest {
         when(discussionRepository.findById(discussionId)).thenReturn(Optional.of(discussion));
 
         // When & Then
-        assertThatThrownBy(() -> discussionService.joinDiscussion(discussionId, null))
+        assertThatThrownBy(() -> discussionService.joinDiscussion(discussionId, new JoinDiscussionRequest(null)))
             .isInstanceOf(ApiException.class)
             .hasFieldOrPropertyWithValue("errorCode", ErrorCode.PASSWORD_REQUIRED);
     }
@@ -672,7 +673,7 @@ public class DiscussionServiceTest {
         when(discussionRepository.findById(discussionId)).thenReturn(Optional.empty());
 
         // When & Then
-        assertThatThrownBy(() -> discussionService.joinDiscussion(discussionId, "password123"))
+        assertThatThrownBy(() -> discussionService.joinDiscussion(discussionId, new JoinDiscussionRequest("password123")))
             .isInstanceOf(ApiException.class)
             .hasFieldOrPropertyWithValue("errorCode", ErrorCode.DISCUSSION_NOT_FOUND);
     }
