@@ -5,6 +5,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import java.util.Arrays;
 import jakarta.servlet.http.Cookie;
@@ -12,31 +13,19 @@ import jakarta.servlet.http.Cookie;
 import java.io.IOException;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+@RequiredArgsConstructor
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
 
     private final JwtProvider jwtProvider;
 
-    public JwtAuthFilter(JwtProvider jwtProvider) {
-        this.jwtProvider = jwtProvider;
-    }
-
-    private String getTokenFromCookie(Cookie[] cookies) {
-    return Arrays.stream(cookies)
-        .filter(cookie -> "accessToken".equals(cookie.getName()))
-        .map(Cookie::getValue)
-        .findFirst()
-        .orElse(null);
-    }
-
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
         FilterChain filterChain) throws ServletException, IOException {
-        String authHeader = request.getHeader("Authorization");
         Cookie[] cookies = request.getCookies();
+        String token = getTokenFromCookie(cookies);
 
-        if (cookies != null) {
-            String token = getTokenFromCookie(cookies);
+        if (token != null) {
 
             try {
                 var signedJwt = jwtProvider.validateToken(token);
@@ -55,7 +44,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 return;
             }
         } else {
-            // Authorization 헤더가 없거나 형식 불일치 -> 401
+            // token 없으면 -> 401
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "No token");
             return;
         }
@@ -78,7 +67,19 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             "/h2-console" // prod profile에서는 h2-console 접근 불가
         );
 
-        return "OPTIONS".equalsIgnoreCase(request.getMethod()) || 
-           excludedPaths.stream().anyMatch(path::startsWith);
+        return "OPTIONS".equalsIgnoreCase(request.getMethod()) ||
+            excludedPaths.stream().anyMatch(path::startsWith);
+    }
+
+    private String getTokenFromCookie(Cookie[] cookies) {
+        if (cookies == null) {
+            return null;
+        }
+
+        return Arrays.stream(cookies)
+            .filter(cookie -> "accessToken".equals(cookie.getName()))
+            .map(Cookie::getValue)
+            .findFirst()
+            .orElse(null);
     }
 }
