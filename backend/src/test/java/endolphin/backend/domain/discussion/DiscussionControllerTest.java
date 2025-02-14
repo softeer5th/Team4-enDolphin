@@ -56,7 +56,8 @@ public class DiscussionControllerTest {
             60,
             MeetingMethod.ONLINE,
             null,
-            LocalDate.now().plusDays(10)
+            LocalDate.now().plusDays(10),
+            null
         );
 
         // given: 서비스가 반환할 응답 DTO 생성

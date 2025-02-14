@@ -4,6 +4,7 @@ import endolphin.backend.domain.discussion.enums.DiscussionStatus;
 import endolphin.backend.domain.discussion.enums.MeetingMethod;
 import endolphin.backend.global.base_entity.BaseTimeEntity;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import java.util.Optional;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,6 +12,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
 @Getter
@@ -51,10 +53,16 @@ public class Discussion extends BaseTimeEntity {
     @Column(nullable = false)
     private LocalDate deadline;
 
+    @Setter
     @Enumerated(EnumType.STRING)
     @ColumnDefault("'ONGOING'")
     @Column(name = "status", nullable = false)
     private DiscussionStatus discussionStatus;
+
+    @Setter
+    @Column(length = 255)
+    @Size(min = 4, max = 100)
+    private String password;
 
     @Builder
     public Discussion(String title, LocalDate dateStart, LocalDate dateEnd,

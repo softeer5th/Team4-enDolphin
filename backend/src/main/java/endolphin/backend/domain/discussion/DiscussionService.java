@@ -3,6 +3,7 @@ package endolphin.backend.domain.discussion;
 import endolphin.backend.domain.discussion.dto.CreateDiscussionRequest;
 import endolphin.backend.domain.discussion.dto.DiscussionResponse;
 import endolphin.backend.domain.discussion.entity.Discussion;
+import endolphin.backend.domain.discussion.enums.DiscussionStatus;
 import endolphin.backend.domain.personal_event.PersonalEventService;
 import endolphin.backend.domain.shared_event.SharedEventService;
 import endolphin.backend.domain.shared_event.dto.SharedEventRequest;
@@ -13,6 +14,7 @@ import endolphin.backend.domain.user.entity.User;
 import endolphin.backend.global.error.exception.ApiException;
 import endolphin.backend.global.error.exception.ErrorCode;
 import endolphin.backend.global.redis.DiscussionBitmapService;
+import endolphin.backend.global.security.PasswordEncoder;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -34,6 +36,7 @@ public class DiscussionService {
     private final SharedEventService sharedEventService;
     private final DiscussionParticipantService discussionParticipantService;
     private final DiscussionBitmapService discussionBitmapService;
+    private final PasswordEncoder passwordEncoder;
 
     public DiscussionResponse createDiscussion(CreateDiscussionRequest request) {
         User currentUser = userService.getCurrentUser();
@@ -51,6 +54,11 @@ public class DiscussionService {
             .build();
 
         discussion = discussionRepository.save(discussion);
+
+        if (request.password() != null) {
+            discussion.setPassword(passwordEncoder.encode(discussion.getId(), request.password()));
+            discussion = discussionRepository.save(discussion);
+        }
 
         discussionParticipantService.addDiscussionParticipant(discussion, currentUser);
         personalEventService.preprocessPersonalEvents(currentUser, discussion);
@@ -72,6 +80,10 @@ public class DiscussionService {
         Discussion discussion = discussionRepository.findById(discussionId)
             .orElseThrow(() -> new ApiException(ErrorCode.DISCUSSION_NOT_FOUND));
 
+        if(discussion.getDiscussionStatus() != DiscussionStatus.ONGOING) {
+            throw new ApiException(ErrorCode.DISCUSSION_NOT_ONGOING);
+        }
+
         SharedEventDto sharedEventDto = sharedEventService.createSharedEvent(discussion,
             request);
 
@@ -82,6 +94,10 @@ public class DiscussionService {
 
         personalEventService.createPersonalEventsForParticipants(participants, discussion,
             sharedEventDto);
+
+        discussion.setDiscussionStatus(DiscussionStatus.UPCOMING);
+
+        discussionRepository.save(discussion);
 
         discussionBitmapService.deleteDiscussionBitmapsUsingScan(discussionId)
             .thenRun(() -> log.info("Redis keys deleted successfully for discussionId : {}",

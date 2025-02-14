@@ -6,12 +6,14 @@ import static org.assertj.core.api.Assertions.within;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import endolphin.backend.domain.discussion.dto.CreateDiscussionRequest;
 import endolphin.backend.domain.discussion.dto.DiscussionResponse;
 import endolphin.backend.domain.discussion.entity.Discussion;
+import endolphin.backend.domain.discussion.enums.DiscussionStatus;
 import endolphin.backend.domain.discussion.enums.MeetingMethod;
 import endolphin.backend.domain.personal_event.PersonalEventService;
 import endolphin.backend.domain.shared_event.SharedEventService;
@@ -20,7 +22,10 @@ import endolphin.backend.domain.shared_event.dto.SharedEventDto;
 import endolphin.backend.domain.shared_event.dto.SharedEventWithDiscussionInfoResponse;
 import endolphin.backend.domain.user.UserService;
 import endolphin.backend.domain.user.entity.User;
+import endolphin.backend.global.error.exception.ApiException;
+import endolphin.backend.global.error.exception.ErrorCode;
 import endolphin.backend.global.redis.DiscussionBitmapService;
+import endolphin.backend.global.security.PasswordEncoder;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -57,6 +62,9 @@ public class DiscussionServiceTest {
     @Mock
     private DiscussionParticipantService discussionParticipantService;
 
+    @Mock
+    private PasswordEncoder passwordEncoder;
+
     @InjectMocks
     private DiscussionService discussionService;
 
@@ -72,7 +80,8 @@ public class DiscussionServiceTest {
             60,
             MeetingMethod.OFFLINE,
             "회의실 1",
-            LocalDate.now().plusDays(10)
+            LocalDate.now().plusDays(10),
+            null
         );
 
         given(discussionRepository.save(any(Discussion.class))).willAnswer(invocation -> {
@@ -110,6 +119,8 @@ public class DiscussionServiceTest {
             .title("Project Sync")
             .meetingMethod(MeetingMethod.ONLINE)
             .build();
+
+        discussion.setDiscussionStatus(DiscussionStatus.ONGOING);
 
         SharedEventRequest request = new SharedEventRequest(
             LocalDateTime.of(2025, 3, 1, 10, 0),
@@ -168,6 +179,8 @@ public class DiscussionServiceTest {
             .meetingMethod(MeetingMethod.ONLINE)
             .build();
 
+        discussion.setDiscussionStatus(DiscussionStatus.ONGOING);
+
         SharedEventRequest request = new SharedEventRequest(
             LocalDateTime.of(2025, 3, 1, 10, 0),
             LocalDateTime.of(2025, 3, 1, 12, 0)
@@ -210,6 +223,82 @@ public class DiscussionServiceTest {
             dummyParticipants, discussion, sharedEventDto
         );
         verify(discussionBitmapService).deleteDiscussionBitmapsUsingScan(discussionId);
+    }
+
+    @DisplayName("논의 확정 시 논의 상태가 ONGOING이 아닌 경우 예외 발생")
+    @Test
+    public void confirmSchedule_whenDiscussionNotOngoing_throwsApiException() {
+        // Given
+        Long discussionId = 1L;
+        // ONGOING이 아닌 상태로 설정 (예: CREATED)
+        Discussion discussion = Discussion.builder()
+            .title("Test Discussion")
+            .meetingMethod(MeetingMethod.ONLINE)
+            .build();
+
+        discussion.setDiscussionStatus(DiscussionStatus.FINISHED);
+        when(discussionRepository.findById(discussionId)).thenReturn(Optional.of(discussion));
+
+        SharedEventRequest request = new SharedEventRequest(
+            LocalDateTime.of(2025, 3, 1, 10, 0),
+            LocalDateTime.of(2025, 3, 1, 12, 0)
+        );
+
+        // When & Then
+        assertThatThrownBy(() -> discussionService.confirmSchedule(discussionId, request))
+            .isInstanceOf(ApiException.class)
+            .hasFieldOrPropertyWithValue("errorCode", ErrorCode.DISCUSSION_NOT_ONGOING);
+    }
+
+
+    @DisplayName("Discussion 생성 시 password 처리 테스트")
+    @Test
+    public void createDiscussion_withPassword_setsEncodedPassword() {
+        // password 필드가 추가된 CreateDiscussionRequest 생성 (password: "secretPassword")
+        CreateDiscussionRequest request = new CreateDiscussionRequest(
+            "팀 회의",
+            LocalDate.of(2025, 2, 10),
+            LocalDate.of(2025, 2, 15),
+            LocalTime.of(9, 0),
+            LocalTime.of(18, 0),
+            60,
+            MeetingMethod.OFFLINE,
+            "회의실 1",
+            LocalDate.now().plusDays(10),
+            "secretPassword"
+        );
+
+        given(discussionRepository.save(any(Discussion.class))).willAnswer(invocation -> {
+            Discussion disc = invocation.getArgument(0);
+            if (disc.getId() == null) {
+                ReflectionTestUtils.setField(disc, "id", 100L);
+            }
+            return disc;
+        });
+
+        when(passwordEncoder.encode(100L, "secretPassword")).thenReturn("encodedPassword");
+
+        User dummyUser = new User();
+        ReflectionTestUtils.setField(dummyUser, "id", 1L);
+        given(userService.getCurrentUser()).willReturn(dummyUser);
+
+        // when
+        DiscussionResponse response = discussionService.createDiscussion(request);
+
+        // then
+        assertThat(response).isNotNull();
+        assertThat(response.id()).isEqualTo(100L);
+        assertThat(response.title()).isEqualTo("팀 회의");
+        assertThat(response.dateRangeStart()).isEqualTo(LocalDate.of(2025, 2, 10));
+        assertThat(response.dateRangeEnd()).isEqualTo(LocalDate.of(2025, 2, 15));
+        assertThat(response.meetingMethod()).isEqualTo(MeetingMethod.OFFLINE);
+        assertThat(response.location()).isEqualTo("회의실 1");
+        assertThat(response.duration()).isEqualTo(60);
+
+        // passwordEncoder.encode가 올바른 인자로 호출되었음을 검증
+        verify(passwordEncoder).encode(100L, "secretPassword");
+        // discussionRepository.save가 두 번 호출되었는지 확인 (최초 저장, 비밀번호 업데이트)
+        verify(discussionRepository, atLeast(2)).save(any(Discussion.class));
     }
 
 }
