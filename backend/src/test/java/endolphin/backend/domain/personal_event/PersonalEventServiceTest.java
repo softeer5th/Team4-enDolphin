@@ -9,6 +9,7 @@ import endolphin.backend.domain.personal_event.entity.PersonalEvent;
 import endolphin.backend.domain.user.UserService;
 import endolphin.backend.domain.user.entity.User;
 import endolphin.backend.global.dto.ListResponse;
+import java.time.LocalDate;
 import endolphin.backend.global.google.dto.GoogleEvent;
 import endolphin.backend.global.google.enums.GoogleEventStatus;
 import java.util.List;
@@ -66,8 +67,8 @@ class PersonalEventServiceTest {
         // Given
         given(userService.getCurrentUser()).willReturn(testUser);
 
-        LocalDateTime startDateTime = LocalDateTime.of(2025, 2, 2, 10, 0);
-        LocalDateTime endDateTime = LocalDateTime.of(2025, 2, 9, 10, 0);
+        LocalDate startDate = LocalDate.of(2025, 2, 2);
+        LocalDate endDate = LocalDate.of(2025, 2, 9);
 
         PersonalEvent personalEvent1 = createPersonalEvent("Meeting1", 2, testUser);
 
@@ -76,12 +77,12 @@ class PersonalEventServiceTest {
             personalEvent1, personalEvent2
         );
 
-        given(personalEventRepository.findByUserAndStartTimeBetween(testUser, startDateTime,
-            endDateTime)).willReturn(eventList);
+        given(personalEventRepository.findByUserAndStartTimeBetween(testUser, startDate.atStartOfDay(),
+            endDate.atTime(23, 59))).willReturn(eventList);
 
         // When
         ListResponse<PersonalEventResponse> response = personalEventService.listPersonalEvents(
-            startDateTime, endDateTime);
+            startDate, endDate);
 
         // Then
         assertThat(response.data().size()).isEqualTo(2);

@@ -14,6 +14,7 @@ import endolphin.backend.global.error.exception.ErrorCode;
 import endolphin.backend.global.google.dto.GoogleEvent;
 import endolphin.backend.global.google.enums.GoogleEventStatus;
 import endolphin.backend.global.util.Validator;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -31,14 +32,14 @@ public class PersonalEventService {
     private final DiscussionParticipantService discussionParticipantService;
 
     @Transactional(readOnly = true)
-    public ListResponse<PersonalEventResponse> listPersonalEvents(LocalDateTime startDateTime,
-        LocalDateTime endDateTime) {
+    public ListResponse<PersonalEventResponse> listPersonalEvents(LocalDate startDate,
+        LocalDate endDate) {
         User user = userService.getCurrentUser();
 
-        Validator.validateDateTimeRange(startDateTime, endDateTime);
+        Validator.validateDateTimeRange(startDate, endDate);
 
         List<PersonalEventResponse> personalEventResponseList = personalEventRepository.findByUserAndStartTimeBetween(
-                user, startDateTime, endDateTime)
+                user, startDate.atStartOfDay(), endDate.atTime(23, 59))
             .stream().map(PersonalEventResponse::fromEntity).toList();
         return new ListResponse<>(personalEventResponseList);
     }
