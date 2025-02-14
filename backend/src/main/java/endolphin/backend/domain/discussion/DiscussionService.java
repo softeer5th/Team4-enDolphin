@@ -216,7 +216,7 @@ public class DiscussionService {
 
         User currentUser = userService.getCurrentUser();
 
-        if(!checkPassword(discussion, password)) {
+        if (hasDiscussionPassword(discussionId) && !checkPassword(discussion, password)) {
             passwordCountService.increaseCount(currentUser.getId(), discussionId);
             return false;
         }
@@ -267,10 +267,18 @@ public class DiscussionService {
     }
 
     private boolean checkPassword(Discussion discussion, String password) {
-        if(password == null || password.isBlank()) {
+        if (password == null || password.isBlank()) {
             throw new ApiException(ErrorCode.PASSWORD_REQUIRED);
         }
 
         return passwordEncoder.matches(discussion.getId(), password, discussion.getPassword());
+    }
+
+    @Transactional(readOnly = true)
+    protected boolean hasDiscussionPassword(Long discussionId) {
+        Discussion discussion = discussionRepository.findById(discussionId)
+            .orElseThrow(() -> new ApiException(ErrorCode.DISCUSSION_NOT_FOUND));
+
+        return discussion.getPassword() != null;
     }
 }
