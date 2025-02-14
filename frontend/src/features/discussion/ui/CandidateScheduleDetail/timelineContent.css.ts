@@ -5,7 +5,7 @@ import { vars } from '@/theme/index.css';
 
 export const timelineContainerStyle = style({
   width: '37.5rem',
-  height: '23.25rem',
+  height: '28.125rem',
   overflowX: 'hidden',
   alignSelf: 'center',
 });
@@ -26,14 +26,11 @@ export const timelineHeaderStyle = style({
 
 export const timelineHeaderTimeTextStyle = style({
   position: 'absolute',
-  transform: 'translateX(-50%)',
   color: vars.color.Ref.Netural[500],
 });
 
 export const timelineCanvasStyle = style({
   position: 'relative',
-  left: 0,
-  alignSelf: 'center',
   width: '42.5rem',
 });
 

@@ -16,7 +16,7 @@ export const backdropStyle = style({
 
 export const containerStyle = style({
   width: '58.5rem',
-  height: '40.5rem',
+  // height: '40.5rem',
   
   position: 'fixed',
   top: '50%',
