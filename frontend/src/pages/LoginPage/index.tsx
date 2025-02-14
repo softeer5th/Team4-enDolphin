@@ -4,14 +4,14 @@ import { Flex } from '@/components/Flex';
 import googleLoginIcon from '@/components/Icon/png/google-login-icon.png';
 import { Modal } from '@/components/Modal';
 import { Text } from '@/components/Text';
-import { requestGoogleLoginUrl } from '@/features/login/api';
+import { loginApi } from '@/features/login/api';
 import { vars } from '@/theme/index.css';
 
 import { backdropStyle, googleLoginButtonStyle } from './index.css';
 
 const LoginPage = () => {
   const googleLogin = useMutation({
-    mutationFn: requestGoogleLoginUrl,
+    mutationFn: loginApi.getGoogleLoginUrl,
     onSuccess: ({ url }) => {
       window.location.href = url;
     },
