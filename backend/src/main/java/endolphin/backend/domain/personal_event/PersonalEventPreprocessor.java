@@ -28,7 +28,6 @@ public class PersonalEventPreprocessor {
         Long offset = discussionParticipantService.getDiscussionParticipantOffset(discussion.getId(),
             user.getId());
         for (PersonalEvent personalEvent : personalEvents) {
-            convert(personalEvent, discussion, offset, true);
             if (discussion.getDiscussionStatus() == DiscussionStatus.ONGOING
                 && isTimeRangeOverlapping(discussion, personalEvent)) {
                 convert(personalEvent, discussion, offset, true);
