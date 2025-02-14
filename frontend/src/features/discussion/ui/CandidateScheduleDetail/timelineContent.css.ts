@@ -38,28 +38,24 @@ export const timelineColumnStyle = recipe({
 
 export const timelineBlockContainerStyle = style({
   position: 'absolute',
-  width: '100%',
-  height: '100%',
-});
-
-export const timelineBlockRowStyle = style({
-  position: 'absolute',
   top: 0,
   left: 0,
-  display: 'flex',
-  flexDirection: 'column',
   width: '100%',
   gap: '0.53125rem',
 });
 
+export const timelineBlockRowStyle = style({
+  position: 'relative',
+  width: '100%',
+  height: '4.25rem',
+});
+
 export const timelineBlockStyle = recipe({
   base: {
-    position: 'relative',
+    position: 'absolute',
     top: 0,
-    bottom: 0,
-    width: 'fit-content',
+    height: '100%',
     backgroundColor: vars.color.Ref.Netural[500],
-    height: '4.25rem',
     borderRadius: vars.radius[300],
     border: '1px solid',
   },

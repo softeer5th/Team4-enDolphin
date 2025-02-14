@@ -96,7 +96,7 @@ const TimelineBlocks = ({ participants, gridStart, gridEnd }: {
       {participants.map((participant, index) => (
         <div
           className={timelineBlockRowStyle}
-          key={index}
+          key={participant.id}
         >
           {participant.events.map((event, index) => (
             <TimelineBlock
@@ -126,6 +126,7 @@ const TimelineBlock = ({ gridStart, gridEnd, event }: {
         width: `${width}px`,
       }}
     >
+      {`${event.startDateTime.toLocaleTimeString()} ~ ${event.endDateTime.toLocaleTimeString()}`}
     </div>
   );
 };

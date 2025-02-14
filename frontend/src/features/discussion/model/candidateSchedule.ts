@@ -38,7 +38,7 @@ export type CandidateScheduleGetRequest = z.infer<typeof CandidateScheduleGetReq
 export type CandidateScheduleGetResponse = z.infer<typeof CandidateScheduleGetResponse>;
 
 // ########## mocked data ###########
-export const mockedCandidateScheduleGetResponse = {
+export const mockedCandidateScheduleGetResponse: CandidateScheduleGetResponse = {
   discussionId: 456,
   startDateTime: new Date('2025-03-01T10:00:00'),
   endDateTime: new Date('2025-03-01T13:00:00'),

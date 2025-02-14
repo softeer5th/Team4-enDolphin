@@ -31,8 +31,9 @@ export const calculateBlockStyle = (
   const BLOCK_WIDTH = 34;
   const BLOCK_WIDTH_PER_MINUTE = BLOCK_WIDTH / 30;
   const totalGridWidth = gridCount * BLOCK_WIDTH;
+  
   const left = Math.max(getMinuteDiff(gridStart, event.startDateTime) * BLOCK_WIDTH_PER_MINUTE, 0);
   const right = Math.max(getMinuteDiff(event.endDateTime, gridEnd) * BLOCK_WIDTH_PER_MINUTE, 0);
   const width = totalGridWidth - left - right;
-  return { left, width };
+  return { left, right, width };
 };

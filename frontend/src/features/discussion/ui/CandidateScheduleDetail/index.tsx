@@ -28,16 +28,7 @@ const CandidateScheduleDetail = () => {
       <Flex className={containerStyle} direction='column'>
         <TopBar />
         <Content
-          {...{
-            ...mockData,
-            participants: mockData.participants.map(participant => ({
-              ...participant,
-              events: participant.events.map(event => ({
-                ...event,
-                status: event.status as 'fixed' | 'adjustable' | 'notInRange',
-              })),
-            })),
-          }}
+          {...mockData}
           {...params}
         />
       </Flex>
