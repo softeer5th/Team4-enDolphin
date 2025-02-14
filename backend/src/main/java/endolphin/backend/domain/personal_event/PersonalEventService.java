@@ -52,9 +52,11 @@ public class PersonalEventService {
             .title(request.title())
             .endTime(request.endDateTime())
             .startTime(request.startDateTime())
+            .isAdjustable(request.isAdjustable())
             .user(user)
             .build();
         PersonalEvent result = personalEventRepository.save(personalEvent);
+        // TODO: 비트맵 반영
         return PersonalEventResponse.fromEntity(result);
     }
 
@@ -67,6 +69,7 @@ public class PersonalEventService {
                 .startTime(sharedEvent.startDateTime())
                 .endTime(sharedEvent.endDateTime())
                 .user(participant)
+                .isAdjustable(false)
                 .build())
             .toList();
 
@@ -84,6 +87,7 @@ public class PersonalEventService {
 
         personalEvent.update(request);
         personalEventRepository.save(personalEvent);
+        // TODO: 비트맵 반영
         return PersonalEventResponse.fromEntity(personalEvent);
     }
 
@@ -91,10 +95,11 @@ public class PersonalEventService {
         PersonalEvent personalEvent = getPersonalEvent(personalEventId);
         User user = userService.getCurrentUser();
         validatePersonalEventUser(personalEvent, user);
-
+        // TODO: 비트맵 반영
         personalEventRepository.delete(personalEvent);
     }
 
+    @Transactional(readOnly = true)
     public PersonalEvent getPersonalEvent(Long personalEventId) {
         return personalEventRepository.findById(personalEventId)
             .orElseThrow(() -> new ApiException(ErrorCode.PERSONAL_EVENT_NOT_FOUND));

@@ -49,13 +49,14 @@ public class PersonalEvent extends BaseTimeEntity {
     @Builder
     public PersonalEvent(User user, String title,
         LocalDateTime startTime, LocalDateTime endTime,
-        String calendarId, String googleEventId) {
+        String calendarId, String googleEventId, boolean isAdjustable) {
         this.user = user;
         this.title = title;
         this.startTime = startTime;
         this.endTime = endTime;
         this.calendarId = calendarId;
         this.googleEventId = googleEventId;
+        this.isAdjustable = isAdjustable;
     }
 
     public void update(PersonalEventRequest personalEventRequest) {
@@ -86,6 +87,7 @@ public class PersonalEvent extends BaseTimeEntity {
             .startTime(googleEvent.startDateTime())
             .endTime(googleEvent.endDateTime())
             .googleEventId(googleEvent.eventId())
+            .isAdjustable(false)
             .user(user)
             .build();
     }
