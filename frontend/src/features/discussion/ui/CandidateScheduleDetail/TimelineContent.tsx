@@ -12,7 +12,9 @@ import {
   timelineBlockStyle,
   timelineCanvasStyle,
   timelineCanvasWrapperStyle,
+  timelineColumnContainerStyle,
   timelineColumnStyle,
+  timelineContainerStyle,
   timelineHeaderStyle,
   timelineHeaderTimeTextStyle,
 } from './timelineContent.css';
@@ -27,17 +29,21 @@ const TimelineContent = ({ participants, meetingStart, meetingEnd }: {
 }) => {
   const gridTimes = getGridTimes(meetingStart, meetingEnd, GRID_HORIZONTAL_COUNT);
   return (
-    <Flex direction='column' width='full'>
+    <Flex
+      className={timelineContainerStyle}
+      direction='column'
+      width='full'
+    >
+      <TimelineHeader
+        endTime={meetingEnd}
+        gridTimes={gridTimes}
+        startTime={meetingStart}
+      />
       <Flex
         className={timelineCanvasWrapperStyle}
         direction='column'
         justify='flex-start'
       >
-        <TimelineHeader
-          endTime={meetingEnd}
-          gridTimes={gridTimes}
-          startTime={meetingStart}
-        />
         <TimelineCanvas
           gridTimes={gridTimes}
           meetingEnd={meetingEnd}
@@ -120,9 +126,9 @@ const TimelineColumns = ({ meetingStart, meetingEnd, gridTimes }: {
   meetingStart: Date; meetingEnd: Date; gridTimes: Date[];
 }) => (
   <Flex
+    className={timelineColumnContainerStyle}
     direction='row'
     style={{ height: '100%' }}
-    width='full'
   >
     {gridTimes.map((stdTime, idx) => { 
       const isInRange = meetingStart <= stdTime && stdTime < meetingEnd;

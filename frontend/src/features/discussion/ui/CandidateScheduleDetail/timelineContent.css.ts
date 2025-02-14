@@ -3,10 +3,16 @@ import { recipe } from '@vanilla-extract/recipes';
 
 import { vars } from '@/theme/index.css';
 
-export const timelineCanvasWrapperStyle = style({
-  alignSelf: 'center',
+export const timelineContainerStyle = style({
   width: '37.5rem',
   height: '23.25rem',
+  overflowX: 'hidden',
+  alignSelf: 'center',
+});
+
+export const timelineCanvasWrapperStyle = style({
+  width: '100%',
+  height: '100%',
   overflowX: 'hidden',
 });
 
@@ -28,14 +34,19 @@ export const timelineCanvasStyle = style({
   position: 'relative',
   left: 0,
   alignSelf: 'center',
-  // width: 'fit-content',
   width: '42.5rem',
+});
+
+export const timelineColumnContainerStyle = style({
+  position: 'absolute',
+  display: 'flex',
+  flexDirection: 'row',
+  height: '100%',
 });
 
 export const timelineColumnStyle = recipe({
   base: {
     width: '2.125rem',
-    // height: '400px',
     height: '100%',
     borderRight: `1px solid ${vars.color.Ref.Netural[300]}`,
     flexShrink: 0,
