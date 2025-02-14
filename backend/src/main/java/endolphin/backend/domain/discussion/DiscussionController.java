@@ -12,6 +12,7 @@ import endolphin.backend.domain.discussion.dto.DiscussionInfo;
 import endolphin.backend.domain.discussion.dto.DiscussionParticipantsResponse;
 import endolphin.backend.domain.discussion.dto.DiscussionResponse;
 import endolphin.backend.domain.discussion.dto.InvitationInfo;
+import endolphin.backend.domain.discussion.dto.JoinDiscussionRequest;
 import endolphin.backend.domain.shared_event.dto.SharedEventRequest;
 import endolphin.backend.domain.shared_event.dto.SharedEventWithDiscussionInfoResponse;
 import endolphin.backend.global.error.ErrorResponse;
@@ -178,8 +179,8 @@ public class DiscussionController {
     })
     @PostMapping("/{discussionId}/join")
     public ResponseEntity<Boolean> joinInDiscussion(@PathVariable @Min(1) Long discussionId,
-        @RequestBody String password) {
-        Boolean isSuccess = discussionService.joinDiscussion(discussionId, password);
+        @Valid @RequestBody JoinDiscussionRequest request) {
+        Boolean isSuccess = discussionService.joinDiscussion(discussionId, request);
         return ResponseEntity.ok(isSuccess);
     }
 

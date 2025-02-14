@@ -5,6 +5,7 @@ import endolphin.backend.domain.discussion.dto.CandidateEventDetailsResponse;
 import endolphin.backend.domain.discussion.dto.CreateDiscussionRequest;
 import endolphin.backend.domain.discussion.dto.DiscussionInfo;
 import endolphin.backend.domain.discussion.dto.DiscussionResponse;
+import endolphin.backend.domain.discussion.dto.JoinDiscussionRequest;
 import endolphin.backend.domain.discussion.dto.InvitationInfo;
 import endolphin.backend.domain.discussion.entity.Discussion;
 import endolphin.backend.domain.discussion.enums.DiscussionStatus;
@@ -210,13 +211,13 @@ public class DiscussionService {
             .orElseThrow(() -> new ApiException(ErrorCode.DISCUSSION_NOT_FOUND));
     }
 
-    public boolean joinDiscussion(Long discussionId, String password) {
+    public boolean joinDiscussion(Long discussionId, JoinDiscussionRequest request) {
         Discussion discussion = discussionRepository.findById(discussionId)
             .orElseThrow(() -> new ApiException(ErrorCode.DISCUSSION_NOT_FOUND));
 
         User currentUser = userService.getCurrentUser();
 
-        if (hasDiscussionPassword(discussionId) && !checkPassword(discussion, password)) {
+        if (hasDiscussionPassword(discussionId) && !checkPassword(discussion, request.password())) {
             passwordCountService.increaseCount(currentUser.getId(), discussionId);
             return false;
         }
