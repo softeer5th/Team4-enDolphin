@@ -8,6 +8,7 @@ public record UserInfoWithPersonalEvents(
     String name,
     String picture,
     boolean selected,
+    boolean requirementOfAdjustment,
     List<PersonalEventWithStatus> events
 ) {
 

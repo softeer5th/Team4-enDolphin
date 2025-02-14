@@ -28,7 +28,7 @@ public enum ErrorCode {
     DISCUSSION_PARTICIPANT_EXCEED_LIMIT(HttpStatus.FORBIDDEN, "DP001", "Discussion participant exceed limit"),
     DISCUSSION_PARTICIPANT_NOT_FOUND(HttpStatus.NOT_FOUND, "DP002", "Discussion participant not found"),
     INVALID_DISCUSSION_PARTICIPANT(HttpStatus.BAD_REQUEST, "DP003", "Invalid Discussion participant"),
-    
+
     //Calendar
     CALENDAR_UNAUTHORIZED_ERROR(HttpStatus.UNAUTHORIZED, "CA001", "Unauthorized"),
     CALENDAR_FORBIDDEN_ERROR(HttpStatus.FORBIDDEN, "CA002", "Forbidden"),

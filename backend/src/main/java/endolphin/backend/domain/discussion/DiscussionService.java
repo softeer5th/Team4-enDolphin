@@ -7,7 +7,6 @@ import endolphin.backend.domain.discussion.dto.DiscussionResponse;
 import endolphin.backend.domain.discussion.entity.Discussion;
 import endolphin.backend.domain.discussion.enums.DiscussionStatus;
 import endolphin.backend.domain.personal_event.PersonalEventService;
-import endolphin.backend.domain.personal_event.dto.PersonalEventWithStatus;
 import endolphin.backend.domain.shared_event.SharedEventService;
 import endolphin.backend.domain.shared_event.dto.SharedEventRequest;
 import endolphin.backend.domain.shared_event.dto.SharedEventWithDiscussionInfoResponse;
@@ -24,7 +23,6 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -157,38 +155,21 @@ public class DiscussionService {
             selectedUserIdMap.put(request.selectedUserIdList().get(i), i);
         }
 
-        Map<Long, List<PersonalEventWithStatus>> result0 =
-            personalEventService.findPersonalEventStatusesByUsers(
-                participants, searchStartTime, searchEndTime, startTime, endTime);
+        List<UserInfoWithPersonalEvents> result0 =
+            personalEventService.findUserInfoWithPersonalEventsByUsers(
+                participants, searchStartTime, searchEndTime, startTime, endTime, selectedUserIdMap);
 
-        List<UserInfoWithPersonalEvents> currentUserList = new ArrayList<>();
-        List<UserInfoWithPersonalEvents> selectedUsersList = new ArrayList<>();
-        List<UserInfoWithPersonalEvents> othersList = new ArrayList<>();
-
-        for (User user : participants) {
-            UserInfoWithPersonalEvents userinfo =
-                new UserInfoWithPersonalEvents(user.getId(), user.getName(), user.getPicture(),
-                    selectedUserIdMap.containsKey(user.getId()), result0.get(user.getId()));
-            if (user.getId().equals(currentUser.getId())) {
-                currentUserList.add(userinfo);
-            } else if (selectedUserIdMap.containsKey(user.getId())) {
-                selectedUsersList.add(userinfo);
-            } else {
-                othersList.add(userinfo);
-            }
-        }
-
-        selectedUsersList.sort(Comparator.comparingInt(info ->
-            selectedUserIdMap.get(info.id())
-        ));
-
-        List<UserInfoWithPersonalEvents> sortedResult = new ArrayList<>();
-        sortedResult.addAll(currentUserList);
-        sortedResult.addAll(selectedUsersList);
-        sortedResult.addAll(othersList);
+        List<UserInfoWithPersonalEvents> sortedResult = getSortedUserInfoWithPersonalEvents(
+            result0, currentUser);
 
         return new CandidateEventDetailsResponse(discussionId, startTime, endTime,
             sortedResult);
+    }
+
+    @Transactional(readOnly = true)
+    public Discussion getDiscussionById(Long discussionId) {
+        return discussionRepository.findById(discussionId)
+            .orElseThrow(() -> new ApiException(ErrorCode.DISCUSSION_NOT_FOUND));
     }
 
     private long calculateTimeLeft(LocalDate deadline) {
@@ -199,16 +180,33 @@ public class DiscussionService {
         return duration.toMillis();
     }
 
-    @Transactional(readOnly = true)
-    public Discussion getDiscussionById(Long discussionId) {
-        return discussionRepository.findById(discussionId)
-            .orElseThrow(() -> new ApiException(ErrorCode.DISCUSSION_NOT_FOUND));
-    }
-
     private LocalDateTime calculateMidTime(LocalDateTime startTime, LocalDateTime endTime) {
         Duration duration = Duration.between(startTime, endTime);
         duration = duration.dividedBy(2);
 
         return startTime.plus(duration);
+    }
+
+    private List<UserInfoWithPersonalEvents> getSortedUserInfoWithPersonalEvents(
+        List<UserInfoWithPersonalEvents> result0, User currentUser) {
+        List<UserInfoWithPersonalEvents> currentUserList = new ArrayList<>();
+        List<UserInfoWithPersonalEvents> selectedUsersList = new ArrayList<>();
+        List<UserInfoWithPersonalEvents> othersList = new ArrayList<>();
+
+        for (UserInfoWithPersonalEvents userInfo : result0) {
+            if (userInfo.id().equals(currentUser.getId())) {
+                currentUserList.add(userInfo);
+            } else if (userInfo.selected()) {
+                selectedUsersList.add(userInfo);
+            } else {
+                othersList.add(userInfo);
+            }
+        }
+
+        List<UserInfoWithPersonalEvents> sortedResult = new ArrayList<>();
+        sortedResult.addAll(currentUserList);
+        sortedResult.addAll(selectedUsersList);
+        sortedResult.addAll(othersList);
+        return sortedResult;
     }
 }

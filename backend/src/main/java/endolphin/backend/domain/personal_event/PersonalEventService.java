@@ -6,6 +6,7 @@ import endolphin.backend.domain.personal_event.dto.PersonalEventRequest;
 import endolphin.backend.domain.personal_event.dto.PersonalEventResponse;
 import endolphin.backend.domain.personal_event.dto.PersonalEventWithStatus;
 import endolphin.backend.domain.personal_event.entity.PersonalEvent;
+import endolphin.backend.domain.personal_event.enums.PersonalEventStatus;
 import endolphin.backend.domain.shared_event.dto.SharedEventDto;
 import endolphin.backend.domain.user.UserService;
 import endolphin.backend.domain.user.dto.UserInfoWithPersonalEvents;
@@ -18,10 +19,10 @@ import endolphin.backend.global.google.enums.GoogleEventStatus;
 import endolphin.backend.global.util.Validator;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -185,9 +186,9 @@ public class PersonalEventService {
     }
 
     @Transactional(readOnly = true)
-    public Map<Long, List<PersonalEventWithStatus>> findPersonalEventStatusesByUsers(
+    public List<UserInfoWithPersonalEvents> findUserInfoWithPersonalEventsByUsers(
         List<User> users, LocalDateTime searchStartTime, LocalDateTime searchEndTime,
-        LocalDateTime startTime, LocalDateTime endTime
+        LocalDateTime startTime, LocalDateTime endTime, Map<Long, Integer> selectedUserIds
     ) {
         List<Long> userIdList = users.stream().map(User::getId).toList();
         List<PersonalEvent> personalEvents =
@@ -195,10 +196,25 @@ public class PersonalEventService {
                     searchEndTime);
         Map<Long, List<PersonalEventWithStatus>> personalEventsByUserId = new HashMap<>();
 
+        List<UserInfoWithPersonalEvents> result = new ArrayList<>();
+
         for (PersonalEvent ps : personalEvents) {
             personalEventsByUserId.computeIfAbsent(ps.getUser().getId(), k -> new ArrayList<>())
                 .add(PersonalEventWithStatus.from(ps, startTime, endTime));
         }
-        return personalEventsByUserId;
+
+        for (User user : users) {
+            List<PersonalEventWithStatus> personalEventWithStatuses
+                = personalEventsByUserId.getOrDefault(user.getId(), new ArrayList<>());
+            boolean requiredOfAdjustment =
+                personalEventWithStatuses != null && personalEventWithStatuses.stream()
+                    .anyMatch(p -> p.status() != PersonalEventStatus.OUT_OF_RANGE);
+            result.add(new UserInfoWithPersonalEvents(
+                user.getId(), user.getName(), user.getPicture(),
+                selectedUserIds.containsKey(user.getId()),
+                requiredOfAdjustment, personalEventWithStatuses));
+        }
+        result.sort(Comparator.comparing(UserInfoWithPersonalEvents::requirementOfAdjustment).reversed());
+        return result;
     }
 }
