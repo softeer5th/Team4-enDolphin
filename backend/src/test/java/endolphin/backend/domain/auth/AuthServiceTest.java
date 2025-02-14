@@ -42,8 +42,8 @@ class AuthServiceTest {
     private AuthService authService;
 
     @Test
-    @DisplayName("로그인 콜백 테스트 - 캘린더 연동 포함")
-    void oauth2Callback_firstLogin() {
+    @DisplayName("로그인 테스트 - 캘린더 연동 포함")
+    void loginTest() {
         // Given
         String code = "test-auth-code";
         GoogleTokens googleTokens = new GoogleTokens("test-access-token", "test-refresh-token");
@@ -70,7 +70,7 @@ class AuthServiceTest {
             .willReturn("test-jwt-token");
 
         // When
-        OAuthResponse response = authService.oauth2Callback(code);
+        OAuthResponse response = authService.login(code);
 
         // Then
         assertThat(response.accessToken()).isEqualTo("test-jwt-token");

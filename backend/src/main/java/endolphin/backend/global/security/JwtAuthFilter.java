@@ -22,11 +22,10 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
         FilterChain filterChain) throws ServletException, IOException {
-        Cookie[] cookies = request.getCookies();
-        String token = getTokenFromCookie(cookies);
 
-        if (token != null) {
-
+        String token = request.getHeader("Authorization");
+        if (token != null && token.startsWith("Bearer ")) {
+            token = token.substring(7);
             try {
                 var signedJwt = jwtProvider.validateToken(token);
                 var claims = signedJwt.getPayload();
@@ -69,17 +68,5 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         return "OPTIONS".equalsIgnoreCase(request.getMethod()) ||
             excludedPaths.stream().anyMatch(path::startsWith);
-    }
-
-    private String getTokenFromCookie(Cookie[] cookies) {
-        if (cookies == null) {
-            return null;
-        }
-
-        return Arrays.stream(cookies)
-            .filter(cookie -> "accessToken".equals(cookie.getName()))
-            .map(Cookie::getValue)
-            .findFirst()
-            .orElse(null);
     }
 }
