@@ -50,7 +50,7 @@ class PersonalEventControllerTest {
         PersonalEventResponse personalEventResponse = new PersonalEventResponse(1L, "title",
             LocalDateTime.of(2025, 2, 2, 10, 0),
             LocalDateTime.of(2025, 2, 2, 12, 0),
-            false, "testEventId", "testCalendarId");
+            false, "testCalendarId");
         given(personalEventService.createPersonalEvent(any())).willReturn(personalEventResponse);
         MvcResult result = mockMvc.perform(post("/api/v1/personal-event").
                 contentType(MediaType.APPLICATION_JSON)

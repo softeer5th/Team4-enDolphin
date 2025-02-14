@@ -9,7 +9,6 @@ public record PersonalEventResponse(
     LocalDateTime startDateTime,
     LocalDateTime endDateTime,
     Boolean isAdjustable,
-    String googleEventId,
     String calendarId
 ) {
     public static PersonalEventResponse fromEntity(PersonalEvent event) {
@@ -19,7 +18,6 @@ public record PersonalEventResponse(
             event.getStartTime(),
             event.getEndTime(),
             event.getIsAdjustable(),
-            event.getGoogleEventId(),
             event.getCalendarId()
         );
     }
