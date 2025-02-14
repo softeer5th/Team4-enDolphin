@@ -31,13 +31,13 @@ public class PersonalEventPreprocessor {
             convert(personalEvent, discussion, offset, true);
             if (discussion.getDiscussionStatus() == DiscussionStatus.ONGOING
                 && isTimeRangeOverlapping(discussion, personalEvent)) {
-                convert(personalEvent, discussion, index, true);
+                convert(personalEvent, discussion, offset, true);
             }
         }
     }
 
     public void preprocessOne(PersonalEvent personalEvent, Discussion discussion, User user, boolean value) {
-        Long index = discussionParticipantService.getDiscussionParticipantIndex(discussion.getId(),
+        Long index = discussionParticipantService.getDiscussionParticipantOffset(discussion.getId(),
             user.getId());
         if (discussion.getDiscussionStatus() == DiscussionStatus.ONGOING
             && isTimeRangeOverlapping(discussion, personalEvent)) {
