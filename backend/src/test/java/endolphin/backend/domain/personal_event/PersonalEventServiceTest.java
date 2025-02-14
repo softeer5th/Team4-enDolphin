@@ -1,11 +1,16 @@
 package endolphin.backend.domain.personal_event;
 
+import endolphin.backend.domain.discussion.DiscussionParticipantService;
+import endolphin.backend.domain.discussion.entity.Discussion;
+import endolphin.backend.domain.discussion.enums.DiscussionStatus;
 import endolphin.backend.domain.personal_event.dto.PersonalEventRequest;
 import endolphin.backend.domain.personal_event.dto.PersonalEventResponse;
 import endolphin.backend.domain.personal_event.entity.PersonalEvent;
 import endolphin.backend.domain.user.UserService;
 import endolphin.backend.domain.user.entity.User;
 import endolphin.backend.global.dto.ListResponse;
+import endolphin.backend.global.google.dto.GoogleEvent;
+import endolphin.backend.global.google.enums.GoogleEventStatus;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -13,6 +18,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
@@ -28,7 +34,13 @@ class PersonalEventServiceTest {
     private PersonalEventRepository personalEventRepository;
 
     @Mock
+    private DiscussionParticipantService discussionParticipantService;
+
+    @Mock
     private UserService userService;
+
+    @Mock
+    private PersonalEventPreprocessor personalEventPreprocessor;
 
     @InjectMocks
     private PersonalEventService personalEventService;
@@ -107,7 +119,8 @@ class PersonalEventServiceTest {
         given(userService.getCurrentUser()).willReturn(testUser);
 
         // when
-        PersonalEventResponse response = personalEventService.updatePersonalEvent(request, anyLong());
+        PersonalEventResponse response = personalEventService.updatePersonalEvent(request,
+            anyLong());
 
         // then
         assertThat(response).isNotNull();
@@ -187,6 +200,55 @@ class PersonalEventServiceTest {
         then(personalEventRepository).should(times(1)).delete(any(PersonalEvent.class));
     }
 
+    @Test
+    @DisplayName("업데이트된 구글 일정을 개인 일정에 반영하는 테스트")
+    public void testUpdatePersonalEventByGoogleSync_Success() {
+        // given
+        User user = createTestUser();
+        String googleCalendarId = "testGoogleCalendarId";
+        GoogleEvent updatedGoogleEvent = createGoogleEvent("testEventId1", "testTitle1",
+            LocalDateTime.of(2024, 3, 10, 10, 0),
+            LocalDateTime.of(2024, 3, 10, 12, 0), GoogleEventStatus.CONFIRMED);
+
+        GoogleEvent deletedGoogleEvent = createGoogleEvent("testEventId2", "testTitle2",
+            LocalDateTime.of(2024, 5, 10, 7, 0),
+            LocalDateTime.of(2024, 5, 10, 12, 0), GoogleEventStatus.CANCELLED);
+        Discussion discussion = createDiscussion();
+        Discussion anotherDiscussion = createDiscussion();
+        given(discussionParticipantService.getDiscussionsByUserId(anyLong())).willReturn(
+            List.of(discussion, anotherDiscussion));
+
+        PersonalEvent existingEvent = createPersonalEvent("new Title");
+        given(existingEvent.getStartTime()).willReturn(LocalDateTime.of(2024, 3, 10, 10, 0));
+        PersonalEvent oldExistingEvent = createPersonalEvent("Old Title");
+        given(existingEvent.copy()).willReturn(oldExistingEvent);
+        PersonalEvent existingEvent2 = createPersonalEvent("Old Title2");
+
+        given(personalEventRepository.findByGoogleEventIdAndCalendarId(
+            eq(updatedGoogleEvent.eventId()), eq(googleCalendarId))).willReturn(Optional.of(existingEvent));
+        given(personalEventRepository.findByGoogleEventIdAndCalendarId(
+            eq(deletedGoogleEvent.eventId()), eq(googleCalendarId))).willReturn(Optional.of(existingEvent2));
+
+        // when
+        personalEventService.syncWithGoogleEvents(List.of(updatedGoogleEvent, deletedGoogleEvent),
+            user, googleCalendarId);
+
+        // then
+        then(personalEventPreprocessor).should(times(1))
+            .preprocessOne(eq(oldExistingEvent), eq(discussion), any(User.class), eq(false));
+        then(personalEventPreprocessor).should(times(1))
+            .preprocessOne(eq(oldExistingEvent), eq(anotherDiscussion), any(User.class), eq(false));
+        then(personalEventPreprocessor).should(times(1))
+            .preprocessOne(eq(existingEvent), eq(discussion), any(User.class), eq(true));
+        then(personalEventPreprocessor).should(times(1))
+            .preprocessOne(eq(existingEvent), eq(anotherDiscussion), any(User.class), eq(true));
+
+        then(personalEventPreprocessor).should(times(1))
+            .preprocessOne(eq(existingEvent2), eq(discussion), any(User.class), eq(false));
+        then(personalEventPreprocessor).should(times(1))
+            .preprocessOne(eq(existingEvent2), eq(anotherDiscussion), any(User.class), eq(false));
+    }
+
     PersonalEvent createPersonalEvent(String title, int minusHour, User user) {
         return PersonalEvent.builder()
             .title(title)
@@ -194,5 +256,29 @@ class PersonalEventServiceTest {
             .endTime(endTime.minusHours(minusHour))
             .user(user)
             .build();
+    }
+
+    GoogleEvent createGoogleEvent(String eventId, String title, LocalDateTime startDateTime,
+        LocalDateTime endDateTime, GoogleEventStatus status) {
+        GoogleEvent googleEvent = Mockito.mock(GoogleEvent.class);
+        given(googleEvent.eventId()).willReturn(eventId);
+        given(googleEvent.status()).willReturn(status);
+        return googleEvent;
+    }
+
+    Discussion createDiscussion() {
+        Discussion discussion = Mockito.mock(Discussion.class);
+        return discussion;
+    }
+
+    PersonalEvent createPersonalEvent(String title) {
+        PersonalEvent personalEvent = Mockito.mock(PersonalEvent.class);
+        return personalEvent;
+    }
+
+    User createTestUser() {
+        User user = Mockito.mock(User.class);
+        given(user.getId()).willReturn(1L);
+        return user;
     }
 }

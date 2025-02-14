@@ -1,5 +1,6 @@
 package endolphin.backend.domain.discussion;
 
+import endolphin.backend.domain.discussion.entity.Discussion;
 import endolphin.backend.domain.discussion.entity.DiscussionParticipant;
 import endolphin.backend.domain.user.entity.User;
 import java.util.List;
@@ -54,4 +55,9 @@ public interface DiscussionParticipantRepository extends
         @Param("offset") List<Long> offsets
     );
 
+    @Query("SELECT dp " +
+        "FROM DiscussionParticipant dp " +
+        "JOIN FETCH dp.discussion d " +
+        "WHERE dp.user.id = :userId")
+    List<Discussion> findDiscussionsByUserId(@Param("userId") Long userId);
 }

@@ -9,4 +9,8 @@ import org.springframework.stereotype.Repository;
 public interface CalendarRepository extends JpaRepository<Calendar, Long> {
 
     Optional<Calendar> findByCalendarId(String calendarId);
+
+    boolean existsByUserId(Long userId);
+
+    Optional<Calendar> findByUserId(Long userId);
 }

@@ -100,4 +100,9 @@ public class DiscussionParticipantService {
 
         return userService.getUserIdNameInIds(userIds);
     }
+
+    @Transactional(readOnly = true)
+    public List<Discussion> getDiscussionsByUserId(Long userId) {
+        return discussionParticipantRepository.findDiscussionsByUserId(userId);
+    }
 }

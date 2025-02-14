@@ -16,6 +16,10 @@ public enum ErrorCode {
     DISCUSSION_NOT_FOUND(HttpStatus.NOT_FOUND, "D001", "Discussion not found"),
     DISCUSSION_NOT_ONGOING(HttpStatus.BAD_REQUEST, "D002", "Discussion not ongoing"),
 
+    // PersonalEvent
+    PERSONAL_EVENT_NOT_FOUND(HttpStatus.NOT_FOUND, "P001", "Personal Event not found"),
+    INVALID_PERSONAL_EVENT_USER(HttpStatus.FORBIDDEN, "P002", "Not allowed to update this personal event"),
+
     //SharedEvent
     SHARED_EVENT_NOT_FOUND(HttpStatus.NOT_FOUND, "S001", "Shared Event not found"),
 
@@ -35,6 +39,9 @@ public enum ErrorCode {
     OAUTH_FORBIDDEN_ERROR(HttpStatus.FORBIDDEN, "O003", "OAuth Forbidden Error"),
     INVALID_OAUTH_CODE(HttpStatus.UNAUTHORIZED, "O004", "Invalid OAuth Code"),
     INVALID_OAUTH_USER_INFO(HttpStatus.UNAUTHORIZED, "O005", "Invalid OAuth User Info"),
+
+    // Google Calendar
+    EXPIRED_SYNC_TOKEN(HttpStatus.GONE, "GC001", "Expired Sync Token"),
     ;
     private final HttpStatus httpStatus;
     private final String code;

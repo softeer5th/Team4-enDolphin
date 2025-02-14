@@ -20,14 +20,14 @@ public class CalendarService {
 
     private final CalendarRepository calendarRepository;
 
-    public void createCalendar(GoogleCalendarDto calendar, User user) {
+    public Calendar createCalendar(GoogleCalendarDto calendar, User user) {
         Calendar newCalendar = Calendar.builder()
             .calendarId(calendar.id())
             .user(user)
             .name(calendar.summary())
             .description(calendar.description())
             .build();
-        calendarRepository.save(newCalendar);
+        return calendarRepository.save(newCalendar);
     }
 
     @Transactional(readOnly = true)
@@ -65,6 +65,17 @@ public class CalendarService {
             () -> new CalendarException(ErrorCode.CALENDAR_NOT_FOUND_ERROR));
         calendar.setSyncToken(null);
         calendarRepository.save(calendar);
+    }
+
+    @Transactional(readOnly = true)
+    public boolean isExistingCalendar(Long userId) {
+        return calendarRepository.existsByUserId(userId);
+    }
+
+    @Transactional(readOnly = true)
+    public Calendar getCalendarByUserId(Long userId) {
+        return calendarRepository.findByUserId(userId).orElseThrow(
+            () -> new CalendarException(ErrorCode.CALENDAR_NOT_FOUND_ERROR));
     }
 
 }
