@@ -1,12 +1,10 @@
 package endolphin.backend.global.google;
 
-import endolphin.backend.domain.auth.dto.UrlResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,15 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/google")
 public class GoogleController {
 
-    private final GoogleOAuthService googleOAuthService;
     private final GoogleCalendarService googleCalendarService;
 
-    @Operation(summary = "구글 로그인 URL", description = "구글 로그인 URL을 반환합니다.")
-    @GetMapping
-    public ResponseEntity<UrlResponse> loginUrl() {
-        UrlResponse response = googleOAuthService.getGoogleLoginUrl();
-        return ResponseEntity.ok(response);
-    }
 
     @Operation(summary = "구글 캘린더 웹훅", description = "구글 캘린더 웹훅을 처리합니다. 프론트엔드는 이 API를 호출하지 않습니다.")
     @PostMapping("/webhook")

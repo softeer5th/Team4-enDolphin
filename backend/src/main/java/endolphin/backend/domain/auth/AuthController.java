@@ -30,7 +30,6 @@ public class AuthController {
     @Value("${app.frontend.callback}")
     private String frontendCallback;
 
-    @Operation(summary = "구글 로그인 콜백", description = "사용자가 Google 계정으로 로그인하여 code를 발급받습니다.")
     @GetMapping("/oauth2/callback")
     public void oauthCallback(@RequestParam("code") String code,
         HttpServletResponse response) throws IOException {
