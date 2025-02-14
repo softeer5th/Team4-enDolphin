@@ -1,4 +1,4 @@
-import { createFileRoute, useParams } from '@tanstack/react-router';
+import { createFileRoute, useSearch } from '@tanstack/react-router';
 import { useEffect } from 'react';
 
 import { useJWTMutation } from '@/features/login/api/mutations';
@@ -8,10 +8,11 @@ const Redirect = () => {
   const { mutate } = useJWTMutation();
   // TODO: lastPath로 redirect하기
   // const lastPath = getLastRoutePath();
-  const params: { code: string } = useParams({ from: '/oauth/redirect/' });
+  const params: { code: string } = useSearch({ from: '/oauth/redirect/' });
 
   // TODO: code 없을 때 예외처리
   useEffect(() => {
+    // console.log(params);
     mutate({ code: params.code });
   }, [params, mutate]);
 
