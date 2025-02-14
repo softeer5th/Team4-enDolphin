@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -20,6 +21,6 @@ public record CreateDiscussionRequest(
     MeetingMethod meetingMethod,
     String location,
     @NotNull @Future LocalDate deadline,
-    @Size(min = 4) String password) {
+    @Size(min = 4, max = 6) @Pattern(regexp = "\\d+") String password) {
 
 }
