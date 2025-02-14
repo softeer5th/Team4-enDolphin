@@ -19,6 +19,7 @@ import endolphin.backend.domain.user.entity.User;
 import endolphin.backend.global.error.exception.ApiException;
 import endolphin.backend.global.error.exception.ErrorCode;
 import endolphin.backend.global.redis.DiscussionBitmapService;
+import endolphin.backend.global.redis.PasswordCountService;
 import endolphin.backend.global.security.PasswordEncoder;
 import endolphin.backend.global.util.Validator;
 import java.time.Duration;
@@ -46,6 +47,7 @@ public class DiscussionService {
     private final DiscussionParticipantService discussionParticipantService;
     private final DiscussionBitmapService discussionBitmapService;
     private final PasswordEncoder passwordEncoder;
+    private final PasswordCountService passwordCountService;
 
     public DiscussionResponse createDiscussion(CreateDiscussionRequest request) {
         User currentUser = userService.getCurrentUser();
@@ -208,6 +210,24 @@ public class DiscussionService {
             .orElseThrow(() -> new ApiException(ErrorCode.DISCUSSION_NOT_FOUND));
     }
 
+    public boolean joinDiscussion(Long discussionId, String password) {
+        Discussion discussion = discussionRepository.findById(discussionId)
+            .orElseThrow(() -> new ApiException(ErrorCode.DISCUSSION_NOT_FOUND));
+
+        User currentUser = userService.getCurrentUser();
+
+        if(!checkPassword(discussion, password)) {
+            passwordCountService.increaseCount(currentUser.getId(), discussionId);
+            return false;
+        }
+
+        discussionParticipantService.addDiscussionParticipant(discussion, currentUser);
+
+        personalEventService.preprocessPersonalEvents(currentUser, discussion);
+
+        return true;
+    }
+
     private long calculateTimeLeft(LocalDate deadline) {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime deadlineDateTime = deadline.atTime(23, 59, 59);
@@ -244,5 +264,13 @@ public class DiscussionService {
         sortedResult.addAll(selectedUsersList);
         sortedResult.addAll(othersList);
         return sortedResult;
+    }
+
+    private boolean checkPassword(Discussion discussion, String password) {
+        if(password == null || password.isBlank()) {
+            throw new ApiException(ErrorCode.PASSWORD_REQUIRED);
+        }
+
+        return passwordEncoder.matches(discussion.getId(), password, discussion.getPassword());
     }
 }
