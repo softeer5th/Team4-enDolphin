@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class AuthService {
 
     private final GoogleOAuthService googleOAuthService;
@@ -23,11 +24,15 @@ public class AuthService {
     private final UserService userService;
     private final JwtProvider jwtProvider;
 
-    @Transactional
-    public OAuthResponse oauth2Callback(String code) {
+    @Transactional(readOnly = true)
+    public String oauth2Callback(String code) {
         if (code == null || code.isBlank()) {
             throw new OAuthException(ErrorCode.INVALID_OAUTH_CODE);
         }
+        return code;
+    }
+
+    public OAuthResponse login(String code) {
         GoogleTokens tokenResponse = googleOAuthService.getGoogleTokens(code);
         GoogleUserInfo userInfo = googleOAuthService.getUserInfo(tokenResponse.accessToken());
         validateUserInfo(userInfo);
@@ -38,6 +43,7 @@ public class AuthService {
         String accessToken = jwtProvider.createToken(user.getId(), user.getEmail());
         return new OAuthResponse(accessToken);
     }
+
 
     private void validateUserInfo(GoogleUserInfo userInfo) {
         if (userInfo == null) {
