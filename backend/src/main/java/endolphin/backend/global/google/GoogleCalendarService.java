@@ -165,7 +165,7 @@ public class GoogleCalendarService {
                     LocalDateTime startDateTime = parseDateTime(start);
                     LocalDateTime endDateTime = parseDateTime(end);
 
-                    GoogleEventStatus eventStatus = GoogleEventStatus.valueOf(status);
+                    GoogleEventStatus eventStatus = GoogleEventStatus.fromValue(status);
 
                     events.add(
                         new GoogleEvent(eventId, summary, startDateTime, endDateTime, eventStatus));
