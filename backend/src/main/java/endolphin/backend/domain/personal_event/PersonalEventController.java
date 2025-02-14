@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import java.net.URI;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -52,10 +53,10 @@ public class PersonalEventController {
     })
     @GetMapping
     public ResponseEntity<ListResponse<PersonalEventResponse>> getPersonalEvents(
-        @Valid @NotNull @RequestParam LocalDateTime startDateTime,
-        @Valid @NotNull @RequestParam LocalDateTime endDateTime) {
+        @Valid @NotNull @RequestParam LocalDate startDate,
+        @Valid @NotNull @RequestParam LocalDate endDate) {
         ListResponse<PersonalEventResponse> response = personalEventService.listPersonalEvents(
-            startDateTime, endDateTime);
+            startDate, endDate);
         return ResponseEntity.ok(response);
     }
 
