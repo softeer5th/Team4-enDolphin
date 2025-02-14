@@ -1,3 +1,4 @@
+import { Link } from '@tanstack/react-router';
 import type { PropsWithChildren } from 'react';
 
 import { Flex } from '@/components/Flex';
@@ -17,11 +18,13 @@ const UpcomingSchedules = ({ schedules, children }: UpcomingSchedulesProps) => {
   });
   return (
     <Flex
+      as={Link}
       className={containerStyle}
       direction='column'
       gap={700}
       height={448}
       justify='space-between'
+      to='/discussion/1'
       width='full'
     > 
       <Flex justify='space-between' width='full'>

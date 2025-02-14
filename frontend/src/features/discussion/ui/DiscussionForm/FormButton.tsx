@@ -39,15 +39,21 @@ const EnrollButton = ({ type }: { type: FormType }) => {
   const { name, onSubmit, isValid } = useFormContext();
   const navigate = useNavigate();
 
-  const typeMap: Record<FormType, string> = {
-    add: '생성하기',
-    edit: '수정하기',
+  const typeMap: Record<FormType, Record<string, string>> = {
+    add: {
+      text: '생성하기',
+      navigate: '/discussion/create/$id',
+    },
+    edit: {
+      text: '수정하기',
+      navigate: '/discussion/$id',
+    },
   };
 
   const handleClickEnrollButton = () => {
     onSubmit();
     navigate({
-      to: '/discussion/$id',
+      to: typeMap[type].navigate,
       params: { id: '1' },
     });
   };
@@ -59,7 +65,7 @@ const EnrollButton = ({ type }: { type: FormType }) => {
       onClick={handleClickEnrollButton}
       size='xl'
     >
-      {typeMap[type]}
+      {typeMap[type].text}
     </Button>
   );
 };
