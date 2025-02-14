@@ -15,14 +15,13 @@ export const backdropStyle = style({
 });
 
 export const containerStyle = style({
-  position: 'fixed',
   width: '58.5rem',
-
+  height: '40.5rem',
+  
+  position: 'fixed',
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-
-  height: '40.5rem',
 
   borderRadius: vars.radius[600],
   backgroundColor: vars.color.Ref.Netural['White'],

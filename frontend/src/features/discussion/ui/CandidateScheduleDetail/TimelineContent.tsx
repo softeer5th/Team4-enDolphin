@@ -31,8 +31,13 @@ const TimelineContent = ({ participants, meetingStart, meetingEnd }: {
       <Flex
         className={timelineCanvasWrapperStyle}
         direction='column'
-        justify='center'
+        justify='flex-start'
       >
+        <TimelineHeader
+          endTime={meetingEnd}
+          gridTimes={gridTimes}
+          startTime={meetingStart}
+        />
         <TimelineCanvas
           gridTimes={gridTimes}
           meetingEnd={meetingEnd}
@@ -90,37 +95,40 @@ const TimelineCanvas = ({ gridTimes, meetingStart, meetingEnd, participants }: {
   meetingStart: Date;
   meetingEnd: Date;
 }) => (
-  <>
-    <TimelineHeader
-      endTime={meetingEnd}
+  <Flex
+    className={timelineCanvasStyle}
+    // justify='center'
+  >
+    <TimelineBlocks
+      gridEnd={gridTimes[gridTimes.length - 1]}
+      gridStart={gridTimes[0]}
       gridTimes={gridTimes}
-      startTime={meetingStart}
+      meetingEnd={meetingEnd}
+      meetingStart={meetingStart}
+      participants={participants}
     />
-    <Flex
-      className={timelineCanvasStyle}
-      justify='center'
-    >
-      {gridTimes.map((stdTime, index) => { 
-        const isInRange = meetingStart <= stdTime && stdTime < meetingEnd;
-        return <TimelineColumn isInRange={isInRange} key={`${stdTime}-${index}`} />;
-      })}
-      {/* <TimelineBlocks
-        gridEnd={gridTimes[gridTimes.length - 1]}
-        gridStart={gridTimes[0]}
-        participants={participants}
-      />
-      <AdjustTimeRangeBox 
-        gridEnd={gridTimes[gridTimes.length - 1]}
-        gridStart={gridTimes[0]}
-        meetingTimeEnd={meetingEnd}
-        meetingTimeStart={meetingStart}
-      /> */}
-    </Flex>
-  </>
+    {/* <AdjustTimeRangeBox 
+      gridEnd={gridTimes[gridTimes.length - 1]}
+      gridStart={gridTimes[0]}
+      meetingTimeEnd={meetingEnd}
+      meetingTimeStart={meetingStart}
+    /> */}
+  </Flex>
 );
 
-const TimelineColumn = ({ isInRange, key }: { isInRange: boolean; key: string }) => (
-  <div className={timelineColumnStyle({ isInRange })} key={key} />
+const TimelineColumns = ({ meetingStart, meetingEnd, gridTimes }: {
+  meetingStart: Date; meetingEnd: Date; gridTimes: Date[];
+}) => (
+  <Flex
+    direction='row'
+    style={{ height: '100%' }}
+    width='full'
+  >
+    {gridTimes.map((stdTime, idx) => { 
+      const isInRange = meetingStart <= stdTime && stdTime < meetingEnd;
+      return <div className={timelineColumnStyle({ isInRange })} key={`${stdTime}-${idx}`} />;
+    })}
+  </Flex>
 );
 
 const AdjustTimeRangeBox = ({ meetingTimeStart, meetingTimeEnd, gridStart, gridEnd }: {
@@ -142,35 +150,40 @@ const AdjustTimeRangeBox = ({ meetingTimeStart, meetingTimeEnd, gridStart, gridE
   );
 };
 
-const TimelineBlocks = ({ participants, gridStart, gridEnd }: {
+const TimelineBlocks = ({ participants, gridStart, gridEnd, gridTimes, meetingEnd, meetingStart }: {
   participants: Participant[];
+  gridTimes: Date[];
+  meetingStart: Date;
+  meetingEnd: Date;
   gridStart: Date;
   gridEnd: Date;
-}) => {
-  const a = 1;
-  return (
-    <Flex
-      className={timelineBlockContainerStyle}
-      direction='column'
-    >
-      {participants.map((participant, index) => (
-        <div
-          className={timelineBlockRowStyle}
-          key={participant.id}
-        >
-          {participant.events.map((event, index) => (
-            <TimelineBlock
-              event={event}
-              gridEnd={gridEnd}
-              gridStart={gridStart}
-              key={index}
-            />
-          ))}
-        </div>
-      ))}
-    </Flex>
-  );
-};
+}) => (
+  <Flex
+    className={timelineBlockContainerStyle}
+    direction='column'
+  >
+    <TimelineColumns
+      gridTimes={gridTimes}
+      meetingEnd={meetingEnd}
+      meetingStart={meetingStart}
+    />
+    {participants.map((participant, index) => (
+      <div
+        className={timelineBlockRowStyle}
+        key={participant.id}
+      >
+        {participant.events.map((event, index) => (
+          <TimelineBlock
+            event={event}
+            gridEnd={gridEnd}
+            gridStart={gridStart}
+            key={index}
+          />
+        ))}
+      </div>
+    ))}
+  </Flex>
+);
 
 const TimelineBlock = ({ gridStart, gridEnd, event }: {
   gridStart: Date;

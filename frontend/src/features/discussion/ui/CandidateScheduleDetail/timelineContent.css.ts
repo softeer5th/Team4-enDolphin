@@ -5,18 +5,17 @@ import { vars } from '@/theme/index.css';
 
 export const timelineCanvasWrapperStyle = style({
   alignSelf: 'center',
-  // width: '37.5rem',
-  width: 'fit-content',
-  height: '100%',
-  overflowY: 'scroll',
+  width: '37.5rem',
+  height: '23.25rem',
   overflowX: 'hidden',
 });
 
 export const timelineHeaderStyle = style({
-  position: 'relative',
   alignSelf: 'center',
   height: 'fit-content',
   width: '42.5rem',
+  zIndex: 1,
+  backgroundColor: vars.color.Ref.Netural['White'],
 });
 
 export const timelineHeaderTimeTextStyle = style({
@@ -27,14 +26,17 @@ export const timelineHeaderTimeTextStyle = style({
 
 export const timelineCanvasStyle = style({
   position: 'relative',
+  left: 0,
   alignSelf: 'center',
-  width: 'fit-content',
+  // width: 'fit-content',
+  width: '42.5rem',
 });
 
 export const timelineColumnStyle = recipe({
   base: {
     width: '2.125rem',
-    height: 400,
+    // height: '400px',
+    height: '100%',
     borderRight: `1px solid ${vars.color.Ref.Netural[300]}`,
     flexShrink: 0,
   },
