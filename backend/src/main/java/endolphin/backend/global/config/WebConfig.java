@@ -16,7 +16,7 @@ public class WebConfig {
     private String[] allowedMethods;
 
     @Value("${spring.cors.allowed-headers}")
-    private String allowedHeaders;
+    private String[] allowedHeaders;
 
     @Value("${spring.cors.allow-credentials}")
     private boolean allowCredentials;
