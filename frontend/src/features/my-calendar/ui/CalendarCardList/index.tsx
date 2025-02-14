@@ -1,12 +1,8 @@
 import { TIME_HEIGHT } from '@/constants/date';
 import { calcPositionByDate } from '@/utils/date/position';
 
+import type { PersonalEventDTO } from '../../model';
 import { CalendarCard } from '../CalendarCard';
-
-interface DateRange {
-  startDate: Date | null;
-  endDate: Date | null;
-}
 
 const calcSize = (height: number) => {
   if (height < TIME_HEIGHT) return 'sm';
@@ -14,20 +10,24 @@ const calcSize = (height: number) => {
   return 'lg';
 };
 
-export const CalendarCardList = ({ cards }: { cards: DateRange[] }) => (
+export const CalendarCardList = (
+  { cards }: { cards: Omit<PersonalEventDTO, 'syncWithGoogleCalendar'>[] },
+) => (
   <>
-    {cards.map((card, idx) => {
-      const { x: sx, y: sy } = calcPositionByDate(card.startDate);
-      const { y: ey } = calcPositionByDate(card.endDate);
+    {cards.map((card) => {
+      const start = new Date(card.startDateTime);
+      const end = new Date(card.endDateTime);
+      const { x: sx, y: sy } = calcPositionByDate(start);
+      const { y: ey } = calcPositionByDate(end);
       const height = ey - sy;
           
       return (
         <CalendarCard
-          endTime={card.endDate}
-          key={idx}
+          endTime={end}
+          key={card.id}
           size={calcSize(height)}
-          startTime={card.startDate}
-          status='adjustable'
+          startTime={start}
+          status={card.isAdjustable ? 'adjustable' : 'fixed'}
           style={{
             width: 'calc((100% - 72px) / 7)',
             height,
@@ -35,7 +35,7 @@ export const CalendarCardList = ({ cards }: { cards: DateRange[] }) => (
             left: `calc(((100% - 72px) / 7 * ${sx}) + 72px)`,
             top: 16 + sy,
           }}
-          title='새 일정 제목이 개길면 어떻게 될까?'
+          title={card.title}
         />
       );
     })}

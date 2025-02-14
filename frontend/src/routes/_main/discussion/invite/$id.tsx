@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router';
 
 import GlobalNavBar from '@/layout/GlobalNavBar';
-import DiscussionInvitePage from '@/pages/DiscussionInvitePage';
+import DiscussionInvitePage from '@/pages/DiscussionPage/DiscussionInvitePage';
 
 const DiscussionInvite = () => (
   <>

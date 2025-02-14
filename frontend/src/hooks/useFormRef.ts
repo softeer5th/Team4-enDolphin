@@ -1,12 +1,13 @@
 import type { ChangeEvent } from 'react';
 import { useRef } from 'react';
 
-export type FormValues<T> = { [K in keyof T]: string | Date };
+// Form의 value로는 다양한 값이 올 수 있습니다.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type FormValues<T> = { [K in keyof T]: any };
 
 export interface FormRef<T> {
   valuesRef: { current: FormValues<T> };
   handleChange: (e: ChangeEvent<HTMLInputElement>) => void;
-  onSubmit: () => void;
 }
 
 export const useFormRef = <T>(initialValues: FormValues<T>): FormRef<T> => {
@@ -16,9 +17,5 @@ export const useFormRef = <T>(initialValues: FormValues<T>): FormRef<T> => {
     valuesRef.current[e.target.name as keyof T] = e.target.value;
   };
 
-  const onSubmit = () => {
-    // console.log(valuesRef.current);
-  };
-
-  return { valuesRef, handleChange, onSubmit };
+  return { valuesRef, handleChange };
 };
