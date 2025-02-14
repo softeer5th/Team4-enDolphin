@@ -3,7 +3,7 @@ name: be-ci
 on:
   pull_request:
     branches:
-      - "dev"
+      - dev
     paths:
       - "backend/**"
 
@@ -40,20 +40,32 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: test-results
-          path: build/reports/tests/
+          path: build/reports/tests/test/
 
       - name: Upload PR Status
         if: always()
         uses: actions/github-script@v7
         with:
           script: |
-            const conclusion = '${{ job.status }}' === 'success' ? 'success' : 'failure';
+            const statusMap = {
+              'success': 'success',
+              'failure': 'failure',
+              'cancelled': 'cancelled',
+              'skipped': 'neutral'
+            };
+            const conclusion = statusMap[process.env.GITHUB_JOB_STATUS] || 'failure';
+            const output = {
+              title: 'Backend CI Result',
+              summary: `Build ${conclusion}: ${process.env.GITHUB_JOB_STATUS}`
+            };
             await github.rest.checks.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
               name: 'Backend CI',
-              head_sha: context.sha,
+              head_sha: context.payload.pull_request.head.sha,
               status: 'completed',
               conclusion: conclusion,
+              output: output
             });
-
+        env:
+          GITHUB_JOB_STATUS: ${{ job.status }}
