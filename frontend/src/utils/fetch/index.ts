@@ -11,6 +11,7 @@ export type RequestOptions = {
 const buildFetchOptions = (options?: RequestInit): RequestInit => {
   const defaultHeaders = {
     'Content-Type': 'application/json',
+    Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
   };
 
   const headers = { ...defaultHeaders, ...options?.headers };
