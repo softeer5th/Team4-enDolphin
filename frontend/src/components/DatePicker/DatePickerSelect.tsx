@@ -2,7 +2,6 @@ import { useState } from 'react';
 
 import { useClickOutside } from '@/hooks/useClickOutside';
 
-import { Flex } from '../Flex';
 import type { CommonDatePickerProps } from '.';
 import DatePickerSelectProvider from './context/DatePickerSelectProvider';
 import Header from './Header';
@@ -22,10 +21,10 @@ const DatePickerSelect = ({
 
   return (
     <DatePickerSelectProvider selectedDate={selectedDate} {...props}>
-      <Flex className={containerStyle} direction='column'>
+      <div className={containerStyle} ref={trigger ? ref : undefined}>
         {
           trigger && 
-          <div onClick={() => setIsOpen((prev) => !prev)} ref={ref}>
+          <div onClick={() => setIsOpen((prev) => !prev)}>
             {trigger}
           </div>
         }
@@ -37,7 +36,7 @@ const DatePickerSelect = ({
             </RootContainer>
           </div>
         )}
-      </Flex>
+      </div>
     </DatePickerSelectProvider>
   );
 };

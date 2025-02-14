@@ -4,6 +4,8 @@ import { recipe } from '@vanilla-extract/recipes';
 import { vars } from '@/theme/index.css';
 
 export const containerStyle = style({
+  display: 'flex',
+  flexDirection: 'column',
   position: 'relative',
 });
 

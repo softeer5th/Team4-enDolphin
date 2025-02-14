@@ -1,3 +1,5 @@
+import { useNavigate } from '@tanstack/react-router';
+
 import Button from '@/components/Button';
 import { Flex } from '@/components/Flex';
 import clsx from '@/utils/clsx';
@@ -35,19 +37,35 @@ const FormButton = ({ type }: { type: FormType }) => {
 
 const EnrollButton = ({ type }: { type: FormType }) => {
   const { name, onSubmit, isValid } = useFormContext();
-  const typeMap: Record<FormType, string> = {
-    add: '생성하기',
-    edit: '수정하기',
+  const navigate = useNavigate();
+
+  const typeMap: Record<FormType, Record<string, string>> = {
+    add: {
+      text: '생성하기',
+      navigate: '/discussion/create/$id',
+    },
+    edit: {
+      text: '수정하기',
+      navigate: '/discussion/$id',
+    },
+  };
+
+  const handleClickEnrollButton = () => {
+    onSubmit();
+    navigate({
+      to: typeMap[type].navigate,
+      params: { id: '1' },
+    });
   };
 
   return (
     <Button
       className={clsx(name, buttonStyle)}
       disabled={!isValid()}
-      onClick={onSubmit}
+      onClick={handleClickEnrollButton}
       size='xl'
     >
-      {typeMap[type]}
+      {typeMap[type].text}
     </Button>
   );
 };

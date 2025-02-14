@@ -38,7 +38,7 @@ const DiscussionCreateCard = () => {
           as={Link}
           size='xl'
           style='borderless'
-          to='/'
+          to='/home'
         >
           홈으로
         </Button>

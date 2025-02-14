@@ -6,6 +6,5 @@ export const containerStyle = style({
   minHeight: '100vh',
   padding: '56px 28px',
   display: 'flex',
-  overflow: 'hidden',
   justifyContent: 'center',
 });

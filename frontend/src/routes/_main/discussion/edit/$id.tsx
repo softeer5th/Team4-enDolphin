@@ -1,7 +1,7 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router';
 
-import GlobalNavBar from '@/layout/GlobalNavBar'
-import DiscussionEditPage from '@/pages/DiscussionPage/DiscussionEditPage'
+import GlobalNavBar from '@/layout/GlobalNavBar';
+import DiscussionEditPage from '@/pages/DiscussionPage/DiscussionEditPage';
 
 const DiscussionEdit = () => (
   <>
@@ -10,8 +10,8 @@ const DiscussionEdit = () => (
     </GlobalNavBar>
     <DiscussionEditPage />
   </>
-)
+);
 
 export const Route = createFileRoute('/_main/discussion/edit/$id')({
   component: DiscussionEdit,
-})
+});

@@ -1,3 +1,5 @@
+import { Link } from '@tanstack/react-router';
+
 import Button from '@/components/Button';
 import { Flex } from '@/components/Flex';
 import { Pencil } from '@/components/Icon';
@@ -15,9 +17,11 @@ const DiscussionTitle = () => (
   >
     <Text color={vars.color.Ref.Netural[900]} typo='h2'>schedule_name 일정 조율 결과</Text>
     <Button
+      as={Link}
       rightIcon={<Pencil clickable />}
       size='lg'
       style='weak'
+      to='/discussion/edit/1'
       variant='secondary'
     >
       수정하기
