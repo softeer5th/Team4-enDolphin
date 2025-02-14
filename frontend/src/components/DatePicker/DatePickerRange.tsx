@@ -27,10 +27,10 @@ const DatePickerRange = ({
       highlightRange={highlightRange}
       {...props}
     >
-      <div className={containerStyle}>
+      <div className={containerStyle} ref={trigger ? ref : undefined}>
         {
           trigger &&
-          <div onClick={() => setIsOpen((prev) => !prev)} ref={ref}>
+          <div onClick={() => setIsOpen((prev) => !prev)}>
             {trigger}
           </div>
         }
