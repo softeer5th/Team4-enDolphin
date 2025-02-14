@@ -103,7 +103,7 @@ public class GoogleCalendarService {
                     LocalDateTime startDateTime = parseDateTime(start);
                     LocalDateTime endDateTime = parseDateTime(end);
 
-                    events.add(new GoogleEvent(eventId, summary, startDateTime, endDateTime, null));
+                    events.add(new GoogleEvent(eventId, summary, startDateTime, endDateTime, GoogleEventStatus.CONFIRMED));
                 }
 
                 // ✅ nextSyncToken을 받아서 저장
