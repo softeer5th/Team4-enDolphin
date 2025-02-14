@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
@@ -39,5 +40,13 @@ public class RedisConfig {
         template.setHashValueSerializer(RedisSerializer.byteArray());
         template.afterPropertiesSet();
         return template;
+    }
+
+    /**
+     * StringRedisTemplate for simple string data (논의 참가 시 인증 실패 횟수 관리)
+     */
+    @Bean
+    public StringRedisTemplate redisStringTemplate(RedisConnectionFactory connectionFactory) {
+        return new StringRedisTemplate(connectionFactory);
     }
 }
