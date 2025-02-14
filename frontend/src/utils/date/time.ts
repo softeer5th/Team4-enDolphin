@@ -46,3 +46,9 @@ export const formatTimeStringToNumber = (timeString: string): number => {
   const [hours, minutes] = timeString.split(':');
   return Number(hours) * HOUR + Number(minutes);
 };
+
+export const getMinuteDiff = (startTime: Date, endTime: Date): number => { 
+  const MINUTE_IN_MILLISECONDS = 60000;
+  const diff = endTime.getTime() - startTime.getTime();
+  return Math.floor(diff / MINUTE_IN_MILLISECONDS);
+};

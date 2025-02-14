@@ -1,14 +1,12 @@
-import Button from '@/components/Button';
 import { Flex } from '@/components/Flex';
 import { Close } from '@/components/Icon';
-import { Text } from '@/components/Text';
 import { vars } from '@/theme/index.css';
-import { formatTimeToColonString } from '@/utils/date/format';
 
 import type { CandidateScheduleGetResponse } from '../../model';
 import { mockedCandidateScheduleGetResponse } from '../../model';
 import Header from './Header';
 import { backdropStyle, containerStyle, contentContainerStyle, topBarStyle } from './index.css';
+import MainContent from './MainContent';
 
 // TODO: 라우팅 param 정의 위치 옮기기
 interface CandidateScheduleDetailParams {
@@ -21,15 +19,27 @@ const CandidateScheduleDetail = () => {
   const mockData = mockedCandidateScheduleGetResponse;
   const params = {
     adjustCount: 1,
-    startTime: new Date(),
-    endTime: new Date(new Date().getTime() + 2 * 60 * 60 * 1000),
+    startTime: mockData.startDateTime,
+    endTime: mockData.endDateTime,
   };
   return (
     <>
       <div className={backdropStyle} />
       <Flex className={containerStyle} direction='column'>
         <TopBar />
-        <Content {...mockData} {...params} />
+        <Content
+          {...{
+            ...mockData,
+            participants: mockData.participants.map(participant => ({
+              ...participant,
+              events: participant.events.map(event => ({
+                ...event,
+                status: event.status as 'fixed' | 'adjustable' | 'notInRange',
+              })),
+            })),
+          }}
+          {...params}
+        />
       </Flex>
     </>
   );
@@ -41,13 +51,23 @@ const TopBar = () => (
     className={topBarStyle}
     justify='flex-end'
   >
-    <Close fill={vars.color.Ref.Netural[500]} width={24} />
+    <Close
+      clickable
+      fill={vars.color.Ref.Netural[500]}
+      width={24}
+    />
   </Flex>
 );
 
 const Content = ({ ...props }: CandidateScheduleGetResponse & CandidateScheduleDetailParams) => (
-  <Flex className={contentContainerStyle} width='full'>
+  <Flex
+    className={contentContainerStyle}
+    direction='column'
+    justify='flex-start'
+    width='full'
+  >
     <Header {...props} />
+    <MainContent {...props} />
   </Flex>
 );
 
