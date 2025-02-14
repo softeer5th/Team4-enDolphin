@@ -93,6 +93,26 @@ export const formatDateToWeekDates = (date: Date | null): Date[] => {
 
 /**
  * 
+ * @param date - 날짜 객체.
+ * @returns - 특정 날짜가 포함된 주의 첫째 날과 마지막 날의 날짜 객체.
+ */
+
+export const formatDateToWeekRange = (date: Date): {
+  startDate: Date;
+  endDate: Date;
+} => {
+  const selected = new Date(date);
+  const firstDateOfWeek = new Date(selected);
+  firstDateOfWeek.setDate(firstDateOfWeek.getDate() - selected.getDay());
+  
+  const lastDateOfWeek = new Date(firstDateOfWeek);
+  lastDateOfWeek.setDate(firstDateOfWeek.getDate() + 6);
+
+  return { startDate: firstDateOfWeek, endDate: lastDateOfWeek };
+};
+
+/**
+ * 
  * @param date1 - 비교할 날짜1
  * @param date2 - 비교할 날짜2
  * @returns 두 날짜가 같은 날짜인지 여부
@@ -196,3 +216,4 @@ export const isAllday = (startDate: Date | null, endDate: Date | null): boolean 
   if (!startDate || !endDate) return false;
   return endDate.getTime() - startDate.getTime() >= ALL_DAY;
 };
+

@@ -25,16 +25,25 @@ const buildFetchOptions = (options?: RequestInit): RequestInit => {
   return { ...defaultOptions, ...options, headers };
 };
 
+interface FetchRequest {
+  params?: Record<string, string>;
+  body?: BodyInit;
+  options?: RequestOptions;
+}
+
 export const executeFetch = async (
   method: Method,
   endpoint: string,
-  body?: BodyInit,
-  options?: RequestOptions,
+  { params, body, options }: FetchRequest = {},
 ) => {
   const fetchOptions = buildFetchOptions(options);
+  const queryString = params && Object.keys(params).length > 0
+    ? `?${new URLSearchParams(params).toString()}`
+    : '';
+  const fullUrl = `${BASE_URL}${endpoint}${queryString}`;
 
   try {
-    const response = await fetch(BASE_URL + endpoint, {
+    const response = await fetch(fullUrl, {
       method: method,
       body: JSON.stringify(body),
       ...fetchOptions,
@@ -67,8 +76,12 @@ export const executeFetch = async (
  * @property delete - 지정된 엔드포인트로 HTTP DELETE 요청을 보냅니다.
  */
 export const request = {
-  get: (endpoint: string) => executeFetch('GET', endpoint),
-  post: (endpoint: string, body?: BodyInit) => executeFetch('POST', endpoint, body),
-  put: (endpoint: string, body?: BodyInit) => executeFetch('PUT', endpoint, body),
-  delete: (endpoint: string) => executeFetch('DELETE', endpoint),
+  get: (endpoint: string, props?: Pick<FetchRequest, 'params'>) =>
+    executeFetch('GET', endpoint, props),
+  post: (endpoint: string, props?: Pick<FetchRequest, 'body'>) => 
+    executeFetch('POST', endpoint, props),
+  put: (endpoint: string, props?: Pick<FetchRequest, 'body'>) => 
+    executeFetch('PUT', endpoint, props),
+  delete: (endpoint: string) => 
+    executeFetch('DELETE', endpoint),
 };
