@@ -27,7 +27,7 @@ const buildFetchOptions = (options?: RequestInit): RequestInit => {
 
 interface FetchRequest {
   params?: Record<string, string>;
-  body?: BodyInit;
+  body?: Record<string, unknown>;
   options?: RequestOptions;
 }
 

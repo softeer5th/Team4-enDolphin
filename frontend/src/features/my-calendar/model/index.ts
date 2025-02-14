@@ -11,9 +11,13 @@ const PersonalEventDTO = z.object({
   calendarId: z.string(),
 });
 
-const PersonalEventResponse = z.array(PersonalEventDTO.omit({ syncWithGoogleCalendar: true }));
+const PersonalEventResponse = PersonalEventDTO.omit({ syncWithGoogleCalendar: true });
+const PersonalEventRequest = PersonalEventDTO.omit(
+  { id: true, googleEventId: true, calendarId: true },
+);
 
 export type PersonalEventDTO = z.infer<typeof PersonalEventDTO>;
 export type PersonalEventResponse = z.infer<typeof PersonalEventResponse>;
+export type PersonalEventRequest = z.infer<typeof PersonalEventRequest>;
 
 export type PopoverType = 'add' | 'edit';

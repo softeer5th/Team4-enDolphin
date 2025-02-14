@@ -4,7 +4,7 @@ import { Calendar } from '@/components/Calendar';
 import { useSharedCalendarContext } from '@/components/Calendar/context/SharedCalendarContext';
 import { useSelectTime } from '@/hooks/useSelectTime';
 import { formatDateToWeekRange } from '@/utils/date';
-import { formatDateToBarString } from '@/utils/date/format';
+import { formatDateToBarString, formatDateToDateTimeString } from '@/utils/date/format';
 
 import { usePersonalEventsQuery } from '../../api/queries';
 import type { PersonalEventResponse } from '../../model';
@@ -12,18 +12,11 @@ import { CalendarCardList } from '../CalendarCardList';
 import { SchedulePopover } from '../SchedulePopover';
 import { calendarStyle, containerStyle } from './index.css';
 
-// TODO: 자주 쓰이는 타입 정의는 따로 빼기
-interface DateRange {
-  startDate: Date | null;
-  endDate: Date | null;
-}
-
 const CalendarTable = (
-  { personalEvents = [] }: { personalEvents?: PersonalEventResponse },
+  { personalEvents = [] }: { personalEvents?: PersonalEventResponse[] },
 ) => {
   const { handleMouseUp, ...time } = useSelectTime();
   const [open, setOpen] = useState(false);
-  const [cards, setCards] = useState<DateRange[]>([]);
 
   const handleMouseUpAddSchedule = () => {
     setOpen(true);
@@ -31,15 +24,13 @@ const CalendarTable = (
 
   return (
     <div className={containerStyle}>
+      {open && 
       <SchedulePopover
-        cards={cards}
-        endDate={time.doneEndTime}
-        isOpen={open}
-        setCards={setCards}
+        endDateTime={formatDateToDateTimeString(time.doneEndTime)}
         setIsOpen={setOpen}
-        startDate={time.doneStartTime}
+        startDateTime={formatDateToDateTimeString(time.doneStartTime)}
         type='add'
-      />
+      />}
       <CalendarCardList cards={personalEvents} />
       <Calendar.Table 
         context={{

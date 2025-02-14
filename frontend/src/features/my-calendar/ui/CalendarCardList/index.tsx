@@ -4,11 +4,6 @@ import { calcPositionByDate } from '@/utils/date/position';
 import type { PersonalEventDTO } from '../../model';
 import { CalendarCard } from '../CalendarCard';
 
-interface DateRange {
-  startDate: Date | null;
-  endDate: Date | null;
-}
-
 const calcSize = (height: number) => {
   if (height < TIME_HEIGHT) return 'sm';
   if (height < TIME_HEIGHT * 2.5) return 'md';
@@ -19,7 +14,7 @@ export const CalendarCardList = (
   { cards }: { cards: Omit<PersonalEventDTO, 'syncWithGoogleCalendar'>[] },
 ) => (
   <>
-    {cards.map((card, idx) => {
+    {cards.map((card) => {
       const start = new Date(card.startDateTime);
       const end = new Date(card.endDateTime);
       const { x: sx, y: sy } = calcPositionByDate(start);

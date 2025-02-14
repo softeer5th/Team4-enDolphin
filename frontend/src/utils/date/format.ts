@@ -1,4 +1,5 @@
 import { getYearMonthDay } from './date';
+import { formatDateToTimeString } from './time';
 
 /**
  * 날짜 객체를 YY-MM-DD 형식의 문자열로 변환합니다.
@@ -15,4 +16,9 @@ export const formatDateToDotString = (date: Date | null): string => {
   if (!date) return '';
   const { year, month, day } = getYearMonthDay(date);
   return `${year}. ${month.toString().padStart(2, '0')}. ${day.toString().padStart(2, '0')}`;
+};
+
+export const formatDateToDateTimeString = (date: Date | null): string => {
+  if (!date) return '';
+  return `${formatDateToBarString(date)}T${formatDateToTimeString(date)}:00`;
 };

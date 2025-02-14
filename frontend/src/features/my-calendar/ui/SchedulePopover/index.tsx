@@ -1,42 +1,40 @@
-import type { Dispatch, SetStateAction } from 'react';
-
+import { useFormRef } from '@/hooks/useFormRef';
 import { isSaturday } from '@/utils/date';
 import { calcPositionByDate } from '@/utils/date/position';
 
-import type { PopoverType } from '../../model';
+import { usePersonalEventMutation } from '../../api/mutations';
+import type { PersonalEventRequest, PopoverType } from '../../model';
 import { containerStyle } from './index.css';
 import { PopoverButton } from './PopoverButton';
 import { PopoverForm } from './PopoverForm';
 import { Title } from './Title';
 
-interface DateRange {
-  startDate: Date | null;
-  endDate: Date | null;
-}
-
-interface SchedulePopoverProps {
-  isOpen: boolean;
+interface SchedulePopoverProps extends Pick<PersonalEventRequest, 'endDateTime' | 'startDateTime'> {
   setIsOpen: (isOpen: boolean) => void;
   type: PopoverType;
-  startDate: Date | null;
-  endDate: Date | null;
-
-  // TODO: API 연결 후 삭제
-  cards: DateRange[];
-  setCards: Dispatch<SetStateAction<DateRange[]>>;
 }
 
-export const SchedulePopover = (
-  { isOpen, setIsOpen, type, startDate, endDate, setCards }: SchedulePopoverProps,
-) => {
-  if (!isOpen) return null;
-  const { x: sx, y: sy } = calcPositionByDate(startDate);
+const defaultEvent: Omit<PersonalEventRequest, 'endDateTime' | 'startDateTime'> = {
+  title: '제목 없음',
+  isAdjustable: false,
+  syncWithGoogleCalendar: true,
+};
 
+export const SchedulePopover = (
+  { setIsOpen, type, ...event }: SchedulePopoverProps,
+) => {
+  const { mutate } = usePersonalEventMutation();
+  const startDate = new Date(event.startDateTime);
+  const { x: sx, y: sy } = calcPositionByDate(startDate);
+  const { valuesRef, handleChange } = useFormRef<PersonalEventRequest>({
+    startDateTime: event.startDateTime,
+    endDateTime: event.endDateTime,
+    ...defaultEvent,
+  });
   const handleClickSave = () => {
-    setCards((prev: DateRange[]) => [...prev, { startDate, endDate }]);
+    mutate(valuesRef.current);
     setIsOpen(false);
   };
-
   const handleClickDelete = () => {
     // do something
   };
@@ -44,7 +42,6 @@ export const SchedulePopover = (
   return(
     <dialog
       className={containerStyle}
-      open={isOpen}
       style={{
         position: 'absolute',
         left: isSaturday(startDate) 
@@ -53,7 +50,7 @@ export const SchedulePopover = (
       }}
     >
       <Title type={type} />
-      <PopoverForm endDate={endDate} startDate={startDate} />
+      <PopoverForm handleChange={handleChange} valuesRef={valuesRef} />
       <PopoverButton
         onClickDelete={handleClickDelete}
         onClickSave={handleClickSave}

@@ -7,9 +7,9 @@ import { personalEventKeys } from './keys';
 export const usePersonalEventsQuery = (
   data: Pick<PersonalEventDTO, 'startDateTime' | 'endDateTime'>,
 ) => {
-  const { data: personalEvents, isLoading } = useQuery<PersonalEventResponse>({
+  const { data: personalEvents, isLoading } = useQuery<PersonalEventResponse[]>({
     queryKey: personalEventKeys.detail(data), 
-    queryFn: () => personalEventApi.getPersonalEvents(data),
+    queryFn: () => personalEventApi.getPersonalEvent(data),
   });
 
   return { personalEvents, isLoading };

@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router';
 
 import GlobalNavBar from '@/layout/GlobalNavBar';
-import DiscussionCreateFinishPage from '@/pages/DiscussionCreateFinishPage';
+import DiscussionCreateFinishPage from '@/pages/DiscussionPage/DiscussionCreateFinishPage';
 
 const DiscussionCreateFinish = () => (
   <>
