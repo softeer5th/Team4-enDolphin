@@ -1,12 +1,13 @@
 package endolphin.backend.global.redis;
 
-import endolphin.backend.domain.discussion.entity.Discussion;
-import java.time.LocalDate;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.ZoneOffset;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.RedisSystemException;
 import org.springframework.data.redis.connection.RedisCommandsProvider;
 import org.springframework.data.redis.connection.RedisConnection;
@@ -34,7 +35,7 @@ public class DiscussionBitmapService {
      * LocalDateTime을 분 단위의 long 값(에포크 기준 분 값)으로 변환.
      */
     private long convertToMinuteKey(LocalDateTime dateTime) {
-        return dateTime.toEpochSecond(ZoneOffset.ofHours(9)) / 60;
+        return dateTime.toEpochSecond(ZoneOffset.UTC) / 60;
     }
 
     /**
@@ -148,4 +149,48 @@ public class DiscussionBitmapService {
         return CompletableFuture.completedFuture(null);
     }
 
+    public Map<Long, byte[]> getDataOfDiscussionId(Long discussionId, Long startDateTime,
+        Long endDateTime) {
+        String pattern = discussionId + ":*";
+        ScanOptions scanOptions = ScanOptions.scanOptions().match(pattern).count(1000).build();
+
+        return redisTemplate.execute((RedisConnection connection) -> {
+            RedisKeyCommands keyCommands = connection.keyCommands();
+            Map<Long, byte[]> map = new HashMap<>();
+
+            try (Cursor<byte[]> cursor = keyCommands.scan(scanOptions)) {
+                while (cursor.hasNext()) {
+                    byte[] rawKey = cursor.next();
+                    String keyStr = new String(rawKey, StandardCharsets.UTF_8);
+                    int colonIndex = keyStr.indexOf(':');
+
+                    if (colonIndex != -1 && colonIndex < keyStr.length() - 1) {
+                        String minuteKeyStr = keyStr.substring(colonIndex + 1);
+                        try {
+                            long minuteKey = Long.parseLong(minuteKeyStr);
+
+                            if (isBetweenTimeRange(minuteKey, startDateTime, endDateTime)) {
+                                byte[] data = connection.stringCommands().get(rawKey);
+                                map.put(minuteKey, data);
+                            }
+                        } catch (NumberFormatException e) {
+                            // 예: log.warn("Invalid minuteKey: {}", minuteKeyStr, e);
+                        }
+                    }
+                }
+            }
+            return map;
+        });
+    }
+
+    private boolean isBetweenTimeRange(long minuteKey, long startDateTime, long endDateTime) {
+        if (minuteKey < startDateTime || minuteKey > endDateTime) {
+            return false;
+        }
+
+        long timeRangeStart = startDateTime % 1440;
+        long timeRangeEnd = endDateTime % 1440;
+
+        return minuteKey % 1440 >= timeRangeStart && minuteKey % 1440 <= timeRangeEnd;
+    }
 }

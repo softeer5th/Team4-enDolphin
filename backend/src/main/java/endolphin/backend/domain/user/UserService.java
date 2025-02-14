@@ -1,5 +1,6 @@
 package endolphin.backend.domain.user;
 
+import endolphin.backend.domain.user.dto.UserIdNameDto;
 import endolphin.backend.global.google.dto.GoogleUserInfo;
 import endolphin.backend.global.google.dto.GoogleTokens;
 import endolphin.backend.domain.user.entity.User;
@@ -7,6 +8,7 @@ import endolphin.backend.global.error.exception.ApiException;
 import endolphin.backend.global.error.exception.ErrorCode;
 import endolphin.backend.global.security.UserContext;
 import endolphin.backend.global.security.UserInfo;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -30,6 +32,11 @@ public class UserService {
     public User getUser(Long userId) {
         return userRepository.findById(userId)
             .orElseThrow(() -> new ApiException(ErrorCode.USER_NOT_FOUND));
+    }
+
+    @Transactional(readOnly = true)
+    public List<UserIdNameDto> getUserIdNameInIds(List<Long> userIds) {
+        return userRepository.findUserIdNameInIds(userIds);
     }
 
     public void updateAccessToken(User user, String accessToken) {

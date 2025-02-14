@@ -14,14 +14,15 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PersonalEventRepository extends JpaRepository<PersonalEvent, Long> {
 
-    List<PersonalEvent> findByUserAndStartTimeBetween(User user, LocalDateTime start, LocalDateTime end);
+    List<PersonalEvent> findByUserAndStartTimeBetween(User user, LocalDateTime start,
+        LocalDateTime end);
 
     @Query("SELECT p FROM PersonalEvent p " +
         "WHERE p.user = :user " +
-        "   AND ((CAST(p.startTime AS localdate) BETWEEN :startDate AND :endDate " +
-        "   OR CAST(p.endTime AS localdate) BETWEEN :startDate AND :endDate) " +
-        "   OR ((CAST(p.startTime AS localdate) <= :startDate AND CAST(p.startTime AS localdate) <= :endDate) " +
-        "   AND (CAST(p.endTime AS localdate) >= :startDate AND CAST(p.endTime AS localdate) >= :endDate)))")
+        "AND (" +
+        "   CAST(p.startTime as localdate) <= :endDate " +
+        "   AND CAST(p.endTime as localdate) >= :startDate" +
+        ")")
     List<PersonalEvent> findFilteredPersonalEvents(
         @Param("user") User user,
         @Param("startDate") LocalDate startDate,

@@ -2,9 +2,12 @@ package endolphin.backend.domain.discussion;
 
 import endolphin.backend.domain.discussion.entity.Discussion;
 import endolphin.backend.domain.discussion.entity.DiscussionParticipant;
+import endolphin.backend.domain.user.UserService;
+import endolphin.backend.domain.user.dto.UserIdNameDto;
 import endolphin.backend.domain.user.entity.User;
 import endolphin.backend.global.error.exception.ApiException;
 import endolphin.backend.global.error.exception.ErrorCode;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,38 +19,85 @@ import org.springframework.transaction.annotation.Transactional;
 public class DiscussionParticipantService {
 
     private final DiscussionParticipantRepository discussionParticipantRepository;
+    private final UserService userService;
 
     public void addDiscussionParticipant(Discussion discussion, User user) {
-        Long index = discussionParticipantRepository.findMaxIndexByDiscussionId(discussion.getId())
-            .orElseThrow(() -> new ApiException(ErrorCode.DISCUSSION_NOT_FOUND));
-        index += 1;
+        Long offset = discussionParticipantRepository.findMaxOffsetByDiscussionId(
+            discussion.getId());
+
+        offset += 1;
+
+        if (offset >= 15) {
+            throw new ApiException(ErrorCode.DISCUSSION_PARTICIPANT_EXCEED_LIMIT);
+        }
+
         DiscussionParticipant participant;
-        if (index == 0) {
+        if (offset == 0) {
             participant = DiscussionParticipant.builder()
                 .discussion(discussion)
                 .user(user)
                 .isHost(true)
-                .index(index)
+                .userOffset(offset)
                 .build();
         } else {
             participant = DiscussionParticipant.builder()
                 .discussion(discussion)
                 .user(user)
                 .isHost(false)
-                .index(index)
+                .userOffset(offset)
                 .build();
         }
         discussionParticipantRepository.save(participant);
     }
 
     @Transactional(readOnly = true)
-    public List<User> getUsersByDiscussionId(Long discussionId){
+    public List<User> getUsersByDiscussionId(Long discussionId) {
         return discussionParticipantRepository.findUsersByDiscussionId(discussionId);
     }
 
     @Transactional(readOnly = true)
-    public Long getDiscussionParticipantIndex(Long discussionId, Long userId) {
-        return discussionParticipantRepository.findIndexByDiscussionIdAndUserId(discussionId, userId)
+    public Long getDiscussionParticipantOffset(Long discussionId, Long userId) {
+        return discussionParticipantRepository.findOffsetByDiscussionIdAndUserId(discussionId,
+                userId)
             .orElseThrow(() -> new ApiException(ErrorCode.DISCUSSION_PARTICIPANT_NOT_FOUND));
+    }
+
+    @Transactional(readOnly = true)
+    public int getFilter(Long discussionId, List<Long> userIds) {
+
+        if(userIds == null || userIds.isEmpty()) {
+            return 0;
+        }
+
+        List<Long> userOffsets = discussionParticipantRepository.findOffsetsByDiscussionIdAndUserIds(
+            discussionId, userIds);
+
+        int filter = 0;
+
+        for (Long offset : userOffsets) {
+            filter |= (1 << 15 - offset);
+        }
+
+        return filter;
+    }
+
+    @Transactional(readOnly = true)
+    public List<UserIdNameDto> getUsersFromData(Long discussionId, int data) {
+        if(data == 0) {
+            return new ArrayList<>();
+        }
+
+        List<Long> userOffsets = new ArrayList<>();
+
+        for (int i = 0; i < 16; i++) {
+            if ((data & (1 << (15 - i))) != 0) {
+                userOffsets.add((long) i);
+            }
+        }
+
+        List<Long> userIds = discussionParticipantRepository.findUserIdsByDiscussionIdAndOffset(
+            discussionId, userOffsets);
+
+        return userService.getUserIdNameInIds(userIds);
     }
 }

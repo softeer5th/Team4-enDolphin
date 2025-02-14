@@ -107,4 +107,10 @@ public class DiscussionService {
 
         return duration.toMillis();
     }
+
+    @Transactional(readOnly = true)
+    public Discussion getDiscussionById(Long discussionId) {
+        return discussionRepository.findById(discussionId)
+            .orElseThrow(() -> new ApiException(ErrorCode.DISCUSSION_NOT_FOUND));
+    }
 }
