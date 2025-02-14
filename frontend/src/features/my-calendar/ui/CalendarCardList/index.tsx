@@ -29,10 +29,10 @@ export const CalendarCardList = (
       return (
         <CalendarCard
           endTime={end}
-          key={idx}
+          key={card.id}
           size={calcSize(height)}
           startTime={start}
-          status='adjustable'
+          status={card.isAdjustable ? 'adjustable' : 'fixed'}
           style={{
             width: 'calc((100% - 72px) / 7)',
             height,
@@ -40,7 +40,7 @@ export const CalendarCardList = (
             left: `calc(((100% - 72px) / 7 * ${sx}) + 72px)`,
             top: 16 + sy,
           }}
-          title='새 일정 제목이 개길면 어떻게 될까?'
+          title={card.title}
         />
       );
     })}

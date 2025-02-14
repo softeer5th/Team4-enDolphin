@@ -63,6 +63,7 @@ export const MyCalendar = () => {
   return (
     <Calendar {...calendar} className={calendarStyle}>
       <Calendar.Core />
+      <Calendar.Header />
       {isLoading ? <div>로딩중...</div> : <CalendarTable personalEvents={personalEvents} />}
     </Calendar>
   );
