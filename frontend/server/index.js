@@ -19,15 +19,6 @@ const createServer = async () =>{
 
   app.use(vite.middlewares);
 
-  app.use((req, res, next) => {
-    if (req.url !== '/landing' && !cookies(req.headers.cookie).get('accessToken')) {
-      res.writeHead(302, { Location: '/landing' });
-      res.end();
-    } else {
-      next();
-    }
-  });
-
   app.use(express.static(path.resolve(dirname, 'public')));
 
   app.use('*', async (req, res, next) => {
