@@ -16,6 +16,8 @@ public enum ErrorCode {
     DISCUSSION_NOT_FOUND(HttpStatus.NOT_FOUND, "D001", "Discussion not found"),
     EMPTY_SELECTED_USER_IDS(HttpStatus.BAD_REQUEST, "D002", "Empty Selected User IDs"),
     DISCUSSION_NOT_ONGOING(HttpStatus.BAD_REQUEST, "D002", "Discussion not ongoing"),
+    TOO_MANY_FAILED_ATTEMPTS(HttpStatus.FORBIDDEN, "D003", "Too many failed attempts"),
+    PASSWORD_REQUIRED(HttpStatus.BAD_REQUEST, "D004", "Password required"),
 
     // PersonalEvent
     PERSONAL_EVENT_NOT_FOUND(HttpStatus.NOT_FOUND, "P001", "Personal Event not found"),
