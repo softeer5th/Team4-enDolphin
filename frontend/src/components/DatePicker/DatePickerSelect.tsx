@@ -2,7 +2,6 @@ import { useState } from 'react';
 
 import { useClickOutside } from '@/hooks/useClickOutside';
 
-import { Flex } from '../Flex';
 import type { CommonDatePickerProps } from '.';
 import DatePickerSelectProvider from './context/DatePickerSelectProvider';
 import Header from './Header';
