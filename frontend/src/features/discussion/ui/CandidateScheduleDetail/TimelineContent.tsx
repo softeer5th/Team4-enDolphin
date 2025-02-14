@@ -1,16 +1,20 @@
 
 import { Flex } from '@/components/Flex';
+import { Text } from '@/components/Text';
 import Tooltip from '@/components/Tooltip';
+import { vars } from '@/theme/index.css';
 
 import type { Participant, ScheduleEvent } from '../../model';
-import { timelineHeaderStyle } from './mainContent.css';
-import { 
+import {
+  adjustRangeTimeBlockStyle,
   timelineBlockContainerStyle,
   timelineBlockRowStyle,
   timelineBlockStyle,
   timelineCanvasStyle,
   timelineCanvasWrapperStyle,
   timelineColumnStyle,
+  timelineHeaderStyle,
+  timelineHeaderTimeTextStyle,
 } from './timelineContent.css';
 import { calculateBlockStyle, getGridTimes } from './timelineHelper';
 
@@ -24,12 +28,9 @@ const TimelineContent = ({ participants, meetingStart, meetingEnd }: {
   const gridTimes = getGridTimes(meetingStart, meetingEnd, GRID_HORIZONTAL_COUNT);
   return (
     <Flex direction='column' width='full'>
-      <TimelineHeader
-        endTime={meetingEnd}
-        startTime={meetingStart}
-      />
       <Flex
         className={timelineCanvasWrapperStyle}
+        direction='column'
         justify='center'
       >
         <TimelineCanvas
@@ -43,9 +44,10 @@ const TimelineContent = ({ participants, meetingStart, meetingEnd }: {
   );
 };
 
-const TimelineHeader = ({ startTime: _, endTime: __ }: {
+const TimelineHeader = ({ startTime: _, endTime: __, gridTimes }: {
   startTime: Date;
   endTime: Date;
+  gridTimes: Date[];
 }) => (
   <Flex
     align='center'
@@ -55,6 +57,29 @@ const TimelineHeader = ({ startTime: _, endTime: __ }: {
     width='full'
   >
     <Tooltip color='blue' tailDirection='down'>Here!</Tooltip>
+    <Flex
+      align='center'
+      direction='row'
+      gap={100}
+      justify='space-between'
+      style={{ position: 'relative', height: '2.125rem' }}
+      width='full'
+    >
+      {gridTimes.map((stdTime, index) => (
+        <span
+          className={timelineHeaderTimeTextStyle}
+          key={index}
+          style={{ left: `${index * 34}px` }}
+        > 
+          <Text
+            color={vars.color.Ref.Netural[500]} 
+            typo='b3M'
+          >
+            {stdTime.getMinutes() === 0 && stdTime.getHours()}
+          </Text>
+        </span>
+      ))}
+    </Flex>
   </Flex>
 );
 
@@ -65,22 +90,57 @@ const TimelineCanvas = ({ gridTimes, meetingStart, meetingEnd, participants }: {
   meetingStart: Date;
   meetingEnd: Date;
 }) => (
-  <Flex
-    className={timelineCanvasStyle}
-    justify='center'
-    width='full'
-  >
-    {gridTimes.map((stdTime, index) => { 
-      const isInRange = meetingStart <= stdTime && stdTime < meetingEnd;
-      return <div className={timelineColumnStyle({ isInRange })} key={index} />;
-    })}
-    <TimelineBlocks
-      gridEnd={gridTimes[gridTimes.length - 1]}
-      gridStart={gridTimes[0]}
-      participants={participants}
+  <>
+    <TimelineHeader
+      endTime={meetingEnd}
+      gridTimes={gridTimes}
+      startTime={meetingStart}
     />
-  </Flex>
+    <Flex
+      className={timelineCanvasStyle}
+      justify='center'
+    >
+      {gridTimes.map((stdTime, index) => { 
+        const isInRange = meetingStart <= stdTime && stdTime < meetingEnd;
+        return <TimelineColumn isInRange={isInRange} key={`${stdTime}-${index}`} />;
+      })}
+      {/* <TimelineBlocks
+        gridEnd={gridTimes[gridTimes.length - 1]}
+        gridStart={gridTimes[0]}
+        participants={participants}
+      />
+      <AdjustTimeRangeBox 
+        gridEnd={gridTimes[gridTimes.length - 1]}
+        gridStart={gridTimes[0]}
+        meetingTimeEnd={meetingEnd}
+        meetingTimeStart={meetingStart}
+      /> */}
+    </Flex>
+  </>
 );
+
+const TimelineColumn = ({ isInRange, key }: { isInRange: boolean; key: string }) => (
+  <div className={timelineColumnStyle({ isInRange })} key={key} />
+);
+
+const AdjustTimeRangeBox = ({ meetingTimeStart, meetingTimeEnd, gridStart, gridEnd }: {
+  gridStart: Date;
+  gridEnd: Date;
+  meetingTimeStart: Date;
+  meetingTimeEnd: Date;
+}) => {
+  const { width } = calculateBlockStyle(
+    gridStart,
+    gridEnd,
+    meetingTimeStart,
+    meetingTimeEnd);
+  return (
+    <div 
+      className={adjustRangeTimeBlockStyle}
+      style={{ width: `${width}px` }}
+    />
+  );
+};
 
 const TimelineBlocks = ({ participants, gridStart, gridEnd }: {
   participants: Participant[];
@@ -117,7 +177,9 @@ const TimelineBlock = ({ gridStart, gridEnd, event }: {
   gridEnd: Date;
   event: ScheduleEvent;
 }) => {
-  const { left, width } = calculateBlockStyle(gridStart, gridEnd, event);
+  const { left, width } = calculateBlockStyle(
+    gridStart, gridEnd, event.startDateTime, event.endDateTime,
+  );
   return (
     <div
       className={timelineBlockStyle({ status: event.status })}

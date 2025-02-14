@@ -5,10 +5,24 @@ import { vars } from '@/theme/index.css';
 
 export const timelineCanvasWrapperStyle = style({
   alignSelf: 'center',
-  width: '37.5rem',
+  // width: '37.5rem',
+  width: 'fit-content',
   height: '100%',
   overflowY: 'scroll',
   overflowX: 'hidden',
+});
+
+export const timelineHeaderStyle = style({
+  position: 'relative',
+  alignSelf: 'center',
+  height: 'fit-content',
+  width: '42.5rem',
+});
+
+export const timelineHeaderTimeTextStyle = style({
+  position: 'absolute',
+  transform: 'translateX(-50%)',
+  color: vars.color.Ref.Netural[500],
 });
 
 export const timelineCanvasStyle = style({
@@ -75,4 +89,11 @@ export const timelineBlockStyle = recipe({
       },
     },
   },
+});
+
+export const adjustRangeTimeBlockStyle = style({
+  position: 'fixed',
+  height: '100%',
+  borderRadius: vars.radius[400],
+  border: `1px solid ${vars.color.Ref.Primary[400]}`,
 });

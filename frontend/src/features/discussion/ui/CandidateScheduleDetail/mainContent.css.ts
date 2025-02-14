@@ -4,6 +4,3 @@ export const mainContainerStyle = style({
 
 });
 
-export const timelineHeaderStyle = style({
-  overflowX: 'hidden',
-});

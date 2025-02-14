@@ -1,12 +1,10 @@
 import { getMinuteDiff } from '@/utils/date';
 
-import type { ScheduleEvent } from '../../model';
-
 // ########## Helpers for Processing Data ##########
 
 export const calculateMiddleTime = (startTime: Date, endTime: Date): Date => {
-  const centerTimestamp = (startTime.getTime() + endTime.getTime()) / 2;
-  return new Date(centerTimestamp);
+  const centerTime = (startTime.getTime() + endTime.getTime()) / 2;
+  return new Date(centerTime);
 };
 
 export const getGridTimes = (discussionStart: Date, discussionEnd: Date, gridCount = 10) => {
@@ -25,15 +23,16 @@ export const getGridTimes = (discussionStart: Date, discussionEnd: Date, gridCou
 export const calculateBlockStyle = (
   gridStart: Date,
   gridEnd: Date,
-  event: ScheduleEvent,
+  blockStart: Date,
+  blockEnd: Date,
   gridCount = 20,
 ) => {
   const BLOCK_WIDTH = 34;
   const BLOCK_WIDTH_PER_MINUTE = BLOCK_WIDTH / 30;
   const totalGridWidth = gridCount * BLOCK_WIDTH;
-  
-  const left = Math.max(getMinuteDiff(gridStart, event.startDateTime) * BLOCK_WIDTH_PER_MINUTE, 0);
-  const right = Math.max(getMinuteDiff(event.endDateTime, gridEnd) * BLOCK_WIDTH_PER_MINUTE, 0);
+
+  const left = Math.max(getMinuteDiff(gridStart, blockStart) * BLOCK_WIDTH_PER_MINUTE, 0);
+  const right = Math.max(getMinuteDiff(blockEnd, gridEnd) * BLOCK_WIDTH_PER_MINUTE, 0);
   const width = totalGridWidth - left - right;
   return { left, right, width };
 };
