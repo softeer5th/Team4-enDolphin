@@ -5,6 +5,7 @@ import endolphin.backend.domain.calendar.entity.Calendar;
 import endolphin.backend.domain.personal_event.PersonalEventService;
 import endolphin.backend.domain.user.UserService;
 import endolphin.backend.domain.user.entity.User;
+import endolphin.backend.global.config.GoogleCalendarProperties;
 import endolphin.backend.global.config.GoogleCalendarUrl;
 import endolphin.backend.global.error.exception.CalendarException;
 import endolphin.backend.global.error.exception.ErrorCode;
@@ -50,13 +51,12 @@ public class GoogleCalendarService {
     private final UserService userService;
     private final PersonalEventService personalEventService;
     private final GoogleOAuthService googleOAuthService;
+    private final GoogleCalendarProperties googleCalendarProperties;
 
     public void upsertGoogleCalendar(User user) {
         if (calendarService.isExistingCalendar(user.getId())) {
             Calendar calendar = calendarService.getCalendarByUserId(user.getId());
-            if (!calendar.getChannelExpiration().isAfter(LocalDateTime.now())) {
-                subscribeToCalendar(calendar, user);
-            }
+            subscribeToCalendar(calendar, user);
         } else {
             GoogleCalendarDto googleCalendarDto = getPrimaryCalendar(
                 user);
@@ -237,7 +237,8 @@ public class GoogleCalendarService {
             googleCalendarUrl.webhookUrl()); //TODO: 실제 도메인 엔드포인트로 변경
         body.add("token", user.getId().toString());
 
-        long expirationTime = Instant.now().plus(Duration.ofMinutes(3)).toEpochMilli();
+        long expirationTime = Instant.now().plus(Duration.ofMinutes(
+            googleCalendarProperties.subscribeDuration())).toEpochMilli();
         body.add("expiration", expirationTime); //TODO: 구독 만료 시간 설정, 현재 테스트용으로 5분
 
         try {

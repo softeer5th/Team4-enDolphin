@@ -159,7 +159,8 @@ public class PersonalEventService {
                     }
                 },
                 () -> {
-                    PersonalEvent personalEvent = PersonalEvent.from(googleEvent, user);
+                    PersonalEvent personalEvent =
+                        PersonalEvent.fromGoogleEvent(googleEvent, user, googleCalendarId);
                     personalEventRepository.save(personalEvent);
                     // 비트맵 수정
                     discussions.forEach(discussion -> {
