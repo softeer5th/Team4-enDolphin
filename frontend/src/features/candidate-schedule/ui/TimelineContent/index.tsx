@@ -6,21 +6,15 @@ import { Text } from '@/components/Text';
 import Tooltip from '@/components/Tooltip';
 import { vars } from '@/theme/index.css';
 
-import type { Participant, ScheduleEvent } from '../../model';
-import { calculateBlockStyle, getGridTimes, getRowTopOffset } from '../timelineHelper';
+import type { Participant } from '../../model';
+import TimelineCanvas from '../TImelineCanvas';
+import { getGridTimes, getRowTopOffset } from '../timelineHelper';
 import {
   bodyContainerStyle,
-  conflictRangeTimeBlockStyle,
   containerStyle,
   gridTimeContainerStyle,
   gridTimeTextStyle,
   overlayStyle,
-  timelineBlockContainerStyle,
-  timelineBlockRowStyle,
-  timelineBlockStyle,
-  timelineCanvasStyle,
-  timelineColumnContainerStyle,
-  timelineColumnStyle,
   timelineHeaderStyle,
 } from './index.css';
 import ParticipantList from './ParticipantList';
@@ -110,105 +104,4 @@ const TimelineHeader = ({ gridTimes, gridStartOffset }: {
   </Flex>
 );
 
-const TimelineCanvas = ({ gridTimes, conflictStart, conflictEnd, participants, gridStartOffset }: {
-  gridTimes: Date[];
-  participants: Participant[];
-  conflictStart: Date;
-  conflictEnd: Date;
-  gridStartOffset: number;
-}) => (
-  <Flex
-    className={timelineCanvasStyle}
-  >
-    <div style={{ position: 'relative', left: `${gridStartOffset}px` }}> 
-      <TimelineColumns
-        conflictEnd={conflictEnd}
-        conflictStart={conflictStart}
-        gridTimes={gridTimes}
-      />
-      <TimelineBlocks
-        gridStart={gridTimes[0]}
-        participants={participants}
-      />
-    </div>
-    <ConflictRangeBox
-      conflictTimeEnd={conflictEnd}
-      conflictTimeStart={conflictStart}
-      gridStart={gridTimes[0]}
-    />
-  </Flex>
-);
-
-const TimelineColumns = ({ conflictStart, conflictEnd, gridTimes }: {
-  conflictStart: Date; conflictEnd: Date; gridTimes: Date[];
-}) => (
-  <Flex
-    className={timelineColumnContainerStyle}
-    direction='row'
-    style={{ height: '100%' }}
-  >
-    {gridTimes.map((stdTime, idx) => { 
-      const isInRange = conflictStart <= stdTime && stdTime < conflictEnd;
-      return <div className={timelineColumnStyle({ isInRange })} key={`${stdTime}-${idx}`} />;
-    })}
-  </Flex>
-);
-
-const ConflictRangeBox = ({ conflictTimeStart, conflictTimeEnd, gridStart }: {
-  gridStart: Date;
-  conflictTimeStart: Date;
-  conflictTimeEnd: Date;
-}) => {
-  const { width } = calculateBlockStyle(
-    gridStart,
-    conflictTimeStart,
-    conflictTimeEnd);
-  return (
-    <div 
-      className={conflictRangeTimeBlockStyle}
-      style={{ width: `${width}px` }}
-    />
-  );
-};
-
-const TimelineBlocks = ({ participants, gridStart }: {
-  participants: Participant[];
-  gridStart: Date;
-}) => (
-  <Flex
-    className={timelineBlockContainerStyle}
-    direction='column'
-  >
-    {participants.map((participant) => (
-      <div
-        className={timelineBlockRowStyle}
-        key={participant.id}
-      >
-        {participant.events.map((event, index) => (
-          <TimelineBlock
-            event={event}
-            gridStart={gridStart}
-            key={index}
-          />
-        ))}
-      </div>
-    ))}
-  </Flex>
-);
-
-const TimelineBlock = ({ gridStart, event }: {
-  gridStart: Date;
-  event: ScheduleEvent;
-}) => {
-  const { left, width } = calculateBlockStyle(gridStart, event.startDateTime, event.endDateTime);
-  return (
-    <div
-      className={timelineBlockStyle({ status: event.status })}
-      style={{
-        left: `${left}px`,
-        width: `${width}px`,
-      }}
-    />
-  );
-};
 export default TimelineContent;
