@@ -64,7 +64,11 @@ class PersonalEventPreprocessorTest {
         Long userId = 200L;
         Long participantIndex = 2L;
         // Discussion, User, PersonalEvent 모킹
-        Discussion discussion = getAnotherDiscussion();
+        Discussion discussion = Mockito.mock(Discussion.class);
+        given(discussion.getId()).willReturn(1L);
+        given(discussion.getDiscussionStatus()).willReturn(DiscussionStatus.ONGOING);
+        given(discussion.getDateRangeStart()).willReturn(LocalDate.of(2024, 3, 10));
+        given(discussion.getDateRangeEnd()).willReturn(LocalDate.of(2024, 3, 20));
         User user = getUser();
 
         given(discussionParticipantService.getDiscussionParticipantOffset(anyLong(), anyLong()))
@@ -228,6 +232,7 @@ class PersonalEventPreprocessorTest {
     private Discussion getAnotherDiscussion() {
         Discussion discussion = Mockito.mock(Discussion.class);
         given(discussion.getId()).willReturn(1L);
+        given(discussion.getDiscussionStatus()).willReturn(DiscussionStatus.ONGOING);
         given(discussion.getDateRangeStart()).willReturn(LocalDate.of(2024, 3, 10));
         given(discussion.getDateRangeEnd()).willReturn(LocalDate.of(2024, 3, 20));
         given(discussion.getTimeRangeStart()).willReturn(LocalTime.of(20, 30));
