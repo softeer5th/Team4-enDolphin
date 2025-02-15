@@ -8,6 +8,7 @@ import endolphin.backend.domain.candidate_event.dto.RankViewResponse;
 import endolphin.backend.domain.discussion.dto.CandidateEventDetailsRequest;
 import endolphin.backend.domain.discussion.dto.CandidateEventDetailsResponse;
 import endolphin.backend.domain.discussion.dto.CreateDiscussionRequest;
+import endolphin.backend.domain.discussion.dto.DiscussionInfo;
 import endolphin.backend.domain.discussion.dto.DiscussionParticipantsResponse;
 import endolphin.backend.domain.discussion.dto.DiscussionResponse;
 import endolphin.backend.domain.shared_event.dto.SharedEventRequest;
@@ -54,6 +55,13 @@ public class DiscussionController {
         DiscussionResponse response = discussionService.createDiscussion(request);
         URI location = URIUtil.buildResourceUri(response.id());
         return ResponseEntity.created(location).body(response);
+    }
+
+    @GetMapping("/{discussionId}")
+    public ResponseEntity<DiscussionInfo> getDiscussionInfo(
+        @PathVariable @Min(1) Long discussionId) {
+        DiscussionInfo discussionInfo = discussionService.getDiscussionInfo(discussionId);
+        return ResponseEntity.ok(discussionInfo);
     }
 
     @Operation(summary = "논의 확정", description = "후보 일정을 해당 논의의 공유 일정으로 확정합니다.")
