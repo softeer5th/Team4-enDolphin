@@ -143,7 +143,7 @@ public class DiscussionService {
         LocalDateTime searchEndTime = midTime.plusHours(TIME_OFFSET);
 
         User currentUser = userService.getCurrentUser();
-        List<User> participants = discussionParticipantService.getUsersByDiscussionIdOrderByCreatedAt(
+        List<User> participants = discussionParticipantService.getUsersByDiscussionId(
             discussionId);
 
         if (!participants.contains(currentUser)) {

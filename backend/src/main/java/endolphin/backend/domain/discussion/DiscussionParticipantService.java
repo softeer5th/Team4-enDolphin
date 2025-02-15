@@ -105,9 +105,4 @@ public class DiscussionParticipantService {
     public List<Discussion> getDiscussionsByUserId(Long userId) {
         return discussionParticipantRepository.findDiscussionsByUserId(userId);
     }
-
-    @Transactional(readOnly = true)
-    public List<User> getUsersByDiscussionIdOrderByCreatedAt(Long discussionId) {
-        return discussionParticipantRepository.findUserByDiscussionIdOrderByJoin(discussionId);
-    }
 }
