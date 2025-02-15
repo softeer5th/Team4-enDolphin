@@ -124,4 +124,15 @@ public class DiscussionParticipantService {
         return discussionParticipantRepository.findIsHostByDiscussionIdAndUserId(discussionId, user.getId())
             .orElseThrow(() -> new ApiException(ErrorCode.DISCUSSION_PARTICIPANT_NOT_FOUND));
     }
+
+    @Transactional(readOnly = true)
+    public String getHostNameByDiscussionId(Long discussionId) {
+        return discussionParticipantRepository.findHostNameByDiscussionIdAndIsHost(discussionId)
+            .orElseThrow(() -> new ApiException(ErrorCode.DISCUSSION_HOST_NOT_FOUND));
+    }
+
+    public Boolean isFull(Long discussionId) {
+        Long offset = discussionParticipantRepository.findMaxOffsetByDiscussionId(discussionId);
+        return offset >= 14;
+    }
 }
