@@ -9,8 +9,11 @@ export const participantsContainerStyle = style({
 export const participantItemStyle = style({
   height: '4.25rem',
   width: '100%',
-  padding: vars.spacing[600],
-  borderRadius: vars.radius[400],
+  // padding: vars.spacing[600],
+  paddingRight: '1.0625rem',
   backgroundColor: vars.color.Ref.Netural[50],
   gap: '1.875rem',
+});
+
+export const profileContainerStyle = style({
 });

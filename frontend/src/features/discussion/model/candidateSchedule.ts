@@ -6,6 +6,12 @@ const CandidateScheduleGetRequest = z.object({
   selectedUserIdList: z.array(z.number()),
 });
 
+const ScheduleEventStatusSchema = z.union([
+  z.literal('adjustable'),
+  z.literal('fixed'),
+  z.literal('notInRange'),
+]);
+
 const ScheduleEvent = z.object({
   id: z.number(),
   startDateTime: z.date(),
@@ -30,6 +36,7 @@ const CandidateScheduleGetResponse = z.object({
 });
 
 export type ScheduleEvent = z.infer<typeof ScheduleEvent>;
+export type ScheduleEventStatus = z.infer<typeof ScheduleEventStatusSchema>;
 
 export type Participant = z.infer<typeof Participant>;
 
@@ -103,7 +110,8 @@ export const mockedCandidateScheduleGetResponse: CandidateScheduleGetResponse = 
           startDateTime: new Date('2025-03-01T11:30:00'),
           endDateTime: new Date('2025-03-01T12:30:00'),
           title: 'Design Review',
-          status: 'fixed',
+          // fixed -> adjustable
+          status: 'adjustable',
         },
         {
           id: 204,
@@ -131,7 +139,8 @@ export const mockedCandidateScheduleGetResponse: CandidateScheduleGetResponse = 
           startDateTime: new Date('2025-03-01T10:30:00'),
           endDateTime: new Date('2025-03-01T11:30:00'),
           title: 'Strategy Talk',
-          status: 'fixed',
+          // fixed -> adjustable
+          status: 'adjustable',
         },
         {
           id: 303,
@@ -185,11 +194,13 @@ export const mockedCandidateScheduleGetResponse: CandidateScheduleGetResponse = 
         },
       ],
     },
+    // Eva부터 끝까지는 이벤트가 1~2개, 회의시간(10:00~13:00)과 겹치지 않고, 모두 notInRange로 변경
     {
       id: 5,
       name: 'Eva',
       picture: 'https://example.com/images/eva.jpg',
       events: [
+        // 회의 전 이벤트
         {
           id: 501,
           startDateTime: new Date('2025-03-01T06:00:00'),
@@ -197,20 +208,7 @@ export const mockedCandidateScheduleGetResponse: CandidateScheduleGetResponse = 
           title: 'Morning Jog',
           status: 'notInRange',
         },
-        {
-          id: 502,
-          startDateTime: new Date('2025-03-01T10:00:00'),
-          endDateTime: new Date('2025-03-01T10:45:00'),
-          title: 'Team Kickoff',
-          status: 'fixed',
-        },
-        {
-          id: 503,
-          startDateTime: new Date('2025-03-01T11:00:00'),
-          endDateTime: new Date('2025-03-01T12:00:00'),
-          title: 'Project Update',
-          status: 'adjustable',
-        },
+        // 회의 후 이벤트
         {
           id: 504,
           startDateTime: new Date('2025-03-01T13:30:00'),
@@ -225,33 +223,13 @@ export const mockedCandidateScheduleGetResponse: CandidateScheduleGetResponse = 
       name: 'Frank',
       picture: 'https://example.com/images/frank.jpg',
       events: [
+        // 회의 전 이벤트만 선택 (1개)
         {
           id: 601,
           startDateTime: new Date('2025-03-01T09:00:00'),
           endDateTime: new Date('2025-03-01T09:45:00'),
           title: 'Preparation',
           status: 'notInRange',
-        },
-        {
-          id: 602,
-          startDateTime: new Date('2025-03-01T10:15:00'),
-          endDateTime: new Date('2025-03-01T11:15:00'),
-          title: 'Daily Standup',
-          status: 'adjustable',
-        },
-        {
-          id: 603,
-          startDateTime: new Date('2025-03-01T11:30:00'),
-          endDateTime: new Date('2025-03-01T12:30:00'),
-          title: 'Tech Sync',
-          status: 'fixed',
-        },
-        {
-          id: 604,
-          startDateTime: new Date('2025-03-01T12:45:00'),
-          endDateTime: new Date('2025-03-01T13:30:00'),
-          title: 'Wrap-up Discussion',
-          status: 'adjustable',
         },
       ],
     },
@@ -261,32 +239,20 @@ export const mockedCandidateScheduleGetResponse: CandidateScheduleGetResponse = 
       picture: 'https://example.com/images/grace.jpg',
       selected: true,
       events: [
-        {
-          id: 701,
-          startDateTime: new Date('2025-03-01T10:30:00'),
-          endDateTime: new Date('2025-03-01T11:00:00'),
-          title: 'Quick Sync',
-          status: 'fixed',
-        },
-        {
-          id: 702,
-          startDateTime: new Date('2025-03-01T13:15:00'),
-          endDateTime: new Date('2025-03-01T14:15:00'),
-          title: 'Post-Meeting Chat',
-          status: 'notInRange',
-        },
-        {
-          id: 703,
-          startDateTime: new Date('2025-03-01T09:50:00'),
-          endDateTime: new Date('2025-03-01T13:10:00'),
-          title: 'Extended Discussion',
-          status: 'adjustable',
-        },
+        // 회의 전 이벤트
         {
           id: 704,
           startDateTime: new Date('2025-03-01T08:00:00'),
           endDateTime: new Date('2025-03-01T09:00:00'),
           title: 'Morning Update',
+          status: 'notInRange',
+        },
+        // 회의 후 이벤트
+        {
+          id: 702,
+          startDateTime: new Date('2025-03-01T13:15:00'),
+          endDateTime: new Date('2025-03-01T14:15:00'),
+          title: 'Post-Meeting Chat',
           status: 'notInRange',
         },
       ],
@@ -296,6 +262,7 @@ export const mockedCandidateScheduleGetResponse: CandidateScheduleGetResponse = 
       name: 'Heidi',
       picture: 'https://example.com/images/heidi.jpg',
       events: [
+        // 회의 전 이벤트
         {
           id: 801,
           startDateTime: new Date('2025-03-01T07:30:00'),
@@ -303,20 +270,7 @@ export const mockedCandidateScheduleGetResponse: CandidateScheduleGetResponse = 
           title: 'Pre-briefing',
           status: 'notInRange',
         },
-        {
-          id: 802,
-          startDateTime: new Date('2025-03-01T10:00:00'),
-          endDateTime: new Date('2025-03-01T11:00:00'),
-          title: 'Status Update',
-          status: 'fixed',
-        },
-        {
-          id: 803,
-          startDateTime: new Date('2025-03-01T11:15:00'),
-          endDateTime: new Date('2025-03-01T12:15:00'),
-          title: 'Collaboration Session',
-          status: 'adjustable',
-        },
+        // 회의 후 이벤트
         {
           id: 804,
           startDateTime: new Date('2025-03-01T13:15:00'),
@@ -332,27 +286,7 @@ export const mockedCandidateScheduleGetResponse: CandidateScheduleGetResponse = 
       picture: 'https://example.com/images/ivan.jpg',
       selected: true,
       events: [
-        {
-          id: 901,
-          startDateTime: new Date('2025-03-01T09:45:00'),
-          endDateTime: new Date('2025-03-01T10:30:00'),
-          title: 'Initial Briefing',
-          status: 'adjustable',
-        },
-        {
-          id: 902,
-          startDateTime: new Date('2025-03-01T10:45:00'),
-          endDateTime: new Date('2025-03-01T11:45:00'),
-          title: 'Deep Dive',
-          status: 'fixed',
-        },
-        {
-          id: 903,
-          startDateTime: new Date('2025-03-01T12:30:00'),
-          endDateTime: new Date('2025-03-01T13:15:00'),
-          title: 'Closing Discussion',
-          status: 'adjustable',
-        },
+        // 회의 후 이벤트만 선택 (1개)
         {
           id: 904,
           startDateTime: new Date('2025-03-01T14:00:00'),
@@ -367,6 +301,7 @@ export const mockedCandidateScheduleGetResponse: CandidateScheduleGetResponse = 
       name: 'Jasmine',
       picture: 'https://example.com/images/jasmine.jpg',
       events: [
+        // 회의 전 이벤트
         {
           id: 1001,
           startDateTime: new Date('2025-03-01T08:00:00'),
@@ -374,20 +309,7 @@ export const mockedCandidateScheduleGetResponse: CandidateScheduleGetResponse = 
           title: 'Breakfast Meeting',
           status: 'notInRange',
         },
-        {
-          id: 1002,
-          startDateTime: new Date('2025-03-01T10:15:00'),
-          endDateTime: new Date('2025-03-01T11:15:00'),
-          title: 'Product Update',
-          status: 'adjustable',
-        },
-        {
-          id: 1003,
-          startDateTime: new Date('2025-03-01T11:30:00'),
-          endDateTime: new Date('2025-03-01T12:30:00'),
-          title: 'Sales Strategy',
-          status: 'fixed',
-        },
+        // 회의 후 이벤트
         {
           id: 1004,
           startDateTime: new Date('2025-03-01T13:30:00'),
