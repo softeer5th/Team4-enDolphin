@@ -120,12 +120,12 @@ const TimelineCanvas = ({ gridTimes, meetingStart, meetingEnd, participants, gri
         gridStart={gridTimes[0]}
         participants={participants}
       />
-      <AdjustTimeRangeBox 
-        gridStart={gridTimes[0]}
-        meetingTimeEnd={meetingEnd}
-        meetingTimeStart={meetingStart}
-      />
     </div>
+    <AdjustTimeRangeBox
+      gridStart={gridTimes[0]}
+      meetingTimeEnd={meetingEnd}
+      meetingTimeStart={meetingStart}
+    />
   </Flex>
 );
 
