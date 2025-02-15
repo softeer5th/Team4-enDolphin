@@ -55,9 +55,8 @@ public interface DiscussionParticipantRepository extends
         @Param("offset") List<Long> offsets
     );
 
-    @Query("SELECT dp " +
+    @Query("SELECT DISTINCT dp.discussion " +
         "FROM DiscussionParticipant dp " +
-        "JOIN FETCH dp.discussion d " +
         "WHERE dp.user.id = :userId")
     List<Discussion> findDiscussionsByUserId(@Param("userId") Long userId);
 }
