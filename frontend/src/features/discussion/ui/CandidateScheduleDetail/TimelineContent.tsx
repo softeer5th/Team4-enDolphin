@@ -78,8 +78,6 @@ const TimelineHeader = ({ startTime: _, endTime: __, gridTimes }: {
       direction='row'
       gap={100}
       justify='space-between'
-      // style={{ position: 'relative', height: '2.125rem', alignSelf: 'center' }}
-      // width='full'
     >
       {gridTimes.map((stdTime, index) => (
         <span
@@ -99,7 +97,7 @@ const TimelineHeader = ({ startTime: _, endTime: __, gridTimes }: {
   </Flex>
 );
 
-// TODO: 30분 단위에 종속적이지 않게 리팩토링하기 (canvas의 중앙 위치를 시간에 맞계 계산해야 함)
+// TODO-MAYBE: 30분 단위에 종속적이지 않게 리팩토링하기 (canvas의 중앙 위치를 시간에 맞계 계산해야 함)
 const TimelineCanvas = ({ gridTimes, meetingStart, meetingEnd, participants }: {
   gridTimes: Date[];
   participants: Participant[];
@@ -108,7 +106,6 @@ const TimelineCanvas = ({ gridTimes, meetingStart, meetingEnd, participants }: {
 }) => (
   <Flex
     className={timelineCanvasStyle}
-    // justify='center'
   >
     <TimelineColumns
       gridTimes={gridTimes}
@@ -116,15 +113,10 @@ const TimelineCanvas = ({ gridTimes, meetingStart, meetingEnd, participants }: {
       meetingStart={meetingStart}
     />
     <TimelineBlocks
-      gridEnd={gridTimes[gridTimes.length - 1]}
       gridStart={gridTimes[0]}
-      gridTimes={gridTimes}
-      meetingEnd={meetingEnd}
-      meetingStart={meetingStart}
       participants={participants}
     />
     <AdjustTimeRangeBox 
-      gridEnd={gridTimes[gridTimes.length - 1]}
       gridStart={gridTimes[0]}
       meetingTimeEnd={meetingEnd}
       meetingTimeStart={meetingStart}
@@ -147,15 +139,13 @@ const TimelineColumns = ({ meetingStart, meetingEnd, gridTimes }: {
   </Flex>
 );
 
-const AdjustTimeRangeBox = ({ meetingTimeStart, meetingTimeEnd, gridStart, gridEnd }: {
+const AdjustTimeRangeBox = ({ meetingTimeStart, meetingTimeEnd, gridStart }: {
   gridStart: Date;
-  gridEnd: Date;
   meetingTimeStart: Date;
   meetingTimeEnd: Date;
 }) => {
   const { width } = calculateBlockStyle(
     gridStart,
-    gridEnd,
     meetingTimeStart,
     meetingTimeEnd);
   return (
@@ -166,13 +156,9 @@ const AdjustTimeRangeBox = ({ meetingTimeStart, meetingTimeEnd, gridStart, gridE
   );
 };
 
-const TimelineBlocks = ({ participants, gridStart, gridEnd, gridTimes, meetingEnd, meetingStart }: {
+const TimelineBlocks = ({ participants, gridStart }: {
   participants: Participant[];
-  gridTimes: Date[];
-  meetingStart: Date;
-  meetingEnd: Date;
   gridStart: Date;
-  gridEnd: Date;
 }) => (
   <Flex
     className={timelineBlockContainerStyle}
@@ -186,7 +172,6 @@ const TimelineBlocks = ({ participants, gridStart, gridEnd, gridTimes, meetingEn
         {participant.events.map((event, index) => (
           <TimelineBlock
             event={event}
-            gridEnd={gridEnd}
             gridStart={gridStart}
             key={index}
           />
@@ -196,14 +181,11 @@ const TimelineBlocks = ({ participants, gridStart, gridEnd, gridTimes, meetingEn
   </Flex>
 );
 
-const TimelineBlock = ({ gridStart, gridEnd, event }: {
+const TimelineBlock = ({ gridStart, event }: {
   gridStart: Date;
-  gridEnd: Date;
   event: ScheduleEvent;
 }) => {
-  const { left, width } = calculateBlockStyle(
-    gridStart, gridEnd, event.startDateTime, event.endDateTime,
-  );
+  const { left, width } = calculateBlockStyle(gridStart, event.startDateTime, event.endDateTime);
   return (
     <div
       className={timelineBlockStyle({ status: event.status })}
@@ -211,9 +193,7 @@ const TimelineBlock = ({ gridStart, gridEnd, event }: {
         left: `${left}px`,
         width: `${width}px`,
       }}
-    >
-      {`${event.startDateTime.toLocaleTimeString()} ~ ${event.endDateTime.toLocaleTimeString()}`}
-    </div>
+    />
   );
 };
 export default TimelineContent;

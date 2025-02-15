@@ -5,14 +5,12 @@ import { vars } from '@/theme/index.css';
 
 export const timelineContainerStyle = style({
   height: '28.125rem',
-  // overflowX: 'hidden',
 });
 
 export const timelineCanvasWrapperStyle = style({
   width: '100%',
   height: '100%',
   overflowX: 'hidden',
-  overflowY: 'scroll',
 });
 
 export const timelineHeaderStyle = style({
@@ -30,7 +28,6 @@ export const gridTimeWrapperStyle = style({
   position: 'relative', 
   alignSelf: 'center',
   overflowX: 'hidden',
-  overflowY: 'hidden',
 });
 
 export const gridTimeTextStyle = style({
@@ -75,11 +72,12 @@ export const timelineColumnStyle = recipe({
 
 export const timelineBlockContainerStyle = style({
   position: 'relative',
-  // width: '100%',
   width: '42.5rem',
   gap: '0.53125rem',
   overflowX: 'hidden',
   flexShrink: 0,
+  // reason
+  overflowY: 'hidden',
 });
 
 export const timelineBlockRowStyle = style({
