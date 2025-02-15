@@ -8,6 +8,8 @@ import type { Participant, ScheduleEvent } from '../../model';
 import ParticipantList from './ParticipantList';
 import {
   adjustRangeTimeBlockStyle,
+  gridTimeTextStyle,
+  gridTimeWrapperStyle,
   timelineBlockContainerStyle,
   timelineBlockRowStyle,
   timelineBlockStyle,
@@ -17,7 +19,6 @@ import {
   timelineColumnStyle,
   timelineContainerStyle,
   timelineHeaderStyle,
-  timelineHeaderTimeTextStyle,
 } from './timelineContent.css';
 import { calculateBlockStyle, getGridTimes } from './timelineHelper';
 
@@ -73,15 +74,16 @@ const TimelineHeader = ({ startTime: _, endTime: __, gridTimes }: {
     <Tooltip color='blue' tailDirection='down'>Here!</Tooltip>
     <Flex
       align='center'
+      className={gridTimeWrapperStyle}
       direction='row'
       gap={100}
       justify='space-between'
-      style={{ position: 'relative', height: '2.125rem' }}
+      // style={{ position: 'relative', height: '2.125rem', alignSelf: 'center' }}
       // width='full'
     >
       {gridTimes.map((stdTime, index) => (
         <span
-          className={timelineHeaderTimeTextStyle}
+          className={gridTimeTextStyle}
           key={index}
           style={{ left: `${index * 34}px` }}
         > 
@@ -108,6 +110,11 @@ const TimelineCanvas = ({ gridTimes, meetingStart, meetingEnd, participants }: {
     className={timelineCanvasStyle}
     // justify='center'
   >
+    <TimelineColumns
+      gridTimes={gridTimes}
+      meetingEnd={meetingEnd}
+      meetingStart={meetingStart}
+    />
     <TimelineBlocks
       gridEnd={gridTimes[gridTimes.length - 1]}
       gridStart={gridTimes[0]}
@@ -116,12 +123,12 @@ const TimelineCanvas = ({ gridTimes, meetingStart, meetingEnd, participants }: {
       meetingStart={meetingStart}
       participants={participants}
     />
-    {/* <AdjustTimeRangeBox 
+    <AdjustTimeRangeBox 
       gridEnd={gridTimes[gridTimes.length - 1]}
       gridStart={gridTimes[0]}
       meetingTimeEnd={meetingEnd}
       meetingTimeStart={meetingStart}
-    /> */}
+    />
   </Flex>
 );
 
@@ -171,12 +178,7 @@ const TimelineBlocks = ({ participants, gridStart, gridEnd, gridTimes, meetingEn
     className={timelineBlockContainerStyle}
     direction='column'
   >
-    <TimelineColumns
-      gridTimes={gridTimes}
-      meetingEnd={meetingEnd}
-      meetingStart={meetingStart}
-    />
-    {participants.map((participant, index) => (
+    {participants.map((participant) => (
       <div
         className={timelineBlockRowStyle}
         key={participant.id}

@@ -5,7 +5,7 @@ import { vars } from '@/theme/index.css';
 
 export const timelineContainerStyle = style({
   height: '28.125rem',
-  overflowX: 'hidden',
+  // overflowX: 'hidden',
 });
 
 export const timelineCanvasWrapperStyle = style({
@@ -16,12 +16,24 @@ export const timelineCanvasWrapperStyle = style({
 });
 
 export const timelineHeaderStyle = style({
-  paddingLeft: '16.5rem',
+  marginLeft: '16.5rem',
   zIndex: 1,
   backgroundColor: vars.color.Ref.Netural['White'],
+  width: '37.5rem',
+  overflowX: 'hidden',
+  position: 'relative',
 });
 
-export const timelineHeaderTimeTextStyle = style({
+export const gridTimeWrapperStyle = style({
+  width: '42.5rem',
+  height: '2.125rem',
+  position: 'relative', 
+  alignSelf: 'center',
+  overflowX: 'hidden',
+  overflowY: 'hidden',
+});
+
+export const gridTimeTextStyle = style({
   position: 'absolute',
   transform: 'translateX(-50%)',
   color: vars.color.Ref.Netural[500],
@@ -30,6 +42,8 @@ export const timelineHeaderTimeTextStyle = style({
 export const timelineCanvasStyle = style({
   position: 'relative',
   width: '37.5rem',
+  height: 'fit-content',
+  overflowX: 'hidden',
 });
 
 export const timelineColumnContainerStyle = style({
@@ -37,6 +51,7 @@ export const timelineColumnContainerStyle = style({
   display: 'flex',
   flexDirection: 'row',
   height: '100%',
+  alignSelf: 'center',
 });
 
 export const timelineColumnStyle = recipe({
@@ -59,11 +74,12 @@ export const timelineColumnStyle = recipe({
 });
 
 export const timelineBlockContainerStyle = style({
-  position: 'absolute',
-  top: 0,
-  left: 0,
-  width: '100%',
+  position: 'relative',
+  // width: '100%',
+  width: '42.5rem',
   gap: '0.53125rem',
+  overflowX: 'hidden',
+  flexShrink: 0,
 });
 
 export const timelineBlockRowStyle = style({
