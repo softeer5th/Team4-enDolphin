@@ -5,6 +5,7 @@ import endolphin.backend.domain.discussion.dto.CandidateEventDetailsResponse;
 import endolphin.backend.domain.discussion.dto.CreateDiscussionRequest;
 import endolphin.backend.domain.discussion.dto.DiscussionInfo;
 import endolphin.backend.domain.discussion.dto.DiscussionResponse;
+import endolphin.backend.domain.discussion.dto.InvitationInfo;
 import endolphin.backend.domain.discussion.entity.Discussion;
 import endolphin.backend.domain.discussion.enums.DiscussionStatus;
 import endolphin.backend.domain.personal_event.PersonalEventService;
@@ -139,6 +140,22 @@ public class DiscussionService {
             discussion.getDuration(),
             discussion.getDeadline(),
             calculateTimeLeft(discussion.getDeadline())
+        );
+    }
+
+    public InvitationInfo getInvitationInfo(Long discussionId) {
+        Discussion discussion = getDiscussionById(discussionId);
+
+        return new InvitationInfo(
+            discussionParticipantService.getHostNameByDiscussionId(discussionId),
+            discussion.getTitle(),
+            discussion.getDateRangeStart(),
+            discussion.getDateRangeEnd(),
+            discussion.getTimeRangeStart(),
+            discussion.getTimeRangeEnd(),
+            discussion.getDuration(),
+            discussionParticipantService.isFull(discussionId),
+            discussion.getPassword() != null
         );
     }
 
