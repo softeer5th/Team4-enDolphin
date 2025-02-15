@@ -9,7 +9,7 @@ export const timelineContainerStyle = style({
 
 export const timelineCanvasWrapperStyle = style({
   width: '100%',
-  height: '100%',
+  height: '23.25rem',
   overflowX: 'hidden',
   overflowY: 'auto',
   scrollbarWidth: 'none',
@@ -114,7 +114,7 @@ export const timelineBlockStyle = recipe({
 
 export const conflictRangeTimeBlockStyle = style({
   position: 'fixed',
-  height: '24.015625rem',
+  height: '23.25rem',
   borderRadius: vars.radius[400],
   border: `1px solid ${vars.color.Ref.Primary[400]}`,
   pointerEvents: 'none',
