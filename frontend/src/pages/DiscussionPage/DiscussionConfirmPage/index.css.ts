@@ -13,7 +13,7 @@ export const backdropStyle = style({
 
 export const containerStyle = style({
   position: 'fixed',
-  transform: 'translate(-50%, -50%)',
+  transform: 'translate(-50%, -58%)',
   top: '50%',
   left: '50%',
 });
