@@ -4,10 +4,7 @@ import DiscussionCreateCard from '@/features/discussion/ui/DiscussionCreateCard'
 import { pageContainerStyle } from './index.css';
 
 const DiscussionCreateFinishPage = () => (
-  <Flex
-    align='center'
-    className={pageContainerStyle}
-  >
+  <Flex align='center' className={pageContainerStyle}>
     <DiscussionCreateCard />
   </Flex>
 );
