@@ -2,7 +2,7 @@ import Avatar from '@/components/Avatar';
 import { Flex } from '@/components/Flex';
 import { Text } from '@/components/Text';
 
-import type { Participant, ScheduleEventStatus } from '../../model';
+import type { Participant, ScheduleEventStatus } from '../model';
 import ChipAble from './ChipAble';
 import { participantItemStyle, participantsContainerStyle } from './participantList.css';
 

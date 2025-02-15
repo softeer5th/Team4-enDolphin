@@ -2,8 +2,8 @@ import { Flex } from '@/components/Flex';
 import { Close } from '@/components/Icon';
 import { vars } from '@/theme/index.css';
 
-import type { CandidateScheduleGetResponse } from '../../model';
-import { mockedCandidateScheduleGetResponse } from '../../model';
+import type { CandidateScheduleGetResponse } from '../model';
+import { mockedCandidateScheduleGetResponse } from '../model';
 import Header from './Header';
 import { backdropStyle, containerStyle, contentContainerStyle, topBarStyle } from './index.css';
 import MainContent from './MainContent';

@@ -1,6 +1,6 @@
 import { Flex } from '@/components/Flex';
 
-import type { Participant } from '../../model';
+import type { Participant } from '../model';
 import { mainContainerStyle } from './mainContent.css';
 import TimelineContent from './TimelineContent';
 

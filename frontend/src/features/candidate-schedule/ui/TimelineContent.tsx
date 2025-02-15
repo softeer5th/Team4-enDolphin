@@ -4,7 +4,7 @@ import { Text } from '@/components/Text';
 import Tooltip from '@/components/Tooltip';
 import { vars } from '@/theme/index.css';
 
-import type { Participant, ScheduleEvent } from '../../model';
+import type { Participant, ScheduleEvent } from '../model';
 import ParticipantList from './ParticipantList';
 import {
   adjustRangeTimeBlockStyle,
