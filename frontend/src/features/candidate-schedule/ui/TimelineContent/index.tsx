@@ -4,8 +4,8 @@ import { Text } from '@/components/Text';
 import Tooltip from '@/components/Tooltip';
 import { vars } from '@/theme/index.css';
 
-import type { Participant, ScheduleEvent } from '../model';
-import ParticipantList from './ParticipantList';
+import type { Participant, ScheduleEvent } from '../../model';
+import { calculateBlockStyle, getGridTimes } from '../timelineHelper';
 import {
   adjustRangeTimeBlockStyle,
   gridTimeContainerStyle,
@@ -19,8 +19,8 @@ import {
   timelineColumnStyle,
   timelineContainerStyle,
   timelineHeaderStyle,
-} from './timelineContent.css';
-import { calculateBlockStyle, getGridTimes } from './timelineHelper';
+} from './index.css';
+import ParticipantList from './ParticipantList';
 
 const GRID_HORIZONTAL_COUNT = 20;
 

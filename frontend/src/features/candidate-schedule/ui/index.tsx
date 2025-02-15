@@ -17,21 +17,20 @@ interface CandidateScheduleDetailParams {
 
 const CandidateScheduleDetail = () => {
   const mockData = mockedCandidateScheduleGetResponse;
-  const params = {
+  const mockRouteParams = {
     adjustCount: 1,
     startTime: mockData.startDateTime,
     endTime: mockData.endDateTime,
+
   };
   return (
-    <>
-      <Flex className={containerStyle} direction='column'>
-        <TopBar />
-        <Content
-          {...mockData}
-          {...params}
-        />
-      </Flex>
-    </>
+    <Flex className={containerStyle} direction='column'>
+      <TopBar />
+      <Content
+        {...mockData}
+        {...mockRouteParams}
+      />
+    </Flex>
   );
 };
 

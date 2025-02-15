@@ -1,7 +1,6 @@
 import { Flex } from '@/components/Flex';
 
 import type { Participant } from '../model';
-import { mainContainerStyle } from './mainContent.css';
 import TimelineContent from './TimelineContent';
 
 const MainContent = ({ participants, startTime, endTime }: { 
@@ -10,7 +9,6 @@ const MainContent = ({ participants, startTime, endTime }: {
   endTime: Date;
 }) => (
   <Flex
-    className={mainContainerStyle}
     direction='column'
     gap={200}
     width='full'
