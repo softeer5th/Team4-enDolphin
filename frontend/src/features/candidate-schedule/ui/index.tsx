@@ -2,11 +2,12 @@ import { Flex } from '@/components/Flex';
 import { Close } from '@/components/Icon';
 import { vars } from '@/theme/index.css';
 
-import type { CandidateScheduleGetResponse } from '../model';
+import type { CandidateScheduleGetResponse, Participant } from '../model';
 import { mockedCandidateScheduleGetResponse } from '../model';
 import Header from './Header';
 import { containerStyle, contentContainerStyle, topBarStyle } from './index.css';
-import MainContent from './MainContent';
+import TimelineContent from './TimelineContent';
+import { splitParticipantsBySelection } from './timelineHelper';
 
 // TODO: 라우팅 param 정의 위치 옮기기
 interface CandidateScheduleDetailParams {
@@ -21,12 +22,19 @@ const CandidateScheduleDetail = () => {
     adjustCount: 1,
     startTime: mockData.startDateTime,
     endTime: mockData.endDateTime,
-
+    selectedParticipantIds: [1, 3, 4, 5, 6, 7, 8],
   };
+  const { selectedParticipants, ignoredParticipants } = splitParticipantsBySelection(
+    mockData.participants, 
+    mockRouteParams.selectedParticipantIds,
+  );
+
   return (
     <Flex className={containerStyle} direction='column'>
       <TopBar />
       <Content
+        ignoredParticipants={ignoredParticipants}
+        selectedParticipants={selectedParticipants}
         {...mockData}
         {...mockRouteParams}
       />
@@ -48,7 +56,12 @@ const TopBar = () => (
   </Flex>
 );
 
-const Content = ({ ...props }: CandidateScheduleGetResponse & CandidateScheduleDetailParams) => (
+interface ContentProps extends CandidateScheduleGetResponse, CandidateScheduleDetailParams {
+  selectedParticipants: Participant[];
+  ignoredParticipants: Participant[];
+}
+
+const Content = ({ selectedParticipants, ignoredParticipants, ...props }: ContentProps) => (
   <Flex
     className={contentContainerStyle}
     direction='column'
@@ -56,7 +69,13 @@ const Content = ({ ...props }: CandidateScheduleGetResponse & CandidateScheduleD
     width='full'
   >
     <Header {...props} />
-    <MainContent {...props} />
+    <TimelineContent
+      conflictEnd={props.endTime}
+      conflictStart={props.startTime} 
+      ignoredParticipants={ignoredParticipants}
+      participants={props.participants}
+      selectedParticipants={selectedParticipants}
+    />
   </Flex>
 );
 

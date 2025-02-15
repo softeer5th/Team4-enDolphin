@@ -1,62 +1,74 @@
 
+import { useRef } from 'react';
+
 import { Flex } from '@/components/Flex';
 import { Text } from '@/components/Text';
 import Tooltip from '@/components/Tooltip';
 import { vars } from '@/theme/index.css';
 
 import type { Participant, ScheduleEvent } from '../../model';
-import { calculateBlockStyle, getGridTimes } from '../timelineHelper';
+import { calculateBlockStyle, getGridTimes, getRowTopOffset } from '../timelineHelper';
 import {
+  bodyContainerStyle,
   conflictRangeTimeBlockStyle,
+  containerStyle,
   gridTimeContainerStyle,
   gridTimeTextStyle,
+  overlayStyle,
   timelineBlockContainerStyle,
   timelineBlockRowStyle,
   timelineBlockStyle,
   timelineCanvasStyle,
-  timelineCanvasWrapperStyle,
   timelineColumnContainerStyle,
   timelineColumnStyle,
-  timelineContainerStyle,
   timelineHeaderStyle,
 } from './index.css';
 import ParticipantList from './ParticipantList';
 
-const GRID_HORIZONTAL_COUNT = 20;
-
-const TimelineContent = ({ participants, conflictStart, conflictEnd }: { 
-  participants: Participant[]; 
+interface TimelineContentProps {
+  participants: Participant[];
   conflictStart: Date;
   conflictEnd: Date;
-}) => {
-  const { gridTimes, gridStartOffset } = getGridTimes(
-    conflictStart, conflictEnd, GRID_HORIZONTAL_COUNT,
-  );
+  selectedParticipants: Participant[];
+  ignoredParticipants: Participant[];
+}
+
+const TimelineContent = (props: TimelineContentProps) => {
+  const { gridTimes, gridStartOffset } = getGridTimes(props.conflictStart, props.conflictEnd);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const overlayRef = useRef<HTMLDivElement>(null);
+  const handleScroll = () => {
+    if (scrollRef.current && overlayRef.current) {
+      overlayRef.current.style.transform = `translateY(-${scrollRef.current.scrollTop}px)`;
+    }
+  };
   return (
     <Flex
-      className={timelineContainerStyle}
+      className={containerStyle}
       direction='column'
       width='full'
     >
-      <TimelineHeader
-        gridStartOffset={gridStartOffset}
-        gridTimes={gridTimes}
-      />
-      <Flex
-        className={timelineCanvasWrapperStyle}
-        direction='row'
-        gap={500}
-        justify='space-between'
+      <TimelineHeader gridStartOffset={gridStartOffset} gridTimes={gridTimes} />
+      <div
+        className={bodyContainerStyle}
+        onScroll={handleScroll}
+        ref={scrollRef}
       >
-        <ParticipantList participants={participants} />
+        <ParticipantList participants={props.participants} />
         <TimelineCanvas
-          conflictEnd={conflictEnd}
-          conflictStart={conflictStart}
+          {...props}
           gridStartOffset={gridStartOffset}
           gridTimes={gridTimes}
-          participants={participants}
         />
-      </Flex>
+      </div>
+      <div
+        className={overlayStyle}
+        ref={overlayRef}
+        style={{ 
+          top: getRowTopOffset(props.selectedParticipants.length) + 72,
+          height: getRowTopOffset(props.ignoredParticipants.length) + 60,
+        }}
+      />
     </Flex>
   );
 };

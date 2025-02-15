@@ -3,16 +3,33 @@ import { recipe } from '@vanilla-extract/recipes';
 
 import { vars } from '@/theme/index.css';
 
-export const timelineContainerStyle = style({
+export const containerStyle = style({
+  position: 'relative',
   height: '28.125rem',
 });
 
-export const timelineCanvasWrapperStyle = style({
-  width: '100%',
+export const overlayStyle = style({
+  position: 'absolute',
+  left: -36,
+  // bottom: 0,
+  width: '58.5rem',
+  height: 100,
+  backgroundColor: vars.color.Ref.Netural[500],
+  opacity: 0.5,
+  pointerEvents: 'none',
+});
+
+export const bodyContainerStyle = style({
+  display: 'flex',
+  flexDirection: 'row',
+  gap: vars.spacing[500],
+  justifyContent: 'space-between',
+  alignItems: 'flex-start',
+
+  position: 'relative',
   height: '23.25rem',
   overflowX: 'hidden',
   overflowY: 'auto',
-  scrollbarWidth: 'none',
 });
 
 export const timelineHeaderStyle = style({

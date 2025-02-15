@@ -25,6 +25,6 @@ export const topBarStyle = style({
 export const contentContainerStyle = style({
   flex: 1,
   padding: `${vars.spacing[600]} ${vars.spacing[900]} ${vars.spacing[900]} ${vars.spacing[900]}`,
-  overflowY: 'auto',
+  overflow: 'hidden',
 });
 
