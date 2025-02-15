@@ -64,7 +64,11 @@ class PersonalEventPreprocessorTest {
         Long userId = 200L;
         Long participantIndex = 2L;
         // Discussion, User, PersonalEvent 모킹
-        Discussion discussion = getAnotherDiscussion();
+        Discussion discussion = Mockito.mock(Discussion.class);
+        given(discussion.getId()).willReturn(1L);
+        given(discussion.getDiscussionStatus()).willReturn(DiscussionStatus.ONGOING);
+        given(discussion.getDateRangeStart()).willReturn(LocalDate.of(2024, 3, 10));
+        given(discussion.getDateRangeEnd()).willReturn(LocalDate.of(2024, 3, 20));
         User user = getUser();
 
         given(discussionParticipantService.getDiscussionParticipantOffset(anyLong(), anyLong()))
@@ -160,6 +164,60 @@ class PersonalEventPreprocessorTest {
         then(discussionBitmapService).should(times(33)).setBitValue(anyLong(), any(LocalDateTime.class), anyLong(), anyBoolean());
     }
 
+    @Test
+    @DisplayName("논의 시간이 23:30 까지 일 경우")
+    public void test6() {
+        // given
+        Long userId = 200L;
+        Long participantIndex = 2L;
+        // Discussion, User, PersonalEvent 모킹
+        // 20:30 ~ 23:30
+        Discussion discussion = getAnotherDiscussion();
+        User user = getUser();
+
+        given(discussionParticipantService.getDiscussionParticipantOffset(anyLong(), anyLong()))
+            .willReturn(participantIndex);
+
+        // count : 1 + 6
+        PersonalEvent personalEvent = mock(PersonalEvent.class);
+        given(personalEvent.getStartTime()).willReturn(LocalDateTime.of(2024, 3, 15, 23, 0, 0));
+        given(personalEvent.getEndTime()).willReturn(LocalDateTime.of(2024, 3, 16, 23, 40, 0));
+        given(personalEvent.getId()).willReturn(5L);
+
+        // when
+        preprocessor.preprocess(List.of(personalEvent), discussion, user);
+
+        // then
+        then(discussionBitmapService).should(times(1 + 6)).setBitValue(anyLong(), any(LocalDateTime.class), anyLong(), anyBoolean());
+    }
+
+    @Test
+    @DisplayName("논의 시간이 23:30까지 일 때 테스트")
+    public void test7() {
+        // given
+        Long userId = 200L;
+        Long participantIndex = 2L;
+        // Discussion, User, PersonalEvent 모킹
+        // 20:30 ~ 23:30
+        Discussion discussion = getAnotherDiscussion();
+        User user = getUser();
+
+        given(discussionParticipantService.getDiscussionParticipantOffset(anyLong(), anyLong()))
+            .willReturn(participantIndex);
+
+        // count : 5
+        PersonalEvent personalEvent = mock(PersonalEvent.class);
+        given(personalEvent.getStartTime()).willReturn(LocalDateTime.of(2024, 3, 15, 20, 0, 0));
+        given(personalEvent.getEndTime()).willReturn(LocalDateTime.of(2024, 3, 16, 1, 0, 0));
+        given(personalEvent.getId()).willReturn(5L);
+
+        // when
+        preprocessor.preprocess(List.of(personalEvent), discussion, user);
+
+        // then
+        then(discussionBitmapService).should(times(6)).setBitValue(anyLong(), any(LocalDateTime.class), anyLong(), anyBoolean());
+    }
+
     private Discussion getDiscussion() {
         Discussion discussion = Mockito.mock(Discussion.class);
         given(discussion.getId()).willReturn(1L);
@@ -177,6 +235,8 @@ class PersonalEventPreprocessorTest {
         given(discussion.getDiscussionStatus()).willReturn(DiscussionStatus.ONGOING);
         given(discussion.getDateRangeStart()).willReturn(LocalDate.of(2024, 3, 10));
         given(discussion.getDateRangeEnd()).willReturn(LocalDate.of(2024, 3, 20));
+        given(discussion.getTimeRangeStart()).willReturn(LocalTime.of(20, 30));
+        given(discussion.getTimeRangeEnd()).willReturn(LocalTime.of(23, 30));
         return discussion;
     }
 
