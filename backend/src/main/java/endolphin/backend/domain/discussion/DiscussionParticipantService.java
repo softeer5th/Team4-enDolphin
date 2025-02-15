@@ -131,6 +131,7 @@ public class DiscussionParticipantService {
             .orElseThrow(() -> new ApiException(ErrorCode.DISCUSSION_HOST_NOT_FOUND));
     }
 
+    @Transactional(readOnly = true)
     public Boolean isFull(Long discussionId) {
         Long offset = discussionParticipantRepository.findMaxOffsetByDiscussionId(discussionId);
         return offset >= 14;
