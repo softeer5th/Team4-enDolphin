@@ -6,19 +6,38 @@ import type { Participant, ScheduleEventStatus } from '../../model';
 import ChipAble from './ChipAble';
 import { participantItemStyle, participantsContainerStyle } from './participantList.css';
 
-const ParticipantList  = ({ participants }: { participants: Participant[] }) => (
+interface ParticipantListProps {
+  selectedParticipants: Participant[];
+  ignoredParticipants: Participant[];
+}
+
+const ParticipantList  = ({ selectedParticipants, ignoredParticipants }: ParticipantListProps) => (
   <Flex
     className={participantsContainerStyle}
     direction='column'
     gap={200}
   >
-    {participants.map((participant) => (
-      <ParticipantItem key={participant.id} participant={participant} />
+    {selectedParticipants.map((participant) => (
+      <ParticipantItem
+        isIgnoredParticipant={false}
+        key={participant.id}
+        participant={participant}
+      />
+    ))}
+    {ignoredParticipants.map((participant) => (
+      <ParticipantItem
+        isIgnoredParticipant={true}
+        key={participant.id}
+        participant={participant}
+      />
     ))}
   </Flex>
 );
 
-const ParticipantItem = ({ participant }: { participant: Participant }) => {
+const ParticipantItem = ({ participant, isIgnoredParticipant }: { 
+  participant: Participant;
+  isIgnoredParticipant: boolean;
+}) => {
   const chipStatus = getChipStatus(participant);
   return (
     <Flex
@@ -30,7 +49,7 @@ const ParticipantItem = ({ participant }: { participant: Participant }) => {
         <Avatar imageUrls={[participant.picture]} size='lg' />
         <Text typo='b2M'>{participant.name}</Text>
       </Flex>
-      {chipStatus !== 'notInRange' &&
+      {!isIgnoredParticipant && chipStatus !== 'notInRange' &&
         <ChipAble isAdjustable={chipStatus === 'adjustable'} />}
     </Flex>
   );

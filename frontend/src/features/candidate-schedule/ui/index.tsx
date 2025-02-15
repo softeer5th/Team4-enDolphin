@@ -73,7 +73,6 @@ const Content = ({ selectedParticipants, ignoredParticipants, ...props }: Conten
       conflictEnd={props.endTime}
       conflictStart={props.startTime} 
       ignoredParticipants={ignoredParticipants}
-      participants={props.participants}
       selectedParticipants={selectedParticipants}
     />
   </Flex>

@@ -4,6 +4,9 @@ import { recipe } from '@vanilla-extract/recipes';
 import { vars } from '@/theme/index.css';
 
 export const containerStyle = style({
+  display: 'flex',
+  flexDirection: 'column',
+  width: '100%',
   position: 'relative',
   height: '28.125rem',
 });
@@ -11,7 +14,6 @@ export const containerStyle = style({
 export const overlayStyle = style({
   position: 'absolute',
   left: -36,
-  // bottom: 0,
   width: '58.5rem',
   height: 100,
   backgroundColor: vars.color.Ref.Netural[500],

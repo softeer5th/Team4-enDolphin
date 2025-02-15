@@ -26,7 +26,6 @@ import {
 import ParticipantList from './ParticipantList';
 
 interface TimelineContentProps {
-  participants: Participant[];
   conflictStart: Date;
   conflictEnd: Date;
   selectedParticipants: Participant[];
@@ -37,28 +36,28 @@ const TimelineContent = (props: TimelineContentProps) => {
   const { gridTimes, gridStartOffset } = getGridTimes(props.conflictStart, props.conflictEnd);
   const scrollRef = useRef<HTMLDivElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
+
+  // overlay의 posY를 스크롤과 동기화
   const handleScroll = () => {
     if (scrollRef.current && overlayRef.current) {
       overlayRef.current.style.transform = `translateY(-${scrollRef.current.scrollTop}px)`;
     }
   };
+
   return (
-    <Flex
-      className={containerStyle}
-      direction='column'
-      width='full'
-    >
+    <div className={containerStyle}>
       <TimelineHeader gridStartOffset={gridStartOffset} gridTimes={gridTimes} />
       <div
         className={bodyContainerStyle}
         onScroll={handleScroll}
         ref={scrollRef}
       >
-        <ParticipantList participants={props.participants} />
+        <ParticipantList {...props} />
         <TimelineCanvas
           {...props}
           gridStartOffset={gridStartOffset}
           gridTimes={gridTimes}
+          participants={[...props.selectedParticipants, ...props.ignoredParticipants]}
         />
       </div>
       <div
@@ -66,10 +65,10 @@ const TimelineContent = (props: TimelineContentProps) => {
         ref={overlayRef}
         style={{ 
           top: getRowTopOffset(props.selectedParticipants.length) + 72,
-          height: getRowTopOffset(props.ignoredParticipants.length) + 60,
+          height: getRowTopOffset(props.ignoredParticipants.length) + 60, 
         }}
       />
-    </Flex>
+    </div>
   );
 };
 
@@ -111,7 +110,6 @@ const TimelineHeader = ({ gridTimes, gridStartOffset }: {
   </Flex>
 );
 
-// TODO-MAYBE: 30분 단위에 종속적이지 않게 리팩토링하기 (canvas의 중앙 위치를 시간에 맞계 계산해야 함)
 const TimelineCanvas = ({ gridTimes, conflictStart, conflictEnd, participants, gridStartOffset }: {
   gridTimes: Date[];
   participants: Participant[];
