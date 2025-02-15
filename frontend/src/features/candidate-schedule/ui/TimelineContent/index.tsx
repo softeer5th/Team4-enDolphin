@@ -7,7 +7,7 @@ import { vars } from '@/theme/index.css';
 import type { Participant, ScheduleEvent } from '../../model';
 import { calculateBlockStyle, getGridTimes } from '../timelineHelper';
 import {
-  adjustRangeTimeBlockStyle,
+  conflictRangeTimeBlockStyle,
   gridTimeContainerStyle,
   gridTimeTextStyle,
   timelineBlockContainerStyle,
@@ -121,7 +121,7 @@ const TimelineCanvas = ({ gridTimes, conflictStart, conflictEnd, participants, g
         participants={participants}
       />
     </div>
-    <AdjustTimeRangeBox
+    <ConflictRangeBox
       conflictTimeEnd={conflictEnd}
       conflictTimeStart={conflictStart}
       gridStart={gridTimes[0]}
@@ -144,7 +144,7 @@ const TimelineColumns = ({ conflictStart, conflictEnd, gridTimes }: {
   </Flex>
 );
 
-const AdjustTimeRangeBox = ({ conflictTimeStart, conflictTimeEnd, gridStart }: {
+const ConflictRangeBox = ({ conflictTimeStart, conflictTimeEnd, gridStart }: {
   gridStart: Date;
   conflictTimeStart: Date;
   conflictTimeEnd: Date;
@@ -155,7 +155,7 @@ const AdjustTimeRangeBox = ({ conflictTimeStart, conflictTimeEnd, gridStart }: {
     conflictTimeEnd);
   return (
     <div 
-      className={adjustRangeTimeBlockStyle}
+      className={conflictRangeTimeBlockStyle}
       style={{ width: `${width}px` }}
     />
   );

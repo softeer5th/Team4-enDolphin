@@ -112,7 +112,7 @@ export const timelineBlockStyle = recipe({
   },
 });
 
-export const adjustRangeTimeBlockStyle = style({
+export const conflictRangeTimeBlockStyle = style({
   position: 'fixed',
   height: '24.015625rem',
   borderRadius: vars.radius[400],
