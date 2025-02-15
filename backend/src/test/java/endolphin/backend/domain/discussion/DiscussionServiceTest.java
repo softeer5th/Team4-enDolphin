@@ -5,11 +5,16 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.within;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.atLeast;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import endolphin.backend.domain.discussion.dto.CandidateEventDetailsRequest;
+import endolphin.backend.domain.discussion.dto.CandidateEventDetailsResponse;
 import endolphin.backend.domain.discussion.dto.CreateDiscussionRequest;
 import endolphin.backend.domain.discussion.dto.DiscussionResponse;
 import endolphin.backend.domain.discussion.entity.Discussion;
@@ -21,6 +26,7 @@ import endolphin.backend.domain.shared_event.dto.SharedEventRequest;
 import endolphin.backend.domain.shared_event.dto.SharedEventDto;
 import endolphin.backend.domain.shared_event.dto.SharedEventWithDiscussionInfoResponse;
 import endolphin.backend.domain.user.UserService;
+import endolphin.backend.domain.user.dto.UserInfoWithPersonalEvents;
 import endolphin.backend.domain.user.entity.User;
 import endolphin.backend.global.error.exception.ApiException;
 import endolphin.backend.global.error.exception.ErrorCode;
@@ -30,7 +36,10 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import org.junit.jupiter.api.DisplayName;
@@ -38,6 +47,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -301,4 +311,171 @@ public class DiscussionServiceTest {
         verify(discussionRepository, atLeast(2)).save(any(Discussion.class));
     }
 
+    @Test
+    void retrieveCandidateEventDetails_ValidRequest_ReturnsCorrectResponse() {
+        // Given
+        User currentUser = Mockito.mock(User.class);
+
+        User participant1 = Mockito.mock(User.class);
+        User participant2 = Mockito.mock(User.class);
+
+        LocalDateTime now = LocalDateTime.of(2024, 2, 13, 12, 0);
+        LocalDateTime searchStartTime = now.minusHours(3);  // 09:00
+        LocalDateTime searchEndTime = now.plusHours(3);     // 15:00
+        LocalDateTime startTime = now.minusHours(1);        // 11:00
+        LocalDateTime endTime = now.plusHours(1);           // 13:00
+
+        // discussionId 설정
+        Long discussionId = 1L;
+
+        // Mock User 객체들의 동작 정의
+        given(currentUser.getId()).willReturn(1L);
+        given(currentUser.getName()).willReturn("Current User");
+        given(currentUser.getPicture()).willReturn("current_user.jpg");
+
+        given(participant1.getId()).willReturn(2L);
+        given(participant1.getName()).willReturn("Participant 1");
+        given(participant1.getPicture()).willReturn("participant1.jpg");
+
+        given(participant2.getId()).willReturn(3L);
+        given(participant2.getName()).willReturn("Participant 2");
+        given(participant2.getPicture()).willReturn("participant2.jpg");
+
+//        PersonalEvent event1 = Mockito.mock(PersonalEvent.class);
+//        PersonalEvent event2 = Mockito.mock(PersonalEvent.class);
+//
+//        // Mock Event 객체들의 동작 정의
+//        // participant1의 이벤트 (검색 범위 내)
+//        given(event1.getUser()).willReturn(participant1);
+//        given(event1.getStartTime()).willReturn(now.plusHours(2));  // 14:00
+//        given(event1.getEndTime()).willReturn(now.plusHours(3));    // 15:00
+//        given(event1.getTitle()).willReturn("Meeting 1");
+//
+//        // participant2의 이벤트 (검색 범위 밖)
+//        given(event2.getUser()).willReturn(participant2);
+//        given(event2.getStartTime()).willReturn(now.plusHours(4));  // 16:00
+//        given(event2.getEndTime()).willReturn(now.plusHours(5));    // 17:00
+//        given(event2.getTitle()).willReturn("Meeting 2");
+
+        // selectedUserIds 초기화 (participant1, participant2 선택)
+        List<Long> selectedUserIds = Arrays.asList(2L);
+
+        CandidateEventDetailsRequest request = new CandidateEventDetailsRequest(
+            startTime,
+            endTime,
+            selectedUserIds
+        );
+
+        List<User> participants = Arrays.asList(currentUser, participant1, participant2);
+
+        List<UserInfoWithPersonalEvents> personalEvents = Arrays.asList(
+            new UserInfoWithPersonalEvents(
+                currentUser.getId(),
+                currentUser.getName(),
+                currentUser.getPicture(),
+                false,
+                true,
+                Collections.emptyList()
+            ),
+            new UserInfoWithPersonalEvents(
+                participant1.getId(),
+                participant1.getName(),
+                participant1.getPicture(),
+                false,
+                true,
+                Collections.emptyList()
+            ),
+            new UserInfoWithPersonalEvents(
+                participant2.getId(),
+                participant2.getName(),
+                participant2.getPicture(),
+                true,
+                true,
+                Collections.emptyList()
+            )
+        );
+
+        given(userService.getCurrentUser()).willReturn(currentUser);
+        given(discussionParticipantService.getUsersByDiscussionIdOrderByCreatedAt(eq(discussionId)))
+            .willReturn(participants);
+        given(personalEventService.findUserInfoWithPersonalEventsByUsers(
+            anyList(), any(LocalDateTime.class), any(LocalDateTime.class), any(LocalDateTime.class), any(LocalDateTime.class), any(Map.class)))
+            .willReturn(personalEvents);
+
+        // When
+        CandidateEventDetailsResponse response = discussionService
+            .retrieveCandidateEventDetails(discussionId, request);
+
+        // Then
+        assertThat(response).isNotNull();
+        assertThat(response.discussionId()).isEqualTo(discussionId);
+        assertThat(response.startDateTime()).isEqualTo(startTime);
+        assertThat(response.endDateTime()).isEqualTo(endTime);
+        assertThat(response.participants()).hasSize(3);
+
+        // 사용자 순서 검증 (현재 사용자가 첫 번째)
+        assertThat(response.participants().get(0).id()).isEqualTo(currentUser.getId());
+        assertThat(response.participants().get(0).events()).isEmpty();
+
+        // participant2의 이벤트 검증
+        assertThat(response.participants().get(1).id()).isEqualTo(participant2.getId());
+        assertThat(response.participants().get(1).events()).isEmpty();
+
+
+        // participant1의 이벤트 검증
+        assertThat(response.participants().get(2).id()).isEqualTo(participant1.getId());
+        assertThat(response.participants().get(2).events()).isEmpty();
+    }
+
+    @Test
+    @DisplayName("후보 일정 가져오기 시간 범위 예외 발생")
+    public void testRetrieveCandidateEventDetails_error_timeRange() {
+        // Given
+        Long discussionId = 1L;
+        LocalDateTime startDateTime = LocalDateTime.of(2025, 2, 12, 10, 0);
+        LocalDateTime endDateTime = LocalDateTime.of(2025, 2, 12, 8, 0);
+        List<Long> selectedUserIdList = Arrays.asList(1L, 3L);
+        CandidateEventDetailsRequest request = new CandidateEventDetailsRequest(startDateTime,
+            endDateTime, selectedUserIdList);
+
+        // When & Then
+        assertThatThrownBy(
+            () -> discussionService.retrieveCandidateEventDetails(discussionId, request))
+            .isInstanceOf(ApiException.class)
+            .hasFieldOrPropertyWithValue("errorCode", ErrorCode.INVALID_DATE_TIME_RANGE);
+
+        // 날짜 범위 검증 단계에서 예외가 발생하므로 다른 서비스들은 호출되지 않아야 함
+        then(userService).shouldHaveNoInteractions();
+        then(discussionParticipantService).shouldHaveNoInteractions();
+        then(personalEventService).shouldHaveNoInteractions();
+    }
+
+    @Test
+    @DisplayName("후보 일정 가져오기, 논의에 포함되지 않는 사용자 예외")
+    public void testRetrieveCandidateEventDetails_error_userParticipant() {
+        // Given
+        Long discussionId = 1L;
+        LocalDateTime startDateTime = LocalDateTime.of(2025, 2, 12, 10, 0);
+        LocalDateTime endDateTime = LocalDateTime.of(2025, 2, 12, 12, 0);
+        List<Long> selectedUserIdList = Arrays.asList(1L, 3L);
+        CandidateEventDetailsRequest request = new CandidateEventDetailsRequest(startDateTime,
+            endDateTime, selectedUserIdList);
+
+        User currentUser = mock(User.class);
+
+        User otherUser = mock(User.class);
+
+        given(userService.getCurrentUser()).willReturn(currentUser);
+        given(discussionParticipantService.getUsersByDiscussionIdOrderByCreatedAt(discussionId))
+            .willReturn(Collections.singletonList(otherUser));
+
+        // When & Then
+        assertThatThrownBy(
+            () -> discussionService.retrieveCandidateEventDetails(discussionId, request))
+            .isInstanceOf(ApiException.class)
+            .hasFieldOrPropertyWithValue("errorCode", ErrorCode.INVALID_DISCUSSION_PARTICIPANT);
+
+        // 날짜 범위 검증 단계에서 예외가 발생하므로 다른 서비스들은 호출되지 않아야 함
+        then(personalEventService).shouldHaveNoInteractions();
+    }
 }

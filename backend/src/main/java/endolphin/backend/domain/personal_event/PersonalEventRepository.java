@@ -4,7 +4,6 @@ import endolphin.backend.domain.personal_event.entity.PersonalEvent;
 import endolphin.backend.domain.user.entity.User;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -30,4 +29,15 @@ public interface PersonalEventRepository extends JpaRepository<PersonalEvent, Lo
         @Param("endDate") LocalDate endDate);
 
     Optional<PersonalEvent> findByGoogleEventIdAndCalendarId(String googleEventId, String calendarId);
+
+    @Query("SELECT p "
+        + "FROM PersonalEvent p "
+        + "JOIN FETCH p.user u "
+        + "WHERE u.id IN :userIds "
+        + "AND p.startTime <= :endDateTime "
+        + "AND p.endTime >= :startDateTime")
+    List<PersonalEvent> findAllByUsersAndDateTimeRange(
+        @Param("userIds") List<Long> userIds,
+        @Param("startDateTime") LocalDateTime start,
+        @Param("endDateTime") LocalDateTime end);
 }

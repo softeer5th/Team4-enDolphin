@@ -1,5 +1,7 @@
 package endolphin.backend.domain.discussion;
 
+import endolphin.backend.domain.discussion.dto.CandidateEventDetailsRequest;
+import endolphin.backend.domain.discussion.dto.CandidateEventDetailsResponse;
 import endolphin.backend.domain.discussion.dto.CreateDiscussionRequest;
 import endolphin.backend.domain.discussion.dto.DiscussionResponse;
 import endolphin.backend.domain.discussion.entity.Discussion;
@@ -10,15 +12,20 @@ import endolphin.backend.domain.shared_event.dto.SharedEventRequest;
 import endolphin.backend.domain.shared_event.dto.SharedEventWithDiscussionInfoResponse;
 import endolphin.backend.domain.shared_event.dto.SharedEventDto;
 import endolphin.backend.domain.user.UserService;
+import endolphin.backend.domain.user.dto.UserInfoWithPersonalEvents;
 import endolphin.backend.domain.user.entity.User;
 import endolphin.backend.global.error.exception.ApiException;
 import endolphin.backend.global.error.exception.ErrorCode;
 import endolphin.backend.global.redis.DiscussionBitmapService;
 import endolphin.backend.global.security.PasswordEncoder;
+import endolphin.backend.global.util.Validator;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -116,6 +123,55 @@ public class DiscussionService {
         );
     }
 
+    @Transactional(readOnly = true)
+    public CandidateEventDetailsResponse retrieveCandidateEventDetails(
+        Long discussionId, CandidateEventDetailsRequest request) {
+        final int TIME_OFFSET = 4;
+
+        if (request.selectedUserIdList().isEmpty()) {
+            throw new ApiException(ErrorCode.EMPTY_SELECTED_USER_IDS);
+        }
+
+        LocalDateTime startTime = request.startDateTime();
+        LocalDateTime endTime = request.endDateTime();
+
+        Validator.validateDateTimeRange(startTime, endTime);
+
+        LocalDateTime midTime = calculateMidTime(startTime, endTime);
+
+        LocalDateTime searchStartTime = midTime.minusHours(TIME_OFFSET);
+        LocalDateTime searchEndTime = midTime.plusHours(TIME_OFFSET);
+
+        User currentUser = userService.getCurrentUser();
+        List<User> participants = discussionParticipantService.getUsersByDiscussionIdOrderByCreatedAt(
+            discussionId);
+
+        if (!participants.contains(currentUser)) {
+            throw new ApiException(ErrorCode.INVALID_DISCUSSION_PARTICIPANT);
+        }
+
+        Map<Long, Integer> selectedUserIdMap = new HashMap<>();
+        for (int i = 0; i < request.selectedUserIdList().size(); i++) {
+            selectedUserIdMap.put(request.selectedUserIdList().get(i), i);
+        }
+
+        List<UserInfoWithPersonalEvents> result0 =
+            personalEventService.findUserInfoWithPersonalEventsByUsers(
+                participants, searchStartTime, searchEndTime, startTime, endTime, selectedUserIdMap);
+
+        List<UserInfoWithPersonalEvents> sortedResult = getSortedUserInfoWithPersonalEvents(
+            result0, currentUser);
+
+        return new CandidateEventDetailsResponse(discussionId, startTime, endTime,
+            sortedResult);
+    }
+
+    @Transactional(readOnly = true)
+    public Discussion getDiscussionById(Long discussionId) {
+        return discussionRepository.findById(discussionId)
+            .orElseThrow(() -> new ApiException(ErrorCode.DISCUSSION_NOT_FOUND));
+    }
+
     private long calculateTimeLeft(LocalDate deadline) {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime deadlineDateTime = deadline.atTime(23, 59, 59);
@@ -124,9 +180,33 @@ public class DiscussionService {
         return duration.toMillis();
     }
 
-    @Transactional(readOnly = true)
-    public Discussion getDiscussionById(Long discussionId) {
-        return discussionRepository.findById(discussionId)
-            .orElseThrow(() -> new ApiException(ErrorCode.DISCUSSION_NOT_FOUND));
+    private LocalDateTime calculateMidTime(LocalDateTime startTime, LocalDateTime endTime) {
+        Duration duration = Duration.between(startTime, endTime);
+        duration = duration.dividedBy(2);
+
+        return startTime.plus(duration);
+    }
+
+    private List<UserInfoWithPersonalEvents> getSortedUserInfoWithPersonalEvents(
+        List<UserInfoWithPersonalEvents> result0, User currentUser) {
+        List<UserInfoWithPersonalEvents> currentUserList = new ArrayList<>();
+        List<UserInfoWithPersonalEvents> selectedUsersList = new ArrayList<>();
+        List<UserInfoWithPersonalEvents> othersList = new ArrayList<>();
+
+        for (UserInfoWithPersonalEvents userInfo : result0) {
+            if (userInfo.id().equals(currentUser.getId())) {
+                currentUserList.add(userInfo);
+            } else if (userInfo.selected()) {
+                selectedUsersList.add(userInfo);
+            } else {
+                othersList.add(userInfo);
+            }
+        }
+
+        List<UserInfoWithPersonalEvents> sortedResult = new ArrayList<>();
+        sortedResult.addAll(currentUserList);
+        sortedResult.addAll(selectedUsersList);
+        sortedResult.addAll(othersList);
+        return sortedResult;
     }
 }

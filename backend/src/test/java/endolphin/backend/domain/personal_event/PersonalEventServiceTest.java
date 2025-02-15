@@ -2,17 +2,21 @@ package endolphin.backend.domain.personal_event;
 
 import endolphin.backend.domain.discussion.DiscussionParticipantService;
 import endolphin.backend.domain.discussion.entity.Discussion;
-import endolphin.backend.domain.discussion.enums.DiscussionStatus;
 import endolphin.backend.domain.personal_event.dto.PersonalEventRequest;
 import endolphin.backend.domain.personal_event.dto.PersonalEventResponse;
+import endolphin.backend.domain.personal_event.dto.PersonalEventWithStatus;
 import endolphin.backend.domain.personal_event.entity.PersonalEvent;
+import endolphin.backend.domain.personal_event.enums.PersonalEventStatus;
 import endolphin.backend.domain.user.UserService;
+import endolphin.backend.domain.user.dto.UserInfoWithPersonalEvents;
 import endolphin.backend.domain.user.entity.User;
 import endolphin.backend.global.dto.ListResponse;
 import java.time.LocalDate;
 import endolphin.backend.global.google.dto.GoogleEvent;
 import endolphin.backend.global.google.enums.GoogleEventStatus;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -281,5 +285,168 @@ class PersonalEventServiceTest {
         User user = Mockito.mock(User.class);
         given(user.getId()).willReturn(1L);
         return user;
+    }
+
+    @Test
+    @DisplayName("사용자별 개인 일정 정보를 조회하고 일정 조정 필요 여부에 따라 정렬한다")
+    void findUserInfoWithPersonalEventsByUsers() {
+        // given
+        LocalDateTime now = LocalDateTime.of(2024, 2, 13, 12, 0);
+        LocalDateTime searchStartTime = now.minusHours(3);
+        LocalDateTime searchEndTime = now.plusHours(3);
+        LocalDateTime startTime = now.minusHours(1);
+        LocalDateTime endTime = now.plusHours(1);
+
+        // Mock User 객체 생성
+        User user1 = mock(User.class);
+        User user2 = mock(User.class);
+        User user3 = mock(User.class);
+
+        given(user1.getId()).willReturn(1L);
+        given(user1.getName()).willReturn("User 1");
+        given(user1.getPicture()).willReturn("picture1.jpg");
+
+        given(user2.getId()).willReturn(2L);
+        given(user2.getName()).willReturn("User 2");
+        given(user2.getPicture()).willReturn("picture2.jpg");
+
+        given(user3.getId()).willReturn(3L);
+        given(user3.getName()).willReturn("User 3");
+        given(user3.getPicture()).willReturn("picture3.jpg");
+
+        List<User> users = List.of(user1, user2, user3);
+
+        // Mock PersonalEvent 객체 생성
+        PersonalEvent event1 = mock(PersonalEvent.class);
+        PersonalEvent event2 = mock(PersonalEvent.class);
+        PersonalEvent event3 = mock(PersonalEvent.class);
+
+        // user1의 이벤트: 조정 필요 없음 (범위 밖)
+        given(event1.getUser()).willReturn(user1);
+        given(event1.getStartTime()).willReturn(now.plusHours(2));
+        given(event1.getEndTime()).willReturn(now.plusHours(3));
+
+        // user2의 이벤트: 조정 필요함 (범위 내)
+        given(event2.getUser()).willReturn(user2);
+        given(event2.getStartTime()).willReturn(startTime);
+        given(event2.getEndTime()).willReturn(endTime);
+
+        // user3의 이벤트: 조정 필요함 (범위와 겹침)
+        given(event3.getUser()).willReturn(user3);
+        given(event3.getStartTime()).willReturn(now.minusMinutes(30));
+        given(event3.getEndTime()).willReturn(now.plusMinutes(30));
+
+        given(personalEventRepository.findAllByUsersAndDateTimeRange(
+            List.of(1L, 2L, 3L),
+            searchStartTime,
+            searchEndTime
+        )).willReturn(List.of(event1, event2, event3));
+
+        // selectedUserIds 설정
+        Map<Long, Integer> selectedUserIds = new HashMap<>();
+        selectedUserIds.put(1L, 0);
+        selectedUserIds.put(2L, 1);
+
+        // when
+        List<UserInfoWithPersonalEvents> result = personalEventService.findUserInfoWithPersonalEventsByUsers(
+            users,
+            searchStartTime,
+            searchEndTime,
+            startTime,
+            endTime,
+            selectedUserIds
+        );
+
+        // then
+        assertThat(result).hasSize(3);
+
+        // 조정이 필요한 사용자가 앞쪽에 정렬되었는지 확인
+        assertThat(result.get(0).requirementOfAdjustment()).isTrue();
+        assertThat(result.get(1).requirementOfAdjustment()).isTrue();
+        assertThat(result.get(2).requirementOfAdjustment()).isFalse();
+
+        // 각 사용자별 정보가 올바르게 설정되었는지 확인
+        for (UserInfoWithPersonalEvents userInfo : result) {
+            if (userInfo.id().equals(1L)) {
+                assertThat(userInfo.selected()).isTrue();
+                assertThat(userInfo.requirementOfAdjustment()).isFalse();
+            } else if (userInfo.id().equals(2L)) {
+                assertThat(userInfo.selected()).isTrue();
+                assertThat(userInfo.requirementOfAdjustment()).isTrue();
+            } else if (userInfo.id().equals(3L)) {
+                assertThat(userInfo.selected()).isFalse();
+                assertThat(userInfo.requirementOfAdjustment()).isTrue();
+            }
+        }
+    }
+
+    @Test
+    @DisplayName("개인 일정이 없는 사용자도 결과에 포함된다")
+    void findUserInfoWithPersonalEventsByUsers_includesUsersWithNoEvents() {
+        // given
+        LocalDateTime now = LocalDateTime.of(2024, 2, 13, 12, 0);
+        LocalDateTime searchStartTime = now.minusHours(3);
+        LocalDateTime searchEndTime = now.plusHours(3);
+        LocalDateTime startTime = now.minusHours(1);
+        LocalDateTime endTime = now.plusHours(1);
+
+        User user1 = mock(User.class);
+        User user2 = mock(User.class);
+
+        given(user1.getId()).willReturn(1L);
+        given(user1.getName()).willReturn("User 1");
+        given(user1.getPicture()).willReturn("picture1.jpg");
+
+        given(user2.getId()).willReturn(2L);
+        given(user2.getName()).willReturn("User 2");
+        given(user2.getPicture()).willReturn("picture2.jpg");
+
+        List<User> users = List.of(user1, user2);
+
+        // user1만 이벤트가 있는 상황
+        PersonalEvent event1 = mock(PersonalEvent.class);
+        given(event1.getUser()).willReturn(user1);
+        given(event1.getStartTime()).willReturn(now.plusHours(2));
+        given(event1.getEndTime()).willReturn(now.plusHours(3));
+
+        given(personalEventRepository.findAllByUsersAndDateTimeRange(
+            List.of(1L, 2L),
+            searchStartTime,
+            searchEndTime
+        )).willReturn(List.of(event1));
+
+        Map<Long, Integer> selectedUserIds = new HashMap<>();
+        selectedUserIds.put(1L, 0);
+
+        // when
+        List<UserInfoWithPersonalEvents> result = personalEventService.findUserInfoWithPersonalEventsByUsers(
+            users,
+            searchStartTime,
+            searchEndTime,
+            startTime,
+            endTime,
+            selectedUserIds
+        );
+
+        // then
+        assertThat(result).hasSize(2);
+
+        // user1 검증
+        UserInfoWithPersonalEvents user1Info = result.stream()
+            .filter(u -> u.id().equals(1L))
+            .findFirst()
+            .orElseThrow();
+        assertThat(user1Info.selected()).isTrue();
+        assertThat(user1Info.requirementOfAdjustment()).isFalse();
+        assertThat(user1Info.events()).isNotEmpty();
+
+        // user2 검증
+        UserInfoWithPersonalEvents user2Info = result.stream()
+            .filter(u -> u.id().equals(2L))
+            .findFirst()
+            .orElseThrow();
+        assertThat(user2Info.selected()).isFalse();
+        assertThat(user2Info.requirementOfAdjustment()).isFalse();
+        assertThat(user2Info.events()).isEmpty();
     }
 }

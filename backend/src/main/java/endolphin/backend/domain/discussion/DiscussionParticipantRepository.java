@@ -60,4 +60,11 @@ public interface DiscussionParticipantRepository extends
         "JOIN FETCH dp.discussion d " +
         "WHERE dp.user.id = :userId")
     List<Discussion> findDiscussionsByUserId(@Param("userId") Long userId);
+
+    @Query("SELECT dp "
+        + "FROM DiscussionParticipant dp "
+        + "JOIN FETCH dp.user "
+        + "WHERE dp.discussion.id = :discussionId "
+        + "ORDER BY dp.createdAt ASC")
+    List<User> findUserByDiscussionIdOrderByJoin(@Param("discussionId") Long discussionId);
 }
