@@ -54,6 +54,7 @@ const TimelineContent = (props: TimelineContentProps) => {
           participants={[...props.selectedParticipants, ...props.ignoredParticipants]}
         />
       </div>
+      {props.ignoredParticipants.length > 0 && 
       <div
         className={overlayStyle}
         ref={overlayRef}
@@ -61,7 +62,7 @@ const TimelineContent = (props: TimelineContentProps) => {
           top: getRowTopOffset(props.selectedParticipants.length) + 72,
           height: getRowTopOffset(props.ignoredParticipants.length) + 60, 
         }}
-      />
+      />}
     </div>
   );
 };
