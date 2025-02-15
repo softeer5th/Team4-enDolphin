@@ -25,6 +25,12 @@ jobs:
           java-version: 17
           cache: gradle
 
+      - name: Set up application.yml file
+        run: |
+          mkdir -p src/main/resources
+          echo "${{ secrets.APPLICATION_DEV_YML }}" > src/main/resources/application.yml
+        shell: bash
+
       - name: Grant Execute Permission for gradlew
         run: |
           chmod +x gradlew
