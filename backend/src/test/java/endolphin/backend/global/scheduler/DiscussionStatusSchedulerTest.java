@@ -139,7 +139,7 @@ public class DiscussionStatusSchedulerTest {
             .build();
         discussion2.setDiscussionStatus(DiscussionStatus.ONGOING);
 
-        when(discussionRepository.findAll()).thenReturn(List.of(discussion1, discussion2));
+        when(discussionRepository.findByDiscussionStatusNot(DiscussionStatus.FINISHED)).thenReturn(List.of(discussion1, discussion2));
 
         doThrow(new ApiException(ErrorCode.SHARED_EVENT_NOT_FOUND)).when(discussionRepository).save(discussion1);
 
