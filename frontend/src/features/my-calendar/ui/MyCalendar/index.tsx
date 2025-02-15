@@ -47,8 +47,8 @@ export const MyCalendar = () => {
   const { startDate, endDate } = formatDateToWeekRange(calendar.selectedDate);
 
   const { personalEvents, isLoading } = usePersonalEventsQuery({ 
-    startDateTime: formatDateToBarString(startDate), 
-    endDateTime: formatDateToBarString(endDate),
+    startDate: formatDateToBarString(startDate), 
+    endDate: formatDateToBarString(endDate),
   });
 
   return (
