@@ -4,34 +4,32 @@ import { recipe } from '@vanilla-extract/recipes';
 import { vars } from '@/theme/index.css';
 
 export const timelineContainerStyle = style({
-  width: '37.5rem',
   height: '28.125rem',
   overflowX: 'hidden',
-  alignSelf: 'center',
 });
 
 export const timelineCanvasWrapperStyle = style({
   width: '100%',
   height: '100%',
   overflowX: 'hidden',
+  overflowY: 'scroll',
 });
 
 export const timelineHeaderStyle = style({
-  alignSelf: 'center',
-  height: 'fit-content',
-  width: '42.5rem',
+  paddingLeft: '16.5rem',
   zIndex: 1,
   backgroundColor: vars.color.Ref.Netural['White'],
 });
 
 export const timelineHeaderTimeTextStyle = style({
   position: 'absolute',
+  transform: 'translateX(-50%)',
   color: vars.color.Ref.Netural[500],
 });
 
 export const timelineCanvasStyle = style({
   position: 'relative',
-  width: '42.5rem',
+  width: '37.5rem',
 });
 
 export const timelineColumnContainerStyle = style({

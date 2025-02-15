@@ -5,6 +5,7 @@ import Tooltip from '@/components/Tooltip';
 import { vars } from '@/theme/index.css';
 
 import type { Participant, ScheduleEvent } from '../../model';
+import ParticipantList from './ParticipantList';
 import {
   adjustRangeTimeBlockStyle,
   timelineBlockContainerStyle,
@@ -41,9 +42,11 @@ const TimelineContent = ({ participants, meetingStart, meetingEnd }: {
       />
       <Flex
         className={timelineCanvasWrapperStyle}
-        direction='column'
-        justify='flex-start'
+        direction='row'
+        gap={500}
+        justify='space-between'
       >
+        <ParticipantList participants={participants} />
         <TimelineCanvas
           gridTimes={gridTimes}
           meetingEnd={meetingEnd}
@@ -74,7 +77,7 @@ const TimelineHeader = ({ startTime: _, endTime: __, gridTimes }: {
       gap={100}
       justify='space-between'
       style={{ position: 'relative', height: '2.125rem' }}
-      width='full'
+      // width='full'
     >
       {gridTimes.map((stdTime, index) => (
         <span
