@@ -76,7 +76,6 @@ export const timelineBlockContainerStyle = style({
   gap: '0.53125rem',
   overflowX: 'hidden',
   flexShrink: 0,
-  // reason
   overflowY: 'hidden',
 });
 
@@ -115,7 +114,8 @@ export const timelineBlockStyle = recipe({
 
 export const adjustRangeTimeBlockStyle = style({
   position: 'fixed',
-  height: '100%',
+  height: '24.015625rem',
   borderRadius: vars.radius[400],
   border: `1px solid ${vars.color.Ref.Primary[400]}`,
+  pointerEvents: 'none',
 });
