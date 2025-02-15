@@ -20,6 +20,7 @@ export const containerStyle = style({
 export const topBarStyle = style({
   width: '100%',
   padding: `${vars.spacing[600]} ${vars.spacing[900]}`,
+  borderBottom: `1px solid ${vars.color.Ref.Netural[200]}`,
 });
 
 export const contentContainerStyle = style({
