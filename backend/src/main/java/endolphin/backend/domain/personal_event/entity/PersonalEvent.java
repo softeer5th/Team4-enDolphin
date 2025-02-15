@@ -81,13 +81,15 @@ public class PersonalEvent extends BaseTimeEntity {
             .build();
     }
 
-    public static PersonalEvent from(GoogleEvent googleEvent, User user) {
+    public static PersonalEvent fromGoogleEvent(GoogleEvent googleEvent, User user,
+        String googleCalenderId) {
         return PersonalEvent.builder()
             .title(googleEvent.summary())
             .startTime(googleEvent.startDateTime())
             .endTime(googleEvent.endDateTime())
             .googleEventId(googleEvent.eventId())
             .isAdjustable(false)
+            .calendarId(googleCalenderId)
             .user(user)
             .build();
     }
