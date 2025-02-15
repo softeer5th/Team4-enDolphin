@@ -11,6 +11,8 @@ export const timelineCanvasWrapperStyle = style({
   width: '100%',
   height: '100%',
   overflowX: 'hidden',
+  overflowY: 'auto',
+  scrollbarWidth: 'none',
 });
 
 export const timelineHeaderStyle = style({
@@ -34,10 +36,11 @@ export const gridTimeTextStyle = style({
   position: 'absolute',
   transform: 'translateX(-50%)',
   color: vars.color.Ref.Netural[500],
+  willChange: 'auto',
 });
 
 export const timelineCanvasStyle = style({
-  position: 'relative',
+  position: 'static',
   width: '37.5rem',
   height: 'fit-content',
   overflowX: 'hidden',

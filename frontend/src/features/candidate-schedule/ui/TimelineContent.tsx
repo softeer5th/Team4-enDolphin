@@ -29,7 +29,9 @@ const TimelineContent = ({ participants, meetingStart, meetingEnd }: {
   meetingStart: Date;
   meetingEnd: Date;
 }) => {
-  const gridTimes = getGridTimes(meetingStart, meetingEnd, GRID_HORIZONTAL_COUNT);
+  const { gridTimes, gridStartOffset } = getGridTimes(
+    meetingStart, meetingEnd, GRID_HORIZONTAL_COUNT,
+  );
   return (
     <Flex
       className={timelineContainerStyle}
@@ -37,9 +39,8 @@ const TimelineContent = ({ participants, meetingStart, meetingEnd }: {
       width='full'
     >
       <TimelineHeader
-        endTime={meetingEnd}
+        gridStartOffset={gridStartOffset}
         gridTimes={gridTimes}
-        startTime={meetingStart}
       />
       <Flex
         className={timelineCanvasWrapperStyle}
@@ -49,6 +50,7 @@ const TimelineContent = ({ participants, meetingStart, meetingEnd }: {
       >
         <ParticipantList participants={participants} />
         <TimelineCanvas
+          gridStartOffset={gridStartOffset}
           gridTimes={gridTimes}
           meetingEnd={meetingEnd}
           meetingStart={meetingStart}
@@ -59,10 +61,9 @@ const TimelineContent = ({ participants, meetingStart, meetingEnd }: {
   );
 };
 
-const TimelineHeader = ({ startTime: _, endTime: __, gridTimes }: {
-  startTime: Date;
-  endTime: Date;
+const TimelineHeader = ({ gridTimes, gridStartOffset }: {
   gridTimes: Date[];
+  gridStartOffset: number;
 }) => (
   <Flex
     align='center'
@@ -78,6 +79,7 @@ const TimelineHeader = ({ startTime: _, endTime: __, gridTimes }: {
       direction='row'
       gap={100}
       justify='space-between'
+      style={{ left: `${gridStartOffset}px` }}
     >
       {gridTimes.map((stdTime, index) => (
         <span
@@ -98,29 +100,32 @@ const TimelineHeader = ({ startTime: _, endTime: __, gridTimes }: {
 );
 
 // TODO-MAYBE: 30분 단위에 종속적이지 않게 리팩토링하기 (canvas의 중앙 위치를 시간에 맞계 계산해야 함)
-const TimelineCanvas = ({ gridTimes, meetingStart, meetingEnd, participants }: {
+const TimelineCanvas = ({ gridTimes, meetingStart, meetingEnd, participants, gridStartOffset }: {
   gridTimes: Date[];
   participants: Participant[];
   meetingStart: Date;
   meetingEnd: Date;
+  gridStartOffset: number;
 }) => (
   <Flex
     className={timelineCanvasStyle}
   >
-    <TimelineColumns
-      gridTimes={gridTimes}
-      meetingEnd={meetingEnd}
-      meetingStart={meetingStart}
-    />
-    <TimelineBlocks
-      gridStart={gridTimes[0]}
-      participants={participants}
-    />
-    <AdjustTimeRangeBox 
-      gridStart={gridTimes[0]}
-      meetingTimeEnd={meetingEnd}
-      meetingTimeStart={meetingStart}
-    />
+    <div style={{ position: 'relative', left: `${gridStartOffset}px` }}> 
+      <TimelineColumns
+        gridTimes={gridTimes}
+        meetingEnd={meetingEnd}
+        meetingStart={meetingStart}
+      />
+      <TimelineBlocks
+        gridStart={gridTimes[0]}
+        participants={participants}
+      />
+      <AdjustTimeRangeBox 
+        gridStart={gridTimes[0]}
+        meetingTimeEnd={meetingEnd}
+        meetingTimeStart={meetingStart}
+      />
+    </div>
   </Flex>
 );
 

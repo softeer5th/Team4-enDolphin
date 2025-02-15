@@ -5,7 +5,7 @@ import { vars } from '@/theme/index.css';
 import type { CandidateScheduleGetResponse } from '../model';
 import { mockedCandidateScheduleGetResponse } from '../model';
 import Header from './Header';
-import { backdropStyle, containerStyle, contentContainerStyle, topBarStyle } from './index.css';
+import { containerStyle, contentContainerStyle, topBarStyle } from './index.css';
 import MainContent from './MainContent';
 
 // TODO: 라우팅 param 정의 위치 옮기기
@@ -24,7 +24,6 @@ const CandidateScheduleDetail = () => {
   };
   return (
     <>
-      <div className={backdropStyle} />
       <Flex className={containerStyle} direction='column'>
         <TopBar />
         <Content
