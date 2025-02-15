@@ -23,13 +23,13 @@ const Header = ({ adjustCount, startTime, endTime }: {
       align='center'
       gap={200}
     >
-      <Button
+      {/* <Button
         size='lg'
         style='weak'
         variant='secondary'
       >
         링크 복사
-      </Button>
+      </Button> */}
       <Button
         size='lg'
       >
