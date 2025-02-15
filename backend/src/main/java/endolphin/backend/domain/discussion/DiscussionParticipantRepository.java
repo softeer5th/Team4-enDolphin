@@ -20,10 +20,10 @@ public interface DiscussionParticipantRepository extends
         "WHERE dp.discussion.id = :discussionId")
     List<String> findUserPicturesByDiscussionId(@Param("discussionId") Long discussionId);
 
-    @Query("select dp " +
-        "from DiscussionParticipant dp " +
-        "join fetch dp.user " +
-        "where dp.discussion.id = :discussionId")
+    @Query("SELECT DISTINCT dp.user " +
+        "FROM DiscussionParticipant dp " +
+        "where dp.discussion.id = :discussionId " +
+        "ORDER BY dp.userOffset ASC")
     List<User> findUsersByDiscussionId(@Param("discussionId") Long discussionId);
 
     @Query("SELECT dp.userOffset " +
@@ -55,16 +55,8 @@ public interface DiscussionParticipantRepository extends
         @Param("offset") List<Long> offsets
     );
 
-    @Query("SELECT dp " +
+    @Query("SELECT DISTINCT dp.discussion " +
         "FROM DiscussionParticipant dp " +
-        "JOIN FETCH dp.discussion d " +
         "WHERE dp.user.id = :userId")
     List<Discussion> findDiscussionsByUserId(@Param("userId") Long userId);
-
-    @Query("SELECT dp "
-        + "FROM DiscussionParticipant dp "
-        + "JOIN FETCH dp.user "
-        + "WHERE dp.discussion.id = :discussionId "
-        + "ORDER BY dp.createdAt ASC")
-    List<User> findUserByDiscussionIdOrderByJoin(@Param("discussionId") Long discussionId);
 }

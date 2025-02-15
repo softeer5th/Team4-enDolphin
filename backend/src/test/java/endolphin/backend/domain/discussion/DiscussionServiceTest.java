@@ -396,7 +396,7 @@ public class DiscussionServiceTest {
         );
 
         given(userService.getCurrentUser()).willReturn(currentUser);
-        given(discussionParticipantService.getUsersByDiscussionIdOrderByCreatedAt(eq(discussionId)))
+        given(discussionParticipantService.getUsersByDiscussionId(eq(discussionId)))
             .willReturn(participants);
         given(personalEventService.findUserInfoWithPersonalEventsByUsers(
             anyList(), any(LocalDateTime.class), any(LocalDateTime.class), any(LocalDateTime.class), any(LocalDateTime.class), any(Map.class)))
@@ -466,7 +466,7 @@ public class DiscussionServiceTest {
         User otherUser = mock(User.class);
 
         given(userService.getCurrentUser()).willReturn(currentUser);
-        given(discussionParticipantService.getUsersByDiscussionIdOrderByCreatedAt(discussionId))
+        given(discussionParticipantService.getUsersByDiscussionId(discussionId))
             .willReturn(Collections.singletonList(otherUser));
 
         // When & Then
