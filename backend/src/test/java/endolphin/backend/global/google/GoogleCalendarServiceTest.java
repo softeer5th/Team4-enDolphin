@@ -8,6 +8,7 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 
 import endolphin.backend.domain.calendar.CalendarService;
 import endolphin.backend.domain.calendar.entity.Calendar;
@@ -67,9 +68,9 @@ class GoogleCalendarServiceTest {
         // Then
         then(calendarService).should().isExistingCalendar(user.getId());
         then(calendarService).should().getCalendarByUserId(user.getId());
+        then(googleCalendarService).should(times(1)).subscribeToCalendar(any(), any());
 
         // 신규 캘린더 생성, 이벤트 동기화, 캘린더 채널 구독은 발생하지 않아야 합니다.
-        then(googleCalendarService).should(never()).subscribeToCalendar(any(), any());
         then(calendarService).should(never()).createCalendar(any(), eq(user));
         then(personalEventService).should(never()).syncWithGoogleEvents(any(), eq(user), anyString());
     }
@@ -118,7 +119,6 @@ class GoogleCalendarServiceTest {
         given(user.getId()).willReturn(1L);
         given(calendarService.isExistingCalendar(user.getId())).willReturn(true);
         Calendar calendar = Mockito.mock(Calendar.class);
-        given(calendar.getChannelExpiration()).willReturn(LocalDateTime.now().minusDays(1));
         given(calendarService.getCalendarByUserId(user.getId())).willReturn(calendar);
 
         doNothing().when(googleCalendarService).subscribeToCalendar(calendar, user);
