@@ -25,7 +25,8 @@ public class DiscussionStatusScheduler {
         LocalDate today = LocalDate.now();
         log.info("Scheduler 실행: {}. 논의 상태 업데이트 시작", today);
 
-        List<Discussion> discussions = discussionRepository.findAll();
+        List<Discussion> discussions = discussionRepository.findByDiscussionStatusNot(
+            DiscussionStatus.FINISHED);
 
         for (Discussion discussion : discussions) {
             try {
