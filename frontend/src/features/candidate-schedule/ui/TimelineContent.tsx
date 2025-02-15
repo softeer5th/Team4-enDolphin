@@ -8,8 +8,8 @@ import type { Participant, ScheduleEvent } from '../model';
 import ParticipantList from './ParticipantList';
 import {
   adjustRangeTimeBlockStyle,
+  gridTimeContainerStyle,
   gridTimeTextStyle,
-  gridTimeWrapperStyle,
   timelineBlockContainerStyle,
   timelineBlockRowStyle,
   timelineBlockStyle,
@@ -24,13 +24,13 @@ import { calculateBlockStyle, getGridTimes } from './timelineHelper';
 
 const GRID_HORIZONTAL_COUNT = 20;
 
-const TimelineContent = ({ participants, meetingStart, meetingEnd }: { 
+const TimelineContent = ({ participants, conflictStart, conflictEnd }: { 
   participants: Participant[]; 
-  meetingStart: Date;
-  meetingEnd: Date;
+  conflictStart: Date;
+  conflictEnd: Date;
 }) => {
   const { gridTimes, gridStartOffset } = getGridTimes(
-    meetingStart, meetingEnd, GRID_HORIZONTAL_COUNT,
+    conflictStart, conflictEnd, GRID_HORIZONTAL_COUNT,
   );
   return (
     <Flex
@@ -50,10 +50,10 @@ const TimelineContent = ({ participants, meetingStart, meetingEnd }: {
       >
         <ParticipantList participants={participants} />
         <TimelineCanvas
+          conflictEnd={conflictEnd}
+          conflictStart={conflictStart}
           gridStartOffset={gridStartOffset}
           gridTimes={gridTimes}
-          meetingEnd={meetingEnd}
-          meetingStart={meetingStart}
           participants={participants}
         />
       </Flex>
@@ -75,7 +75,7 @@ const TimelineHeader = ({ gridTimes, gridStartOffset }: {
     <Tooltip color='blue' tailDirection='down'>Here!</Tooltip>
     <Flex
       align='center'
-      className={gridTimeWrapperStyle}
+      className={gridTimeContainerStyle}
       direction='row'
       gap={100}
       justify='space-between'
@@ -100,11 +100,11 @@ const TimelineHeader = ({ gridTimes, gridStartOffset }: {
 );
 
 // TODO-MAYBE: 30분 단위에 종속적이지 않게 리팩토링하기 (canvas의 중앙 위치를 시간에 맞계 계산해야 함)
-const TimelineCanvas = ({ gridTimes, meetingStart, meetingEnd, participants, gridStartOffset }: {
+const TimelineCanvas = ({ gridTimes, conflictStart, conflictEnd, participants, gridStartOffset }: {
   gridTimes: Date[];
   participants: Participant[];
-  meetingStart: Date;
-  meetingEnd: Date;
+  conflictStart: Date;
+  conflictEnd: Date;
   gridStartOffset: number;
 }) => (
   <Flex
@@ -112,9 +112,9 @@ const TimelineCanvas = ({ gridTimes, meetingStart, meetingEnd, participants, gri
   >
     <div style={{ position: 'relative', left: `${gridStartOffset}px` }}> 
       <TimelineColumns
+        conflictEnd={conflictEnd}
+        conflictStart={conflictStart}
         gridTimes={gridTimes}
-        meetingEnd={meetingEnd}
-        meetingStart={meetingStart}
       />
       <TimelineBlocks
         gridStart={gridTimes[0]}
@@ -122,15 +122,15 @@ const TimelineCanvas = ({ gridTimes, meetingStart, meetingEnd, participants, gri
       />
     </div>
     <AdjustTimeRangeBox
+      conflictTimeEnd={conflictEnd}
+      conflictTimeStart={conflictStart}
       gridStart={gridTimes[0]}
-      meetingTimeEnd={meetingEnd}
-      meetingTimeStart={meetingStart}
     />
   </Flex>
 );
 
-const TimelineColumns = ({ meetingStart, meetingEnd, gridTimes }: {
-  meetingStart: Date; meetingEnd: Date; gridTimes: Date[];
+const TimelineColumns = ({ conflictStart, conflictEnd, gridTimes }: {
+  conflictStart: Date; conflictEnd: Date; gridTimes: Date[];
 }) => (
   <Flex
     className={timelineColumnContainerStyle}
@@ -138,21 +138,21 @@ const TimelineColumns = ({ meetingStart, meetingEnd, gridTimes }: {
     style={{ height: '100%' }}
   >
     {gridTimes.map((stdTime, idx) => { 
-      const isInRange = meetingStart <= stdTime && stdTime < meetingEnd;
+      const isInRange = conflictStart <= stdTime && stdTime < conflictEnd;
       return <div className={timelineColumnStyle({ isInRange })} key={`${stdTime}-${idx}`} />;
     })}
   </Flex>
 );
 
-const AdjustTimeRangeBox = ({ meetingTimeStart, meetingTimeEnd, gridStart }: {
+const AdjustTimeRangeBox = ({ conflictTimeStart, conflictTimeEnd, gridStart }: {
   gridStart: Date;
-  meetingTimeStart: Date;
-  meetingTimeEnd: Date;
+  conflictTimeStart: Date;
+  conflictTimeEnd: Date;
 }) => {
   const { width } = calculateBlockStyle(
     gridStart,
-    meetingTimeStart,
-    meetingTimeEnd);
+    conflictTimeStart,
+    conflictTimeEnd);
   return (
     <div 
       className={adjustRangeTimeBlockStyle}

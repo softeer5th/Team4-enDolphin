@@ -24,19 +24,16 @@ export const timelineHeaderStyle = style({
   position: 'relative',
 });
 
-export const gridTimeWrapperStyle = style({
+export const gridTimeContainerStyle = style({
   width: '42.5rem',
   height: '2.125rem',
   position: 'relative', 
-  alignSelf: 'center',
-  overflowX: 'hidden',
 });
 
 export const gridTimeTextStyle = style({
   position: 'absolute',
-  transform: 'translateX(-50%)',
+  transform: 'translateX(-50%)',  
   color: vars.color.Ref.Netural[500],
-  willChange: 'auto',
 });
 
 export const timelineCanvasStyle = style({

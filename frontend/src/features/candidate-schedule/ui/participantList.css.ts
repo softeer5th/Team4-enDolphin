@@ -10,6 +10,3 @@ export const participantItemStyle = style({
   paddingRight: '1.0625rem',
   gap: '1.875rem',
 });
-
-export const profileContainerStyle = style({
-});

@@ -16,8 +16,8 @@ const MainContent = ({ participants, startTime, endTime }: {
     width='full'
   >
     <TimelineContent
-      meetingEnd={endTime} 
-      meetingStart={startTime}
+      conflictEnd={endTime} 
+      conflictStart={startTime}
       participants={participants}
     />
   </Flex>
