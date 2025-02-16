@@ -1,23 +1,12 @@
-import type { InputHTMLAttributes, PropsWithChildren, SetStateAction }  from 'react';
 import { useId } from 'react';
 
 import { useCheckbox } from '@/hooks/useCheckbox';
 
 import { Check } from '../Icon';
+import { CheckboxInput } from './CheckboxInput';
 import { CheckboxLabel } from './CheckboxLabel';
-import { checkboxStyle, containerStyle, inputStyle } from './index.css';
-
-export type Size = 'sm' | 'md';
-
-interface CheckboxProps extends PropsWithChildren {
-  value?: number;
-  isChecked?: boolean;
-  onToggleCheck?: (prev: SetStateAction<boolean>) => void;
-  type?: 'all' | 'single';
-  size?: Size;
-  defaultChecked?: boolean;
-  inputProps?: InputHTMLAttributes<HTMLInputElement>;
-}
+import { checkboxStyle, containerStyle } from './index.css';
+import type { CheckboxProps } from './type';
 
 /**
  * @description Checkbox 컴포넌트.
@@ -38,7 +27,7 @@ export const Checkbox = ({
   type = 'single', 
   size = 'md', 
   defaultChecked, 
-  inputProps, 
+  inputProps = {}, 
   children, 
 }: CheckboxProps) => {
   const defaultId = `checkbox-${useId()}`;
@@ -46,27 +35,24 @@ export const Checkbox = ({
 
   const { handleClickCheck, checked } = 
     useCheckbox({ value, defaultChecked, type, isChecked, onToggleCheck });
-  const checkStyleName = checked ? 'selected' : 'rest';
 
   return(
-    <div className={containerStyle} onClick={handleClickCheck}>
-      <span className={checkboxStyle({ size, style: checkStyleName })}>
+    <div className={containerStyle}>
+      <span className={checkboxStyle({ size, style: checked ? 'selected' : 'rest' })}>
         {checked && <Check clickable width={16} />}
       </span>
       <CheckboxLabel
         id={id}
         size={size}
-        style={checkStyleName}
+        style={checked ? 'selected' : 'rest'}
       >
         {children}
       </CheckboxLabel>
-      <input 
+      <CheckboxInput
         checked={checked}
-        className={inputStyle}
+        handleClickCheck={handleClickCheck}
         id={id}
-        type='checkbox'
-        {...inputProps}
-        onChange={handleClickCheck}
+        inputProps={inputProps}
       />
     </div>
   ); 

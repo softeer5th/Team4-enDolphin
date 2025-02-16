@@ -12,15 +12,20 @@ interface CheckedStateProps {
   type: 'all' | 'single';
 }
 
+interface UseCheckboxReturn {
+  handleClickCheck: () => void;
+  checked: boolean;
+}
+
 export const useCheckbox = ({ 
   value, 
   defaultChecked, 
   isChecked, 
   onToggleCheck, 
   type, 
-}: CheckedStateProps) => {
+}: CheckedStateProps): UseCheckboxReturn => {
   const group = useContext(GroupContext);
-  const [checked, setChecked] = useState(defaultChecked || false);
+  const [checked, setChecked] = useState<boolean>(defaultChecked || false);
   
   const handleClickCheck = () => {
     if (group) {
@@ -35,8 +40,10 @@ export const useCheckbox = ({
   };
 
   const findIsChecked = () => {
-    if (type === 'all') return group?.isAllChecked;
-    if (value) return group?.checkedList.has(value);
+    if (group) {
+      if (type === 'all') return group.isAllChecked;
+      if (value) return group.checkedList.has(value);
+    }
     if (isChecked) return isChecked;
     return checked;
   };

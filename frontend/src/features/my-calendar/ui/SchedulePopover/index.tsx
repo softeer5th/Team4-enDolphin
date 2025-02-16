@@ -38,7 +38,6 @@ export const SchedulePopover = (
   const handleClickDelete = () => {
     // do something
   };
-
   return(
     <dialog
       className={containerStyle}
