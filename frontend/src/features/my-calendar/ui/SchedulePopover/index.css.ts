@@ -20,7 +20,7 @@ export const containerStyle = style({
   border: `1px solid ${vars.color.Ref.Netural[200]}`,
   borderRadius: vars.radius[500],
 
-  zIndex: 1,
+  zIndex: 3,
 });
 
 export const titleStyle = style({

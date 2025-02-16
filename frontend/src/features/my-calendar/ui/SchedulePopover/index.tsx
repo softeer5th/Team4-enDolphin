@@ -1,5 +1,4 @@
 import { Flex } from '@/components/Flex';
-import { useClickOutside } from '@/hooks/useClickOutside';
 import type { FormValues } from '@/hooks/useFormRef';
 import { useFormRef } from '@/hooks/useFormRef';
 import { isSaturday } from '@/utils/date';
@@ -63,7 +62,6 @@ const useSchedulePopover = ({
 export const SchedulePopover = (
   { setIsOpen, scheduleId, type, values, ...event }: SchedulePopoverProps,
 ) => {
-  const ref = useClickOutside<HTMLDialogElement>(() => setIsOpen(false));
   const startDate = new Date(event.startDateTime);
   const { x: sx, y: sy } = calcPositionByDate(startDate);
   const { valuesRef, handleChange } = useFormRef<PersonalEventRequest>({
@@ -77,10 +75,9 @@ export const SchedulePopover = (
     valuesRef,
   });
   return(
-    <Flex className={backgroundStyle}>
+    <>
       <dialog
         className={containerStyle}
-        ref={ref}
         style={{
           position: 'absolute',
           left: isSaturday(startDate) 
@@ -97,6 +94,7 @@ export const SchedulePopover = (
           type={type}
         />
       </dialog>
-    </Flex>
+      <Flex className={backgroundStyle} onClick={() => setIsOpen(false)} />
+    </>
   ); 
 };
