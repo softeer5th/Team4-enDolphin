@@ -29,7 +29,8 @@ const CalendarCardTimezone = (
 );
   
 export const CardContents = (
-  { status, size, title, endTime, startTime }: Omit<CalendarCardProps, 'id' | 'style'>,
+  { status, size, title, endTime, startTime }: 
+  Omit<CalendarCardProps, 'id' | 'style' | 'syncWithGoogleCalendar'>,
 ) => (
   <Flex
     className={cardContentStyle({ status, size })}

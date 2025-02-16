@@ -26,12 +26,9 @@ export const usePersonalEventUpdateMutation = () => {
     mutationFn: (
       { id, body }: { id: number; body: PersonalEventRequest },
     ) => personalEventApi.putPersonalEvent(id, body),
-    onSuccess: ({ startDateTime, endDateTime }) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: personalEventKeys.detail({
-          startDate: startDateTime,
-          endDate: endDateTime,
-        }),
+        queryKey: personalEventKeys.all,
       });
     },
   });

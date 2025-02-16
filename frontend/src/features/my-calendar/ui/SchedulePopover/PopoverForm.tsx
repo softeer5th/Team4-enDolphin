@@ -15,8 +15,8 @@ const AdjustableCheckbox = (
   { valuesRef, handleChange }: FormRef<PersonalEventRequest>,
 ) => (
   <Checkbox
+    defaultChecked={valuesRef.current.isAdjustable}
     inputProps={{
-      defaultChecked: valuesRef.current.isAdjustable,
       name: 'isAdjustable',
       onChange: (e) => handleChange({ name: 'isAdjustable', value: e.target.checked }),
     }}

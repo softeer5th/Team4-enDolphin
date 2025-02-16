@@ -26,6 +26,11 @@ export const CalendarCard = ({
         setIsOpen={setOpen}
         startDateTime={formatDateToDateTimeString(startTime)}
         type='edit'
+        values={{
+          title: props.title,
+          isAdjustable: props.status === 'adjustable',
+          syncWithGoogleCalendar: props.syncWithGoogleCalendar,
+        }}
       />}
       <Card
         endTime={endTime}
