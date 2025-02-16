@@ -5,7 +5,9 @@ import endolphin.backend.domain.discussion.dto.CandidateEventDetailsResponse;
 import endolphin.backend.domain.discussion.dto.CreateDiscussionRequest;
 import endolphin.backend.domain.discussion.dto.DiscussionInfo;
 import endolphin.backend.domain.discussion.dto.DiscussionResponse;
+import endolphin.backend.domain.discussion.dto.JoinDiscussionRequest;
 import endolphin.backend.domain.discussion.dto.InvitationInfo;
+import endolphin.backend.domain.discussion.dto.JoinDiscussionResponse;
 import endolphin.backend.domain.discussion.entity.Discussion;
 import endolphin.backend.domain.discussion.enums.DiscussionStatus;
 import endolphin.backend.domain.personal_event.PersonalEventService;
@@ -19,6 +21,7 @@ import endolphin.backend.domain.user.entity.User;
 import endolphin.backend.global.error.exception.ApiException;
 import endolphin.backend.global.error.exception.ErrorCode;
 import endolphin.backend.global.redis.DiscussionBitmapService;
+import endolphin.backend.global.redis.PasswordCountService;
 import endolphin.backend.global.security.PasswordEncoder;
 import endolphin.backend.global.util.Validator;
 import java.time.Duration;
@@ -46,6 +49,7 @@ public class DiscussionService {
     private final DiscussionParticipantService discussionParticipantService;
     private final DiscussionBitmapService discussionBitmapService;
     private final PasswordEncoder passwordEncoder;
+    private final PasswordCountService passwordCountService;
 
     public DiscussionResponse createDiscussion(CreateDiscussionRequest request) {
         User currentUser = userService.getCurrentUser();
@@ -193,7 +197,8 @@ public class DiscussionService {
 
         List<UserInfoWithPersonalEvents> result0 =
             personalEventService.findUserInfoWithPersonalEventsByUsers(
-                participants, searchStartTime, searchEndTime, startTime, endTime, selectedUserIdMap);
+                participants, searchStartTime, searchEndTime, startTime, endTime,
+                selectedUserIdMap);
 
         List<UserInfoWithPersonalEvents> sortedResult = getSortedUserInfoWithPersonalEvents(
             result0, currentUser);
@@ -206,6 +211,32 @@ public class DiscussionService {
     public Discussion getDiscussionById(Long discussionId) {
         return discussionRepository.findById(discussionId)
             .orElseThrow(() -> new ApiException(ErrorCode.DISCUSSION_NOT_FOUND));
+    }
+
+    public JoinDiscussionResponse joinDiscussion(Long discussionId, JoinDiscussionRequest request) {
+        Discussion discussion = discussionRepository.findById(discussionId)
+            .orElseThrow(() -> new ApiException(ErrorCode.DISCUSSION_NOT_FOUND));
+
+        if (discussion.getDiscussionStatus() != DiscussionStatus.ONGOING) {
+            throw new ApiException(ErrorCode.DISCUSSION_NOT_ONGOING);
+        }
+
+        if(discussionParticipantService.isFull(discussionId)) {
+            throw new ApiException(ErrorCode.DISCUSSION_PARTICIPANT_EXCEED_LIMIT);
+        }
+
+        User currentUser = userService.getCurrentUser();
+
+        if (hasDiscussionPassword(discussionId) && !checkPassword(discussion, request.password())) {
+            int failedCount = passwordCountService.increaseCount(currentUser.getId(), discussionId);
+            return new JoinDiscussionResponse(false, failedCount);
+        }
+
+        discussionParticipantService.addDiscussionParticipant(discussion, currentUser);
+
+        personalEventService.preprocessPersonalEvents(currentUser, discussion);
+
+        return new JoinDiscussionResponse(true, 0);
     }
 
     private long calculateTimeLeft(LocalDate deadline) {
@@ -244,5 +275,21 @@ public class DiscussionService {
         sortedResult.addAll(selectedUsersList);
         sortedResult.addAll(othersList);
         return sortedResult;
+    }
+
+    private boolean checkPassword(Discussion discussion, String password) {
+        if (password == null || password.isBlank()) {
+            throw new ApiException(ErrorCode.PASSWORD_REQUIRED);
+        }
+
+        return passwordEncoder.matches(discussion.getId(), password, discussion.getPassword());
+    }
+
+    @Transactional(readOnly = true)
+    protected boolean hasDiscussionPassword(Long discussionId) {
+        Discussion discussion = discussionRepository.findById(discussionId)
+            .orElseThrow(() -> new ApiException(ErrorCode.DISCUSSION_NOT_FOUND));
+
+        return discussion.getPassword() != null;
     }
 }
