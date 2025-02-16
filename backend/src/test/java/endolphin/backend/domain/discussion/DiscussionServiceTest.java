@@ -588,7 +588,7 @@ public class DiscussionServiceTest {
         Discussion discussion = Discussion.builder()
             .title("Test Discussion")
             .build();
-
+        ReflectionTestUtils.setField(discussion, "discussionStatus", DiscussionStatus.ONGOING);
         ReflectionTestUtils.setField(discussion, "id", 1L);
 
         discussion.setPassword(encodedPassword);
@@ -621,6 +621,7 @@ public class DiscussionServiceTest {
         Discussion discussion = Discussion.builder()
             .title("Test Discussion")
             .build();
+        ReflectionTestUtils.setField(discussion, "discussionStatus", DiscussionStatus.ONGOING);
 
         discussion.setPassword(encodedPassword);
 
@@ -654,6 +655,7 @@ public class DiscussionServiceTest {
         Discussion discussion = Discussion.builder()
             .title("Test Discussion")
             .build();
+        ReflectionTestUtils.setField(discussion, "discussionStatus", DiscussionStatus.ONGOING);
 
         discussion.setPassword("encodedPassword123");
 
