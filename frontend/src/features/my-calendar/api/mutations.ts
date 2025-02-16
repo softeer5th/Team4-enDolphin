@@ -35,3 +35,18 @@ export const usePersonalEventUpdateMutation = () => {
 
   return { mutate };
 };
+
+export const usePersonalEventDeleteMutation = () => {
+  const queryClient = useQueryClient();
+
+  const { mutate } = useMutation({
+    mutationFn: (id: number) => personalEventApi.deletePersonalEvent(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: personalEventKeys.all,
+      });
+    },
+  });
+
+  return { mutate };
+};

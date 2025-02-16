@@ -1,10 +1,9 @@
 import { Flex } from '@/components/Flex';
-import type { FormValues } from '@/hooks/useFormRef';
 import { useFormRef } from '@/hooks/useFormRef';
 import { isSaturday } from '@/utils/date';
 import { calcPositionByDate } from '@/utils/date/position';
 
-import { usePersonalEventMutation, usePersonalEventUpdateMutation } from '../../api/mutations';
+import { useSchedulePopover } from '../../api/hooks';
 import type { PersonalEventRequest, PopoverType } from '../../model';
 import { backgroundStyle, containerStyle } from './index.css';
 import { PopoverButton } from './PopoverButton';
@@ -27,36 +26,6 @@ const initEvent = (values?: DefaultEvent): DefaultEvent => {
     isAdjustable: false,
     syncWithGoogleCalendar: true,
   };
-};
-
-const useSchedulePopover = ({
-  setIsOpen,
-  scheduleId,
-  valuesRef,
-}: {
-  setIsOpen: (isOpen: boolean) => void;
-  scheduleId?: number;
-  valuesRef: { current: FormValues<PersonalEventRequest> };
-}) => {
-  const { mutate: createMutate } = usePersonalEventMutation();
-  const { mutate: editMutate } = usePersonalEventUpdateMutation();
-
-  const handleClickCreate = () => {
-    createMutate(valuesRef.current);
-    setIsOpen(false);
-  };
-
-  const handleClickEdit = () => {
-    if (scheduleId) editMutate({ id: scheduleId, body: valuesRef.current });
-    setIsOpen(false);
-  };
-
-  const handleClickDelete = () => {
-    // if (scheduleId) mutate({ ...valuesRef.current, id: scheduleId });
-    setIsOpen(false);
-  };
-
-  return { handleClickCreate, handleClickEdit, handleClickDelete };
 };
 
 export const SchedulePopover = (
