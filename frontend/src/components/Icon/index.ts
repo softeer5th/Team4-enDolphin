@@ -1,5 +1,6 @@
 export * from "./component/ArrowLeft.tsx";
 export * from "./component/CalendarCheck.tsx";
+export * from "./component/Calendar.tsx";
 export * from "./component/Check.tsx";
 export * from "./component/ChevronDown.tsx";
 export * from "./component/ChevronLeft.tsx";
