@@ -8,7 +8,9 @@ import endolphin.backend.domain.discussion.dto.DiscussionResponse;
 import endolphin.backend.domain.discussion.dto.JoinDiscussionRequest;
 import endolphin.backend.domain.discussion.dto.InvitationInfo;
 import endolphin.backend.domain.discussion.dto.JoinDiscussionResponse;
+import endolphin.backend.domain.discussion.dto.OngoingDiscussionResponse;
 import endolphin.backend.domain.discussion.entity.Discussion;
+import endolphin.backend.domain.discussion.enums.AttendType;
 import endolphin.backend.domain.discussion.enums.DiscussionStatus;
 import endolphin.backend.domain.personal_event.PersonalEventService;
 import endolphin.backend.domain.shared_event.SharedEventService;
@@ -23,6 +25,7 @@ import endolphin.backend.global.error.exception.ErrorCode;
 import endolphin.backend.global.redis.DiscussionBitmapService;
 import endolphin.backend.global.redis.PasswordCountService;
 import endolphin.backend.global.security.PasswordEncoder;
+import endolphin.backend.global.util.TimeCalculator;
 import endolphin.backend.global.util.Validator;
 import java.time.Duration;
 import java.time.LocalDate;
@@ -33,6 +36,7 @@ import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.el.stream.Stream;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -84,7 +88,7 @@ public class DiscussionService {
             discussion.getMeetingMethod(),
             discussion.getLocation(),
             discussion.getDuration(),
-            calculateTimeLeft(discussion.getDeadline())
+            TimeCalculator.calculateTimeLeft(discussion.getDeadline())
         );
     }
 
@@ -143,7 +147,7 @@ public class DiscussionService {
             discussion.getLocation(),
             discussion.getDuration(),
             discussion.getDeadline(),
-            calculateTimeLeft(discussion.getDeadline())
+            TimeCalculator.calculateTimeLeft(discussion.getDeadline())
         );
     }
 
@@ -177,7 +181,7 @@ public class DiscussionService {
 
         Validator.validateDateTimeRange(startTime, endTime);
 
-        LocalDateTime midTime = calculateMidTime(startTime, endTime);
+        LocalDateTime midTime = TimeCalculator.calculateMidTime(startTime, endTime);
 
         LocalDateTime searchStartTime = midTime.minusHours(TIME_OFFSET);
         LocalDateTime searchEndTime = midTime.plusHours(TIME_OFFSET);
@@ -208,6 +212,20 @@ public class DiscussionService {
     }
 
     @Transactional(readOnly = true)
+    public List<OngoingDiscussionResponse> getOngoingDiscussions(int page, int size,
+        AttendType type) {
+        User currentUser = userService.getCurrentUser();
+
+        Boolean isHost = switch (type) {
+            case HOST -> true;
+            case ATTENDEE -> false;
+            case ALL -> null;
+        };
+        return discussionParticipantService
+            .getOngoingDiscussions(currentUser.getId(), page - 1, size, isHost);
+    }
+
+    @Transactional(readOnly = true)
     public Discussion getDiscussionById(Long discussionId) {
         return discussionRepository.findById(discussionId)
             .orElseThrow(() -> new ApiException(ErrorCode.DISCUSSION_NOT_FOUND));
@@ -221,7 +239,7 @@ public class DiscussionService {
             throw new ApiException(ErrorCode.DISCUSSION_NOT_ONGOING);
         }
 
-        if(discussionParticipantService.isFull(discussionId)) {
+        if (discussionParticipantService.isFull(discussionId)) {
             throw new ApiException(ErrorCode.DISCUSSION_PARTICIPANT_EXCEED_LIMIT);
         }
 
@@ -237,21 +255,6 @@ public class DiscussionService {
         personalEventService.preprocessPersonalEvents(currentUser, discussion);
 
         return new JoinDiscussionResponse(true, 0);
-    }
-
-    private long calculateTimeLeft(LocalDate deadline) {
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime deadlineDateTime = deadline.atTime(23, 59, 59);
-        Duration duration = Duration.between(now, deadlineDateTime);
-
-        return duration.toMillis();
-    }
-
-    private LocalDateTime calculateMidTime(LocalDateTime startTime, LocalDateTime endTime) {
-        Duration duration = Duration.between(startTime, endTime);
-        duration = duration.dividedBy(2);
-
-        return startTime.plus(duration);
     }
 
     private List<UserInfoWithPersonalEvents> getSortedUserInfoWithPersonalEvents(
