@@ -79,6 +79,7 @@ export const CalendarTable = () => {
               <DiscussionCard 
                 discussion={discussion}
                 key={`${discussion.startDateTime.getTime()}-${idx}`}
+                size='sm'
               />,
             )}
           </Flex>
