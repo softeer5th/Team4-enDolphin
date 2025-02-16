@@ -19,6 +19,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.util.ReflectionTestUtils;
 
 @DataJpaTest
@@ -183,5 +185,59 @@ public class DiscussionParticipantRepositoryTest {
             discussion.getId(), user2.getId());
         assertThat(result).isPresent();
         assertThat(result.get()).isFalse();
+    }
+
+    @DisplayName("findOngoingDiscussions 쿼리 테스트 - Host False")
+    @Test
+    public void testFindOngoingDiscussions_HostFalse() {
+        Page<Discussion> results = discussionParticipantRepository.findOngoingDiscussions(
+            user2.getId(), false, PageRequest.of(0, 10));
+        assertThat(results.getContent()).hasSize(1);
+        assertThat(results.getContent().get(0).getId()).isEqualTo(discussion.getId());
+    }
+
+    @DisplayName("findOngoingDiscussions 쿼리 테스트 - Host Null")
+    @Test
+    public void testFindOngoingDiscussions_HostNull() {
+        Page<Discussion> results = discussionParticipantRepository.findOngoingDiscussions(
+            user3.getId(), null, PageRequest.of(0, 10));
+        assertThat(results.getContent()).hasSize(1);
+        assertThat(results.getContent().get(0).getId()).isEqualTo(discussion.getId());
+    }
+
+    @DisplayName("findOngoingDiscussions 쿼리 테스트 - 정렬 검증")
+    @Test
+    public void testFindOngoingDiscussions_Order() {
+        Discussion discussion2 = Discussion.builder()
+            .title("Early Discussion")
+            .dateStart(LocalDate.now().minusDays(2))
+            .dateEnd(LocalDate.now().minusDays(1))
+            .timeStart(LocalTime.of(8, 0))
+            .timeEnd(LocalTime.of(16, 0))
+            .duration(60)
+            .deadline(LocalDate.now().minusDays(1))
+            .location("Early Location")
+            .build();
+        ReflectionTestUtils.setField(discussion2, "discussionStatus", DiscussionStatus.ONGOING);
+        entityManager.persist(discussion2);
+
+        DiscussionParticipant dpForDiscussion2 = DiscussionParticipant.builder()
+            .discussion(discussion2)
+            .user(user1)
+            .isHost(true)
+            .userOffset(0L)
+            .build();
+        entityManager.persist(dpForDiscussion2);
+
+        entityManager.flush();
+        entityManager.clear();
+
+        Page<Discussion> results = discussionParticipantRepository.findOngoingDiscussions(
+            user1.getId(), true, PageRequest.of(0, 10));
+        List<Discussion> discussionsResult = results.getContent();
+
+        assertThat(discussionsResult).hasSize(2);
+        assertThat(discussionsResult.get(0).getDeadline())
+            .isBeforeOrEqualTo(discussionsResult.get(1).getDeadline());
     }
 }
