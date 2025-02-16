@@ -1,16 +1,24 @@
 package endolphin.backend.domain.discussion;
 
 import endolphin.backend.domain.discussion.dto.DiscussionParticipantsResponse;
+import endolphin.backend.domain.discussion.dto.OngoingDiscussionResponse;
 import endolphin.backend.domain.discussion.entity.Discussion;
 import endolphin.backend.domain.discussion.entity.DiscussionParticipant;
+import endolphin.backend.domain.discussion.enums.DiscussionStatus;
 import endolphin.backend.domain.user.UserService;
 import endolphin.backend.domain.user.dto.UserIdNameDto;
 import endolphin.backend.domain.user.entity.User;
 import endolphin.backend.global.error.exception.ApiException;
 import endolphin.backend.global.error.exception.ErrorCode;
+import endolphin.backend.global.util.TimeCalculator;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -113,16 +121,38 @@ public class DiscussionParticipantService {
         List<UserIdNameDto> participants = discussionParticipantRepository.findUserIdNameDtosByDiscussionId(
             discussionId);
 
-        if(participants.isEmpty()) {
+        if (participants.isEmpty()) {
             throw new ApiException(ErrorCode.DISCUSSION_PARTICIPANT_NOT_FOUND);
         }
         return new DiscussionParticipantsResponse(participants);
     }
 
     @Transactional(readOnly = true)
+    public List<OngoingDiscussionResponse> getOngoingDiscussions(Long userId, int page, int size,
+        Boolean isHost) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Discussion> discussionPage = discussionParticipantRepository.findOngoingDiscussions(
+            userId, isHost, pageable);
+        List<Discussion> discussions = discussionPage.getContent();
+
+        return discussions.stream()
+            .map(discussion -> new OngoingDiscussionResponse(
+                discussion.getId(),
+                discussion.getTitle(),
+                discussion.getDateRangeStart(),
+                discussion.getDateRangeEnd(),
+                TimeCalculator.calculateTimeLeft(discussion.getDeadline()),
+                discussionParticipantRepository.findUserPicturesByDiscussionId(discussion.getId())
+            ))
+            .collect(Collectors.toList());
+    }
+
+
+    @Transactional(readOnly = true)
     public Boolean amIHost(Long discussionId) {
         User user = userService.getCurrentUser();
-        return discussionParticipantRepository.findIsHostByDiscussionIdAndUserId(discussionId, user.getId())
+        return discussionParticipantRepository.findIsHostByDiscussionIdAndUserId(discussionId,
+                user.getId())
             .orElseThrow(() -> new ApiException(ErrorCode.DISCUSSION_PARTICIPANT_NOT_FOUND));
     }
 
