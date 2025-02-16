@@ -171,7 +171,7 @@ public class DiscussionController {
             content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
         @ApiResponse(responseCode = "401", description = "인증 실패",
             content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-        @ApiResponse(responseCode = "403", description = "비밀번호 인증 5회 실패",
+        @ApiResponse(responseCode = "403", description = "참가자 초과",
             content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
         @ApiResponse(responseCode = "404", description = "해당 논의 없음",
             content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
