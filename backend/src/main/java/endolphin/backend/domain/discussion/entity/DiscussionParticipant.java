@@ -10,7 +10,9 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @Entity
-@Table(name = "discussion_participant")
+@Table(name = "discussion_participant", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"discussion_id", "user_id"})
+})
 public class DiscussionParticipant extends BaseTimeEntity {
 
     @Id
@@ -34,7 +36,8 @@ public class DiscussionParticipant extends BaseTimeEntity {
     private Long userOffset;
 
     @Builder
-    public DiscussionParticipant(Discussion discussion, User user, boolean isHost, Long userOffset) {
+    public DiscussionParticipant(Discussion discussion, User user, boolean isHost,
+        Long userOffset) {
         this.discussion = discussion;
         this.user = user;
         this.isHost = isHost;
