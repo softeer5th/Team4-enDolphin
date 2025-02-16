@@ -1,3 +1,5 @@
+import { Flex } from '@/components/Flex';
+import { useClickOutside } from '@/hooks/useClickOutside';
 import type { FormValues } from '@/hooks/useFormRef';
 import { useFormRef } from '@/hooks/useFormRef';
 import { isSaturday } from '@/utils/date';
@@ -5,7 +7,7 @@ import { calcPositionByDate } from '@/utils/date/position';
 
 import { usePersonalEventMutation, usePersonalEventUpdateMutation } from '../../api/mutations';
 import type { PersonalEventRequest, PopoverType } from '../../model';
-import { containerStyle } from './index.css';
+import { backgroundStyle, containerStyle } from './index.css';
 import { PopoverButton } from './PopoverButton';
 import { PopoverForm } from './PopoverForm';
 import { Title } from './Title';
@@ -61,6 +63,7 @@ const useSchedulePopover = ({
 export const SchedulePopover = (
   { setIsOpen, scheduleId, type, values, ...event }: SchedulePopoverProps,
 ) => {
+  const ref = useClickOutside<HTMLDialogElement>(() => setIsOpen(false));
   const startDate = new Date(event.startDateTime);
   const { x: sx, y: sy } = calcPositionByDate(startDate);
   const { valuesRef, handleChange } = useFormRef<PersonalEventRequest>({
@@ -68,31 +71,32 @@ export const SchedulePopover = (
     endDateTime: event.endDateTime,
     ...initEvent(values),
   });
-
   const { handleClickCreate, handleClickEdit, handleClickDelete } = useSchedulePopover({
     setIsOpen,
     scheduleId,
     valuesRef,
   });
-
   return(
-    <dialog
-      className={containerStyle}
-      style={{
-        position: 'absolute',
-        left: isSaturday(startDate) 
-          ? `calc((100% - 72px) / 7 * ${sx - 1})` : `calc((100% - 72px) / 7 * ${sx + 1})`,
-        top: 16 + sy,
-      }}
-    >
-      <Title type={type} />
-      <PopoverForm handleChange={handleChange} valuesRef={valuesRef} />
-      <PopoverButton
-        onClickCreate={handleClickCreate}
-        onClickDelete={handleClickDelete}
-        onClickEdit={handleClickEdit}
-        type={type}
-      />
-    </dialog>
+    <Flex className={backgroundStyle}>
+      <dialog
+        className={containerStyle}
+        ref={ref}
+        style={{
+          position: 'absolute',
+          left: isSaturday(startDate) 
+            ? `calc((100% - 72px) / 7 * ${sx - 1})` : `calc((100% - 72px) / 7 * ${sx + 1})`,
+          top: 16 + sy,
+        }}
+      >
+        <Title type={type} />
+        <PopoverForm handleChange={handleChange} valuesRef={valuesRef} />
+        <PopoverButton
+          onClickCreate={handleClickCreate}
+          onClickDelete={handleClickDelete}
+          onClickEdit={handleClickEdit}
+          type={type}
+        />
+      </dialog>
+    </Flex>
   ); 
 };
