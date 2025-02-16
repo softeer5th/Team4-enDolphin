@@ -55,7 +55,7 @@ export const MyCalendar = () => {
     <Calendar {...calendar} className={calendarStyle}>
       <Calendar.Core />
       <Calendar.Header />
-      {isLoading ? <div>로딩중...</div> : <CalendarTable personalEvents={personalEvents} />}
+      {<CalendarTable personalEvents={isLoading ? [] : personalEvents} />}
     </Calendar>
   );
 };
