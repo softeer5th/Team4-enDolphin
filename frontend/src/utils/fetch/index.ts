@@ -1,6 +1,6 @@
 /* global RequestInit BodyInit HeadersInit */
 
-const BASE_URL = import.meta.env.VITE_API_URL;
+import { serviceENV } from '@/envconfig';
 
 type Method = 'GET' | 'POST' | 'PUT' | 'DELETE';
 
@@ -11,6 +11,7 @@ export type RequestOptions = {
 const buildFetchOptions = (options?: RequestInit): RequestInit => {
   const defaultHeaders = {
     'Content-Type': 'application/json',
+    Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
   };
 
   const headers = { ...defaultHeaders, ...options?.headers };
@@ -40,7 +41,7 @@ export const executeFetch = async (
   const queryString = params && Object.keys(params).length > 0
     ? `?${new URLSearchParams(params).toString()}`
     : '';
-  const fullUrl = `${BASE_URL}${endpoint}${queryString}`;
+  const fullUrl = `${serviceENV.BASE_URL}${endpoint}${queryString}`;
 
   try {
     const response = await fetch(fullUrl, {

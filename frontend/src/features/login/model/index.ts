@@ -1,9 +1,7 @@
-
-export interface RequestGoogleLoginUrlResponse {
-  url: string;
+export interface JWTRequest {
+  code: string;
 }
 
-export interface RequestGoogleLoginResponse {
+export interface JWTResponse {
   accessToken: string;
 }
-

@@ -12,6 +12,6 @@ const DiscussionCreateFinish = () => (
   </>
 );
 
-export const Route = createFileRoute('/discussion/create/$id')({
+export const Route = createFileRoute('/_main/discussion/create/$id')({
   component: DiscussionCreateFinish,
 });

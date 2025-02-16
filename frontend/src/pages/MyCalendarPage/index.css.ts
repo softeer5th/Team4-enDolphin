@@ -6,6 +6,10 @@ export const containerStyle = style({
   width: '100vw',
   height: '100vh',
 
+  position: 'fixed',
+  top: 0,
+  left: 0,
+
   paddingTop: 56,
 
   overflow: 'hidden',

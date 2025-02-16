@@ -12,6 +12,6 @@ const MyCalendar = () => (
   </>
 );
 
-export const Route = createLazyFileRoute('/my-calendar/')({
+export const Route = createLazyFileRoute('/_main/my-calendar/')({
   component: MyCalendar,
 });

@@ -1,8 +1,12 @@
 import { request } from '@/utils/fetch';
 
-import type { RequestGoogleLoginUrlResponse } from '../model';
+import type { JWTResponse } from '../model';
 
-export const requestGoogleLoginUrl = async (): Promise<RequestGoogleLoginUrlResponse> => {
-  const response = await request.get('/api/v1/google');
-  return response;
+export const loginApi = {
+  getJWT: async (code: string): Promise<JWTResponse> => {
+    const response = await request.post('/api/v1/login', {
+      body: { code },
+    });
+    return response;
+  },
 };
