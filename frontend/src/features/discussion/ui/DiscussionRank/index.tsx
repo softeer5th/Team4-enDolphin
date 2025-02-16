@@ -1,9 +1,11 @@
 import { useState } from 'react';
 
+import { Flex } from '@/components/Flex';
 import { Tab } from '@/components/Tab';
 
 import type { DiscussionDTO } from '../../model';
-import { Participants } from './Participants';
+import { tabStyle } from './index.css';
+import { RankContents } from './RankContents';
 
 const data: DiscussionDTO[] = [
   {
@@ -62,18 +64,22 @@ const DiscussionRank = () => {
   };
 
   return (
-    <div>
-      <Tab onChange={handleChange} selectedValue={tab}>
-        <Tab.List>
-          <Tab.Item value='eventsRankedDefault'>참가자 많은 순</Tab.Item>
-          <Tab.Item value='eventsRankedOfTime'>빠른 시간 순</Tab.Item>
-        </Tab.List>
-        <Tab.Content value='eventsRankedDefault'>
-          <Participants data={data} />
-        </Tab.Content>
-        <Tab.Content value='eventsRankedOfTime'>순위</Tab.Content>
-      </Tab>
-    </div>
+    <Tab
+      className={tabStyle}
+      onChange={handleChange}
+      selectedValue={tab}
+    >
+      <Tab.List>
+        <Tab.Item value='eventsRankedDefault'>참가자 많은 순</Tab.Item>
+        <Tab.Item value='eventsRankedOfTime'>빠른 시간 순</Tab.Item>
+      </Tab.List>
+      <Tab.Content value='eventsRankedDefault'>
+        <RankContents data={data} />
+      </Tab.Content>
+      <Tab.Content value='eventsRankedOfTime'>
+        <RankContents data={data} />
+      </Tab.Content>
+    </Tab>
   );
 };
 
