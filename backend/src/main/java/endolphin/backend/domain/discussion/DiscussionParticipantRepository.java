@@ -67,4 +67,11 @@ public interface DiscussionParticipantRepository extends
         "WHERE dp.discussion.id = :discussionId " +
         "ORDER BY dp.userOffset ASC")
     List<UserIdNameDto> findUserIdNameDtosByDiscussionId(@Param("discussionId") Long discussionId);
+
+    @Query("SELECT dp.isHost " +
+        "FROM DiscussionParticipant dp " +
+        "WHERE dp.discussion.id = :discussionId " +
+        "AND dp.user.id = :userId")
+    Optional<Boolean> findIsHostByDiscussionIdAndUserId(@Param("discussionId") Long discussionId,
+        @Param("userId") Long userId);
 }

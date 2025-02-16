@@ -166,4 +166,22 @@ public class DiscussionParticipantRepositoryTest {
         assertThat(dtos.get(2).id()).isEqualTo(user3.getId());
         assertThat(dtos.get(2).name()).isEqualTo(user3.getName());
     }
+
+    @DisplayName("discussionId, userId로 호스트 여부 조회(true)")
+    @Test
+    public void testFindIsHostByDiscussionIdAndUserId_returnsTrue() {
+        Optional<Boolean> result = discussionParticipantRepository.findIsHostByDiscussionIdAndUserId(
+            discussion.getId(), user1.getId());
+        assertThat(result).isPresent();
+        assertThat(result.get()).isTrue();
+    }
+
+    @DisplayName("discussionId, userId로 호스트 여부 조회(false)")
+    @Test
+    public void testFindIsHostByDiscussionIdAndUserId_returnsFalse() {
+        Optional<Boolean> result = discussionParticipantRepository.findIsHostByDiscussionIdAndUserId(
+            discussion.getId(), user2.getId());
+        assertThat(result).isPresent();
+        assertThat(result.get()).isFalse();
+    }
 }
