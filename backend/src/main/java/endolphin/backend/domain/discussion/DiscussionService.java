@@ -196,7 +196,8 @@ public class DiscussionService {
 
         List<UserInfoWithPersonalEvents> result0 =
             personalEventService.findUserInfoWithPersonalEventsByUsers(
-                participants, searchStartTime, searchEndTime, startTime, endTime, selectedUserIdMap);
+                participants, searchStartTime, searchEndTime, startTime, endTime,
+                selectedUserIdMap);
 
         List<UserInfoWithPersonalEvents> sortedResult = getSortedUserInfoWithPersonalEvents(
             result0, currentUser);
@@ -214,6 +215,10 @@ public class DiscussionService {
     public boolean joinDiscussion(Long discussionId, JoinDiscussionRequest request) {
         Discussion discussion = discussionRepository.findById(discussionId)
             .orElseThrow(() -> new ApiException(ErrorCode.DISCUSSION_NOT_FOUND));
+
+        if (discussion.getDiscussionStatus() != DiscussionStatus.ONGOING) {
+            throw new ApiException(ErrorCode.DISCUSSION_NOT_ONGOING);
+        }
 
         User currentUser = userService.getCurrentUser();
 

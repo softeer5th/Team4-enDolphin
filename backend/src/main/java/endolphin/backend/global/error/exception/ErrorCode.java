@@ -15,9 +15,9 @@ public enum ErrorCode {
     // Discussion
     DISCUSSION_NOT_FOUND(HttpStatus.NOT_FOUND, "D001", "Discussion not found"),
     EMPTY_SELECTED_USER_IDS(HttpStatus.BAD_REQUEST, "D002", "Empty Selected User IDs"),
-    DISCUSSION_NOT_ONGOING(HttpStatus.BAD_REQUEST, "D002", "Discussion not ongoing"),
-    TOO_MANY_FAILED_ATTEMPTS(HttpStatus.FORBIDDEN, "D003", "Too many failed attempts"),
-    PASSWORD_REQUIRED(HttpStatus.BAD_REQUEST, "D004", "Password required"),
+    DISCUSSION_NOT_ONGOING(HttpStatus.BAD_REQUEST, "D003", "Discussion not ongoing"),
+    TOO_MANY_FAILED_ATTEMPTS(HttpStatus.FORBIDDEN, "D004", "Too many failed attempts"),
+    PASSWORD_REQUIRED(HttpStatus.BAD_REQUEST, "D005", "Password required"),
 
     // PersonalEvent
     PERSONAL_EVENT_NOT_FOUND(HttpStatus.NOT_FOUND, "P001", "Personal Event not found"),
@@ -30,7 +30,7 @@ public enum ErrorCode {
     DISCUSSION_PARTICIPANT_EXCEED_LIMIT(HttpStatus.FORBIDDEN, "DP001", "Discussion participant exceed limit"),
     DISCUSSION_PARTICIPANT_NOT_FOUND(HttpStatus.NOT_FOUND, "DP002", "Discussion participant not found"),
     INVALID_DISCUSSION_PARTICIPANT(HttpStatus.BAD_REQUEST, "DP003", "Invalid Discussion participant"),
-    DISCUSSION_HOST_NOT_FOUND(HttpStatus.NOT_FOUND, "DP003", "Discussion host not found"),
+    DISCUSSION_HOST_NOT_FOUND(HttpStatus.NOT_FOUND, "DP004", "Discussion host not found"),
 
     //Calendar
     CALENDAR_UNAUTHORIZED_ERROR(HttpStatus.UNAUTHORIZED, "CA001", "Unauthorized"),
