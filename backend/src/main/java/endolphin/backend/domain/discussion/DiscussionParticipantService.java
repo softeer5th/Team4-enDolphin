@@ -21,6 +21,7 @@ public class DiscussionParticipantService {
 
     private final DiscussionParticipantRepository discussionParticipantRepository;
     private final UserService userService;
+    private static final int MAX_PARTICIPANT = 15;
 
     public void addDiscussionParticipant(Discussion discussion, User user) {
         Long offset = discussionParticipantRepository.findMaxOffsetByDiscussionId(
@@ -28,7 +29,7 @@ public class DiscussionParticipantService {
 
         offset += 1;
 
-        if (offset >= 15) {
+        if (offset >= MAX_PARTICIPANT) {
             throw new ApiException(ErrorCode.DISCUSSION_PARTICIPANT_EXCEED_LIMIT);
         }
 
@@ -76,7 +77,7 @@ public class DiscussionParticipantService {
         int filter = 0;
 
         for (Long offset : userOffsets) {
-            filter |= (1 << 15 - offset);
+            filter |= (1 << MAX_PARTICIPANT - offset);
         }
 
         return filter;
@@ -90,8 +91,8 @@ public class DiscussionParticipantService {
 
         List<Long> userOffsets = new ArrayList<>();
 
-        for (int i = 0; i < 16; i++) {
-            if ((data & (1 << (15 - i))) != 0) {
+        for (int i = 0; i < MAX_PARTICIPANT + 1; i++) {
+            if ((data & (1 << (MAX_PARTICIPANT - i))) != 0) {
                 userOffsets.add((long) i);
             }
         }
@@ -123,5 +124,17 @@ public class DiscussionParticipantService {
         User user = userService.getCurrentUser();
         return discussionParticipantRepository.findIsHostByDiscussionIdAndUserId(discussionId, user.getId())
             .orElseThrow(() -> new ApiException(ErrorCode.DISCUSSION_PARTICIPANT_NOT_FOUND));
+    }
+
+    @Transactional(readOnly = true)
+    public String getHostNameByDiscussionId(Long discussionId) {
+        return discussionParticipantRepository.findHostNameByDiscussionIdAndIsHost(discussionId)
+            .orElseThrow(() -> new ApiException(ErrorCode.DISCUSSION_HOST_NOT_FOUND));
+    }
+
+    @Transactional(readOnly = true)
+    public Boolean isFull(Long discussionId) {
+        Long offset = discussionParticipantRepository.findMaxOffsetByDiscussionId(discussionId);
+        return offset >= MAX_PARTICIPANT - 1;
     }
 }

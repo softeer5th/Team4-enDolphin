@@ -16,7 +16,9 @@ import static org.mockito.Mockito.when;
 import endolphin.backend.domain.discussion.dto.CandidateEventDetailsRequest;
 import endolphin.backend.domain.discussion.dto.CandidateEventDetailsResponse;
 import endolphin.backend.domain.discussion.dto.CreateDiscussionRequest;
+import endolphin.backend.domain.discussion.dto.DiscussionInfo;
 import endolphin.backend.domain.discussion.dto.DiscussionResponse;
+import endolphin.backend.domain.discussion.dto.InvitationInfo;
 import endolphin.backend.domain.discussion.entity.Discussion;
 import endolphin.backend.domain.discussion.enums.DiscussionStatus;
 import endolphin.backend.domain.discussion.enums.MeetingMethod;
@@ -310,6 +312,97 @@ public class DiscussionServiceTest {
         // discussionRepository.save가 두 번 호출되었는지 확인 (최초 저장, 비밀번호 업데이트)
         verify(discussionRepository, atLeast(2)).save(any(Discussion.class));
     }
+
+    @DisplayName("Discussion 정보 조회 테스트")
+    @Test
+    public void getDiscussionInfo_returnsExpectedDiscussionInfo() {
+        // Given
+        Long discussionId = 1L;
+        LocalDate start = LocalDate.of(2025, 2, 10);
+        LocalDate end = LocalDate.of(2025, 2, 15);
+        LocalTime timeStart = LocalTime.of(9, 0);
+        LocalTime timeEnd = LocalTime.of(18, 0);
+        LocalDate deadline = LocalDate.now().plusDays(10);
+
+        Discussion discussion = Discussion.builder()
+            .title("팀 회의")
+            .dateStart(start)
+            .dateEnd(end)
+            .timeStart(timeStart)
+            .timeEnd(timeEnd)
+            .duration(60)
+            .deadline(deadline)
+            .meetingMethod(MeetingMethod.OFFLINE)
+            .location("회의실 1")
+            .build();
+        discussion.setDiscussionStatus(DiscussionStatus.ONGOING);
+
+        when(discussionRepository.findById(discussionId)).thenReturn(Optional.of(discussion));
+
+        // When
+        DiscussionInfo info = discussionService.getDiscussionInfo(discussionId);
+
+        // Then
+        assertThat(info).isNotNull();
+        assertThat(info.id()).isEqualTo(discussionId);
+        assertThat(info.title()).isEqualTo("팀 회의");
+        assertThat(info.dateRangeStart()).isEqualTo(start);
+        assertThat(info.dateRangeEnd()).isEqualTo(end);
+        assertThat(info.timeRangeStart()).isEqualTo(timeStart);
+        assertThat(info.timeRangeEnd()).isEqualTo(timeEnd);
+        assertThat(info.meetingMethod()).isEqualTo(MeetingMethod.OFFLINE);
+        assertThat(info.location()).isEqualTo("회의실 1");
+        assertThat(info.duration()).isEqualTo(60);
+        assertThat(info.deadline()).isEqualTo(deadline);
+
+        long expectedTimeLeft = Duration.between(LocalDateTime.now(), deadline.atTime(23, 59, 59)).toMillis();
+        // 약간의 오차(1000ms 이내)는 허용
+        assertThat(info.timeLeft()).isCloseTo(expectedTimeLeft, within(1000L));
+    }
+
+    @DisplayName("Invitation 정보 조회 테스트")
+    @Test
+    public void getInvitationInfo_returnsExpectedInvitationInfo() {
+        Long discussionId = 1L;
+        LocalDate start = LocalDate.of(2025, 2, 10);
+        LocalDate end = LocalDate.of(2025, 2, 15);
+        LocalTime timeStart = LocalTime.of(9, 0);
+        LocalTime timeEnd = LocalTime.of(18, 0);
+        LocalDate deadline = LocalDate.now().plusDays(10);
+
+        Discussion discussion = Discussion.builder()
+            .title("팀 회의")
+            .dateStart(start)
+            .dateEnd(end)
+            .timeStart(timeStart)
+            .timeEnd(timeEnd)
+            .duration(60)
+            .deadline(deadline)
+            .meetingMethod(MeetingMethod.OFFLINE)
+            .location("회의실 1")
+            .build();
+        discussion.setDiscussionStatus(DiscussionStatus.ONGOING);
+        discussion.setPassword("encodedPassword");
+
+        when(discussionRepository.findById(discussionId)).thenReturn(Optional.of(discussion));
+        when(discussionParticipantService.getHostNameByDiscussionId(discussionId))
+            .thenReturn("HostName");
+        when(discussionParticipantService.isFull(discussionId)).thenReturn(true);
+
+        InvitationInfo invitationInfo = discussionService.getInvitationInfo(discussionId);
+
+        assertThat(invitationInfo).isNotNull();
+        assertThat(invitationInfo.host()).isEqualTo("HostName");
+        assertThat(invitationInfo.title()).isEqualTo("팀 회의");
+        assertThat(invitationInfo.dateRangeStart()).isEqualTo(start);
+        assertThat(invitationInfo.dateRangeEnd()).isEqualTo(end);
+        assertThat(invitationInfo.timeRangeStart()).isEqualTo(timeStart);
+        assertThat(invitationInfo.timeRangeEnd()).isEqualTo(timeEnd);
+        assertThat(invitationInfo.duration()).isEqualTo(60);
+        assertThat(invitationInfo.isFull()).isTrue();
+        assertThat(invitationInfo.requirePassword()).isTrue();
+    }
+
 
     @Test
     void retrieveCandidateEventDetails_ValidRequest_ReturnsCorrectResponse() {

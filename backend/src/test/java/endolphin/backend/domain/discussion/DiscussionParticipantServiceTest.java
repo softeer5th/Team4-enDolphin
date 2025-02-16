@@ -199,4 +199,55 @@ class DiscussionParticipantServiceTest {
         // Then
         assertThat(result).isEqualTo(dtos);
     }
+
+    @Test
+    @DisplayName("호스트 이름 조회 - 성공")
+    void getHostNameByDiscussionId_ShouldReturnHostName() {
+        Long discussionId = 1L;
+        String hostName = "HostName";
+        given(discussionParticipantRepository.findHostNameByDiscussionIdAndIsHost(discussionId))
+            .willReturn(Optional.of(hostName));
+
+        String result = discussionParticipantService.getHostNameByDiscussionId(discussionId);
+
+        assertThat(result).isEqualTo(hostName);
+    }
+
+    @Test
+    @DisplayName("호스트 이름 조회 - 존재하지 않을 경우 예외 발생")
+    void getHostNameByDiscussionId_ShouldThrowExceptionIfNotFound() {
+        Long discussionId = 1L;
+        given(discussionParticipantRepository.findHostNameByDiscussionIdAndIsHost(discussionId))
+            .willReturn(Optional.empty());
+
+        ApiException exception = assertThrows(ApiException.class, () ->
+            discussionParticipantService.getHostNameByDiscussionId(discussionId)
+        );
+        assertThat(exception.getErrorCode()).isEqualTo(ErrorCode.DISCUSSION_HOST_NOT_FOUND);
+    }
+
+    @Test
+    @DisplayName("논의가 꽉 차지 않았을 때 isFull이 false를 반환")
+    void isFull_ShouldReturnFalseWhenOffsetLessThanLimit() {
+        Long discussionId = 1L;
+        given(discussionParticipantRepository.findMaxOffsetByDiscussionId(discussionId))
+            .willReturn(10L);
+
+        Boolean result = discussionParticipantService.isFull(discussionId);
+
+        assertThat(result).isFalse();
+    }
+
+    @Test
+    @DisplayName("논의가 꽉 찼을 때 isFull이 true를 반환")
+    void isFull_ShouldReturnTrueWhenOffsetAtOrAboveLimit() {
+        Long discussionId = 1L;
+        given(discussionParticipantRepository.findMaxOffsetByDiscussionId(discussionId))
+            .willReturn(14L);
+
+        Boolean result = discussionParticipantService.isFull(discussionId);
+
+        assertThat(result).isTrue();
+    }
+
 }

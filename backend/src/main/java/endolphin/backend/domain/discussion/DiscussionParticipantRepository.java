@@ -74,4 +74,11 @@ public interface DiscussionParticipantRepository extends
         "AND dp.user.id = :userId")
     Optional<Boolean> findIsHostByDiscussionIdAndUserId(@Param("discussionId") Long discussionId,
         @Param("userId") Long userId);
+
+    @Query("SELECT u.name " +
+        "FROM DiscussionParticipant dp " +
+        "JOIN dp.user u " +
+        "WHERE dp.discussion.id = :discussionId " +
+        "AND dp.isHost = true")
+    Optional<String> findHostNameByDiscussionIdAndIsHost(@Param("discussionId") Long discussionId);
 }

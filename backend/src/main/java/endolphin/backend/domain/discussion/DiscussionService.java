@@ -3,7 +3,9 @@ package endolphin.backend.domain.discussion;
 import endolphin.backend.domain.discussion.dto.CandidateEventDetailsRequest;
 import endolphin.backend.domain.discussion.dto.CandidateEventDetailsResponse;
 import endolphin.backend.domain.discussion.dto.CreateDiscussionRequest;
+import endolphin.backend.domain.discussion.dto.DiscussionInfo;
 import endolphin.backend.domain.discussion.dto.DiscussionResponse;
+import endolphin.backend.domain.discussion.dto.InvitationInfo;
 import endolphin.backend.domain.discussion.entity.Discussion;
 import endolphin.backend.domain.discussion.enums.DiscussionStatus;
 import endolphin.backend.domain.personal_event.PersonalEventService;
@@ -87,7 +89,7 @@ public class DiscussionService {
         Discussion discussion = discussionRepository.findById(discussionId)
             .orElseThrow(() -> new ApiException(ErrorCode.DISCUSSION_NOT_FOUND));
 
-        if(discussion.getDiscussionStatus() != DiscussionStatus.ONGOING) {
+        if (discussion.getDiscussionStatus() != DiscussionStatus.ONGOING) {
             throw new ApiException(ErrorCode.DISCUSSION_NOT_ONGOING);
         }
 
@@ -120,6 +122,40 @@ public class DiscussionService {
             discussion.getMeetingMethodOrLocation(),
             sharedEventDto,
             participantPictures
+        );
+    }
+
+    public DiscussionInfo getDiscussionInfo(Long discussionId) {
+        Discussion discussion = getDiscussionById(discussionId);
+
+        return new DiscussionInfo(
+            discussionId,
+            discussion.getTitle(),
+            discussion.getDateRangeStart(),
+            discussion.getDateRangeEnd(),
+            discussion.getTimeRangeStart(),
+            discussion.getTimeRangeEnd(),
+            discussion.getMeetingMethod(),
+            discussion.getLocation(),
+            discussion.getDuration(),
+            discussion.getDeadline(),
+            calculateTimeLeft(discussion.getDeadline())
+        );
+    }
+
+    public InvitationInfo getInvitationInfo(Long discussionId) {
+        Discussion discussion = getDiscussionById(discussionId);
+
+        return new InvitationInfo(
+            discussionParticipantService.getHostNameByDiscussionId(discussionId),
+            discussion.getTitle(),
+            discussion.getDateRangeStart(),
+            discussion.getDateRangeEnd(),
+            discussion.getTimeRangeStart(),
+            discussion.getTimeRangeEnd(),
+            discussion.getDuration(),
+            discussionParticipantService.isFull(discussionId),
+            discussion.getPassword() != null
         );
     }
 

@@ -5,6 +5,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import java.util.Arrays;
@@ -67,7 +68,10 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             "/h2-console" // prod profile에서는 h2-console 접근 불가
         );
 
+        Pattern invitePattern = Pattern.compile("^/api/v1/discussion/\\d+/invite$");
+
         return "OPTIONS".equalsIgnoreCase(request.getMethod()) ||
-            excludedPaths.stream().anyMatch(path::startsWith);
+            excludedPaths.stream().anyMatch(path::startsWith) ||
+            invitePattern.matcher(path).matches();
     }
 }

@@ -8,8 +8,10 @@ import endolphin.backend.domain.candidate_event.dto.RankViewResponse;
 import endolphin.backend.domain.discussion.dto.CandidateEventDetailsRequest;
 import endolphin.backend.domain.discussion.dto.CandidateEventDetailsResponse;
 import endolphin.backend.domain.discussion.dto.CreateDiscussionRequest;
+import endolphin.backend.domain.discussion.dto.DiscussionInfo;
 import endolphin.backend.domain.discussion.dto.DiscussionParticipantsResponse;
 import endolphin.backend.domain.discussion.dto.DiscussionResponse;
+import endolphin.backend.domain.discussion.dto.InvitationInfo;
 import endolphin.backend.domain.shared_event.dto.SharedEventRequest;
 import endolphin.backend.domain.shared_event.dto.SharedEventWithDiscussionInfoResponse;
 import endolphin.backend.global.error.ErrorResponse;
@@ -54,6 +56,46 @@ public class DiscussionController {
         DiscussionResponse response = discussionService.createDiscussion(request);
         URI location = URIUtil.buildResourceUri(response.id());
         return ResponseEntity.created(location).body(response);
+    }
+
+    @Operation(summary = "논의 정보 조회", description = "논의 정보를 조회합니다.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "논의 정보 조회 성공",
+            content = @Content(schema = @Schema(implementation = DiscussionInfo.class))),
+        @ApiResponse(responseCode = "400", description = "잘못된 요청 파라미터",
+            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+        @ApiResponse(responseCode = "401", description = "인증 실패",
+            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+        @ApiResponse(responseCode = "404", description = "해당 논의 없음",
+            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+        @ApiResponse(responseCode = "500", description = "서버 오류",
+            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    })
+    @GetMapping("/{discussionId}")
+    public ResponseEntity<DiscussionInfo> getDiscussionInfo(
+        @PathVariable @Min(1) Long discussionId) {
+        DiscussionInfo discussionInfo = discussionService.getDiscussionInfo(discussionId);
+        return ResponseEntity.ok(discussionInfo);
+    }
+
+    @Operation(summary = "초대장 정보 조회", description = "논의 초대장 정보를 조회합니다.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "초대장 정보 조회 성공",
+            content = @Content(schema = @Schema(implementation = InvitationInfo.class))),
+        @ApiResponse(responseCode = "400", description = "잘못된 요청 파라미터",
+            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+        @ApiResponse(responseCode = "401", description = "인증 실패",
+            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+        @ApiResponse(responseCode = "404", description = "해당 논의 없음",
+            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+        @ApiResponse(responseCode = "500", description = "서버 오류",
+            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    })
+    @GetMapping("/{discussionId}/invite")
+    public ResponseEntity<InvitationInfo> getInvitationInfo(
+        @PathVariable @Min(1) Long discussionId) {
+        InvitationInfo invitationInfo = discussionService.getInvitationInfo(discussionId);
+        return ResponseEntity.ok(invitationInfo);
     }
 
     @Operation(summary = "논의 확정", description = "후보 일정을 해당 논의의 공유 일정으로 확정합니다.")
