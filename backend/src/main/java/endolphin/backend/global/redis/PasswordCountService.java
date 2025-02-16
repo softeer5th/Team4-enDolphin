@@ -16,7 +16,7 @@ public class PasswordCountService {
     private static final int MAX_FAILED_ATTEMPTS = 5;
     private static final long LOCKOUT_DURATION_MS = 5 * 60 * 1000;
 
-    public void increaseCount(Long userId, Long discussionId) {
+    public int increaseCount(Long userId, Long discussionId) {
         String redisKey = "failedAttempts:" + discussionId + ":" + userId;
 
         String countStr = redisStringTemplate.opsForValue().get(redisKey);
@@ -27,8 +27,12 @@ public class PasswordCountService {
         }
 
         Long updatedCount = redisStringTemplate.opsForValue().increment(redisKey);
-        if (updatedCount != null) {
-            redisStringTemplate.expire(redisKey, LOCKOUT_DURATION_MS, TimeUnit.MILLISECONDS);
+
+        if (updatedCount == null) {
+            throw new ApiException(ErrorCode.INTERNAL_ERROR);
         }
+        redisStringTemplate.expire(redisKey, LOCKOUT_DURATION_MS, TimeUnit.MILLISECONDS);
+
+        return updatedCount.intValue();
     }
 }

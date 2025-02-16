@@ -7,6 +7,7 @@ import endolphin.backend.domain.discussion.dto.DiscussionInfo;
 import endolphin.backend.domain.discussion.dto.DiscussionResponse;
 import endolphin.backend.domain.discussion.dto.JoinDiscussionRequest;
 import endolphin.backend.domain.discussion.dto.InvitationInfo;
+import endolphin.backend.domain.discussion.dto.JoinDiscussionResponse;
 import endolphin.backend.domain.discussion.entity.Discussion;
 import endolphin.backend.domain.discussion.enums.DiscussionStatus;
 import endolphin.backend.domain.personal_event.PersonalEventService;
@@ -212,7 +213,7 @@ public class DiscussionService {
             .orElseThrow(() -> new ApiException(ErrorCode.DISCUSSION_NOT_FOUND));
     }
 
-    public boolean joinDiscussion(Long discussionId, JoinDiscussionRequest request) {
+    public JoinDiscussionResponse joinDiscussion(Long discussionId, JoinDiscussionRequest request) {
         Discussion discussion = discussionRepository.findById(discussionId)
             .orElseThrow(() -> new ApiException(ErrorCode.DISCUSSION_NOT_FOUND));
 
@@ -220,18 +221,22 @@ public class DiscussionService {
             throw new ApiException(ErrorCode.DISCUSSION_NOT_ONGOING);
         }
 
+        if(discussionParticipantService.isFull(discussionId)) {
+            throw new ApiException(ErrorCode.DISCUSSION_PARTICIPANT_EXCEED_LIMIT);
+        }
+
         User currentUser = userService.getCurrentUser();
 
         if (hasDiscussionPassword(discussionId) && !checkPassword(discussion, request.password())) {
-            passwordCountService.increaseCount(currentUser.getId(), discussionId);
-            return false;
+            int failedCount = passwordCountService.increaseCount(currentUser.getId(), discussionId);
+            return new JoinDiscussionResponse(false, failedCount);
         }
 
         discussionParticipantService.addDiscussionParticipant(discussion, currentUser);
 
         personalEventService.preprocessPersonalEvents(currentUser, discussion);
 
-        return true;
+        return new JoinDiscussionResponse(true, 0);
     }
 
     private long calculateTimeLeft(LocalDate deadline) {
