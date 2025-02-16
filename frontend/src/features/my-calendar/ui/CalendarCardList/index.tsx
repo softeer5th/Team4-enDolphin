@@ -1,7 +1,7 @@
 import { TIME_HEIGHT } from '@/constants/date';
 import { calcPositionByDate } from '@/utils/date/position';
 
-import type { PersonalEventDTO } from '../../model';
+import type { PersonalEventResponse } from '../../model';
 import { CalendarCard } from '../CalendarCard';
 
 const calcSize = (height: number) => {
@@ -10,7 +10,7 @@ const calcSize = (height: number) => {
   return 'lg';
 };
 
-export const CalendarCardList = ({ cards }: { cards: PersonalEventDTO[] }) => (
+export const CalendarCardList = ({ cards }: { cards: PersonalEventResponse[] }) => (
   <>
     {cards.map((card) => {
       const start = new Date(card.startDateTime);

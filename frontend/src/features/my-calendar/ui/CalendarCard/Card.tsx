@@ -13,6 +13,7 @@ export const Card = ({
   status,
   style,
   title,
+  calendarId,
 }: CalendarCardProps & { handleClickEdit: () => void }) => (
   <div
     className={cardContainerStyle({ status, size })}
@@ -25,6 +26,7 @@ export const Card = ({
       justify='flex-start'
     >
       <CardContents
+        calendarId={calendarId}
         endTime={endTime}
         size={size}
         startTime={startTime}
