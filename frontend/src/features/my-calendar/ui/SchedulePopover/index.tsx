@@ -1,43 +1,80 @@
+import type { FormValues } from '@/hooks/useFormRef';
 import { useFormRef } from '@/hooks/useFormRef';
 import { isSaturday } from '@/utils/date';
 import { calcPositionByDate } from '@/utils/date/position';
 
-import { usePersonalEventMutation } from '../../api/mutations';
+import { usePersonalEventMutation, usePersonalEventUpdateMutation } from '../../api/mutations';
 import type { PersonalEventRequest, PopoverType } from '../../model';
 import { containerStyle } from './index.css';
 import { PopoverButton } from './PopoverButton';
 import { PopoverForm } from './PopoverForm';
 import { Title } from './Title';
 
+type DefaultEvent = Omit<PersonalEventRequest, 'endDateTime' | 'startDateTime'>;
+
 interface SchedulePopoverProps extends Pick<PersonalEventRequest, 'endDateTime' | 'startDateTime'> {
+  scheduleId?: number;
+  values?: DefaultEvent;
   setIsOpen: (isOpen: boolean) => void;
   type: PopoverType;
 }
 
-const defaultEvent: Omit<PersonalEventRequest, 'endDateTime' | 'startDateTime'> = {
-  title: '제목 없음',
-  isAdjustable: false,
-  syncWithGoogleCalendar: true,
+const initEvent = (values?: DefaultEvent): DefaultEvent => {
+  if (values) return values;
+  return {
+    title: '제목 없음',
+    isAdjustable: false,
+    syncWithGoogleCalendar: true,
+  };
+};
+
+const useSchedulePopover = ({
+  setIsOpen,
+  scheduleId,
+  valuesRef,
+}: {
+  setIsOpen: (isOpen: boolean) => void;
+  scheduleId?: number;
+  valuesRef: { current: FormValues<PersonalEventRequest> };
+}) => {
+  const { mutate: createMutate } = usePersonalEventMutation();
+  const { mutate: editMutate } = usePersonalEventUpdateMutation();
+
+  const handleClickCreate = () => {
+    createMutate(valuesRef.current);
+    setIsOpen(false);
+  };
+
+  const handleClickEdit = () => {
+    if (scheduleId) editMutate({ id: scheduleId, body: valuesRef.current });
+    setIsOpen(false);
+  };
+
+  const handleClickDelete = () => {
+    // if (scheduleId) mutate({ ...valuesRef.current, id: scheduleId });
+    setIsOpen(false);
+  };
+
+  return { handleClickCreate, handleClickEdit, handleClickDelete };
 };
 
 export const SchedulePopover = (
-  { setIsOpen, type, ...event }: SchedulePopoverProps,
+  { setIsOpen, scheduleId, type, values, ...event }: SchedulePopoverProps,
 ) => {
-  const { mutate } = usePersonalEventMutation();
   const startDate = new Date(event.startDateTime);
   const { x: sx, y: sy } = calcPositionByDate(startDate);
   const { valuesRef, handleChange } = useFormRef<PersonalEventRequest>({
     startDateTime: event.startDateTime,
     endDateTime: event.endDateTime,
-    ...defaultEvent,
+    ...initEvent(values),
   });
-  const handleClickSave = () => {
-    mutate(valuesRef.current);
-    setIsOpen(false);
-  };
-  const handleClickDelete = () => {
-    // do something
-  };
+
+  const { handleClickCreate, handleClickEdit, handleClickDelete } = useSchedulePopover({
+    setIsOpen,
+    scheduleId,
+    valuesRef,
+  });
+
   return(
     <dialog
       className={containerStyle}
@@ -51,8 +88,9 @@ export const SchedulePopover = (
       <Title type={type} />
       <PopoverForm handleChange={handleChange} valuesRef={valuesRef} />
       <PopoverButton
+        onClickCreate={handleClickCreate}
         onClickDelete={handleClickDelete}
-        onClickSave={handleClickSave}
+        onClickEdit={handleClickEdit}
         type={type}
       />
     </dialog>

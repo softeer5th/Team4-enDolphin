@@ -11,9 +11,12 @@ import type { PersonalEventRequest } from '../../model';
 import { cardStyle, inputStyle } from './index.css';
 
 // TODO: Form Context 관리
-const AdjustableCheckbox = ({ handleChange }: FormRef<PersonalEventRequest>) => (
+const AdjustableCheckbox = (
+  { valuesRef, handleChange }: FormRef<PersonalEventRequest>,
+) => (
   <Checkbox
     inputProps={{
+      defaultChecked: valuesRef.current.isAdjustable,
       name: 'isAdjustable',
       onChange: (e) => handleChange({ name: 'isAdjustable', value: e.target.checked }),
     }}
@@ -24,9 +27,10 @@ const AdjustableCheckbox = ({ handleChange }: FormRef<PersonalEventRequest>) => 
 );
 
 const GoogleCalendarToggle = (
-  { handleChange }: FormRef<PersonalEventRequest>,
+  { valuesRef, handleChange }: FormRef<PersonalEventRequest>,
 ) =>
   <Toggle
+    defaultChecked={valuesRef.current.syncWithGoogleCalendar}
     inputProps={{
       name: 'syncWithGoogleCalendar',
       onChange: (e) => handleChange({ name: 'syncWithGoogleCalendar', value: e.target.checked }),
@@ -43,6 +47,7 @@ export const PopoverForm = ({ valuesRef, handleChange }: FormRef<PersonalEventRe
     >
       <input
         className={inputStyle}
+        defaultValue={valuesRef.current.title}
         name='title'
         onChange={(e) => handleChange({ name: 'title', value: e.target.value })}
         placeholder='새 일정'
