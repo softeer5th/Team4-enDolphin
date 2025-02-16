@@ -2,6 +2,7 @@ package endolphin.backend.domain.discussion;
 
 import endolphin.backend.domain.discussion.entity.Discussion;
 import endolphin.backend.domain.discussion.entity.DiscussionParticipant;
+import endolphin.backend.domain.user.dto.UserIdNameDto;
 import endolphin.backend.domain.user.entity.User;
 import java.util.List;
 import java.util.Optional;
@@ -22,7 +23,7 @@ public interface DiscussionParticipantRepository extends
 
     @Query("SELECT DISTINCT dp.user " +
         "FROM DiscussionParticipant dp " +
-        "where dp.discussion.id = :discussionId " +
+        "WHERE dp.discussion.id = :discussionId " +
         "ORDER BY dp.userOffset ASC")
     List<User> findUsersByDiscussionId(@Param("discussionId") Long discussionId);
 
@@ -59,4 +60,11 @@ public interface DiscussionParticipantRepository extends
         "FROM DiscussionParticipant dp " +
         "WHERE dp.user.id = :userId")
     List<Discussion> findDiscussionsByUserId(@Param("userId") Long userId);
+
+    @Query("SELECT new endolphin.backend.domain.user.dto.UserIdNameDto(u.id, u.name) " +
+        "FROM DiscussionParticipant dp " +
+        "JOIN dp.user u " +
+        "WHERE dp.discussion.id = :discussionId " +
+        "ORDER BY dp.userOffset ASC")
+    List<UserIdNameDto> findUserIdNameDtosByDiscussionId(@Param("discussionId") Long discussionId);
 }
