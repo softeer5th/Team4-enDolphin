@@ -117,4 +117,11 @@ public class DiscussionParticipantService {
         }
         return new DiscussionParticipantsResponse(participants);
     }
+
+    @Transactional(readOnly = true)
+    public Boolean amIHost(Long discussionId) {
+        User user = userService.getCurrentUser();
+        return discussionParticipantRepository.findIsHostByDiscussionIdAndUserId(discussionId, user.getId())
+            .orElseThrow(() -> new ApiException(ErrorCode.DISCUSSION_PARTICIPANT_NOT_FOUND));
+    }
 }
