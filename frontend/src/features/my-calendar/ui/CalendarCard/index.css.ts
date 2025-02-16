@@ -6,6 +6,7 @@ import { vars } from '@/theme/index.css';
 export const cardContainerStyle = recipe({
   base: {
     padding: vars.spacing[200],
+    cursor: 'pointer',
   },
   variants: {
     status: {

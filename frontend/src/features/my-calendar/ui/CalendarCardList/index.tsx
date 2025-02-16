@@ -20,10 +20,11 @@ export const CalendarCardList = (
       const { x: sx, y: sy } = calcPositionByDate(start);
       const { y: ey } = calcPositionByDate(end);
       const height = ey - sy;
-          
+
       return (
         <CalendarCard
           endTime={end}
+          id={card.id}
           key={card.id}
           size={calcSize(height)}
           startTime={start}

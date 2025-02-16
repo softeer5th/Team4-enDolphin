@@ -2,15 +2,14 @@ import { Flex } from '@/components/Flex';
 import { GoogleCalendar, Pencil } from '@/components/Icon';
 import { vars } from '@/theme/index.css';
 
-import type { CalendarCardProps } from '.';
 import { cardBottomStyle } from './index.css';
+import type { CalendarCardProps } from './type';
 
 export const CardBottom = ({
   size,
   onClickEdit,
-  onClickGoogle,
-}: Pick<CalendarCardProps, 'size' | 'onClickEdit' | 'onClickGoogle'>) => {
-  if (size === 'sm' || size === 'md') return null;
+}: Pick<CalendarCardProps, 'size' | 'onClickEdit'>) => {
+  if (size !== 'lg') return null;
   
   return(
     <Flex
@@ -21,7 +20,7 @@ export const CardBottom = ({
       justify='flex-end'
       width='full'
     >
-      <GoogleCalendar clickable onClick={onClickGoogle} />
+      <GoogleCalendar />
       <Pencil
         clickable
         fill={vars.color.Ref.Netural[600]}

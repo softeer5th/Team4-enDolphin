@@ -15,4 +15,10 @@ export const personalEventApi = {
     const response = await request.post('/api/v1/personal-event', { body });
     return response;
   },
+  putPersonalEvent: async (
+    id: number, body: PersonalEventRequest,
+  ): Promise<PersonalEventResponse> => {
+    const response = await request.put(`/api/v1/personal-event/${id}`, { body });
+    return response;
+  },
 };

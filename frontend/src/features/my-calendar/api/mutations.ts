@@ -18,3 +18,23 @@ export const usePersonalEventMutation = () => {
 
   return { mutate };
 };
+
+export const usePersonalEventUpdateMutation = () => {
+  const queryClient = useQueryClient();
+
+  const { mutate } = useMutation({
+    mutationFn: (
+      { id, body }: { id: number; body: PersonalEventRequest },
+    ) => personalEventApi.putPersonalEvent(id, body),
+    onSuccess: ({ startDateTime, endDateTime }) => {
+      queryClient.invalidateQueries({
+        queryKey: personalEventKeys.detail({
+          startDate: startDateTime,
+          endDate: endDateTime,
+        }),
+      });
+    },
+  });
+
+  return { mutate };
+};
