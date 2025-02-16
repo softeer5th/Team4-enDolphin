@@ -20,6 +20,7 @@ public class DiscussionStatusScheduler {
     private final DiscussionRepository discussionRepository;
     private final SharedEventService sharedEventService;
 
+    @Transactional
     @Scheduled(cron = "0 0 0 * * *")
     public void updateDiscussionStatusAtMidnight() {
         LocalDate today = LocalDate.now();
@@ -37,26 +38,18 @@ public class DiscussionStatusScheduler {
         }
     }
 
-    @Transactional
     public void updateStatus(Discussion discussion, LocalDate today) {
-        switch (discussion.getDiscussionStatus()) {
-            case ONGOING:
-                if (discussion.getDateRangeEnd().isBefore(today)) {
-                    discussion.setDiscussionStatus(DiscussionStatus.FINISHED);
-                    discussionRepository.save(discussion);
-                    log.info("Discussion id {} FINISHED", discussion.getId());
-                }
-                break;
-            case UPCOMING:
-                if (sharedEventService.getSharedEvent(discussion.getId()).endDateTime()
-                    .toLocalDate().isBefore(today)) {
-                    discussion.setDiscussionStatus(DiscussionStatus.FINISHED);
-                    discussionRepository.save(discussion);
-                    log.info("Discussion id {} FINISHED", discussion.getId());
-                }
-                break;
-            default:
-                break;
+        if (discussion.getDiscussionStatus() == DiscussionStatus.ONGOING) {
+            if (discussion.getDateRangeEnd().isBefore(today)) {
+                discussion.setDiscussionStatus(DiscussionStatus.FINISHED);
+                discussionRepository.save(discussion);
+                log.info("Discussion id {} FINISHED", discussion.getId());
+            }
+        } else if (sharedEventService.getSharedEvent(discussion.getId()).endDateTime()
+            .toLocalDate().isBefore(today)) {
+            discussion.setDiscussionStatus(DiscussionStatus.FINISHED);
+            discussionRepository.save(discussion);
+            log.info("Discussion id {} FINISHED", discussion.getId());
         }
     }
 }
