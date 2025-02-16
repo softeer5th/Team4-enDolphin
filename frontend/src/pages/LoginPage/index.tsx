@@ -32,7 +32,7 @@ const GoogleLoginButton = () => (
     className={googleLoginButtonStyle}
     gap={200}
     justify='center'
-    to={serviceENV.VITE_GOOGLE_OAUTH_URL}
+    to={serviceENV.GOOGLE_OAUTH_URL}
     width='full'
   >
     <img
