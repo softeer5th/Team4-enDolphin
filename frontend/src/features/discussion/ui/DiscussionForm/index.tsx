@@ -1,5 +1,5 @@
 import { Flex } from '@/components/Flex';
-import { formatDateToDotString } from '@/utils/date/format';
+import { formatDateToBarString } from '@/utils/date/format';
 
 import type { DiscussionRequest } from '../../model';
 import FormButton from './FormButton';
@@ -23,13 +23,13 @@ const DiscussionForm = (
     <FormProvider 
       initialValues={initialValues || {
         title: '',
-        dateRangeStart: formatDateToDotString(today),
-        dateRangeEnd: formatDateToDotString(new Date(today.getTime() + SEVEN_DAYS)),
+        dateRangeStart: formatDateToBarString(today),
+        dateRangeEnd: formatDateToBarString(new Date(today.getTime() + SEVEN_DAYS)),
         timeRangeStart: '20:00',
         timeRangeEnd: '21:00',
         duration: 60,
         meetingMethod: null,
-        deadline: formatDateToDotString(new Date(today.getTime() + SEVEN_DAYS)),
+        deadline: formatDateToBarString(new Date(today.getTime() + SEVEN_DAYS)),
       }}
     >
       <Flex

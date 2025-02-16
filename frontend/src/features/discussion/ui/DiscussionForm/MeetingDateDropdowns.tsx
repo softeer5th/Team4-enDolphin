@@ -2,7 +2,7 @@ import DatePicker from '@/components/DatePicker';
 import Input from '@/components/Input';
 import { useMonthNavigation } from '@/hooks/useDatePicker/useMonthNavigation';
 import { isSameDate } from '@/utils/date';
-import { formatDateToDotString } from '@/utils/date/format';
+import { formatDateToBarString } from '@/utils/date/format';
 
 import { useFormContext } from './FormContext';
 
@@ -27,8 +27,8 @@ const MeetingDateDropdowns = () => {
         start: formState.dateRangeStart ? new Date(formState.dateRangeStart) : null,
         end: formState.dateRangeEnd ? new Date(formState.dateRangeEnd) : null, 
       }}
-      setHighlightEnd={(date) => handleUpdateField('dateRangeEnd', formatDateToDotString(date))}
-      setHighlightStart={(date) => handleUpdateField('dateRangeStart', formatDateToDotString(date))}
+      setHighlightEnd={(date) => handleUpdateField('dateRangeEnd', formatDateToBarString(date))}
+      setHighlightStart={(date) => handleUpdateField('dateRangeStart', formatDateToBarString(date))}
       trigger={
         <Input.Multi
           error='과거의 날짜는 포함할 수 없습니다.'

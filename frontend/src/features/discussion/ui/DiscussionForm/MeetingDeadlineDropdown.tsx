@@ -2,7 +2,7 @@ import DatePicker from '@/components/DatePicker';
 import Input from '@/components/Input';
 import { useMonthNavigation } from '@/hooks/useDatePicker/useMonthNavigation';
 import { isSameDate } from '@/utils/date';
-import { formatDateToDotString } from '@/utils/date/format';
+import { formatDateToBarString } from '@/utils/date/format';
 
 import type { DiscussionRequest } from '../../model';
 import { useFormContext } from './FormContext';
@@ -26,7 +26,7 @@ const MeetingDeadlineDropdown = ({ name }: { name: keyof DiscussionRequest }) =>
   return (
     <DatePicker.Select
       {...navigation}
-      handleDateSelect={(date) => handleUpdateField(name, formatDateToDotString(date))}
+      handleDateSelect={(date) => handleUpdateField(name, formatDateToBarString(date))}
       selectedDate={new Date(formState.deadline)}
       trigger={
         <div className={inputStyle}>
