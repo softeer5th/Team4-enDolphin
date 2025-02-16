@@ -9,7 +9,7 @@ export interface CalendarCardProps {
   title: string;
   startTime: Date | null;
   endTime: Date | null;
-  syncWithGoogleCalendar: boolean;
+  calendarId: string;
   style: CSSProperties;
   onClickEdit?: () => void;
 }

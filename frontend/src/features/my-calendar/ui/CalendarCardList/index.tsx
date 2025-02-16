@@ -10,9 +10,7 @@ const calcSize = (height: number) => {
   return 'lg';
 };
 
-export const CalendarCardList = (
-  { cards }: { cards: Omit<PersonalEventDTO, 'syncWithGoogleCalendar'>[] },
-) => (
+export const CalendarCardList = ({ cards }: { cards: PersonalEventDTO[] }) => (
   <>
     {cards.map((card) => {
       const start = new Date(card.startDateTime);
@@ -23,6 +21,7 @@ export const CalendarCardList = (
 
       return (
         <CalendarCard
+          calendarId={card.calendarId}
           endTime={end}
           id={card.id}
           key={card.id}
