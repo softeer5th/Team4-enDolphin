@@ -1,6 +1,5 @@
 import { useState } from 'react';
 
-import { Flex } from '@/components/Flex';
 import { Tab } from '@/components/Tab';
 
 import type { DiscussionDTO } from '../../model';

@@ -1,11 +1,12 @@
 import { Flex } from '@/components/Flex';
+import { CalendarCheck, Clock, UserTwo } from '@/components/Icon';
 import { Text } from '@/components/Text';
 import { vars } from '@/theme/index.css';
 import { formatDateToTimeString } from '@/utils/date';
 import { formatDateToString } from '@/utils/date/format';
 
 import type { DiscussionDTO } from '../../model';
-import { largeContainerStyle } from './card.css';
+import { largeContainerStyle, rankContainerStyle, textStyle } from './card.css';
 
 const formatUserListToString = (users: DiscussionDTO['usersForAdjust']) => {
   const ADJUSTMENT_LENGTH = users.length;
@@ -14,6 +15,41 @@ const formatUserListToString = (users: DiscussionDTO['usersForAdjust']) => {
   const userNames = users.map((user) => user.name).join(' · ');
   return `${userNames} 외 ${ADJUSTMENT_LENGTH}명`;
 };
+
+const DiscussionContents = (
+  { discussion }: { discussion: DiscussionDTO },
+) => (
+  <Flex direction='column' gap={200}>
+    <Text
+      className={textStyle}
+      color={vars.color.Ref.Netural[600]}
+      typo='b2R'
+    >
+      <UserTwo width={16} />
+      {formatUserListToString(discussion.usersForAdjust)}
+    </Text>
+    <Text
+      className={textStyle}
+      color={vars.color.Ref.Netural[600]}
+      typo='b2R'
+    >
+      <CalendarCheck width={16} />
+      {formatDateToString(discussion.startDateTime)}
+    </Text>
+    <Text
+      className={textStyle}
+      color={vars.color.Ref.Netural[600]}
+      typo='b2R'
+    >
+      <Clock color={vars.color.Ref.Netural[400]} width={16} />
+      {formatDateToTimeString(discussion.startDateTime)}
+      {' '}
+      - 
+      {' '}
+      {formatDateToTimeString(discussion.endDateTime)}
+    </Text>
+  </Flex>
+);
 
 export const DiscussionLarge = (
   { discussion, rank }: { discussion: DiscussionDTO; rank: number },
@@ -28,7 +64,14 @@ export const DiscussionLarge = (
       width='100%'
     >
       <Flex direction='column' gap={300}>
-        <div>{rank}</div>
+        <Flex 
+          align='center'
+          className={rankContainerStyle({ rank: rank === 1 ? 'first' : 'default' })}
+          height={32}
+          width={32}
+        >
+          <Text typo='t2'>{rank}</Text>
+        </Flex>
         {isRecommend ? 
           <Text color={vars.color.Ref.Netural[800]} typo='t1'>모두 가능해요</Text> : 
           <Text color={vars.color.Ref.Netural[800]} typo='t1'>
@@ -36,21 +79,7 @@ export const DiscussionLarge = (
             명만 조율하면 돼요
           </Text>}
       </Flex>
-      <Flex direction='column' gap={200}>
-        <Text color={vars.color.Ref.Netural[600]} typo='b2R'>
-          {formatUserListToString(discussion.usersForAdjust)}
-        </Text>
-        <Text color={vars.color.Ref.Netural[600]} typo='b2R'>
-          {formatDateToString(discussion.startDateTime)}
-        </Text>
-        <Text color={vars.color.Ref.Netural[600]} typo='b2R'>
-          {formatDateToTimeString(discussion.startDateTime)}
-          {' '}
-          - 
-          {' '}
-          {formatDateToTimeString(discussion.endDateTime)}
-        </Text>
-      </Flex>
+      <DiscussionContents discussion={discussion} />
     </Flex>
   );
 };
