@@ -602,7 +602,7 @@ public class DiscussionServiceTest {
             true);
 
         // When
-        boolean result = discussionService.joinDiscussion(discussionId, new JoinDiscussionRequest(correctPassword));
+        boolean result = discussionService.joinDiscussion(discussionId, new JoinDiscussionRequest(correctPassword)).isSuccess();
 
         // Then
         assertThat(result).isTrue();
@@ -636,7 +636,7 @@ public class DiscussionServiceTest {
             false);
 
         // When
-        boolean result = discussionService.joinDiscussion(discussionId, new JoinDiscussionRequest(incorrectPassword));
+        boolean result = discussionService.joinDiscussion(discussionId, new JoinDiscussionRequest(incorrectPassword)).isSuccess();
 
         // Then
         assertThat(result).isFalse();
