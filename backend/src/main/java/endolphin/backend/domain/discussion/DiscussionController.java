@@ -8,6 +8,7 @@ import endolphin.backend.domain.candidate_event.dto.RankViewResponse;
 import endolphin.backend.domain.discussion.dto.CandidateEventDetailsRequest;
 import endolphin.backend.domain.discussion.dto.CandidateEventDetailsResponse;
 import endolphin.backend.domain.discussion.dto.CreateDiscussionRequest;
+import endolphin.backend.domain.discussion.dto.DiscussionParticipantsResponse;
 import endolphin.backend.domain.discussion.dto.DiscussionResponse;
 import endolphin.backend.domain.shared_event.dto.SharedEventRequest;
 import endolphin.backend.domain.shared_event.dto.SharedEventWithDiscussionInfoResponse;
@@ -33,6 +34,7 @@ import org.springframework.web.bind.annotation.*;
 public class DiscussionController {
 
     private final DiscussionService discussionService;
+    private final DiscussionParticipantService discussionParticipantService;
     private final CandidateEventService candidateEventService;
 
     @Operation(summary = "논의 생성", description = "새 논의를 생성합니다.")
@@ -123,9 +125,50 @@ public class DiscussionController {
             content = @Content(schema = @Schema(implementation = CandidateEventDetailsResponse.class)))
     })
     @PostMapping("/{discussionId}/candidate-event/details")
-    public ResponseEntity<CandidateEventDetailsResponse> getCandidateEventDetails(@PathVariable("discussionId") @Min(1) Long discussionId,
+    public ResponseEntity<CandidateEventDetailsResponse> getCandidateEventDetails(
+        @PathVariable("discussionId") @Min(1) Long discussionId,
         @Valid @RequestBody CandidateEventDetailsRequest request) {
-        CandidateEventDetailsResponse response = discussionService.retrieveCandidateEventDetails(discussionId, request);
+        CandidateEventDetailsResponse response = discussionService.retrieveCandidateEventDetails(
+            discussionId, request);
         return ResponseEntity.ok(response);
+    }
+
+    @Operation(summary = "논의 참여자 조회", description = "해당 논의의 참여자 목록을 조회합니다.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "참여자 목록 조회 성공",
+            content = @Content(schema = @Schema(implementation = DiscussionParticipantsResponse.class))),
+        @ApiResponse(responseCode = "400", description = "잘못된 요청 파라미터",
+            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+        @ApiResponse(responseCode = "401", description = "인증 실패",
+            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+        @ApiResponse(responseCode = "404", description = "논의 참여자 없음",
+            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+        @ApiResponse(responseCode = "500", description = "서버 오류",
+            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    })
+    @GetMapping("/{discussionId}/participants")
+    public ResponseEntity<DiscussionParticipantsResponse> getDiscussionParticipants(
+        @PathVariable("discussionId") @Min(1) Long discussionId) {
+        return ResponseEntity.ok(
+            discussionParticipantService.getDiscussionParticipants(discussionId));
+    }
+
+    @Operation(summary = "내가 호스트인가요?", description = "현재 사용자가 논의의 호스트인지 조회합니다.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "호스트 여부 조회 성공",
+            content = @Content(schema = @Schema(implementation = Boolean.class))),
+        @ApiResponse(responseCode = "400", description = "잘못된 요청 파라미터",
+            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+        @ApiResponse(responseCode = "401", description = "인증 실패",
+            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+        @ApiResponse(responseCode = "404", description = "논의 참여자 없음",
+            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+        @ApiResponse(responseCode = "500", description = "서버 오류",
+            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    })
+    @GetMapping("/{discussionId}/role")
+    public ResponseEntity<Boolean> amIHost(
+        @PathVariable("discussionId") @Min(1) Long discussionId) {
+        return ResponseEntity.ok(discussionParticipantService.amIHost(discussionId));
     }
 }

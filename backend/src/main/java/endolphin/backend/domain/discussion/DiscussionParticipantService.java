@@ -1,5 +1,6 @@
 package endolphin.backend.domain.discussion;
 
+import endolphin.backend.domain.discussion.dto.DiscussionParticipantsResponse;
 import endolphin.backend.domain.discussion.entity.Discussion;
 import endolphin.backend.domain.discussion.entity.DiscussionParticipant;
 import endolphin.backend.domain.user.UserService;
@@ -65,7 +66,7 @@ public class DiscussionParticipantService {
     @Transactional(readOnly = true)
     public int getFilter(Long discussionId, List<Long> userIds) {
 
-        if(userIds == null || userIds.isEmpty()) {
+        if (userIds == null || userIds.isEmpty()) {
             return 0;
         }
 
@@ -83,7 +84,7 @@ public class DiscussionParticipantService {
 
     @Transactional(readOnly = true)
     public List<UserIdNameDto> getUsersFromData(Long discussionId, int data) {
-        if(data == 0) {
+        if (data == 0) {
             return new ArrayList<>();
         }
 
@@ -104,5 +105,23 @@ public class DiscussionParticipantService {
     @Transactional(readOnly = true)
     public List<Discussion> getDiscussionsByUserId(Long userId) {
         return discussionParticipantRepository.findDiscussionsByUserId(userId);
+    }
+
+    @Transactional(readOnly = true)
+    public DiscussionParticipantsResponse getDiscussionParticipants(Long discussionId) {
+        List<UserIdNameDto> participants = discussionParticipantRepository.findUserIdNameDtosByDiscussionId(
+            discussionId);
+
+        if(participants.isEmpty()) {
+            throw new ApiException(ErrorCode.DISCUSSION_PARTICIPANT_NOT_FOUND);
+        }
+        return new DiscussionParticipantsResponse(participants);
+    }
+
+    @Transactional(readOnly = true)
+    public Boolean amIHost(Long discussionId) {
+        User user = userService.getCurrentUser();
+        return discussionParticipantRepository.findIsHostByDiscussionIdAndUserId(discussionId, user.getId())
+            .orElseThrow(() -> new ApiException(ErrorCode.DISCUSSION_PARTICIPANT_NOT_FOUND));
     }
 }
