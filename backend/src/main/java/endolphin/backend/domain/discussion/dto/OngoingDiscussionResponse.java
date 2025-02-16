@@ -8,6 +8,7 @@ public record OngoingDiscussionResponse(
     String title,
     LocalDate dateRangeStart,
     LocalDate dateRangeEnd,
+    Long timeLeft,
     List<String> participantPictureUrls
 ) {
 
