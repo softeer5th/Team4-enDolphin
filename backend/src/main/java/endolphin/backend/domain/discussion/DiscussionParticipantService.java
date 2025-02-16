@@ -112,6 +112,9 @@ public class DiscussionParticipantService {
         List<UserIdNameDto> participants = discussionParticipantRepository.findUserIdNameDtosByDiscussionId(
             discussionId);
 
+        if(participants.isEmpty()) {
+            throw new ApiException(ErrorCode.DISCUSSION_PARTICIPANT_NOT_FOUND);
+        }
         return new DiscussionParticipantsResponse(participants);
     }
 }

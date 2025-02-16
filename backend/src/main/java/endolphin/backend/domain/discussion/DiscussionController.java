@@ -138,6 +138,12 @@ public class DiscussionController {
         @ApiResponse(responseCode = "200", description = "참여자 목록 조회 성공",
             content = @Content(schema = @Schema(implementation = DiscussionParticipantsResponse.class))),
         @ApiResponse(responseCode = "400", description = "잘못된 요청 파라미터",
+            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+        @ApiResponse(responseCode = "401", description = "인증 실패",
+            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+        @ApiResponse(responseCode = "404", description = "논의 참여자 없음",
+            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+        @ApiResponse(responseCode = "500", description = "서버 오류",
             content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @GetMapping("/{discussionId}/participants")
