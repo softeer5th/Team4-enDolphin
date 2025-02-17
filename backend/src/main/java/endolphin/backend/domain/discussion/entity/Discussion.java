@@ -64,6 +64,10 @@ public class Discussion extends BaseTimeEntity {
     @Size(min = 4, max = 100)
     private String password;
 
+    @Setter
+    @Column(name = "fixed_date")
+    private LocalDate fixedDate;
+
     @Builder
     public Discussion(String title, LocalDate dateStart, LocalDate dateEnd,
         LocalTime timeStart, LocalTime timeEnd,

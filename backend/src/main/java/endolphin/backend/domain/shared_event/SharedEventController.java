@@ -1,6 +1,7 @@
 package endolphin.backend.domain.shared_event;
 
 import endolphin.backend.domain.discussion.DiscussionService;
+import endolphin.backend.domain.discussion.dto.FinishedDiscussionsResponse;
 import endolphin.backend.domain.discussion.dto.OngoingDiscussion;
 import endolphin.backend.domain.discussion.dto.OngoingDiscussionsResponse;
 import endolphin.backend.domain.discussion.enums.AttendType;
@@ -49,4 +50,23 @@ public class SharedEventController {
         return ResponseEntity.ok(discussionService.getOngoingDiscussions(page, size, attendType));
     }
 
+    @Operation(summary = "지나간 논의 조회", description = "지난 논의를 조회합니다.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "논의 조회 성공",
+            content = @Content(schema = @Schema(implementation = FinishedDiscussionsResponse.class))),
+        @ApiResponse(responseCode = "400", description = "잘못된 요청 파라미터",
+            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+        @ApiResponse(responseCode = "401", description = "인증 실패",
+            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+        @ApiResponse(responseCode = "500", description = "서버 오류",
+            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    })
+    @GetMapping("/finished")
+    public ResponseEntity<FinishedDiscussionsResponse> getFinishedDiscussion(
+        @Min(1) @RequestParam int page,
+        @Min(1) @RequestParam int size,
+        @RequestParam int year
+    ) {
+        return ResponseEntity.ok(discussionService.getFinishedDiscussions(page, size, year));
+    }
 }

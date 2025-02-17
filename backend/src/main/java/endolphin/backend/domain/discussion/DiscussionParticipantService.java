@@ -1,10 +1,14 @@
 package endolphin.backend.domain.discussion;
 
 import endolphin.backend.domain.discussion.dto.DiscussionParticipantsResponse;
+import endolphin.backend.domain.discussion.dto.FinishedDiscussionsResponse;
 import endolphin.backend.domain.discussion.dto.OngoingDiscussion;
 import endolphin.backend.domain.discussion.dto.OngoingDiscussionsResponse;
 import endolphin.backend.domain.discussion.entity.Discussion;
 import endolphin.backend.domain.discussion.entity.DiscussionParticipant;
+import endolphin.backend.domain.shared_event.SharedEventService;
+import endolphin.backend.domain.shared_event.dto.SharedEventDto;
+import endolphin.backend.domain.shared_event.dto.SharedEventWithDiscussionInfoResponse;
 import endolphin.backend.domain.user.UserService;
 import endolphin.backend.domain.user.dto.UserIdNameDto;
 import endolphin.backend.domain.user.entity.User;
@@ -12,7 +16,9 @@ import endolphin.backend.global.error.exception.ApiException;
 import endolphin.backend.global.error.exception.ErrorCode;
 import endolphin.backend.global.util.TimeCalculator;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -29,6 +35,7 @@ public class DiscussionParticipantService {
     private final DiscussionParticipantRepository discussionParticipantRepository;
     private final UserService userService;
     private static final int MAX_PARTICIPANT = 15;
+    private final SharedEventService sharedEventService;
 
     public void addDiscussionParticipant(Discussion discussion, User user) {
         Long offset = discussionParticipantRepository.findMaxOffsetByDiscussionId(
@@ -134,6 +141,12 @@ public class DiscussionParticipantService {
             userId, isHost, pageable);
         List<Discussion> discussions = discussionPage.getContent();
 
+        List<Long> discussionIds = discussions.stream()
+            .map(Discussion::getId)
+            .collect(Collectors.toList());
+
+        Map<Long, List<String>> discussionPicturesMap = getDiscussionPicturesMap(discussionIds);
+
         List<OngoingDiscussion> ongoingDiscussions = discussions.stream()
             .map(discussion -> new OngoingDiscussion(
                 discussion.getId(),
@@ -141,14 +154,66 @@ public class DiscussionParticipantService {
                 discussion.getDateRangeStart(),
                 discussion.getDateRangeEnd(),
                 TimeCalculator.calculateTimeLeft(discussion.getDeadline()),
-                discussionParticipantRepository.findUserPicturesByDiscussionId(discussion.getId())
+                discussionPicturesMap.getOrDefault(discussion.getId(), Collections.emptyList())
             ))
             .collect(Collectors.toList());
 
-        return new OngoingDiscussionsResponse(page + 1, discussionPage.getTotalPages(),
-            discussionPage.hasNext(), discussionPage.hasPrevious(), ongoingDiscussions);
+        return new OngoingDiscussionsResponse(
+            page + 1,
+            discussionPage.getTotalPages(),
+            discussionPage.hasNext(),
+            discussionPage.hasPrevious(),
+            ongoingDiscussions);
     }
 
+    @Transactional(readOnly = true)
+    public FinishedDiscussionsResponse getFinishedDiscussions(Long userId, int page, int size,
+        int year) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Discussion> discussionPage = discussionParticipantRepository.findFinishedDiscussions(
+            userId, pageable, year);
+
+        List<Discussion> discussions = discussionPage.getContent();
+
+        List<Long> discussionIds = discussions.stream()
+            .map(Discussion::getId)
+            .collect(Collectors.toList());
+
+        Map<Long, List<String>> discussionPicturesMap = getDiscussionPicturesMap(discussionIds);
+
+        Map<Long, SharedEventDto> sharedEventMap = sharedEventService.getSharedEventMap(
+            discussionIds);
+
+        List<SharedEventWithDiscussionInfoResponse> finishedDiscussions = discussions.stream()
+            .map(discussion -> new SharedEventWithDiscussionInfoResponse(
+                discussion.getId(),
+                discussion.getTitle(),
+                discussion.getMeetingMethodOrLocation(),
+                sharedEventMap.getOrDefault(discussion.getId(), null),
+                discussionPicturesMap.getOrDefault(discussion.getId(), Collections.emptyList())
+            ))
+            .collect(Collectors.toList());
+
+        return new FinishedDiscussionsResponse(
+            year,
+            page + 1,
+            discussionPage.getTotalPages(),
+            discussionPage.hasNext(),
+            discussionPage.hasPrevious(),
+            finishedDiscussions);
+    }
+
+    @Transactional(readOnly = true)
+    protected Map<Long, List<String>> getDiscussionPicturesMap(List<Long> discussionIds) {
+        List<Object[]> pictureResults = discussionParticipantRepository.findUserPicturesByDiscussionIds(
+            discussionIds);
+
+        return pictureResults.stream()
+            .collect(Collectors.groupingBy(
+                result -> (Long) result[0],
+                Collectors.mapping(result -> (String) result[1], Collectors.toList())
+            ));
+    }
 
     @Transactional(readOnly = true)
     public Boolean amIHost(Long discussionId) {
