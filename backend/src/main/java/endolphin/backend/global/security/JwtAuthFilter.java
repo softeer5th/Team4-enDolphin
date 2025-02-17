@@ -62,6 +62,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         List<String> excludedPaths = List.of(
             "/api/v1/login",
             "/api/v1/oauth2/callback",
+            "/api/v1/google/webhook",
             "/swagger-ui", // prod profile에서는 swagger-ui 접근 불가
             "/v3/api-docs", // prod profile에서는 v3/api-docs 접근 불가
             "/h2-console", // prod profile에서는 h2-console 접근 불가
