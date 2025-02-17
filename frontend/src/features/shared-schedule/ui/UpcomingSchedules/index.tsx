@@ -1,4 +1,3 @@
-import { Link } from '@tanstack/react-router';
 import type { PropsWithChildren } from 'react';
 
 import { Flex } from '@/components/Flex';
