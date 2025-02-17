@@ -28,7 +28,7 @@ jobs:
       - name: Set up application.yml file
         run: |
           mkdir -p src/main/resources
-          echo "${{ secrets.APPLICATION_DEV_YML }}" > src/main/resources/application.yml
+          echo "${{ secrets.APPLICATION_DEV_YML }}" > src/main/resources/application-dev.yml
         shell: bash
 
       - name: Grant Execute Permission for gradlew
@@ -38,7 +38,7 @@ jobs:
 
       - name: Build gradle
         run: |
-          ./gradlew clean build
+          ./gradlew clean build -Dspring.profiles.active=dev
         shell: bash
 
       - name: Upload Test Results

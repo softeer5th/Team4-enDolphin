@@ -30,7 +30,7 @@ public class AuthController {
     @Value("${app.frontend.callback}")
     private String frontendCallback;
 
-    @GetMapping("/oauth2/callback")
+    @GetMapping("/api/v1/oauth2/callback")
     public void oauthCallback(@RequestParam("code") String code,
         HttpServletResponse response) throws IOException {
         String googleCode = authService.oauth2Callback(code);
