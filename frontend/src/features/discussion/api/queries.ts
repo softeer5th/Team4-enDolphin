@@ -3,12 +3,13 @@ import { useQuery } from '@tanstack/react-query';
 import type { 
   DiscussionCalendarRequest, 
   DiscussionCalendarResponse,
+  DiscussionParticipantResponse,
   DiscussionRankRequest,
   DiscussionRankResponse,
   DiscussionResponse, 
 } from '../model';
 import { candidateApi, discussionApi } from '.';
-import { calendarKeys, discussionKeys, rankKeys } from './keys';
+import { calendarKeys, discussionKeys, participantKeys, rankKeys } from './keys';
 
 export const discussionQuery = (discussionId: string) => ({
   queryKey: discussionKeys.detail(discussionId), 
@@ -27,6 +28,11 @@ export const discussionRankQuery = (
 ) => ({
   queryKey: rankKeys.detail(discussionId, body),
   queryFn: () => candidateApi.postRankCandidate(discussionId, body),
+});
+
+export const discussionParticipantQuery = (discussionId: string) => ({
+  queryKey: participantKeys.detail(discussionId),
+  queryFn: () => candidateApi.getCandidateParticipants(discussionId),
 });
 
 export const useDiscussionQuery = (discussionId: string) => {
@@ -54,4 +60,13 @@ export const useDiscussionRankQuery = (
   );
   
   return { rank, isLoading };
+};
+
+export const useDiscussionParticipantsQuery = (discussionId: string) => {
+  const { data: participants, isLoading } 
+        = useQuery<DiscussionParticipantResponse['participants']>(
+          discussionParticipantQuery(discussionId),
+        );
+    
+  return { participants, isLoading };
 };

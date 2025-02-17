@@ -16,3 +16,8 @@ export const rankKeys = {
   detail: (id: string, body: DiscussionRankRequest) => 
     [...rankKeys.all, id, JSON.stringify(body)],
 };
+
+export const participantKeys = {
+  all: ['participants'],
+  detail: (id: string) => [...participantKeys.all, id],
+};

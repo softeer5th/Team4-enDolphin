@@ -42,8 +42,7 @@ const DiscussionResponse = z.object({
 });
 
 const DiscussionParticipantResponse = z.object({
-  host: UserDTO,
-  data: z.array(UserDTO),
+  participants: z.array(UserDTO),
 });
 
 const DiscussionCalendarRequest = z.object({

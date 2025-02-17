@@ -1,21 +1,22 @@
+import { useParams } from '@tanstack/react-router';
+
 import Button from '@/components/Button';
 import { Checkbox } from '@/components/Checkbox';
 import { Flex } from '@/components/Flex';
 import { Group } from '@/components/Group';
-import type { UserDTO } from '@/features/user/model';
 import { useGroup } from '@/hooks/useGroup';
 
+import { useDiscussionParticipantsQuery } from '../../api/queries';
 import { checkboxContainerStyle } from './index.css';
 import Title from './Title';
 
-interface DiscussionMemberCheckboxProps {
-  members: UserDTO[];
-}
+const DiscussionMemberCheckbox = () => {
+  const params: { id: string } = useParams({ from: '/_main/discussion/$id' });
+  const { participants = [], isLoading } = useDiscussionParticipantsQuery(params.id);
 
-const DiscussionMemberCheckbox = ({ members }: DiscussionMemberCheckboxProps) => {
   const groupInfos = useGroup({
     defaultCheckedList: new Set([1, 2]),
-    itemIds: members.map(({ id }) => id ),
+    itemIds: participants.map(({ id }) => id ),
   });
 
   const handleClickSearch = () => {
@@ -38,7 +39,7 @@ const DiscussionMemberCheckbox = ({ members }: DiscussionMemberCheckboxProps) =>
           width='100%'
         >
           <Checkbox type='all'>전체</Checkbox>
-          {members.map(({ id, name }) => (
+          {!isLoading && participants.map(({ id, name }) => (
             <Checkbox key={id} value={id}>{name}</Checkbox>
           ))}
         </Flex>
