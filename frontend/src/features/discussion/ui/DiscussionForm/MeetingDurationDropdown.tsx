@@ -3,7 +3,7 @@ import type { ChangeEvent } from 'react';
 import { Dropdown } from '@/components/Dropdown';
 import Input from '@/components/Input';
 import { MINUTES_HALF } from '@/constants/date';
-import { formatTimeStringToNumber } from '@/utils/date';
+import { formatTimeStringToNumber } from '@/utils/date/format';
 
 import type { DiscussionRequest } from '../../model';
 import { useFormContext } from './FormContext';

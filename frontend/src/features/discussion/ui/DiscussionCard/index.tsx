@@ -2,7 +2,7 @@ import { Chip } from '@/components/Chip';
 import { Flex } from '@/components/Flex';
 import { Text } from '@/components/Text';
 import { vars } from '@/theme/index.css';
-import { formatDateToTimeString } from '@/utils/date';
+import { formatDateToTimeString } from '@/utils/date/format';
 
 import type { DiscussionDTO } from '../../model';
 import { containerStyle } from './card.css';

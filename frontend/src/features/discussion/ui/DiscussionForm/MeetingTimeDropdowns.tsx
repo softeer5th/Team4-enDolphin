@@ -7,7 +7,7 @@ import {
   formatMinutesToTimeString, 
   formatNumberToTimeString, 
   formatTimeStringToNumber, 
-} from '@/utils/date';
+} from '@/utils/date/format';
 
 import type { DiscussionRequest } from '../../model';
 import { useFormContext } from './FormContext';

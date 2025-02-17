@@ -6,7 +6,7 @@ import { Text } from '@/components/Text';
 import type { AdjustmentStatus } from '@/constants/statusMap';
 import { adjustmentStatusMap } from '@/constants/statusMap';
 import { vars } from '@/theme/index.css';
-import { formatDateToTimeString } from '@/utils/date';
+import { formatDateToTimeString } from '@/utils/date/format';
 
 import { CardBottom } from './CardBottom';
 import {
