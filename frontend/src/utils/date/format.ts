@@ -57,3 +57,8 @@ export const formatTimeStringToNumber = (timeString: string): number => {
   return Number(hours) * HOUR + Number(minutes);
 };
 
+export const formatDateToString = (date: Date | null): string => {
+  if (!date) return '';
+  const { year, month, day } = getYearMonthDay(date);
+  return `${year.toString().slice(2)}년 ${month}월 ${day}일`;
+};

@@ -2,8 +2,7 @@ import { Flex } from '@/components/Flex';
 import { CalendarCheck, Clock, UserTwo } from '@/components/Icon';
 import { Text } from '@/components/Text';
 import { vars } from '@/theme/index.css';
-import { formatDateToTimeString } from '@/utils/date';
-import { formatDateToString } from '@/utils/date/format';
+import { formatDateToString, formatDateToTimeString } from '@/utils/date/format';
 
 import type { DiscussionDTO } from '../../model';
 import { largeContainerStyle, rankContainerStyle, textStyle } from './card.css';
