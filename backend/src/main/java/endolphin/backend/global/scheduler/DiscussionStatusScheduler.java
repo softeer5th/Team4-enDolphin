@@ -5,6 +5,7 @@ import endolphin.backend.domain.discussion.entity.Discussion;
 import endolphin.backend.domain.discussion.enums.DiscussionStatus;
 import endolphin.backend.domain.shared_event.SharedEventService;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,27 +30,38 @@ public class DiscussionStatusScheduler {
         List<Discussion> discussions = discussionRepository.findByDiscussionStatusNot(
             DiscussionStatus.FINISHED);
 
+        List<Discussion> updatedDiscussions = new ArrayList<>();
+
         for (Discussion discussion : discussions) {
             try {
-                updateStatus(discussion, today);
+                Discussion updated = updateStatus(discussion, today);
+
+                if(updated != null) {
+                    updatedDiscussions.add(updated);
+                }
             } catch (Exception e) {
                 log.error("Discussion id {} 업데이트 실패: {}", discussion.getId(), e.getMessage());
             }
         }
+
+        discussionRepository.saveAll(updatedDiscussions);
     }
 
-    public void updateStatus(Discussion discussion, LocalDate today) {
+    public Discussion updateStatus(Discussion discussion, LocalDate today) {
         if (discussion.getDiscussionStatus() == DiscussionStatus.ONGOING) {
             if (discussion.getDateRangeEnd().isBefore(today)) {
                 discussion.setDiscussionStatus(DiscussionStatus.FINISHED);
-                discussionRepository.save(discussion);
-                log.info("Discussion id {} FINISHED", discussion.getId());
+                discussion.setFixedDate(discussion.getDateRangeEnd());
+                log.info("ONGOING Discussion id {} FINISHED", discussion.getId());
+                return discussion;
             }
         } else if (sharedEventService.getSharedEvent(discussion.getId()).endDateTime()
             .toLocalDate().isBefore(today)) {
             discussion.setDiscussionStatus(DiscussionStatus.FINISHED);
             discussionRepository.save(discussion);
-            log.info("Discussion id {} FINISHED", discussion.getId());
+            log.info("UPCOMING Discussion id {} FINISHED", discussion.getId());
+            return discussion;
         }
+        return null;
     }
 }
