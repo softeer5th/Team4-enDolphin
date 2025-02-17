@@ -1,6 +1,4 @@
 
-import { useState } from 'react';
-
 import { Flex } from '@/components/Flex';
 import SegmentControl from '@/components/SegmentControl';
 import { Text } from '@/components/Text';
@@ -9,13 +7,8 @@ import { containerStyle, mainContainerStyle, titleStyle } from './index.css';
 import ScheduleContents from './ScheduleDetails';
 import UnconfirmedScheduleList from './UnconfirmedScheduleList';
 
-const segmentOptions = [
-  { label: '모든 일정', value: 'all' },
-  { label: '내가 만든 일정', value: 'mine' },
-  { label: '공유 받은 일정', value: 'shared' },
-];
+const segmentValues = ['모든 일정', '내가 만든 일정', '공유 받은 일정'];
 const UnConfirmedSchedules = () => {
-  const [_, setSelectedSegment] = useState('all');
   const schedules = [{}, {}, {}];
 
   return  (
@@ -26,7 +19,7 @@ const UnConfirmedSchedules = () => {
       width='full'
     >
       <Text className={titleStyle} typo='h2'>확정되지 않은 일정</Text>
-      <SegmentControl onChange={(value) => setSelectedSegment(value)} options={segmentOptions} />
+      <SegmentControl defaultValue='모든 일정' values={segmentValues} />
       <div className={mainContainerStyle}>
         <UnconfirmedScheduleList schedules={schedules} />
         <ScheduleContents />
