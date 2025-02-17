@@ -1,10 +1,12 @@
 import { z } from 'zod';
 
+import { zCoerceToDate } from '@/utils/zod';
+
 const Schedule = z.object({
   id: z.number(),
   title: z.string(),
-  startDateTime: z.date(),
-  endDateTime: z.date(),
+  startDateTime: zCoerceToDate,
+  endDateTime: zCoerceToDate,
   meetingMethodOrLocation: z.enum(['ONLINE', 'OFFLINE']),
   participantPictureUrls: z.array(z.string()),
 });
