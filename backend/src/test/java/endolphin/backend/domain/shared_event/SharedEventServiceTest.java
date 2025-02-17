@@ -80,20 +80,19 @@ class SharedEventServiceTest {
     @DisplayName("공유 일정 조회 성공")
     @Test
     void getSharedEvent_Success() {
-        when(sharedEventRepository.findById(100L)).thenReturn(Optional.of(sharedEvent));
+        when(sharedEventRepository.findByDiscussionId(100L)).thenReturn(Optional.of(sharedEvent));
 
         SharedEventDto response = sharedEventService.getSharedEvent(100L);
 
         assertThat(response).isNotNull();
-        assertThat(response.id()).isEqualTo(100L);
 
-        verify(sharedEventRepository, times(1)).findById(100L);
+        verify(sharedEventRepository, times(1)).findByDiscussionId(100L);
     }
 
     @DisplayName("존재하지 않는 공유 일정 조회에 대한 에러 응답 테스트")
     @Test
     void getSharedEvent_NotFound_ThrowsException() {
-        when(sharedEventRepository.findById(999L)).thenReturn(Optional.empty());
+        when(sharedEventRepository.findByDiscussionId(999L)).thenReturn(Optional.empty());
 
         ApiException exception = (ApiException) catchThrowable(() ->
             sharedEventService.getSharedEvent(999L)
@@ -106,7 +105,7 @@ class SharedEventServiceTest {
             ErrorCode.SHARED_EVENT_NOT_FOUND.getMessage());
         assertThat(errorResponse.code()).isEqualTo(ErrorCode.SHARED_EVENT_NOT_FOUND.getCode());
 
-        verify(sharedEventRepository, times(1)).findById(999L);
+        verify(sharedEventRepository, times(1)).findByDiscussionId(999L);
     }
 
     @DisplayName("공유 일정 삭제 성공")
