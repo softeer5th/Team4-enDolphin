@@ -18,13 +18,6 @@ import org.springframework.stereotype.Repository;
 public interface DiscussionParticipantRepository extends
     JpaRepository<DiscussionParticipant, Long> {
 
-    @Query("SELECT u.picture " +
-        "FROM DiscussionParticipant dp " +
-        "JOIN dp.user u " +
-        "WHERE dp.discussion.id = :discussionId " +
-        "ORDER BY dp.userOffset ASC")
-    List<String> findUserPicturesByDiscussionId(@Param("discussionId") Long discussionId);
-
     @Query("SELECT dp.user " +
         "FROM DiscussionParticipant dp " +
         "WHERE dp.discussion.id = :discussionId " +
@@ -96,4 +89,12 @@ public interface DiscussionParticipantRepository extends
     Page<Discussion> findOngoingDiscussions(@Param("userId") Long userId,
         @Param("isHost") Boolean isHost,
         Pageable pageable);
+
+    @Query("SELECT dp.discussion.id, u.picture " +
+        "FROM DiscussionParticipant dp " +
+        "JOIN dp.user u " +
+        "WHERE dp.discussion.id IN :discussionIds " +
+        "ORDER BY dp.userOffset ASC")
+    List<Object[]> findUserPicturesByDiscussionIds(
+        @Param("discussionIds") List<Long> discussionIds);
 }
