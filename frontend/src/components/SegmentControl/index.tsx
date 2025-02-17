@@ -1,64 +1,59 @@
+import type { PropsWithChildren } from 'react';
 import { useState } from 'react';
 
-import type { ButtonProps } from '../Button';
-import Button from '../Button';
-import { segmentControlContainer } from './index.css';
+import { Flex } from '../Flex';
+import Content from './Content';
+import ControlButton from './ControlButton';
+import { controlButtonContainerStyle } from './index.css';
+import { SegmentControlContext } from './SegmentControlContext';
 
-export type SegmentOption = {
-  label: string;
-  value: string;
-};
-
-export interface SegmentControlProps {
-  options: SegmentOption[];
+export interface SegmentControlProps extends PropsWithChildren {
+  values: string[];
   style?: 'weak' | 'filled';
   shadow?: boolean;
   defaultValue?: string;
-  onChange: (value: string) => void;
+  onValueChange?: (value: string) => void;
 };
 
 const SegmentControl = ({
-  options,
+  values,
   style = 'filled',
   shadow = true,
-  defaultValue = options[0]?.value ?? '',
-  onChange,
+  defaultValue = values[0] ?? '',
+  onValueChange,
+  children,
 }: SegmentControlProps) => {
   const [selectedValue, setSelectedValue] = useState(defaultValue);
 
   const handleSelect = (value: string) => {
     setSelectedValue(value);
-    onChange(value);
+    onValueChange?.(value);
   };
 
   return (
-    <div className={segmentControlContainer({ style, shadow })}>
-      {options.map((option) => {
-        const isSelected = option.value === selectedValue;
-        const buttonStyles: ButtonProps = {
-          variant: 'secondary',
-          radius: 'max',
-          size: 'lg',
-          style: getButtonStyle(isSelected, style), 
-        };
-        return (
-          <Button 
-            {...buttonStyles}
-            key={option.value}
-            onClick={() => handleSelect(option.value)} 
-          >
-            {option.label}
-          </Button>
-        );
-      })}
-    </div>
+    <SegmentControlContext.Provider 
+      value={{ selectedValue, handleSelect }}
+    >
+      <Flex direction='column'>
+        <Flex
+          as='ul'
+          className={controlButtonContainerStyle({ style, shadow })}
+          direction='row'
+        >
+          {values.map((value, idx) => (
+            <ControlButton
+              key={`${value}-${idx}`}
+              segmentControlStyle={style}
+              value={value}
+            />
+          ))}
+        </Flex>
+        {children}
+      </Flex>
+    </SegmentControlContext.Provider>
   );
 };
 
-const getButtonStyle = (isSelected: boolean, style: SegmentControlProps['style']) => {
-  if (!isSelected) return 'borderless';
-  if (style === 'filled') return 'filled';
-  return 'weak';
-};
+SegmentControl.Content = Content;
 
 export default SegmentControl;

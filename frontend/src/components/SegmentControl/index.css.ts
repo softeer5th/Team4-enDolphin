@@ -1,8 +1,9 @@
+import { style } from '@vanilla-extract/css';
 import { recipe } from '@vanilla-extract/recipes';
 
 import { vars } from '../../theme/index.css';
 
-export const segmentControlContainer = recipe({
+export const controlButtonContainerStyle = recipe({
   base: {
     display: 'inline-flex',
     borderRadius: vars.radius[600],
@@ -26,4 +27,8 @@ export const segmentControlContainer = recipe({
     style: 'filled',
     shadow: true,
   },
+});
+
+export const contentContainerStyle = style({
+  width: '100%',
 });
