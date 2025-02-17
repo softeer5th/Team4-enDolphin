@@ -3,7 +3,7 @@ package endolphin.backend.domain.discussion.dto;
 import endolphin.backend.domain.shared_event.dto.SharedEventWithDiscussionInfoResponse;
 import java.util.List;
 
-public record FinishedDiscussionResponse(
+public record FinishedDiscussionsResponse(
     int currentYear,
     int currentPage,
     int totalPages,

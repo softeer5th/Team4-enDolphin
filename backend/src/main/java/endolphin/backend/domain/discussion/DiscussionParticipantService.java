@@ -1,7 +1,7 @@
 package endolphin.backend.domain.discussion;
 
 import endolphin.backend.domain.discussion.dto.DiscussionParticipantsResponse;
-import endolphin.backend.domain.discussion.dto.FinishedDiscussionResponse;
+import endolphin.backend.domain.discussion.dto.FinishedDiscussionsResponse;
 import endolphin.backend.domain.discussion.dto.OngoingDiscussion;
 import endolphin.backend.domain.discussion.dto.OngoingDiscussionsResponse;
 import endolphin.backend.domain.discussion.entity.Discussion;
@@ -167,7 +167,7 @@ public class DiscussionParticipantService {
     }
 
     @Transactional(readOnly = true)
-    public FinishedDiscussionResponse getFinishedDiscussions(Long userId, int page, int size,
+    public FinishedDiscussionsResponse getFinishedDiscussions(Long userId, int page, int size,
         int year) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Discussion> discussionPage = discussionParticipantRepository.findFinishedDiscussions(
@@ -194,7 +194,7 @@ public class DiscussionParticipantService {
             ))
             .collect(Collectors.toList());
 
-        return new FinishedDiscussionResponse(
+        return new FinishedDiscussionsResponse(
             year,
             page + 1,
             discussionPage.getTotalPages(),

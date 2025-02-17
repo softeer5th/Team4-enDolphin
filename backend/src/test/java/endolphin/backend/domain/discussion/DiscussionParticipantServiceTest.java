@@ -6,7 +6,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
-import endolphin.backend.domain.discussion.dto.FinishedDiscussionResponse;
+import endolphin.backend.domain.discussion.dto.FinishedDiscussionsResponse;
 import endolphin.backend.domain.discussion.dto.OngoingDiscussion;
 import endolphin.backend.domain.discussion.dto.OngoingDiscussionsResponse;
 import endolphin.backend.domain.discussion.entity.Discussion;
@@ -444,7 +444,7 @@ class DiscussionParticipantServiceTest {
             .willReturn(sharedEventMap);
 
         // When: Service 메서드 호출
-        FinishedDiscussionResponse response = discussionParticipantService.getFinishedDiscussions(userId, page, size, year);
+        FinishedDiscussionsResponse response = discussionParticipantService.getFinishedDiscussions(userId, page, size, year);
 
         // Then: FinishedDiscussionResponse 검증
         assertThat(response.currentYear()).isEqualTo(year);
