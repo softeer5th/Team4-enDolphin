@@ -16,7 +16,7 @@ const DiscussionCreateCard = ({ discussion }: { discussion: DiscussionResponse }
 
   const handleClickShareButton = () => {
     // TODO: 링크 암호화
-    handleCopyToClipboard(`http://localhost:5173/discussion/${discussion.id}`);
+    handleCopyToClipboard(`http://localhost:5173/discussion/invite/${discussion.id}`);
   };
 
   return (

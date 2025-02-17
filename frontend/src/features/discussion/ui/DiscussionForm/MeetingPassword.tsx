@@ -12,7 +12,7 @@ const MeetingPassword = ({ name }: { name: keyof DiscussionRequest }) => {
     isSubmitted, 
     handleUpdateField, 
   } = useFormContext();
-  setValidation(name, () => PASSWORD.test(formState[name] as string));
+  setValidation(name, () => !formState[name] || PASSWORD.test(formState[name] as string));
 
   return (
     <Input.Single
