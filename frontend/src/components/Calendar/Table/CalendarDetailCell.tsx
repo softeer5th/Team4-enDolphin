@@ -12,7 +12,6 @@ export const CalendarDetailCell = ({ date }: { date: Date }) => {
     handleMouseDown,
     handleMouseEnter,
     handleMouseUp,
-    handleClick,
   } = useTimeTableContext();
   const OFFSET = 15 * 60 * 1000;
   const formatEndTime = (endTime: Date | null) => {
@@ -28,11 +27,10 @@ export const CalendarDetailCell = ({ date }: { date: Date }) => {
     return 'default';
   })();
 
-  return (
+  return(
     <div
       className={cellDetailStyle({ state: stateStyle })}
       key={date.getTime()}
-      onClick={()=>handleClick(date)}
       onMouseDown={()=>handleMouseDown(date)}
       onMouseEnter={()=>handleMouseEnter(date)}
       onMouseUp={()=>handleMouseUp()}
