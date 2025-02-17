@@ -23,7 +23,7 @@ const CalendarTable = (
   };
 
   return (
-    <div className={containerStyle}>
+    <div className={containerStyle({ open })}>
       {open && 
       <SchedulePopover
         endDateTime={formatDateToDateTimeString(time.doneEndTime)}

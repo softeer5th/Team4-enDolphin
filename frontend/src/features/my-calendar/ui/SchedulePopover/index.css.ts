@@ -20,7 +20,7 @@ export const containerStyle = style({
   border: `1px solid ${vars.color.Ref.Netural[200]}`,
   borderRadius: vars.radius[500],
 
-  zIndex: 3,
+  zIndex: 9999,
 });
 
 export const titleStyle = style({
@@ -66,4 +66,5 @@ export const backgroundStyle = style({
   bottom: 0,
 
   zIndex: 2,
+  backgroundColor: 'rgba(0, 0, 0, 0.2)',
 });
