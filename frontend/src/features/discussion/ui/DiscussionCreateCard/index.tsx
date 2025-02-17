@@ -7,14 +7,16 @@ import { Text } from '@/components/Text';
 import { useClipboard } from '@/hooks/useClipboard';
 import { vars } from '@/theme/index.css';
 
+import type { DiscussionResponse } from '../../model';
 import DiscussionInfo from './DiscussionInfo';
 import { containerStyle } from './index.css';
 
-const DiscussionCreateCard = () => {
+const DiscussionCreateCard = ({ discussion }: { discussion: DiscussionResponse }) => {
   const { handleCopyToClipboard } = useClipboard();
 
   const handleClickShareButton = () => {
-    handleCopyToClipboard('논의 주소');
+    // TODO: 링크 암호화
+    handleCopyToClipboard(`http://localhost:5173/discussion/${discussion.id}`);
   };
 
   return (
@@ -32,7 +34,7 @@ const DiscussionCreateCard = () => {
       />
       <Text color={vars.color.Ref.Netural[900]} typo='h2'>일정 조율 생성 완료</Text>
       <Divider />
-      <DiscussionInfo />
+      <DiscussionInfo discussion={discussion} />
       <Flex justify='flex-end' width='100%'>
         <Button
           as={Link}

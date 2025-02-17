@@ -1,4 +1,4 @@
 export const discussionKeys = {
   all: ['discussions'],
-  detail: (id: number) => [...discussionKeys.all, id],
+  detail: (id: string) => [...discussionKeys.all, id],
 };
