@@ -1,10 +1,14 @@
 package endolphin.backend.domain.discussion;
 
 import endolphin.backend.domain.discussion.dto.DiscussionParticipantsResponse;
+import endolphin.backend.domain.discussion.dto.FinishedDiscussionResponse;
 import endolphin.backend.domain.discussion.dto.OngoingDiscussion;
 import endolphin.backend.domain.discussion.dto.OngoingDiscussionsResponse;
 import endolphin.backend.domain.discussion.entity.Discussion;
 import endolphin.backend.domain.discussion.entity.DiscussionParticipant;
+import endolphin.backend.domain.shared_event.SharedEventService;
+import endolphin.backend.domain.shared_event.dto.SharedEventDto;
+import endolphin.backend.domain.shared_event.dto.SharedEventWithDiscussionInfoResponse;
 import endolphin.backend.domain.user.UserService;
 import endolphin.backend.domain.user.dto.UserIdNameDto;
 import endolphin.backend.domain.user.entity.User;
@@ -31,6 +35,7 @@ public class DiscussionParticipantService {
     private final DiscussionParticipantRepository discussionParticipantRepository;
     private final UserService userService;
     private static final int MAX_PARTICIPANT = 15;
+    private final SharedEventService sharedEventService;
 
     public void addDiscussionParticipant(Discussion discussion, User user) {
         Long offset = discussionParticipantRepository.findMaxOffsetByDiscussionId(
@@ -168,6 +173,49 @@ public class DiscussionParticipantService {
             ongoingDiscussions);
     }
 
+    @Transactional(readOnly = true)
+    public FinishedDiscussionResponse getFinishedDiscussions(Long userId, int page, int size,
+        int year) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Discussion> discussionPage = discussionParticipantRepository.findFinishedDiscussions(
+            userId, pageable, year);
+
+        List<Discussion> discussions = discussionPage.getContent();
+
+        List<Long> discussionIds = discussions.stream()
+            .map(Discussion::getId)
+            .collect(Collectors.toList());
+
+        List<Object[]> pictureResults = discussionParticipantRepository.findUserPicturesByDiscussionIds(
+            discussionIds);
+
+        Map<Long, List<String>> discussionPicturesMap = pictureResults.stream()
+            .collect(Collectors.groupingBy(
+                result -> (Long) result[0],
+                Collectors.mapping(result -> (String) result[1], Collectors.toList())
+            ));
+
+        Map<Long, SharedEventDto> sharedEventMap = sharedEventService.getSharedEventMap(
+            discussionIds);
+
+        List<SharedEventWithDiscussionInfoResponse> finishedDiscussions = discussions.stream()
+            .map(discussion -> new SharedEventWithDiscussionInfoResponse(
+                discussion.getId(),
+                discussion.getTitle(),
+                discussion.getMeetingMethodOrLocation(),
+                sharedEventMap.getOrDefault(discussion.getId(), null),
+                discussionPicturesMap.getOrDefault(discussion.getId(), Collections.emptyList())
+            ))
+            .collect(Collectors.toList());
+
+        return new FinishedDiscussionResponse(
+            year,
+            page + 1,
+            discussionPage.getTotalPages(),
+            discussionPage.hasNext(),
+            discussionPage.hasPrevious(),
+            finishedDiscussions);
+    }
 
     @Transactional(readOnly = true)
     public Boolean amIHost(Long discussionId) {
