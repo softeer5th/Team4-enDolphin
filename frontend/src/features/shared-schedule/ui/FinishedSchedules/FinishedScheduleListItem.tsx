@@ -8,7 +8,7 @@ import {
   detailsContainerStyle,
   dotStyle,
   scheduleItemContainerStyle,
-} from './expiredScheduleListItem.css';
+} from './finishedScheduleListItem.css';
 
 interface ExpiredScheduleListItemProps {
   scheduleTitle: string;

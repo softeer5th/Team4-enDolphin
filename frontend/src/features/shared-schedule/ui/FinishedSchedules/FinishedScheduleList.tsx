@@ -4,8 +4,8 @@ import type { PropsWithChildren } from 'react';
 import { Flex } from '@/components/Flex';
 import Pagination from '@/components/Pagination';
 
-import { paginationStyle } from './expiredScheduleList.css';
-import ExpiredScheduleListItem from './ExpiredScheduleListItem';
+import { paginationStyle } from './finishedScheduleList.css';
+import ExpiredScheduleListItem from './FinishedScheduleListItem';
 
 interface ScheduleListProps extends PropsWithChildren {
   schedules: object[];

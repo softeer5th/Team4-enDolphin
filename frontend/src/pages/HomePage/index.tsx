@@ -9,7 +9,7 @@ import {
   prefetchOngoingSchedules,
   prefetchUpcomingSchedules,
 } from '@/features/shared-schedule/api/prefetch';
-import ExpiredSchedules from '@/features/shared-schedule/ui/ExpiredSchedules';
+import FinishedSchedules from '@/features/shared-schedule/ui/FinishedSchedules';
 import UnConfirmedSchedules from '@/features/shared-schedule/ui/OngoingSchedules';
 import UpcomingSchedules from '@/features/shared-schedule/ui/UpcomingSchedules';
 
@@ -37,7 +37,7 @@ const HomePage = () => {
         </Button>
       </UpcomingSchedules>
       <UnConfirmedSchedules />
-      <ExpiredSchedules />
+      <FinishedSchedules />
     </div>
   );
 };

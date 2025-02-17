@@ -3,7 +3,7 @@ import { ChevronLeft, ChevronRight } from '@/components/Icon';
 import { Text } from '@/components/Text';
 import { vars } from '@/theme/index.css';
 
-const ExpiredSchedules = () => (
+const FinishedSchedules = () => (
   <Flex
     direction='column'
     gap={400}
@@ -22,4 +22,4 @@ const ExpiredSchedules = () => (
   </Flex>
 );
 
-export default ExpiredSchedules;
+export default FinishedSchedules;
