@@ -9,6 +9,7 @@ import MeetingDeadlineDropdown from './MeetingDeadlineDropdown';
 import MeetingDurationDropdown from './MeetingDurationDropdown';
 import MeetingLocation from './MeetingLocation';
 import MeetingMethodDropdown from './MeetingMethodDropdown';
+import MeetingPassword from './MeetingPassword';
 import MeetingTimeDropdowns from './MeetingTimeDropdowns';
 import MeetingTitle from './MeetingTitle';
 import type { FormType } from './type';
@@ -44,6 +45,7 @@ const DiscussionForm = (
         <MeetingMethodDropdown name='meetingMethod' />
         <MeetingLocation name='location' />
         <MeetingDeadlineDropdown name='deadline' />
+        <MeetingPassword name='password' />
         <FormButton type={type} />
       </Flex>
     </FormProvider>

@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { DATE_BAR, TIME  } from '@/constants/regex';
+import { DATE_BAR, PASSWORD, TIME  } from '@/constants/regex';
 import { UserDTO } from '@/features/user/model';
 
 const MeetingMethodENUM = z.enum(['OFFLINE', 'ONLINE']);
@@ -23,6 +23,8 @@ const DiscussionRequest = z.object({
   meetingMethod: z.union([MeetingMethodENUM, z.null()]),
   location: z.string().optional(),
   deadline: z.string().regex(DATE_BAR),
+  password: z.string().regex(PASSWORD)
+    .optional(),
 });
 
 const DiscussionResponse = z.object({
