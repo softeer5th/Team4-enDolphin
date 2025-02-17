@@ -3,7 +3,7 @@ import { Flex } from '@/components/Flex';
 import { Text } from '@/components/Text';
 import { adjustmentStatusMap } from '@/constants/statusMap';
 import { vars } from '@/theme/index.css';
-import { formatDateToTimeString } from '@/utils/date';
+import { formatDateToTimeString } from '@/utils/date/format';
 
 import { cardContentStyle, cardTextStyle, cardTitleStyle } from './index.css';
 import type { CalendarCardProps } from './type';
