@@ -2,6 +2,7 @@ import { useState } from 'react';
 
 import { Calendar } from '@/components/Calendar';
 import { useSharedCalendarContext } from '@/components/Calendar/context/SharedCalendarContext';
+import { useClickOutside } from '@/hooks/useClickOutside';
 import { useSelectTime } from '@/hooks/useSelectTime';
 import { formatDateToWeekRange } from '@/utils/date';
 import { formatDateToBarString, formatDateToDateTimeString } from '@/utils/date/format';
