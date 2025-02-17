@@ -1,9 +1,22 @@
 import { style } from '@vanilla-extract/css';
+import { recipe } from '@vanilla-extract/recipes';
 
 import { vars } from '@/theme/index.css';
 
-export const containerStyle = style({
-  position: 'relative',
+export const containerStyle = recipe({
+  base: {
+    position: 'relative',
+  },
+  variants: {
+    open: {
+      true: {
+        overflow: 'hidden',
+      },
+      false: {
+        overflow: 'scroll',
+      },
+    },
+  },
 });
 
 export const calendarStyle = style({

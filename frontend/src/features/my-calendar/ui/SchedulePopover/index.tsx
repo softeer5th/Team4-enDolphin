@@ -60,10 +60,9 @@ export const SchedulePopover = (
       <dialog
         className={containerStyle}
         style={{
-          position: 'absolute',
-          left: isSaturday(startDate) 
-            ? `calc((100% - 72px) / 7 * ${sx - 1})` : `calc((100% - 72px) / 7 * ${sx + 1})`,
-          top: 16 + sy,
+          position: 'fixed',
+          left: `calc((100vw - 72px - 17.75rem) / 7 * ${sx + 1})`,
+          top: '50vh',
         }}
       >
         <Title type={type} />
