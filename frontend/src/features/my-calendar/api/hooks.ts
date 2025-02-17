@@ -9,10 +9,12 @@ import {
 
 export const useSchedulePopover = ({
   setIsOpen,
+  reset,
   scheduleId,
   valuesRef,
 }: {
   setIsOpen: (isOpen: boolean) => void;
+  reset?: () => void;
   scheduleId?: number;
   valuesRef: { current: FormValues<PersonalEventRequest> };
 }) => {
@@ -22,16 +24,19 @@ export const useSchedulePopover = ({
   
   const handleClickCreate = () => {
     createMutate(valuesRef.current);
+    reset?.();
     setIsOpen(false);
   };
   
   const handleClickEdit = () => {
     if (scheduleId) editMutate({ id: scheduleId, body: valuesRef.current });
+    reset?.();
     setIsOpen(false);
   };
   
   const handleClickDelete = () => {
     if (scheduleId) deleteMutate(scheduleId);
+    reset?.();
     setIsOpen(false);
   };
   

@@ -2,6 +2,7 @@ import { useState } from 'react';
 
 import { Calendar } from '@/components/Calendar';
 import { useSharedCalendarContext } from '@/components/Calendar/context/SharedCalendarContext';
+import { useClickOutside } from '@/hooks/useClickOutside';
 import { useSelectTime } from '@/hooks/useSelectTime';
 import { formatDateToWeekRange } from '@/utils/date';
 import { formatDateToBarString, formatDateToDateTimeString } from '@/utils/date/format';
@@ -15,7 +16,7 @@ import { calendarStyle, containerStyle } from './index.css';
 const CalendarTable = (
   { personalEvents = [] }: { personalEvents?: PersonalEventResponse[] },
 ) => {
-  const { handleMouseUp, ...time } = useSelectTime();
+  const { handleMouseUp, reset, ...time } = useSelectTime();
   const [open, setOpen] = useState(false);
 
   const handleMouseUpAddSchedule = () => {
@@ -27,6 +28,7 @@ const CalendarTable = (
       {open && 
       <SchedulePopover
         endDateTime={formatDateToDateTimeString(time.doneEndTime)}
+        reset={reset}
         setIsOpen={setOpen}
         startDateTime={formatDateToDateTimeString(time.doneStartTime)}
         type='add'
@@ -35,6 +37,10 @@ const CalendarTable = (
       <Calendar.Table 
         context={{
           handleMouseUp: () => handleMouseUp(handleMouseUpAddSchedule),
+          reset: () => {
+            setOpen(false);
+            reset();
+          },
           ...time,
         }}
       />

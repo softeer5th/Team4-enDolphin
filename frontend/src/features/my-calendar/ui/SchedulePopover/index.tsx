@@ -17,6 +17,7 @@ interface SchedulePopoverProps extends Pick<PersonalEventRequest, 'endDateTime' 
   values?: DefaultEvent;
   setIsOpen: (isOpen: boolean) => void;
   type: PopoverType;
+  reset?: () => void;
 }
 
 const initEvent = (values?: DefaultEvent): DefaultEvent => {
@@ -28,8 +29,18 @@ const initEvent = (values?: DefaultEvent): DefaultEvent => {
   };
 };
 
+const Background = ({ setIsOpen, reset }: Pick<SchedulePopoverProps, 'setIsOpen' | 'reset'>) => (
+  <Flex
+    className={backgroundStyle}
+    onClick={() => {
+      setIsOpen(false);
+      reset?.();
+    }}
+  />
+);
+
 export const SchedulePopover = (
-  { setIsOpen, scheduleId, type, values, ...event }: SchedulePopoverProps,
+  { setIsOpen, reset, scheduleId, type, values, ...event }: SchedulePopoverProps,
 ) => {
   const startDate = new Date(event.startDateTime);
   const { x: sx, y: sy } = calcPositionByDate(startDate);
@@ -40,6 +51,7 @@ export const SchedulePopover = (
   });
   const { handleClickCreate, handleClickEdit, handleClickDelete } = useSchedulePopover({
     setIsOpen,
+    reset,
     scheduleId,
     valuesRef,
   });
@@ -63,7 +75,7 @@ export const SchedulePopover = (
           type={type}
         />
       </dialog>
-      <Flex className={backgroundStyle} onClick={() => setIsOpen(false)} />
+      <Background reset={reset} setIsOpen={setIsOpen} />
     </>
   ); 
 };
