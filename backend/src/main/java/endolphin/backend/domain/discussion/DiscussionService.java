@@ -113,6 +113,8 @@ public class DiscussionService {
 
         discussion.setDiscussionStatus(DiscussionStatus.UPCOMING);
 
+        discussion.setFixedDate(sharedEventDto.startDateTime().toLocalDate());
+
         discussionRepository.save(discussion);
 
         discussionBitmapService.deleteDiscussionBitmapsUsingScan(discussionId)
