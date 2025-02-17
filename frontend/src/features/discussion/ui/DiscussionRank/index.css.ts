@@ -3,8 +3,9 @@ import { recipe } from '@vanilla-extract/recipes';
 
 import { vars } from '@/theme/index.css';
 
-export const tabStyle = style({
-  flexGrow: 1,
+export const segmentControlStyle = style({
+  paddingTop: vars.spacing[500],
+  gap: vars.spacing[500],
 });
 
 export const rankContainerStyle = style({

@@ -13,6 +13,7 @@ export interface SegmentControlProps extends PropsWithChildren {
   shadow?: boolean;
   defaultValue?: string;
   onValueChange?: (value: string) => void;
+  className?: string;
 };
 
 const SegmentControl = ({
@@ -22,6 +23,7 @@ const SegmentControl = ({
   defaultValue = values[0] ?? '',
   onValueChange,
   children,
+  className,
 }: SegmentControlProps) => {
   const [selectedValue, setSelectedValue] = useState(defaultValue);
 
@@ -34,7 +36,7 @@ const SegmentControl = ({
     <SegmentControlContext.Provider 
       value={{ selectedValue, handleSelect }}
     >
-      <Flex direction='column'>
+      <Flex className={className} direction='column'>
         <Flex
           as='ul'
           className={controlButtonContainerStyle({ style, shadow })}
