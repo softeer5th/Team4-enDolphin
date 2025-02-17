@@ -1,3 +1,5 @@
+import type { DiscussionCalendarRequest, DiscussionRankRequest } from '../model';
+
 export const discussionKeys = {
   all: ['discussions'],
   detail: (id: string) => [...discussionKeys.all, id],
@@ -5,10 +7,12 @@ export const discussionKeys = {
 
 export const calendarKeys = {
   all: ['calendars'],
-  detail: (id: string) => [...calendarKeys.all, id],
+  detail: (id: string, body: DiscussionCalendarRequest) => 
+    [...calendarKeys.all, id, JSON.stringify(body)],
 };
 
 export const rankKeys = {
   all: ['ranks'],
-  detail: (id: string) => [...rankKeys.all, id],
+  detail: (id: string, body: DiscussionRankRequest) => 
+    [...rankKeys.all, id, JSON.stringify(body)],
 };

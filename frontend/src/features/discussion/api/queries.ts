@@ -8,7 +8,7 @@ import type {
   DiscussionResponse, 
 } from '../model';
 import { candidateApi, discussionApi } from '.';
-import { calendarKeys, discussionKeys } from './keys';
+import { calendarKeys, discussionKeys, rankKeys } from './keys';
 
 export const discussionQuery = (discussionId: string) => ({
   queryKey: discussionKeys.detail(discussionId), 
@@ -18,17 +18,14 @@ export const discussionQuery = (discussionId: string) => ({
 export const discussionCalendarQuery = (
   discussionId: string, body: DiscussionCalendarRequest,
 ) => ({
-  // body가 쿼리키로 사용되는 것은 좋지 않습니다.
-  // eslint-disable-next-line
-  queryKey: calendarKeys.detail(discussionId),
+  queryKey: calendarKeys.detail(discussionId, body),
   queryFn: () => candidateApi.postCalendarCandidate(discussionId, body),
 });
 
 export const discussionRankQuery = (
   discussionId: string, body: DiscussionRankRequest,
 ) => ({
-  // eslint-disable-next-line
-  queryKey: calendarKeys.detail(discussionId),
+  queryKey: rankKeys.detail(discussionId, body),
   queryFn: () => candidateApi.postRankCandidate(discussionId, body),
 });
 
