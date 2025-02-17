@@ -7,6 +7,9 @@ import endolphin.backend.domain.shared_event.entity.SharedEvent;
 import endolphin.backend.global.error.ErrorResponse;
 import endolphin.backend.global.error.exception.ApiException;
 import endolphin.backend.global.error.exception.ErrorCode;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,6 +25,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
 class SharedEventServiceTest {
@@ -139,5 +143,48 @@ class SharedEventServiceTest {
 
         verify(sharedEventRepository, times(1)).existsById(sharedEventId);
         verify(sharedEventRepository, never()).deleteById(anyLong());
+    }
+
+    @DisplayName("discussion Id 리스트에 해당하는 공유 일정 목록 조회 성공")
+    @Test
+    public void testGetSharedEventMap() {
+        // 준비: 두 개의 Discussion 생성 (ID: 100, 101)
+        Discussion discussion1 = new Discussion();
+        ReflectionTestUtils.setField(discussion1, "id", 100L);
+
+        Discussion discussion2 = new Discussion();
+        ReflectionTestUtils.setField(discussion2, "id", 101L);
+
+        // 준비: 두 개의 SharedEvent 생성, 각 Discussion과 연결
+        SharedEvent event1 = new SharedEvent();
+        ReflectionTestUtils.setField(event1, "id", 1L);
+        ReflectionTestUtils.setField(event1, "discussion", discussion1);
+        LocalDateTime start1 = LocalDateTime.of(2025, 1, 1, 9, 0);
+        LocalDateTime end1 = LocalDateTime.of(2025, 1, 1, 17, 0);
+        ReflectionTestUtils.setField(event1, "startDateTime", start1);
+        ReflectionTestUtils.setField(event1, "endDateTime", end1);
+
+        SharedEvent event2 = new SharedEvent();
+        ReflectionTestUtils.setField(event2, "id", 2L);
+        ReflectionTestUtils.setField(event2, "discussion", discussion2);
+        LocalDateTime start2 = LocalDateTime.of(2025, 2, 1, 10, 0);
+        LocalDateTime end2 = LocalDateTime.of(2025, 2, 1, 18, 0);
+        ReflectionTestUtils.setField(event2, "startDateTime", start2);
+        ReflectionTestUtils.setField(event2, "endDateTime", end2);
+
+        // 모의: sharedEventRepository.findByDiscussionIdIn(...)가 두 이벤트를 반환하도록 설정
+        List<SharedEvent> events = Arrays.asList(event1, event2);
+        given(sharedEventRepository.findByDiscussionIdIn(Arrays.asList(100L, 101L)))
+            .willReturn(events);
+
+        // When: Service 메서드 호출
+        Map<Long, SharedEventDto> result = sharedEventService.getSharedEventMap(Arrays.asList(100L, 101L));
+
+        // Then: 반환된 Map이 두 개의 key를 포함하고, 각 key에 대해 SharedEventDto가 올바르게 매핑되는지 검증
+        assertThat(result).hasSize(2);
+        SharedEventDto expectedDto1 = SharedEventDto.of(event1);
+        SharedEventDto expectedDto2 = SharedEventDto.of(event2);
+        assertThat(result.get(100L)).isEqualTo(expectedDto1);
+        assertThat(result.get(101L)).isEqualTo(expectedDto2);
     }
 }

@@ -6,10 +6,14 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
+import endolphin.backend.domain.discussion.dto.FinishedDiscussionResponse;
 import endolphin.backend.domain.discussion.dto.OngoingDiscussion;
 import endolphin.backend.domain.discussion.dto.OngoingDiscussionsResponse;
 import endolphin.backend.domain.discussion.entity.Discussion;
 import endolphin.backend.domain.discussion.enums.DiscussionStatus;
+import endolphin.backend.domain.shared_event.SharedEventService;
+import endolphin.backend.domain.shared_event.dto.SharedEventDto;
+import endolphin.backend.domain.shared_event.dto.SharedEventWithDiscussionInfoResponse;
 import endolphin.backend.domain.user.UserService;
 import endolphin.backend.domain.user.dto.UserIdNameDto;
 import endolphin.backend.domain.user.entity.User;
@@ -17,9 +21,11 @@ import endolphin.backend.global.error.exception.ApiException;
 import endolphin.backend.global.error.exception.ErrorCode;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.junit.jupiter.api.DisplayName;
@@ -31,6 +37,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.util.ReflectionTestUtils;
 
 @ExtendWith(MockitoExtension.class)
@@ -41,6 +48,9 @@ class DiscussionParticipantServiceTest {
 
     @Mock
     private UserService userService;
+
+    @Mock
+    private SharedEventService sharedEventService;
 
     @InjectMocks
     private DiscussionParticipantService discussionParticipantService;
@@ -336,5 +346,133 @@ class DiscussionParticipantServiceTest {
         assertThat(od.participantPictureUrls()).isEqualTo(Arrays.asList("pic3.jpg", "pic4.jpg"));
     }
 
+    @DisplayName("진행 중인 논의 목록 조회 - 페이징(0,2) 테스트")
+    @Test
+    public void testGetFinishedDiscussions() {
+        Long userId = 1L;
+        int page = 0;
+        int size = 2;
+        int year = 2025;
+
+        // --- 준비: 4개의 Discussion 생성 ---
+        // Discussion 1: FINISHED, year=2025, fixedDate = 2025-01-01, id=100L
+        Discussion discussion1 = Discussion.builder()
+            .title("Discussion 1")
+            .dateStart(LocalDate.of(2025, 1, 10))
+            .dateEnd(LocalDate.of(2025, 1, 15))
+            .timeStart(LocalTime.of(9, 0))
+            .timeEnd(LocalTime.of(17, 0))
+            .duration(60)
+            .deadline(LocalDate.of(2025, 1, 20))
+            .location("Room 1")
+            .build();
+        ReflectionTestUtils.setField(discussion1, "discussionStatus", DiscussionStatus.FINISHED);
+        ReflectionTestUtils.setField(discussion1, "fixedDate", LocalDate.of(2025, 1, 1));
+        ReflectionTestUtils.setField(discussion1, "id", 100L);
+
+        // Discussion 2: FINISHED, year=2025, fixedDate = 2025-02-01, id=101L
+        Discussion discussion2 = Discussion.builder()
+            .title("Discussion 2")
+            .dateStart(LocalDate.of(2025, 2, 5))
+            .dateEnd(LocalDate.of(2025, 2, 10))
+            .timeStart(LocalTime.of(10, 0))
+            .timeEnd(LocalTime.of(18, 0))
+            .duration(60)
+            .deadline(LocalDate.of(2025, 2, 15))
+            .location("Room 2")
+            .build();
+        ReflectionTestUtils.setField(discussion2, "discussionStatus", DiscussionStatus.FINISHED);
+        ReflectionTestUtils.setField(discussion2, "fixedDate", LocalDate.of(2025, 2, 1));
+        ReflectionTestUtils.setField(discussion2, "id", 101L);
+
+        // Discussion 3: FINISHED, but year=2024 -> 필터링되어야 함, id=102L
+        Discussion discussion3 = Discussion.builder()
+            .title("Discussion 3")
+            .dateStart(LocalDate.of(2024, 12, 1))
+            .dateEnd(LocalDate.of(2024, 12, 5))
+            .timeStart(LocalTime.of(9, 0))
+            .timeEnd(LocalTime.of(17, 0))
+            .duration(60)
+            .deadline(LocalDate.of(2024, 12, 10))
+            .location("Room 3")
+            .build();
+        ReflectionTestUtils.setField(discussion3, "discussionStatus", DiscussionStatus.FINISHED);
+        ReflectionTestUtils.setField(discussion3, "fixedDate", LocalDate.of(2024, 12, 1));
+        ReflectionTestUtils.setField(discussion3, "id", 102L);
+
+        // Discussion 4: ONGOING 상태 -> 필터링되어야 함, id=103L
+        Discussion discussion4 = Discussion.builder()
+            .title("Discussion 4")
+            .dateStart(LocalDate.of(2025, 3, 1))
+            .dateEnd(LocalDate.of(2025, 3, 5))
+            .timeStart(LocalTime.of(10, 0))
+            .timeEnd(LocalTime.of(18, 0))
+            .duration(60)
+            .deadline(LocalDate.of(2025, 3, 10))
+            .location("Room 4")
+            .build();
+        ReflectionTestUtils.setField(discussion4, "discussionStatus", DiscussionStatus.ONGOING);
+        ReflectionTestUtils.setField(discussion4, "fixedDate", LocalDate.of(2025, 3, 1));
+        ReflectionTestUtils.setField(discussion4, "id", 103L);
+
+        Pageable pageable = PageRequest.of(page, size);
+        // Finished Discussions 중 year=2025에 해당하는 것은 discussion1과 discussion2만 있음.
+        Page<Discussion> discussionPage = new PageImpl<>(Arrays.asList(discussion1, discussion2), pageable, 2);
+        given(discussionParticipantRepository.findFinishedDiscussions(userId, pageable, year))
+            .willReturn(discussionPage);
+
+        List<Object[]> pictureResults = Arrays.asList(
+            new Object[]{100L, "pic1.jpg"},
+            new Object[]{100L, "pic2.jpg"},
+            new Object[]{101L, "pic3.jpg"}
+        );
+        given(discussionParticipantRepository.findUserPicturesByDiscussionIds(Arrays.asList(100L, 101L)))
+            .willReturn(pictureResults);
+
+        // --- 목업: sharedEventService.getSharedEventMap ---
+        SharedEventDto sharedEvent1 = new SharedEventDto(100L,
+            LocalDateTime.of(2025, 1, 10, 9, 0),
+            LocalDateTime.of(2025, 1, 15, 17, 0));
+        SharedEventDto sharedEvent2 = new SharedEventDto(101L,
+            LocalDateTime.of(2025, 2, 5, 10, 0),
+            LocalDateTime.of(2025, 2, 10, 18, 0));
+        Map<Long, SharedEventDto> sharedEventMap = Map.of(
+            100L, sharedEvent1,
+            101L, sharedEvent2
+        );
+        given(sharedEventService.getSharedEventMap(Arrays.asList(100L, 101L)))
+            .willReturn(sharedEventMap);
+
+        // When: Service 메서드 호출
+        FinishedDiscussionResponse response = discussionParticipantService.getFinishedDiscussions(userId, page, size, year);
+
+        // Then: FinishedDiscussionResponse 검증
+        assertThat(response.currentYear()).isEqualTo(year);
+        // currentPage는 1-based로 반환 (page+1)
+        assertThat(response.currentPage()).isEqualTo(page + 1);
+        // 전체 결과 건수=2, size=2, 총 페이지=1
+        assertThat(response.totalPages()).isEqualTo(1);
+        assertThat(response.hasNext()).isFalse();
+        assertThat(response.hasPrevious()).isFalse();
+
+        List<SharedEventWithDiscussionInfoResponse> finishedDiscussions = response.finishedDiscussions();
+        assertThat(finishedDiscussions).hasSize(2);
+
+        // 정렬: fixedDate ASC 기준 -> discussion1 (fixedDate=2025-01-01) 먼저, discussion2 (fixedDate=2025-02-01) 이후
+        SharedEventWithDiscussionInfoResponse ded1 = finishedDiscussions.get(0);
+        SharedEventWithDiscussionInfoResponse ded2 = finishedDiscussions.get(1);
+
+        assertThat(ded1.discussionId()).isEqualTo(100L);
+        assertThat(ded1.title()).isEqualTo("Discussion 1");
+        assertThat(ded1.meetingMethodOrLocation()).isEqualTo("Room 1");
+        assertThat(ded1.sharedEventDto()).isEqualTo(sharedEvent1);
+        assertThat(ded1.participantPictureUrls()).containsExactly("pic1.jpg", "pic2.jpg");
+
+        assertThat(ded2.discussionId()).isEqualTo(101L);
+        assertThat(ded2.title()).isEqualTo("Discussion 2");
+        assertThat(ded2.meetingMethodOrLocation()).isEqualTo("Room 2");
+        assertThat(ded2.sharedEventDto()).isEqualTo(sharedEvent2);
+        assertThat(ded2.participantPictureUrls()).containsExactly("pic3.jpg");
+    }
 
 }
