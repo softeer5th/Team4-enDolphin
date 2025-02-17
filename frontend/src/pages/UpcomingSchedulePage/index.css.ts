@@ -4,8 +4,13 @@ import { recipe } from '@vanilla-extract/recipes';
 import { vars } from '@/theme/index.css';
 
 export const containerStyle = style({
-  width: '100%',
+  width: 1284,
   paddingBottom: 218,
+
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  gap: 120,
 });
 
 export const controlButtonStyle = recipe({
