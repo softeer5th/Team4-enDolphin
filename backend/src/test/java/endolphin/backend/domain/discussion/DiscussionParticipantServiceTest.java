@@ -6,7 +6,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
-import endolphin.backend.domain.discussion.dto.OngoingDiscussionResponse;
+import endolphin.backend.domain.discussion.dto.OngoingDiscussion;
+import endolphin.backend.domain.discussion.dto.OngoingDiscussionsResponse;
 import endolphin.backend.domain.discussion.entity.Discussion;
 import endolphin.backend.domain.discussion.enums.DiscussionStatus;
 import endolphin.backend.domain.user.UserService;
@@ -102,7 +103,8 @@ class DiscussionParticipantServiceTest {
             discussionParticipantService.addDiscussionParticipant(discussion, user);
         });
 
-        assertThat(exception.getErrorCode()).isEqualTo(ErrorCode.DISCUSSION_PARTICIPANT_EXCEED_LIMIT);
+        assertThat(exception.getErrorCode()).isEqualTo(
+            ErrorCode.DISCUSSION_PARTICIPANT_EXCEED_LIMIT);
     }
 
     @Test
@@ -110,7 +112,8 @@ class DiscussionParticipantServiceTest {
     void getUsersByDiscussionId_ShouldReturnUsers() {
         // Given
         Long discussionId = 1L;
-        User user1 = User.builder().name("Alice").email("alice@example.com").picture("alice.jpg").build();
+        User user1 = User.builder().name("Alice").email("alice@example.com").picture("alice.jpg")
+            .build();
         User user2 = User.builder().name("Bob").email("bob@example.com").picture("bob.jpg").build();
 
         given(discussionParticipantRepository.findUsersByDiscussionId(discussionId))
@@ -132,11 +135,13 @@ class DiscussionParticipantServiceTest {
         Long userId = 1L;
         Long expectedOffset = 3L;
 
-        given(discussionParticipantRepository.findOffsetByDiscussionIdAndUserId(discussionId, userId))
+        given(
+            discussionParticipantRepository.findOffsetByDiscussionIdAndUserId(discussionId, userId))
             .willReturn(Optional.of(expectedOffset));
 
         // When
-        Long offset = discussionParticipantService.getDiscussionParticipantOffset(discussionId, userId);
+        Long offset = discussionParticipantService.getDiscussionParticipantOffset(discussionId,
+            userId);
 
         // Then
         assertThat(offset).isEqualTo(expectedOffset);
@@ -149,7 +154,8 @@ class DiscussionParticipantServiceTest {
         Long discussionId = 1L;
         Long userId = 2L;
 
-        given(discussionParticipantRepository.findOffsetByDiscussionIdAndUserId(discussionId, userId))
+        given(
+            discussionParticipantRepository.findOffsetByDiscussionIdAndUserId(discussionId, userId))
             .willReturn(Optional.empty());
 
         // When & Then
@@ -168,7 +174,8 @@ class DiscussionParticipantServiceTest {
         List<Long> userIds = Arrays.asList(1L, 2L, 3L);
         List<Long> offsets = Arrays.asList(0L, 3L, 8L);
 
-        given(discussionParticipantRepository.findOffsetsByDiscussionIdAndUserIds(discussionId, userIds))
+        given(discussionParticipantRepository.findOffsetsByDiscussionIdAndUserIds(discussionId,
+            userIds))
             .willReturn(offsets);
 
         // When
@@ -189,7 +196,8 @@ class DiscussionParticipantServiceTest {
         // 위의 data를 바탕으로, 내부에서 생성되는 userOffsets는 [0, 3, 8]이어야 함.
         List<Long> expectedOffsets = Arrays.asList(0L, 3L, 8L);
         List<Long> userIds = Arrays.asList(10L, 20L, 30L);
-        given(discussionParticipantRepository.findUserIdsByDiscussionIdAndOffset(discussionId, expectedOffsets))
+        given(discussionParticipantRepository.findUserIdsByDiscussionIdAndOffset(discussionId,
+            expectedOffsets))
             .willReturn(userIds);
 
         List<UserIdNameDto> dtos = Arrays.asList(
@@ -200,7 +208,8 @@ class DiscussionParticipantServiceTest {
         given(userService.getUserIdNameInIds(userIds)).willReturn(dtos);
 
         // When
-        List<UserIdNameDto> result = discussionParticipantService.getUsersFromData(discussionId, data);
+        List<UserIdNameDto> result = discussionParticipantService.getUsersFromData(discussionId,
+            data);
 
         // Then
         assertThat(result).isEqualTo(dtos);
@@ -260,7 +269,7 @@ class DiscussionParticipantServiceTest {
     @Test
     public void testGetOngoingDiscussions_Pagination() {
         Long userId = 1L;
-        int page = 1;  // 두 번째 페이지 (0-based index)
+        int page = 1;  // 두 번째 페이지
         int size = 1;  // 한 건씩 반환
         Boolean isHost = true;
 
@@ -299,7 +308,8 @@ class DiscussionParticipantServiceTest {
             2 // 전체 결과 건수
         );
 
-        given(discussionParticipantRepository.findOngoingDiscussions(userId, isHost, PageRequest.of(page, size)))
+        given(discussionParticipantRepository.findOngoingDiscussions(userId, isHost,
+            PageRequest.of(page, size)))
             .willReturn(pagedDiscussionPage);
 
         // 두 번째 Discussion에 대한 참여자 사진 설정
@@ -308,16 +318,24 @@ class DiscussionParticipantServiceTest {
             .willReturn(pictures2);
 
         // When: Service 메서드 호출
-        List<OngoingDiscussionResponse> responses = discussionParticipantService.getOngoingDiscussions(userId, page, size, isHost);
 
+        OngoingDiscussionsResponse response = discussionParticipantService.getOngoingDiscussions(
+            userId, page, size, isHost);
+
+        List<OngoingDiscussion> ods = response.ongoingDiscussions();
+
+        assertThat(response.currentPage()).isEqualTo(page + 1);
+        assertThat(response.totalPages()).isEqualTo(2);
+        assertThat(response.hasNext()).isFalse();
+        assertThat(response.hasPrevious()).isTrue();
         // Then: 페이징 결과가 두 번째 Discussion만 포함하는지 검증
-        assertThat(responses).hasSize(1);
-        OngoingDiscussionResponse response = responses.get(0);
-        assertThat(response.discussionId()).isEqualTo(101L);
-        assertThat(response.title()).isEqualTo("Discussion 2");
-        assertThat(response.dateRangeStart()).isEqualTo(LocalDate.of(2025, 2, 1));
-        assertThat(response.dateRangeEnd()).isEqualTo(LocalDate.of(2025, 3, 5));
-        assertThat(response.participantPictureUrls()).isEqualTo(pictures2);
+        assertThat(ods).hasSize(1);
+        OngoingDiscussion od = ods.get(0);
+        assertThat(od.discussionId()).isEqualTo(101L);
+        assertThat(od.title()).isEqualTo("Discussion 2");
+        assertThat(od.dateRangeStart()).isEqualTo(LocalDate.of(2025, 2, 1));
+        assertThat(od.dateRangeEnd()).isEqualTo(LocalDate.of(2025, 3, 5));
+        assertThat(od.participantPictureUrls()).isEqualTo(pictures2);
     }
 
 }
