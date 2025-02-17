@@ -2,10 +2,13 @@ package endolphin.backend.domain.discussion;
 
 import endolphin.backend.domain.discussion.entity.Discussion;
 import endolphin.backend.domain.discussion.entity.DiscussionParticipant;
+import endolphin.backend.domain.discussion.enums.DiscussionStatus;
 import endolphin.backend.domain.user.dto.UserIdNameDto;
 import endolphin.backend.domain.user.entity.User;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -18,7 +21,8 @@ public interface DiscussionParticipantRepository extends
     @Query("SELECT u.picture " +
         "FROM DiscussionParticipant dp " +
         "JOIN dp.user u " +
-        "WHERE dp.discussion.id = :discussionId")
+        "WHERE dp.discussion.id = :discussionId " +
+        "ORDER BY dp.userOffset ASC")
     List<String> findUserPicturesByDiscussionId(@Param("discussionId") Long discussionId);
 
     @Query("SELECT dp.user " +
@@ -81,4 +85,15 @@ public interface DiscussionParticipantRepository extends
         "WHERE dp.discussion.id = :discussionId " +
         "AND dp.isHost = true")
     Optional<String> findHostNameByDiscussionIdAndIsHost(@Param("discussionId") Long discussionId);
+
+    @Query("SELECT d " +
+        "FROM DiscussionParticipant dp " +
+        "JOIN dp.discussion d " +
+        "WHERE dp.user.id = :userId " +
+        "AND d.discussionStatus = 'ONGOING' " +
+        "AND (:isHost IS NULL OR dp.isHost = :isHost) " +
+        "ORDER BY d.deadline ASC")
+    Page<Discussion> findOngoingDiscussions(@Param("userId") Long userId,
+        @Param("isHost") Boolean isHost,
+        Pageable pageable);
 }
