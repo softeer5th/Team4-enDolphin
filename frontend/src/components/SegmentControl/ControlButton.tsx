@@ -1,20 +1,20 @@
 import { useSafeContext } from '@/hooks/useSafeContext';
 
 import Button from '../Button';
-import type { SegmentControlProps } from '.';
+import type { SegmentControlProps, SegmentOption } from '.';
 import { SegmentControlContext } from './SegmentControlContext';
 
 interface ControlButtonProps {
-  value: string;
+  segmentOption: SegmentOption;
   segmentControlStyle: SegmentControlProps['style'];
 }
 
 const ControlButton = ({ 
-  value, 
+  segmentOption, 
   segmentControlStyle,
 }: ControlButtonProps ) => {
   const { selectedValue, handleSelect } = useSafeContext(SegmentControlContext);
-  
+  const { label, value } = segmentOption;
   return (
     <Button
       as='li'
@@ -24,7 +24,7 @@ const ControlButton = ({
       style={getButtonStyle(selectedValue === value, segmentControlStyle)}
       variant='secondary'
     >
-      {value}
+      {label}
     </Button>
   );
 };
