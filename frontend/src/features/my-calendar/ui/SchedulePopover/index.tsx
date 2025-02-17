@@ -1,6 +1,5 @@
 import { Flex } from '@/components/Flex';
 import { useFormRef } from '@/hooks/useFormRef';
-import { isSaturday } from '@/utils/date';
 import { calcPositionByDate } from '@/utils/date/position';
 
 import { useSchedulePopover } from '../../api/hooks';
@@ -43,7 +42,7 @@ export const SchedulePopover = (
   { setIsOpen, reset, scheduleId, type, values, ...event }: SchedulePopoverProps,
 ) => {
   const startDate = new Date(event.startDateTime);
-  const { x: sx, y: sy } = calcPositionByDate(startDate);
+  const { x: sx } = calcPositionByDate(startDate);
   const { valuesRef, handleChange } = useFormRef<PersonalEventRequest>({
     startDateTime: event.startDateTime,
     endDateTime: event.endDateTime,
