@@ -7,7 +7,7 @@
     "dev": "node server",
     "build:client": "vite build --outDir dist/client",
 
-    "build": "tsc -b && vite build",
+    "build": "vite build && tsc -b",
     "test": "vitest",
     "coverage": "vitest run --coverage",
     "lint": "eslint .",
