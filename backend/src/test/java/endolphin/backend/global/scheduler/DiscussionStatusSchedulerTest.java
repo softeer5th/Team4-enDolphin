@@ -1,6 +1,7 @@
 package endolphin.backend.global.scheduler;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.*;
 
 import endolphin.backend.domain.discussion.DiscussionRepository;
@@ -51,10 +52,9 @@ public class DiscussionStatusSchedulerTest {
             .build();
         discussion.setDiscussionStatus(DiscussionStatus.ONGOING);
 
-        scheduler.updateStatus(discussion, today);
+        discussion = scheduler.updateStatus(discussion, today);
 
         assertEquals(DiscussionStatus.FINISHED, discussion.getDiscussionStatus());
-        verify(discussionRepository).save(discussion);
     }
 
     @DisplayName("UPCOMING 논의의 공유 일정 종료 시간이 오늘보다 이전인 경우 상태를 FINISHED로 변경")
@@ -79,10 +79,9 @@ public class DiscussionStatusSchedulerTest {
         when(sharedEvent.endDateTime()).thenReturn(LocalDateTime.of(today.minusDays(1), LocalTime.of(23, 59, 59)));
         when(sharedEventService.getSharedEvent(discussion.getId())).thenReturn(sharedEvent);
 
-        scheduler.updateStatus(discussion, today);
+        discussion = scheduler.updateStatus(discussion, today);
 
         assertEquals(DiscussionStatus.FINISHED, discussion.getDiscussionStatus());
-        verify(discussionRepository).save(discussion);
     }
 
     @Test
@@ -102,10 +101,10 @@ public class DiscussionStatusSchedulerTest {
             .build();
         discussion.setDiscussionStatus(DiscussionStatus.ONGOING);
 
-        scheduler.updateStatus(discussion, today);
+        discussion = scheduler.updateStatus(discussion, today);
 
-        assertEquals(DiscussionStatus.ONGOING, discussion.getDiscussionStatus());
-        verify(discussionRepository, never()).save(discussion);
+        assertNull(discussion);
+        verify(discussionRepository, never()).saveAll(any());
     }
 
     @DisplayName("에러 발생해도 다른 논의의 상태를 업데이트")
@@ -124,7 +123,7 @@ public class DiscussionStatusSchedulerTest {
             .meetingMethod(MeetingMethod.OFFLINE)
             .location("Room 1")
             .build();
-        discussion1.setDiscussionStatus(DiscussionStatus.ONGOING);
+        discussion1.setDiscussionStatus(DiscussionStatus.UPCOMING);
 
         Discussion discussion2 = Discussion.builder()
             .title("Discussion 2")
@@ -141,12 +140,10 @@ public class DiscussionStatusSchedulerTest {
 
         when(discussionRepository.findByDiscussionStatusNot(DiscussionStatus.FINISHED)).thenReturn(List.of(discussion1, discussion2));
 
-        doThrow(new ApiException(ErrorCode.SHARED_EVENT_NOT_FOUND)).when(discussionRepository).save(discussion1);
+        doThrow(new ApiException(ErrorCode.SHARED_EVENT_NOT_FOUND)).when(sharedEventService).getSharedEvent(discussion1.getId());
 
         scheduler.updateDiscussionStatusAtMidnight();
 
-        assertEquals(DiscussionStatus.FINISHED, discussion2.getDiscussionStatus());
-        verify(discussionRepository).save(discussion1);
-        verify(discussionRepository).save(discussion2);
+        verify(discussionRepository).saveAll(List.of(discussion2));
     }
 }
