@@ -33,7 +33,7 @@ export const Card = ({
         status={status}
         title={title}
       />
-      <CardBottom onClickEdit={handleClickEdit} size={size} />
+      {calendarId && <CardBottom />}
     </Flex>
   </div>
 );
