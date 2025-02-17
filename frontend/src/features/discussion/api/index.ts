@@ -3,6 +3,8 @@ import { request } from '@/utils/fetch';
 import type { 
   DiscussionCalendarRequest,
   DiscussionCalendarResponse, 
+  DiscussionRankRequest, 
+  DiscussionRankResponse, 
   DiscussionRequest, 
   DiscussionResponse, 
 } from '../model';
@@ -25,5 +27,12 @@ export const candidateApi = {
     const response 
       = await request.post(`/api/v1/discussion/${discussionId}/candidate-event/calendar`, { body });
     return response.events;
+  },
+  postRankCandidate: async (
+    discussionId: string, body: DiscussionRankRequest,
+  ): Promise<DiscussionRankResponse> => {
+    const response 
+      = await request.post(`/api/v1/discussion/${discussionId}/candidate-event/rank`, { body });
+    return response;
   },
 };

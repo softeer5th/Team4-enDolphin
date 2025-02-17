@@ -3,6 +3,8 @@ import { useQuery } from '@tanstack/react-query';
 import type { 
   DiscussionCalendarRequest, 
   DiscussionCalendarResponse,
+  DiscussionRankRequest,
+  DiscussionRankResponse,
   DiscussionResponse, 
 } from '../model';
 import { candidateApi, discussionApi } from '.';
@@ -22,6 +24,14 @@ export const discussionCalendarQuery = (
   queryFn: () => candidateApi.postCalendarCandidate(discussionId, body),
 });
 
+export const discussionRankQuery = (
+  discussionId: string, body: DiscussionRankRequest,
+) => ({
+  // eslint-disable-next-line
+  queryKey: calendarKeys.detail(discussionId),
+  queryFn: () => candidateApi.postRankCandidate(discussionId, body),
+});
+
 export const useDiscussionQuery = (discussionId: string) => {
   const { data: discussion, isLoading } 
     = useQuery<DiscussionResponse>(discussionQuery(discussionId));
@@ -37,4 +47,14 @@ export const useDiscussionCalendarQuery = (
   );
 
   return { calendar, isLoading };
+};
+
+export const useDiscussionRankQuery = (
+  discussionId: string, body: DiscussionRankRequest,
+) => {  
+  const { data: rank, isLoading } = useQuery<DiscussionRankResponse>(
+    discussionRankQuery(discussionId, body),
+  );
+  
+  return { rank, isLoading };
 };

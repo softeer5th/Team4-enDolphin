@@ -6,8 +6,8 @@ import { UserDTO } from '@/features/user/model';
 const MeetingMethodENUM = z.enum(['OFFLINE', 'ONLINE']);
 
 const DiscussionDTO = z.object({
-  startDateTime: z.string(),
-  endDateTime: z.string(),
+  startDateTime: z.string().regex(DATE_BAR),
+  endDateTime: z.string().regex(DATE_BAR),
   usersForAdjust: z.array(UserDTO.pick({ id: true, name: true })),
 });
 
@@ -54,8 +54,17 @@ const DiscussionCalendarRequest = z.object({
     .optional(),
 });
 
+const DiscussionRankRequest = z.object({
+  selectedUserIdList: z.array(z.number()),
+});
+
 const DiscussionCalendarResponse = z.object({
   events: z.array(DiscussionDTO),
+});
+
+const DiscussionRankResponse = z.object({
+  eventsRankedDefault: z.array(DiscussionDTO),
+  eventsRankedOfTime: z.array(DiscussionDTO),
 });
 
 export type DiscussionRequest = z.infer<typeof DiscussionRequest>;
@@ -64,6 +73,9 @@ export type DiscussionParticipantResponse = z.infer<typeof DiscussionParticipant
 
 export type DiscussionCalendarRequest = z.infer<typeof DiscussionCalendarRequest>;
 export type DiscussionCalendarResponse = z.infer<typeof DiscussionCalendarResponse>;
+
+export type DiscussionRankRequest = z.infer<typeof DiscussionRankRequest>;
+export type DiscussionRankResponse = z.infer<typeof DiscussionRankResponse>;
 
 export type MeetingMethodENUM = z.infer<typeof MeetingMethodENUM>;
 export type DiscussionDTO = z.infer<typeof DiscussionDTO>;

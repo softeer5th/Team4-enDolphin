@@ -7,3 +7,8 @@ export const calendarKeys = {
   all: ['calendars'],
   detail: (id: string) => [...calendarKeys.all, id],
 };
+
+export const rankKeys = {
+  all: ['ranks'],
+  detail: (id: string) => [...rankKeys.all, id],
+};
