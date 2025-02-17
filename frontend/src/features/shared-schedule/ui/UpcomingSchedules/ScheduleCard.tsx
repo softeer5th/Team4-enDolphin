@@ -4,33 +4,34 @@ import { Flex } from '@/components/Flex';
 import { ChevronRight } from '@/components/Icon';
 import { Text } from '@/components/Text';
 import { vars } from '@/theme/index.css';
+import { getDateTimeRangeString } from '@/utils/date';
+import { formatDateToDdayString } from '@/utils/date/format';
 
+import type { UpcomingSchedule } from '../../model';
 import { chevronButtonStyle, containerStyle } from './scheduleCard.css';
 
 interface ScheduleCardProps {
-  selected: boolean;
-  // scheduleInfo: object;
+  schedule: UpcomingSchedule;
+  latest: boolean;
 }
 
-const ScheduleCard = ({ selected }: ScheduleCardProps) => (
+const ScheduleCard = ({ schedule, latest }: ScheduleCardProps) => (
   <Flex
-    className={containerStyle({ selected })}
+    className={containerStyle({ latest })}
     direction='column'
     justify='space-between'
   >
     <Flex direction='column' gap={300}>
-      <Chip
-        color={selected ? 'black' : 'coolGray'}
-        radius='max'
-        size='md'
-        style={selected ? 'filled' : 'weak'}
-      >
-        D-day
-      </Chip>
-      <Text typo='h3'>기업디(3) 첫 팀플</Text>
+      <DdayChip endDateTime={schedule.endDateTime} latest={latest} />
+      <Text typo='h3'>{schedule.title}</Text>
       <Flex direction='column'>
-        <Text color={vars.color.Ref.Netural[600]} typo='b2R'>12월 30일 오후 11시 ~ 오후 12시</Text>
-        <Text color={vars.color.Ref.Netural[600]} typo='b2R'>강남역 4번 출구</Text>
+        <MeetingDateTimeInfo 
+          endDateTime={schedule.endDateTime}
+          startDateTime={schedule.startDateTime}
+        />
+        <Text color={vars.color.Ref.Netural[600]} typo='b2R'>
+          {schedule.meetingMethodOrLocation}
+        </Text>
       </Flex>
     </Flex>
     <Flex
@@ -38,8 +39,8 @@ const ScheduleCard = ({ selected }: ScheduleCardProps) => (
       justify='space-between'
       width='full'
     >
-      <Avatar imageUrls={['hi.com', 'hi.com']} size='lg' />
-      <button className={chevronButtonStyle({ selected })}>
+      <Avatar imageUrls={schedule.participantPictureUrls} size='lg' />
+      <button className={chevronButtonStyle({ latest })}>
         <ChevronRight
           clickable
           fill={vars.color.Ref.Netural[800]}
@@ -48,6 +49,29 @@ const ScheduleCard = ({ selected }: ScheduleCardProps) => (
       </button>
     </Flex>
   </Flex>
+);
+
+const DdayChip = ({ endDateTime, latest }: {
+  endDateTime: Date;
+  latest: boolean;
+}) => (
+  <Chip
+    color={latest ? 'black' : 'coolGray'}
+    radius='max'
+    size='md'
+    style={latest ? 'filled' : 'weak'}
+  >
+    {formatDateToDdayString(endDateTime)}
+  </Chip>
+);
+
+const MeetingDateTimeInfo = ({ startDateTime, endDateTime }: {
+  startDateTime: Date;
+  endDateTime: Date;
+}) => (
+  <Text color={vars.color.Ref.Netural[600]} typo='b2R'>
+    {getDateTimeRangeString(startDateTime, endDateTime)}
+  </Text>
 );
 
 export default ScheduleCard;

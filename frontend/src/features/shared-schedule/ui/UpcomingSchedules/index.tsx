@@ -3,18 +3,22 @@ import type { PropsWithChildren } from 'react';
 import { Flex } from '@/components/Flex';
 import { useCarouselControl } from '@/hooks/useCarousel';
 
+import { useUpcomingQuery } from '../../api/queries';
 import ControlButtons from './ControlButton';
 import { containerStyle } from './index.css';
 import UpcomingCarousel from './UpcomingCarousel';
 
-interface UpcomingSchedulesProps extends PropsWithChildren {
-  schedules: object[];
-}
-
-const UpcomingSchedules = ({ schedules, children }: UpcomingSchedulesProps) => {
+const UpcomingSchedules = ({ children }: PropsWithChildren) => {
+  const { data, isPending } = useUpcomingQuery();
+  const schedules = data?.data ?? [];
+  
   const { offsetX, translateCarousel, canTranslateLeft, canTranslateRight } = useCarouselControl({ 
     totalCards: schedules.length,
   });
+
+  if (isPending) return <div>pending...</div>;
+  if (!data || !data.data) return <div>No data available</div>;
+
   return (
     <Flex
       className={containerStyle}

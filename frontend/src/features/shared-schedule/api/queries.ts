@@ -18,4 +18,3 @@ export const useFinishedQuery = (page: number, size: number, year: number) =>
   useQuery<FinishedSchedulesResponse>(
     sharedSchedulesQueryOptions.finished(page, size, year),
   );
-  

@@ -11,7 +11,7 @@ export const containerStyle = recipe({
     flexShrink: 0,
   },
   variants: {
-    selected: {
+    latest: {
       true: {
         backgroundColor: vars.color.Ref.Primary[50],
       },
@@ -34,7 +34,7 @@ export const chevronButtonStyle = recipe({
     borderRadius: vars.radius['Max'],
   },
   variants: {
-    selected: {
+    latest: {
       true: {
         backgroundColor: vars.color.Ref.Primary[100],
       }, 

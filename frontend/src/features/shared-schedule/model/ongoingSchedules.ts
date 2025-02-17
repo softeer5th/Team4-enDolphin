@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 import { zCoerceToDate } from '@/utils/zod';
 
-const OngoingDiscussion = z.object({
+const OngoingDiscussionSchema = z.object({
   id: z.number(),
   title: z.string(),
   dateRangeStart: zCoerceToDate,
@@ -16,8 +16,8 @@ export const OngoingSchedulesResponseSchema = z.object({
   totalPages: z.number(),
   hasNext: z.boolean(),
   hasPrevious: z.boolean(),
-  ongoingDiscussions: z.array(OngoingDiscussion),
+  ongoingDiscussions: z.array(OngoingDiscussionSchema),
 });
 
 export type OngoingSchedulesResponse = z.infer<typeof OngoingSchedulesResponseSchema>;
-export type OngoingDiscussion = z.infer<typeof OngoingDiscussion>;
+export type OngoingDiscussion = z.infer<typeof OngoingDiscussionSchema>;

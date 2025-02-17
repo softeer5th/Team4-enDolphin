@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 import { zCoerceToDate } from '@/utils/zod';
 
-const Schedule = z.object({
+const UpcomingScheduleSchema = z.object({
   id: z.number(),
   title: z.string(),
   startDateTime: zCoerceToDate,
@@ -12,8 +12,8 @@ const Schedule = z.object({
 });
 
 export const UpcomingSchedulesResponseSchema = z.object({
-  data: z.array(Schedule),
+  data: z.array(UpcomingScheduleSchema),
 });
 
-export type Schedule = z.infer<typeof Schedule>;
+export type UpcomingSchedule = z.infer<typeof UpcomingScheduleSchema>;
 export type UpcomingSchedulesResponse = z.infer<typeof UpcomingSchedulesResponseSchema>;
