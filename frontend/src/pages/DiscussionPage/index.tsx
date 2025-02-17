@@ -15,7 +15,7 @@ const DiscussionPage = () =>(
     <DiscussionTitle />
     <Flex
       gap={700}
-      height='100%'
+      height='calc(100vh - 112px - 96px)'
       width='100%'
     >
       <DiscussionMemberCheckbox members={[
