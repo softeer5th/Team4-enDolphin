@@ -5,6 +5,7 @@ import endolphin.backend.domain.discussion.dto.CandidateEventDetailsResponse;
 import endolphin.backend.domain.discussion.dto.CreateDiscussionRequest;
 import endolphin.backend.domain.discussion.dto.DiscussionInfo;
 import endolphin.backend.domain.discussion.dto.DiscussionResponse;
+import endolphin.backend.domain.discussion.dto.FinishedDiscussionsResponse;
 import endolphin.backend.domain.discussion.dto.JoinDiscussionRequest;
 import endolphin.backend.domain.discussion.dto.InvitationInfo;
 import endolphin.backend.domain.discussion.dto.JoinDiscussionResponse;
@@ -224,6 +225,15 @@ public class DiscussionService {
         };
         return discussionParticipantService
             .getOngoingDiscussions(currentUser.getId(), page - 1, size, isHost);
+    }
+
+    @Transactional(readOnly = true)
+    public FinishedDiscussionsResponse getFinishedDiscussions(int page, int size,
+        int year) {
+        User currentUser = userService.getCurrentUser();
+
+        return discussionParticipantService
+            .getFinishedDiscussions(currentUser.getId(), page - 1, size, year);
     }
 
     @Transactional(readOnly = true)
