@@ -12,7 +12,9 @@ import endolphin.backend.global.error.exception.ApiException;
 import endolphin.backend.global.error.exception.ErrorCode;
 import endolphin.backend.global.util.TimeCalculator;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -134,6 +136,19 @@ public class DiscussionParticipantService {
             userId, isHost, pageable);
         List<Discussion> discussions = discussionPage.getContent();
 
+        List<Long> discussionIds = discussions.stream()
+            .map(Discussion::getId)
+            .collect(Collectors.toList());
+
+        List<Object[]> pictureResults = discussionParticipantRepository.findUserPicturesByDiscussionIds(
+            discussionIds);
+
+        Map<Long, List<String>> discussionPicturesMap = pictureResults.stream()
+            .collect(Collectors.groupingBy(
+                result -> (Long) result[0],
+                Collectors.mapping(result -> (String) result[1], Collectors.toList())
+            ));
+
         List<OngoingDiscussion> ongoingDiscussions = discussions.stream()
             .map(discussion -> new OngoingDiscussion(
                 discussion.getId(),
@@ -141,12 +156,16 @@ public class DiscussionParticipantService {
                 discussion.getDateRangeStart(),
                 discussion.getDateRangeEnd(),
                 TimeCalculator.calculateTimeLeft(discussion.getDeadline()),
-                discussionParticipantRepository.findUserPicturesByDiscussionId(discussion.getId())
+                discussionPicturesMap.getOrDefault(discussion.getId(), Collections.emptyList())
             ))
             .collect(Collectors.toList());
 
-        return new OngoingDiscussionsResponse(page + 1, discussionPage.getTotalPages(),
-            discussionPage.hasNext(), discussionPage.hasPrevious(), ongoingDiscussions);
+        return new OngoingDiscussionsResponse(
+            page + 1,
+            discussionPage.getTotalPages(),
+            discussionPage.hasNext(),
+            discussionPage.hasPrevious(),
+            ongoingDiscussions);
     }
 
 
