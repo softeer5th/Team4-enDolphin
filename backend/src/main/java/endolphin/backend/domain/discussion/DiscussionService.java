@@ -64,6 +64,7 @@ public class DiscussionService {
             .deadline(request.deadline())
             .meetingMethod(request.meetingMethod())
             .location(request.location())
+            .status(DiscussionStatus.ONGOING)
             .build();
 
         discussion = discussionRepository.save(discussion);
