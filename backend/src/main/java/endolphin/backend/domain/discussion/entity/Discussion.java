@@ -68,7 +68,7 @@ public class Discussion extends BaseTimeEntity {
     public Discussion(String title, LocalDate dateStart, LocalDate dateEnd,
         LocalTime timeStart, LocalTime timeEnd,
         Integer duration, LocalDate deadline,
-        MeetingMethod meetingMethod, String location) {
+        MeetingMethod meetingMethod, String location, DiscussionStatus status) {
         this.title = title;
         this.dateRangeStart = dateStart;
         this.dateRangeEnd = dateEnd;
@@ -78,6 +78,7 @@ public class Discussion extends BaseTimeEntity {
         this.deadline = deadline;
         this.meetingMethod = meetingMethod;
         this.location = location;
+        this.discussionStatus = status;
     }
 
     public String getMeetingMethodOrLocation() {
