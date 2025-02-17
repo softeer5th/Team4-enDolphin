@@ -53,11 +53,11 @@ const EnrollButton = ({ type }: { type: FormType }) => {
   };
 
   const handleClickEnrollButton = () => {
-    const callback = () => {
+    const callback = (id: string) => {
       onSubmit();
       navigate({
         to: typeMap[type].navigate,
-        params: { id: '1' },
+        params: { id },
       });
     };
     mutate({ body: formState, callback });
