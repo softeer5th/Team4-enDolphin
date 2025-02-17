@@ -7,6 +7,9 @@ import endolphin.backend.domain.shared_event.entity.SharedEvent;
 import endolphin.backend.global.error.exception.ApiException;
 import endolphin.backend.global.error.exception.ErrorCode;
 import endolphin.backend.global.util.Validator;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,11 +42,21 @@ public class SharedEventService {
         return SharedEventDto.of(sharedEvent);
     }
 
+    @Transactional(readOnly = true)
+    public Map<Long, SharedEventDto> getSharedEventMap(List<Long> discussionIds) {
+        List<SharedEvent> events = sharedEventRepository.findByDiscussionIdIn(discussionIds);
+
+        return events.stream()
+            .collect(Collectors.toMap(
+                event -> event.getDiscussion().getId(),
+                SharedEventDto::of
+            ));
+    }
+
     public void deleteSharedEvent(Long sharedEventId) {
         if (!sharedEventRepository.existsById(sharedEventId)) {
             throw new ApiException(ErrorCode.SHARED_EVENT_NOT_FOUND);
         }
         sharedEventRepository.deleteById(sharedEventId);
     }
-
 }
