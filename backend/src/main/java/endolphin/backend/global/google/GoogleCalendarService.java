@@ -74,7 +74,7 @@ public class GoogleCalendarService {
 
             String timeMin = LocalDateTime.now().atZone(ZoneOffset.UTC)
                 .format(DateTimeFormatter.ISO_INSTANT);
-            eventsUrl += "?timeMin=" + timeMin;
+            eventsUrl += "?timeMin=" + timeMin + "&timeZone=" + googleCalendarProperties.timeZone();
 
             Map<String, Object> response = restClient.get()
                 .uri(eventsUrl)
@@ -103,7 +103,8 @@ public class GoogleCalendarService {
                     LocalDateTime startDateTime = parseDateTime(start);
                     LocalDateTime endDateTime = parseDateTime(end);
 
-                    events.add(new GoogleEvent(eventId, summary, startDateTime, endDateTime, GoogleEventStatus.CONFIRMED));
+                    events.add(new GoogleEvent(eventId, summary, startDateTime, endDateTime,
+                        GoogleEventStatus.CONFIRMED));
                 }
 
                 // ✅ nextSyncToken을 받아서 저장
@@ -130,9 +131,11 @@ public class GoogleCalendarService {
             String syncToken = calendarService.getSyncToken(calendarId);
             String eventsUrl = googleCalendarUrl.eventsUrl().replace("{calendarId}", calendarId);
 
-            if (syncToken != null && !syncToken.isEmpty()) {
-                eventsUrl += "?syncToken=" + syncToken;
+            if (syncToken == null || syncToken.isEmpty()) {
+                return getCalendarEvents(calendarId, user);
             }
+            eventsUrl +=
+                "?syncToken=" + syncToken + "&timeZone=" + googleCalendarProperties.timeZone();
 
             Map<String, Object> response = restClient.get()
                 .uri(eventsUrl)
@@ -227,7 +230,8 @@ public class GoogleCalendarService {
     }
 
     public void subscribeToCalendar(Calendar calendar, User user) {
-        if (calendar.getChannelExpiration() != null && !calendar.getChannelExpiration().isBefore(LocalDateTime.now())) {
+        if (calendar.getChannelExpiration() != null && !calendar.getChannelExpiration()
+            .isBefore(LocalDateTime.now())) {
             return;
         }
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
