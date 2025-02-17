@@ -1,0 +1,58 @@
+name: fe-cd
+
+on:
+  push:
+    branches:
+      - dev
+      - main
+    paths:
+      - "frontend/**"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      # 프론트엔드 빌드
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 9
+
+      - name: Set .env file
+        working-directory: ./frontend
+        run: |
+          echo ${{ secrets.FE_ENV }} > .env
+
+      - name: Build Frontend
+        working-directory: ./frontend
+        run: |
+          pnpm install
+          pnpm build
+
+      # EC2로 파일 전송
+      - name: Copy files to EC2
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          source: "frontend/dist/"
+          target: "~/app/frontend/dist"
+
+      # 배포 스크립트 실행
+      - name: Deploy
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            cd ~/app
+            bash deploy_scripts/frontend_deploy.sh

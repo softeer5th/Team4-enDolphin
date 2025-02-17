@@ -65,7 +65,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             "/oauth2/callback",
             "/swagger-ui", // prod profile에서는 swagger-ui 접근 불가
             "/v3/api-docs", // prod profile에서는 v3/api-docs 접근 불가
-            "/h2-console" // prod profile에서는 h2-console 접근 불가
+            "/h2-console", // prod profile에서는 h2-console 접근 불가
+            "/health"
         );
 
         Pattern invitePattern = Pattern.compile("^/api/v1/discussion/\\d+/invite$");
