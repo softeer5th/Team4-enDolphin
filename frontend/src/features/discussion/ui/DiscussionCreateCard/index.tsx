@@ -4,6 +4,7 @@ import Button from '@/components/Button';
 import { Divider } from '@/components/Divider';
 import { Flex } from '@/components/Flex';
 import { Text } from '@/components/Text';
+import { serviceENV } from '@/envconfig';
 import { useClipboard } from '@/hooks/useClipboard';
 import { vars } from '@/theme/index.css';
 
@@ -16,7 +17,7 @@ const DiscussionCreateCard = ({ discussion }: { discussion: DiscussionResponse }
 
   const handleClickShareButton = () => {
     // TODO: 링크 암호화
-    handleCopyToClipboard(`http://localhost:5173/discussion/invite/${discussion.id}`);
+    handleCopyToClipboard(`${serviceENV.CLIENT_URL}/discussion/invite/${discussion.id}`);
   };
 
   return (
