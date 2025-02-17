@@ -1,7 +1,7 @@
 import { TIME_HEIGHT } from '@/constants/date';
 import { calcPositionByDate } from '@/utils/date/position';
 
-import type { PersonalEventDTO } from '../../model';
+import type { PersonalEventResponse } from '../../model';
 import { CalendarCard } from '../CalendarCard';
 
 const calcSize = (height: number) => {
@@ -10,9 +10,7 @@ const calcSize = (height: number) => {
   return 'lg';
 };
 
-export const CalendarCardList = (
-  { cards }: { cards: Omit<PersonalEventDTO, 'syncWithGoogleCalendar'>[] },
-) => (
+export const CalendarCardList = ({ cards }: { cards: PersonalEventResponse[] }) => (
   <>
     {cards.map((card) => {
       const start = new Date(card.startDateTime);
@@ -20,10 +18,12 @@ export const CalendarCardList = (
       const { x: sx, y: sy } = calcPositionByDate(start);
       const { y: ey } = calcPositionByDate(end);
       const height = ey - sy;
-          
+
       return (
         <CalendarCard
+          calendarId={card.calendarId}
           endTime={end}
+          id={card.id}
           key={card.id}
           size={calcSize(height)}
           startTime={start}

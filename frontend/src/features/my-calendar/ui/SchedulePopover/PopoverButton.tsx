@@ -6,12 +6,13 @@ import { buttonStyle } from './index.css';
 
 interface PopoverButtonProps {
   type: PopoverType;
-  onClickSave: () => void;
+  onClickCreate: () => void;
+  onClickEdit: () => void;
   onClickDelete: () => void;
 }
 
 export const PopoverButton = ({ type, ...handlers }: PopoverButtonProps)=>(
-  type === 'add' ? <Button className={buttonStyle} onClick={handlers.onClickSave}>저장</Button> : (
+  type === 'add' ? <Button className={buttonStyle} onClick={handlers.onClickCreate}>저장</Button> : (
     <Flex
       gap={100}
       justify='flex-end'
@@ -25,7 +26,7 @@ export const PopoverButton = ({ type, ...handlers }: PopoverButtonProps)=>(
       >
         삭제
       </Button>
-      <Button className={buttonStyle} onClick={handlers.onClickSave}>저장</Button>
+      <Button className={buttonStyle} onClick={handlers.onClickEdit}>저장</Button>
     </Flex>
   )
 );

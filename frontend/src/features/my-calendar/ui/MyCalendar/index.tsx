@@ -15,7 +15,7 @@ import { calendarStyle, containerStyle } from './index.css';
 const CalendarTable = (
   { personalEvents = [] }: { personalEvents?: PersonalEventResponse[] },
 ) => {
-  const { handleMouseUp, ...time } = useSelectTime();
+  const { handleMouseUp, reset, ...time } = useSelectTime();
   const [open, setOpen] = useState(false);
 
   const handleMouseUpAddSchedule = () => {
@@ -27,6 +27,7 @@ const CalendarTable = (
       {open && 
       <SchedulePopover
         endDateTime={formatDateToDateTimeString(time.doneEndTime)}
+        reset={reset}
         setIsOpen={setOpen}
         startDateTime={formatDateToDateTimeString(time.doneStartTime)}
         type='add'
@@ -35,6 +36,10 @@ const CalendarTable = (
       <Calendar.Table 
         context={{
           handleMouseUp: () => handleMouseUp(handleMouseUpAddSchedule),
+          reset: () => {
+            setOpen(false);
+            reset();
+          },
           ...time,
         }}
       />
@@ -47,15 +52,15 @@ export const MyCalendar = () => {
   const { startDate, endDate } = formatDateToWeekRange(calendar.selectedDate);
 
   const { personalEvents, isLoading } = usePersonalEventsQuery({ 
-    startDateTime: formatDateToBarString(startDate), 
-    endDateTime: formatDateToBarString(endDate),
+    startDate: formatDateToBarString(startDate), 
+    endDate: formatDateToBarString(endDate),
   });
 
   return (
     <Calendar {...calendar} className={calendarStyle}>
       <Calendar.Core />
       <Calendar.Header />
-      {isLoading ? <div>로딩중...</div> : <CalendarTable personalEvents={personalEvents} />}
+      {<CalendarTable personalEvents={isLoading ? [] : personalEvents} />}
     </Calendar>
   );
 };

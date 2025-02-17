@@ -1,9 +1,9 @@
 import type { PropsWithChildren } from 'react';
 
 import type { Typo } from '../Text';
-import { Text  } from '../Text';
-import type { Size } from '.';
+import { Text } from '../Text';
 import { labelStyle } from './index.css';
+import type { Size } from './type';
 
 interface CheckboxLabelProps extends PropsWithChildren {
   size: Size;

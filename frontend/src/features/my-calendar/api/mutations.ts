@@ -18,3 +18,35 @@ export const usePersonalEventMutation = () => {
 
   return { mutate };
 };
+
+export const usePersonalEventUpdateMutation = () => {
+  const queryClient = useQueryClient();
+
+  const { mutate } = useMutation({
+    mutationFn: (
+      { id, body }: { id: number; body: PersonalEventRequest },
+    ) => personalEventApi.putPersonalEvent(id, body),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: personalEventKeys.all,
+      });
+    },
+  });
+
+  return { mutate };
+};
+
+export const usePersonalEventDeleteMutation = () => {
+  const queryClient = useQueryClient();
+
+  const { mutate } = useMutation({
+    mutationFn: (id: number) => personalEventApi.deletePersonalEvent(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: personalEventKeys.all,
+      });
+    },
+  });
+
+  return { mutate };
+};

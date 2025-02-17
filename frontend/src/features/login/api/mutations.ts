@@ -11,7 +11,7 @@ interface JWTMutationProps extends JWTRequest {
 export const useJWTMutation = () => {
   const navigate = useNavigate();
   
-  const { mutate, isPending } = useMutation({
+  const { mutate } = useMutation({
     mutationFn: ({ code }: JWTMutationProps) => loginApi.getJWT(code),
     onSuccess: ({ accessToken }, { lastPath }) => {
       localStorage.setItem('accessToken', accessToken);
@@ -26,5 +26,5 @@ export const useJWTMutation = () => {
     },
   });
 
-  return { loginMutate: mutate, isPending };
+  return { loginMutate: mutate };
 };

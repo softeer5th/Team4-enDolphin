@@ -31,18 +31,18 @@ const resetDoneTime = () => ({
   endTime: null,
 });
 
-const calcDoneTimeRange = (selectedTime: TimeRange, date?: Date) => {
+const calcDoneTimeRange = (selectedTime: TimeRange) => {
   const OFFSET = 15 * 60 * 1000;
-  if (!selectedTime.startTime && date) {
+  if (selectedTime.startTime && !selectedTime.endTime) {
     return {
-      startTime: date,
-      endTime: new Date(date.getTime() + OFFSET),
+      startTime: selectedTime.startTime,
+      endTime: new Date(selectedTime.startTime.getTime() + OFFSET),
     };
   }
   const { startDate, endDate } = sortDate(selectedTime.startTime, selectedTime.endTime);
   return {
-    startTime: date || startDate,
-    endTime: date || endDate,
+    startTime: startDate,
+    endTime: endDate,
   };
 };
 
@@ -61,7 +61,7 @@ const selectReducer = (state: State, action: Action) => {
       };
 
     case 'SELECT_END': {
-      const doneTime = calcDoneTimeRange(state.selectedTime, action.date);
+      const doneTime = calcDoneTimeRange(state.selectedTime);
       if (typeof action.callback === 'function') action.callback(doneTime);
       return {
         selectedTime: resetSelectedTime(),
@@ -90,7 +90,6 @@ export interface TimeInfo {
   handleMouseDown: (date: Date) => void;
   handleMouseEnter: (date: Date) => void;
   handleMouseUp: (callback?: Callback) => void;
-  handleClick: (date: Date) => void;
   reset: () => void;
 }
 
@@ -109,7 +108,6 @@ export const useSelectTime = (): TimeInfo => {
     handleMouseDown: (date: Date) => dispatch({ type: 'SELECT_START', date }),
     handleMouseEnter: (date: Date) => dispatch({ type: 'SELECT_PROGRESS', date }),
     handleMouseUp: (callback) => dispatch({ type: 'SELECT_END', callback }),
-    handleClick: (date: Date) => dispatch({ type: 'SELECT_END', date }),
     reset: () => dispatch({ type: 'SELECT_CANCEL' }),
   };
 };

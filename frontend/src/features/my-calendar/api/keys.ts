@@ -1,7 +1,7 @@
-import type { PersonalEventDTO } from '../model';
+import type { DateRangeParams } from '../model';
 
 export const personalEventKeys = {
   all: ['personalEvents'],
-  detail: (data: Pick<PersonalEventDTO, 'startDateTime' | 'endDateTime'>) => 
+  detail: (data: DateRangeParams) => 
     [...personalEventKeys.all, data],
 };

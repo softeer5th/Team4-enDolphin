@@ -20,4 +20,9 @@ export type PersonalEventDTO = z.infer<typeof PersonalEventDTO>;
 export type PersonalEventResponse = z.infer<typeof PersonalEventResponse>;
 export type PersonalEventRequest = z.infer<typeof PersonalEventRequest>;
 
+export interface DateRangeParams {
+  startDate: string;
+  endDate: string;
+}
+
 export type PopoverType = 'add' | 'edit';

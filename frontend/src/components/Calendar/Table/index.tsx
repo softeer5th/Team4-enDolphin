@@ -1,4 +1,3 @@
-
 import type { TimeInfo } from '@/hooks/useSelectTime';
 import { isSameDate } from '@/utils/date';
 
@@ -12,7 +11,7 @@ const CalendarContents = () => {
   const { selected, dates } = useCalendarContext();
 
   return (
-    <div className={contentsStyle} >
+    <div className={contentsStyle}>
       {dates.map((date) => 
         <CalendarDay
           date={date}

@@ -1,21 +1,27 @@
 import { request } from '@/utils/fetch';
 
-import type { PersonalEventDTO, PersonalEventRequest, PersonalEventResponse } from '../model';
+import type { DateRangeParams, PersonalEventRequest, PersonalEventResponse } from '../model';
 
 export const personalEventApi = {
   getPersonalEvent: async (
-    { startDateTime, endDateTime }: Pick<PersonalEventDTO, 'startDateTime' | 'endDateTime'>,
+    { startDate, endDate }: DateRangeParams,
   ): Promise<PersonalEventResponse[]> => {
     const response = await request.get('/api/v1/personal-event', {
-      params: { 
-        startDateTime: `${startDateTime}T00:00:00`, 
-        endDateTime: `${endDateTime}T00:00:00`,
-      },
+      params: { startDate, endDate },
     });
     return response.data;
   },
   postPersonalEvent: async (body: PersonalEventRequest): Promise<PersonalEventResponse> => {
     const response = await request.post('/api/v1/personal-event', { body });
     return response;
+  },
+  putPersonalEvent: async (
+    id: number, body: PersonalEventRequest,
+  ): Promise<PersonalEventResponse> => {
+    const response = await request.put(`/api/v1/personal-event/${id}`, { body });
+    return response;
+  },
+  deletePersonalEvent: async (id: number): Promise<void> => {
+    await request.delete(`/api/v1/personal-event/${id}`);
   },
 };
