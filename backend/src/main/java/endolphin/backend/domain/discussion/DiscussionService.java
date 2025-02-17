@@ -8,7 +8,8 @@ import endolphin.backend.domain.discussion.dto.DiscussionResponse;
 import endolphin.backend.domain.discussion.dto.JoinDiscussionRequest;
 import endolphin.backend.domain.discussion.dto.InvitationInfo;
 import endolphin.backend.domain.discussion.dto.JoinDiscussionResponse;
-import endolphin.backend.domain.discussion.dto.OngoingDiscussionResponse;
+import endolphin.backend.domain.discussion.dto.OngoingDiscussion;
+import endolphin.backend.domain.discussion.dto.OngoingDiscussionsResponse;
 import endolphin.backend.domain.discussion.entity.Discussion;
 import endolphin.backend.domain.discussion.enums.AttendType;
 import endolphin.backend.domain.discussion.enums.DiscussionStatus;
@@ -27,8 +28,6 @@ import endolphin.backend.global.redis.PasswordCountService;
 import endolphin.backend.global.security.PasswordEncoder;
 import endolphin.backend.global.util.TimeCalculator;
 import endolphin.backend.global.util.Validator;
-import java.time.Duration;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,7 +35,6 @@ import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.el.stream.Stream;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -212,7 +210,7 @@ public class DiscussionService {
     }
 
     @Transactional(readOnly = true)
-    public List<OngoingDiscussionResponse> getOngoingDiscussions(int page, int size,
+    public OngoingDiscussionsResponse getOngoingDiscussions(int page, int size,
         AttendType type) {
         User currentUser = userService.getCurrentUser();
 

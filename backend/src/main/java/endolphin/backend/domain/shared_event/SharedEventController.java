@@ -1,7 +1,8 @@
 package endolphin.backend.domain.shared_event;
 
 import endolphin.backend.domain.discussion.DiscussionService;
-import endolphin.backend.domain.discussion.dto.OngoingDiscussionResponse;
+import endolphin.backend.domain.discussion.dto.OngoingDiscussion;
+import endolphin.backend.domain.discussion.dto.OngoingDiscussionsResponse;
 import endolphin.backend.domain.discussion.enums.AttendType;
 import endolphin.backend.global.error.ErrorResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -31,9 +32,7 @@ public class SharedEventController {
     @Operation(summary = "진행 중인 논의 조회", description = "진행 중인 논의를 조회합니다.")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "논의 조회 성공",
-            content = @Content(
-                array = @ArraySchema(
-                    schema = @Schema(implementation = OngoingDiscussionResponse.class)))),
+            content = @Content(schema = @Schema(implementation = OngoingDiscussionsResponse.class))),
         @ApiResponse(responseCode = "400", description = "잘못된 요청 파라미터",
             content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
         @ApiResponse(responseCode = "401", description = "인증 실패",
@@ -42,7 +41,7 @@ public class SharedEventController {
             content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @GetMapping("/ongoing")
-    public ResponseEntity<List<OngoingDiscussionResponse>> getOngoingDiscussion(
+    public ResponseEntity<OngoingDiscussionsResponse> getOngoingDiscussion(
         @Min(1) @RequestParam int page,
         @Min(1) @RequestParam int size,
         @RequestParam AttendType attendType
