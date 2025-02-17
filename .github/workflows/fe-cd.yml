@@ -28,7 +28,7 @@ jobs:
       - name: Set .env file
         working-directory: ./frontend
         run: |
-          echo ${{ secrets.FE_ENV }} > .env
+          echo "${{ secrets.FE_ENV }}" > .env
 
       - name: Build Frontend
         working-directory: ./frontend
