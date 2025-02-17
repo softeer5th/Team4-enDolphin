@@ -3,7 +3,7 @@ package endolphin.backend.domain.discussion.dto;
 import java.time.LocalDate;
 import java.util.List;
 
-public record OngoingDiscussionResponse(
+public record OngoingDiscussion(
     Long discussionId,
     String title,
     LocalDate dateRangeStart,
