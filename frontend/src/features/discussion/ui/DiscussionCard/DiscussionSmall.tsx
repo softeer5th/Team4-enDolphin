@@ -20,11 +20,11 @@ export const DiscussionSmall = ({ discussion }: { discussion: DiscussionDTO }) =
       {isRecommend && <Chip color='blue' size='lg'>추천</Chip>}
       <Flex direction='column' gap={50}>
         <Text color={vars.color.Ref.Netural[600]} typo='b3R'>
-          {formatDateToTimeString(discussion.startDateTime)}
+          {formatDateToTimeString(new Date(discussion.startDateTime))}
           {' '}
           - 
           {' '}
-          {formatDateToTimeString(discussion.endDateTime)}
+          {formatDateToTimeString(new Date(discussion.endDateTime))}
         </Text>
         {isRecommend ? 
           <Text color={vars.color.Ref.Netural[800]} typo='t1'>모두 가능해요</Text> : 
