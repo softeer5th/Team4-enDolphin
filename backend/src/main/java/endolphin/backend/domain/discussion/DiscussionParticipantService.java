@@ -1,10 +1,10 @@
 package endolphin.backend.domain.discussion;
 
 import endolphin.backend.domain.discussion.dto.DiscussionParticipantsResponse;
-import endolphin.backend.domain.discussion.dto.OngoingDiscussionResponse;
+import endolphin.backend.domain.discussion.dto.OngoingDiscussion;
+import endolphin.backend.domain.discussion.dto.OngoingDiscussionsResponse;
 import endolphin.backend.domain.discussion.entity.Discussion;
 import endolphin.backend.domain.discussion.entity.DiscussionParticipant;
-import endolphin.backend.domain.discussion.enums.DiscussionStatus;
 import endolphin.backend.domain.user.UserService;
 import endolphin.backend.domain.user.dto.UserIdNameDto;
 import endolphin.backend.domain.user.entity.User;
@@ -14,7 +14,6 @@ import endolphin.backend.global.util.TimeCalculator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -128,15 +127,15 @@ public class DiscussionParticipantService {
     }
 
     @Transactional(readOnly = true)
-    public List<OngoingDiscussionResponse> getOngoingDiscussions(Long userId, int page, int size,
+    public OngoingDiscussionsResponse getOngoingDiscussions(Long userId, int page, int size,
         Boolean isHost) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Discussion> discussionPage = discussionParticipantRepository.findOngoingDiscussions(
             userId, isHost, pageable);
         List<Discussion> discussions = discussionPage.getContent();
 
-        return discussions.stream()
-            .map(discussion -> new OngoingDiscussionResponse(
+        List<OngoingDiscussion> ongoingDiscussions = discussions.stream()
+            .map(discussion -> new OngoingDiscussion(
                 discussion.getId(),
                 discussion.getTitle(),
                 discussion.getDateRangeStart(),
@@ -145,6 +144,9 @@ public class DiscussionParticipantService {
                 discussionParticipantRepository.findUserPicturesByDiscussionId(discussion.getId())
             ))
             .collect(Collectors.toList());
+
+        return new OngoingDiscussionsResponse(page + 1, discussionPage.getTotalPages(),
+            discussionPage.hasNext(), discussionPage.hasPrevious(), ongoingDiscussions);
     }
 
 
