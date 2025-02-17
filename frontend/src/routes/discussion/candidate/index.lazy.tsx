@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router';
+import { createLazyFileRoute } from '@tanstack/react-router';
 
 import GlobalNavBar from '@/layout/GlobalNavBar';
 import CandidateSchedulePage from '@/pages/CandidateSchedulePage';
@@ -10,6 +10,6 @@ const CandidateSchedule = () => (
   </>
 );
 
-export const Route = createFileRoute('/discussion/candidate/$id')({
+export const Route = createLazyFileRoute('/discussion/candidate/')({
   component: CandidateSchedule,
 });
