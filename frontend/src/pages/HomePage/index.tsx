@@ -10,7 +10,7 @@ import {
   prefetchUpcomingSchedules,
 } from '@/features/shared-schedule/api/prefetch';
 import ExpiredSchedules from '@/features/shared-schedule/ui/ExpiredSchedules';
-import UnConfirmedSchedules from '@/features/shared-schedule/ui/UnConfirmedSchedules';
+import UnConfirmedSchedules from '@/features/shared-schedule/ui/OngoingSchedules';
 import UpcomingSchedules from '@/features/shared-schedule/ui/UpcomingSchedules';
 
 import { containerStyle } from './index.css';

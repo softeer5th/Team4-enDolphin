@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 
 import type { UpcomingSchedulesResponse } from '../model';
-import type { FinishedSchedulesResponse, OngoingQueryType } from '../model/finishedSchedules';
-import type { OngoingSchedulesResponse } from '../model/ongoingSchedules';
+import type { FinishedSchedulesResponse } from '../model/finishedSchedules';
+import type { OngoingQueryType, OngoingSchedulesResponse } from '../model/ongoingSchedules';
 import { sharedSchedulesQueryOptions } from './queryOptions';
 
 export const useUpcomingQuery = () => useQuery<UpcomingSchedulesResponse>(

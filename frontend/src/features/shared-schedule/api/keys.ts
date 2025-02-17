@@ -1,4 +1,4 @@
-import type { OngoingQueryType } from '../model/finishedSchedules';
+import type { OngoingQueryType } from '../model';
 
 export const sharedScheduleQuerykeys = {
   upcoming: ['upcoming'],

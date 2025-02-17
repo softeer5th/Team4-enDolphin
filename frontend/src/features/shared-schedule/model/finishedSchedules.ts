@@ -25,9 +25,6 @@ export const FinishedSchedulesResponseSchema = z.object({
   finisnedDiscussions: z.array(FinishedDiscussionSchema),
 });
 
-export type OngoingQueryType = 'HOST' | 'ATTENDEE' | 'ALL';
-export type MeetingMethod = 'ONLINE' | 'OFFLINE';
-
 export type FinishedSchedulesResponse = z.infer<typeof FinishedSchedulesResponseSchema>;
 export type FinisnedDiscussion = z.infer<typeof FinishedDiscussionSchema>;
 export type SharedEventDto = z.infer<typeof SharedEventDtoSchema>;

@@ -1,12 +1,16 @@
 import { request } from '@/utils/fetch';
 
-import type { OngoingSchedulesResponse, UpcomingSchedulesResponse } from '../model';
+import type {
+  OngoingQueryType,
+  OngoingSchedulesResponse,
+  UpcomingSchedulesResponse, 
+} from '../model';
 import { 
   FinishedSchedulesResponseSchema, 
   OngoingSchedulesResponseSchema,
   UpcomingSchedulesResponseSchema, 
 } from '../model';
-import type { FinishedSchedulesResponse, OngoingQueryType } from '../model/finishedSchedules';
+import type { FinishedSchedulesResponse } from '../model/finishedSchedules';
 
 const ENDPOINT_PREFIX = '/api/v1/schedules';
 

@@ -7,9 +7,9 @@ import {
   detailsContainerStyle,
   scheduleItemContainerStyle,
   updateIndicatorStyle,
-} from './unconfirmedscheduleListItem.css';
+} from './ongoingScheduleListItem.css';
 
-interface UnconfirmedScheduleListItemProps {
+interface OngoingScheduleListItemProps {
   scheduleTitle: string;
   participantImageUrls: string[];
   selected: boolean;
@@ -18,12 +18,12 @@ interface UnconfirmedScheduleListItemProps {
   onClick?: () => void;
 }
 
-const UnconfimredScheduleListItem = ({ 
+const OngoingScheduleListItem = ({ 
   scheduleTitle,
   participantImageUrls,
   selected,
   isUpdated = false,
-}: UnconfirmedScheduleListItemProps) => (
+}: OngoingScheduleListItemProps) => (
   <Flex
     className={scheduleItemContainerStyle({ selected })}
     direction='column'
@@ -53,4 +53,4 @@ const UnconfimredScheduleListItem = ({
   </Flex>
 );
 
-export default UnconfimredScheduleListItem;
+export default OngoingScheduleListItem;
