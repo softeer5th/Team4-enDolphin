@@ -5,7 +5,7 @@ import { Text } from '@/components/Text';
 import { Toggle } from '@/components/Toggle';
 import type { FormRef } from '@/hooks/useFormRef';
 import { vars } from '@/theme/index.css';
-import { formatDateToTimeString } from '@/utils/date';
+import { formatDateToTimeString } from '@/utils/date/format';
 
 import type { PersonalEventRequest } from '../../model';
 import { cardStyle, inputStyle } from './index.css';
