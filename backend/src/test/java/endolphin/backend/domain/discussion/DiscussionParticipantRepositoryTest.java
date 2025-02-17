@@ -240,4 +240,89 @@ public class DiscussionParticipantRepositoryTest {
         assertThat(discussionsResult.get(0).getDeadline())
             .isBeforeOrEqualTo(discussionsResult.get(1).getDeadline());
     }
+
+    @DisplayName("discussionId로 참여자 사진 목록 조회 및 정렬 검증")
+    @Test
+    public void testFindUserPicturesByDiscussionIds() {
+        Discussion discussion = Discussion.builder()
+            .title("Test Discussion")
+            .dateStart(LocalDate.now())
+            .dateEnd(LocalDate.now().plusDays(1))
+            .timeStart(LocalTime.of(9, 0))
+            .timeEnd(LocalTime.of(17, 0))
+            .duration(60)
+            .deadline(LocalDate.now().plusDays(2))
+            .location("Test Location")
+            .build();
+        ReflectionTestUtils.setField(discussion, "discussionStatus", DiscussionStatus.ONGOING);
+        entityManager.persist(discussion);
+        entityManager.flush();
+        Long discussionId = discussion.getId();
+
+        // Users 생성
+        User user1 = User.builder()
+            .name("Alice")
+            .email("alice@example.com")
+            .picture("pic1.jpg")
+            .build();
+        entityManager.persist(user1);
+
+        User user2 = User.builder()
+            .name("Bob")
+            .email("bob@example.com")
+            .picture("pic2.jpg")
+            .build();
+        entityManager.persist(user2);
+
+        User user3 = User.builder()
+            .name("Charlie")
+            .email("charlie@example.com")
+            .picture("pic3.jpg")
+            .build();
+        entityManager.persist(user3);
+
+        DiscussionParticipant dp1 = DiscussionParticipant.builder()
+            .discussion(discussion)
+            .user(user1)
+            .isHost(true)
+            .userOffset(2L)
+            .build();
+        entityManager.persist(dp1);
+
+        DiscussionParticipant dp2 = DiscussionParticipant.builder()
+            .discussion(discussion)
+            .user(user2)
+            .isHost(false)
+            .userOffset(0L)
+            .build();
+        entityManager.persist(dp2);
+
+        DiscussionParticipant dp3 = DiscussionParticipant.builder()
+            .discussion(discussion)
+            .user(user3)
+            .isHost(false)
+            .userOffset(1L)
+            .build();
+        entityManager.persist(dp3);
+
+        entityManager.flush();
+        entityManager.clear();
+
+        List<Object[]> results = discussionParticipantRepository.findUserPicturesByDiscussionIds(Arrays.asList(discussionId));
+
+        assertThat(results).hasSize(3);
+
+        Object[] row1 = results.get(0);
+        Object[] row2 = results.get(1);
+        Object[] row3 = results.get(2);
+
+        assertThat((Long) row1[0]).isEqualTo(discussionId);
+        assertThat((String) row1[1]).isEqualTo("pic2.jpg");
+
+        assertThat((Long) row2[0]).isEqualTo(discussionId);
+        assertThat((String) row2[1]).isEqualTo("pic3.jpg");
+
+        assertThat((Long) row3[0]).isEqualTo(discussionId);
+        assertThat((String) row3[1]).isEqualTo("pic1.jpg");
+    }
 }

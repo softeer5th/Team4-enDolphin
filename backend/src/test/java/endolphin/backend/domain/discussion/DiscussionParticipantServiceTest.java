@@ -269,11 +269,11 @@ class DiscussionParticipantServiceTest {
     @Test
     public void testGetOngoingDiscussions_Pagination() {
         Long userId = 1L;
-        int page = 1;  // 두 번째 페이지
+        int page = 1;  // 두 번째 페이지 (0-based index: page 1)
         int size = 1;  // 한 건씩 반환
         Boolean isHost = true;
 
-        // 첫 번째 Discussion 생성
+        // 첫 번째 Discussion 생성 (id=100L)
         Discussion discussion1 = Discussion.builder()
             .title("Discussion 1")
             .dateStart(LocalDate.of(2025, 2, 10))
@@ -287,7 +287,6 @@ class DiscussionParticipantServiceTest {
         ReflectionTestUtils.setField(discussion1, "discussionStatus", DiscussionStatus.ONGOING);
         ReflectionTestUtils.setField(discussion1, "id", 100L);
 
-        // 두 번째 Discussion 생성
         Discussion discussion2 = Discussion.builder()
             .title("Discussion 2")
             .dateStart(LocalDate.of(2025, 2, 1))
@@ -301,41 +300,41 @@ class DiscussionParticipantServiceTest {
         ReflectionTestUtils.setField(discussion2, "discussionStatus", DiscussionStatus.ONGOING);
         ReflectionTestUtils.setField(discussion2, "id", 101L);
 
-        // Repository가 페이지 1, 사이즈 1로 두 번째 Discussion만 반환하도록 PageImpl 생성
         Page<Discussion> pagedDiscussionPage = new PageImpl<>(
             List.of(discussion2),
             PageRequest.of(page, size),
             2 // 전체 결과 건수
         );
 
-        given(discussionParticipantRepository.findOngoingDiscussions(userId, isHost,
-            PageRequest.of(page, size)))
+        given(discussionParticipantRepository.findOngoingDiscussions(userId, isHost, PageRequest.of(page, size)))
             .willReturn(pagedDiscussionPage);
 
-        // 두 번째 Discussion에 대한 참여자 사진 설정
-        List<String> pictures2 = Arrays.asList("pic3.jpg", "pic4.jpg");
-        given(discussionParticipantRepository.findUserPicturesByDiscussionId(101L))
-            .willReturn(pictures2);
+        List<Object[]> pictureResults = Arrays.asList(
+            new Object[]{101L, "pic3.jpg"},
+            new Object[]{101L, "pic4.jpg"}
+        );
+        given(discussionParticipantRepository.findUserPicturesByDiscussionIds(Arrays.asList(101L)))
+            .willReturn(pictureResults);
 
         // When: Service 메서드 호출
-
-        OngoingDiscussionsResponse response = discussionParticipantService.getOngoingDiscussions(
-            userId, page, size, isHost);
-
+        OngoingDiscussionsResponse response = discussionParticipantService.getOngoingDiscussions(userId, page, size, isHost);
         List<OngoingDiscussion> ods = response.ongoingDiscussions();
 
-        assertThat(response.currentPage()).isEqualTo(page + 1);
+        // Then: 페이징 관련 메타 데이터 검증
+        assertThat(response.currentPage()).isEqualTo(page + 1);  // currentPage는 1-based
         assertThat(response.totalPages()).isEqualTo(2);
-        assertThat(response.hasNext()).isFalse();
+        assertThat(response.hasNext()).isFalse();    // page 1 (즉, 두 번째 페이지)가 마지막
         assertThat(response.hasPrevious()).isTrue();
-        // Then: 페이징 결과가 두 번째 Discussion만 포함하는지 검증
+
+        // 반환된 OngoingDiscussion이 discussion2에 해당하는지 검증
         assertThat(ods).hasSize(1);
         OngoingDiscussion od = ods.get(0);
         assertThat(od.discussionId()).isEqualTo(101L);
         assertThat(od.title()).isEqualTo("Discussion 2");
         assertThat(od.dateRangeStart()).isEqualTo(LocalDate.of(2025, 2, 1));
         assertThat(od.dateRangeEnd()).isEqualTo(LocalDate.of(2025, 3, 5));
-        assertThat(od.participantPictureUrls()).isEqualTo(pictures2);
+        assertThat(od.participantPictureUrls()).isEqualTo(Arrays.asList("pic3.jpg", "pic4.jpg"));
     }
+
 
 }
