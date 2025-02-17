@@ -97,4 +97,15 @@ public interface DiscussionParticipantRepository extends
         "ORDER BY dp.userOffset ASC")
     List<Object[]> findUserPicturesByDiscussionIds(
         @Param("discussionIds") List<Long> discussionIds);
+
+    @Query("SELECT d " +
+        "FROM DiscussionParticipant dp " +
+        "JOIN dp.discussion d " +
+        "WHERE dp.user.id = :userId " +
+        "AND d.discussionStatus = 'FINISHED' " +
+        "AND FUNCTION('YEAR', d.fixedDate) = :year " +
+        "ORDER BY d.fixedDate ASC")
+    Page<Discussion> findFinishedDiscussions(@Param("userId") Long userId,
+        Pageable pageable,
+        @Param("year") int year);
 }
