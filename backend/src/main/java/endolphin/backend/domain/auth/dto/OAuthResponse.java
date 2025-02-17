@@ -1,5 +1,10 @@
 package endolphin.backend.domain.auth.dto;
 
-public record OAuthResponse(String accessToken) {
+import java.time.LocalDateTime;
+
+public record OAuthResponse(
+    String accessToken,
+    LocalDateTime expiredAt
+) {
 
 }
