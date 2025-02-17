@@ -7,20 +7,17 @@ import { SegmentControlContext } from './SegmentControlContext';
 interface ControlButtonProps {
   value: string;
   segmentControlStyle: SegmentControlProps['style'];
-  key?: string;
 }
 
 const ControlButton = ({ 
   value, 
   segmentControlStyle,
-  key,
 }: ControlButtonProps ) => {
   const { selectedValue, handleSelect } = useSafeContext(SegmentControlContext);
   
   return (
     <Button
       as='li'
-      key={key}
       onClick={() => handleSelect(value)}
       radius='max'
       size='lg'

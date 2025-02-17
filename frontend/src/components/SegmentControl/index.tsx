@@ -41,7 +41,7 @@ const SegmentControl = ({
           direction='row'
         >
           {values.map((value, idx) => (
-            <ControlButton 
+            <ControlButton
               key={`${value}-${idx}`}
               segmentControlStyle={style}
               value={value}
