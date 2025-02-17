@@ -145,14 +145,7 @@ public class DiscussionParticipantService {
             .map(Discussion::getId)
             .collect(Collectors.toList());
 
-        List<Object[]> pictureResults = discussionParticipantRepository.findUserPicturesByDiscussionIds(
-            discussionIds);
-
-        Map<Long, List<String>> discussionPicturesMap = pictureResults.stream()
-            .collect(Collectors.groupingBy(
-                result -> (Long) result[0],
-                Collectors.mapping(result -> (String) result[1], Collectors.toList())
-            ));
+        Map<Long, List<String>> discussionPicturesMap = getDiscussionPicturesMap(discussionIds);
 
         List<OngoingDiscussion> ongoingDiscussions = discussions.stream()
             .map(discussion -> new OngoingDiscussion(
@@ -186,14 +179,7 @@ public class DiscussionParticipantService {
             .map(Discussion::getId)
             .collect(Collectors.toList());
 
-        List<Object[]> pictureResults = discussionParticipantRepository.findUserPicturesByDiscussionIds(
-            discussionIds);
-
-        Map<Long, List<String>> discussionPicturesMap = pictureResults.stream()
-            .collect(Collectors.groupingBy(
-                result -> (Long) result[0],
-                Collectors.mapping(result -> (String) result[1], Collectors.toList())
-            ));
+        Map<Long, List<String>> discussionPicturesMap = getDiscussionPicturesMap(discussionIds);
 
         Map<Long, SharedEventDto> sharedEventMap = sharedEventService.getSharedEventMap(
             discussionIds);
@@ -215,6 +201,18 @@ public class DiscussionParticipantService {
             discussionPage.hasNext(),
             discussionPage.hasPrevious(),
             finishedDiscussions);
+    }
+
+    @Transactional(readOnly = true)
+    protected Map<Long, List<String>> getDiscussionPicturesMap(List<Long> discussionIds) {
+        List<Object[]> pictureResults = discussionParticipantRepository.findUserPicturesByDiscussionIds(
+            discussionIds);
+
+        return pictureResults.stream()
+            .collect(Collectors.groupingBy(
+                result -> (Long) result[0],
+                Collectors.mapping(result -> (String) result[1], Collectors.toList())
+            ));
     }
 
     @Transactional(readOnly = true)
