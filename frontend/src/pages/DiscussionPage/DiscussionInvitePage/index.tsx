@@ -1,17 +1,35 @@
+import { useInviteInfoQuery } from '@/features/discussion/api/queries';
 import DiscussionInviteCard from '@/features/discussion/ui/DiscussionInviteCard';
 
-const DiscussionInvitePage = () => {
-  const dummyData = {
-    hostName: '김기업',
-    dateRange: { start: new Date(), end: new Date() },
-    timeRange: { start: new Date(), end: new Date() },
-    meetingDuration: 60,
-    participantImageUrls: ['hi.com'],
-    location: '서울시 강남구 역삼동 123-45',
-    canJoin: true,
-  };
+const DiscussionInvitePage = ({ discussionId }:
+{ discussionId: number },
+) => {
+  const { data, isPending } = useInviteInfoQuery(discussionId);
 
-  return <DiscussionInviteCard {...dummyData} />;
+  if (isPending) return <div>Loading...</div>;
+  if (!data) return <div>response contains no data</div>;
+ 
+  const {
+    host,
+    title,
+    dateRangeStart,
+    dateRangeEnd,
+    timeRangeStart,
+    timeRangeEnd,
+    duration,
+    isFull,
+  } = data;
+
+  return (
+    <DiscussionInviteCard 
+      canJoin={!isFull}
+      dateRange={{ start: dateRangeStart, end: dateRangeEnd }}
+      hostName={host}
+      meetingDuration={duration}
+      timeRange={{ start: timeRangeStart, end: timeRangeEnd }}
+      title={title}
+    />
+  );
 };
 
 export default DiscussionInvitePage;

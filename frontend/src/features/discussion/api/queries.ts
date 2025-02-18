@@ -8,8 +8,10 @@ import type {
   DiscussionRankResponse,
   DiscussionResponse, 
 } from '../model';
+import type { InviteResponse } from '../model/invite';
 import { candidateApi, discussionApi } from '.';
 import { calendarKeys, discussionKeys, participantKeys, rankKeys } from './keys';
+import { invitationQueryOption } from './queryOptions';
 
 export const discussionQuery = (discussionId: string) => ({
   queryKey: discussionKeys.detail(discussionId), 
@@ -73,3 +75,5 @@ export const useDiscussionParticipantsQuery = (discussionId: string) => {
     
   return { participants, isLoading };
 };
+export const useInviteInfoQuery = (discussionId: number) => 
+  useQuery<InviteResponse>(invitationQueryOption(discussionId));
