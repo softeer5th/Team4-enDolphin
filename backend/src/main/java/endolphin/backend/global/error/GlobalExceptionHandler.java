@@ -41,13 +41,13 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(e.getErrorCode().getHttpStatus()).body(response);
     }
 
-    @ExceptionHandler({MethodArgumentNotValidException.class, ConstraintViolationException.class, HttpMessageNotReadableException.class})
+    @ExceptionHandler({MethodArgumentNotValidException.class, ConstraintViolationException.class,
+        HttpMessageNotReadableException.class})
     public ResponseEntity<ErrorResponse> handleBadRequestExceptions(Exception e) {
         log.error("[Bad Request Exception] ", e);
         ErrorResponse response = ErrorResponse.of(ErrorCode.INVALID_INPUT);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
-
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleUnexpectedException(Exception e) {
