@@ -1,25 +1,73 @@
-import { useState } from 'react';
+import SegmentControl from '@/components/SegmentControl';
 
-import { Tab } from '@/components/Tab';
+import type { DiscussionDTO } from '../../model';
+import { segmentControlStyle } from './index.css';
+import { RankContents } from './RankContents';
 
-const DiscussionRank = () => {
-  const [tab, setTab] = useState('eventsRankedDefault');
-  const handleChange = (value: string) => {
-    setTab(value);
-  };
+const data: DiscussionDTO[] = [
+  {
+    startDateTime: '2025-02-16',
+    endDateTime: '2025-02-17',
+    usersForAdjust: [],
+  },
+  {
+    startDateTime: '2025-02-20',
+    endDateTime: '2025-02-21',
+    usersForAdjust: [
+      {
+        id: 1,
+        name: '이현영', 
+      },
+      {
+        id: 2,
+        name: '이재영',
+      },
+    ],
+  },
+  {
+    startDateTime: '2025-02-16',
+    endDateTime: '2025-02-17',
+    usersForAdjust: [
+      {
+        id: 3,
+        name: '김동권', 
+      },
+      {
+        id: 4,
+        name: '김동현',
+      },
+    ],
+  },
+  {
+    startDateTime: '2025-02-16',
+    endDateTime: '2025-02-17',
+    usersForAdjust: [
+      {
+        id: 3,
+        name: '김동권', 
+      },
+      {
+        id: 4,
+        name: '김동현',
+      },
+    ],
+  },
+];
 
-  return (
-    <div>
-      <Tab onChange={handleChange} selectedValue={tab}>
-        <Tab.List>
-          <Tab.Item value='eventsRankedDefault'>참가자 많은 순</Tab.Item>
-          <Tab.Item value='eventsRankedOfTime'>빠른 시간 순</Tab.Item>
-        </Tab.List>
-        <Tab.Content value='eventsRankedDefault'>캘린더</Tab.Content>
-        <Tab.Content value='eventsRankedOfTime'>순위</Tab.Content>
-      </Tab>
-    </div>
-  );
-};
+const DiscussionRank = () => (
+  <SegmentControl
+    className={segmentControlStyle}
+    defaultValue='참가자 많은 순'
+    style='weak'
+    values={['참가자 많은 순', '빠른 시간 순']}
+  >
+    <SegmentControl.Content value='참가자 많은 순'>
+      <RankContents data={data} />
+    </SegmentControl.Content>
+    <SegmentControl.Content value='빠른 시간 순'>
+      <RankContents data={data} />
+    </SegmentControl.Content>
+  </SegmentControl>
+);
 
 export default DiscussionRank;

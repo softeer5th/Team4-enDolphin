@@ -1,12 +1,18 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { createBrowserHistory, createRootRoute, Outlet } from '@tanstack/react-router';
+import type { QueryClient } from '@tanstack/react-query';
+import { 
+  createRootRouteWithContext, 
+  Outlet, 
+} from '@tanstack/react-router';
 import { lazy } from 'react';
 
 import { NotificationProvider } from '@/components/Notification/NotificationProvider';
 import { defaultENV } from '@/envconfig';
 import GlobalNavBar from '@/layout/GlobalNavBar';
 import ErrorPage from '@/pages/ErrorPage';
-import { setLastRoutePath } from '@/utils/route';
+
+export interface QueryClientContext {
+  queryClient: QueryClient;
+}
 
 const TanStackRouterDevtools =
   defaultENV.MODE === 'production'
@@ -17,29 +23,17 @@ const TanStackRouterDevtools =
       })),
     );
 
-const queryClient = new QueryClient();
-
-const history = createBrowserHistory();
-history.subscribe((subArgs) => {
-  const pathname = subArgs.location.pathname;
-  if (pathname !== '/login' && pathname !== '/oauth/redirect') {
-    setLastRoutePath(pathname);
-  }
-});
-
-export const Route = createRootRoute({
+export const Route = createRootRouteWithContext<QueryClientContext>()({
   component: () => (
-    <QueryClientProvider client={queryClient}>
-      <NotificationProvider>
-        <Outlet />
-        <TanStackRouterDevtools />
-      </NotificationProvider>
-    </QueryClientProvider>
+    <NotificationProvider>
+      <Outlet />
+      <TanStackRouterDevtools />
+    </NotificationProvider>
   ),
   notFoundComponent: () => (
     <>
       <GlobalNavBar />
       <ErrorPage />
     </>
-  ), 
+  ),
 });

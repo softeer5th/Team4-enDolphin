@@ -1,5 +1,5 @@
 import { Flex } from '@/components/Flex';
-import { formatDateToDotString } from '@/utils/date/format';
+import { formatDateToBarString } from '@/utils/date/format';
 
 import type { DiscussionRequest } from '../../model';
 import FormButton from './FormButton';
@@ -9,6 +9,7 @@ import MeetingDeadlineDropdown from './MeetingDeadlineDropdown';
 import MeetingDurationDropdown from './MeetingDurationDropdown';
 import MeetingLocation from './MeetingLocation';
 import MeetingMethodDropdown from './MeetingMethodDropdown';
+import MeetingPassword from './MeetingPassword';
 import MeetingTimeDropdowns from './MeetingTimeDropdowns';
 import MeetingTitle from './MeetingTitle';
 import type { FormType } from './type';
@@ -23,13 +24,13 @@ const DiscussionForm = (
     <FormProvider 
       initialValues={initialValues || {
         title: '',
-        dateRangeStart: formatDateToDotString(today),
-        dateRangeEnd: formatDateToDotString(new Date(today.getTime() + SEVEN_DAYS)),
+        dateRangeStart: formatDateToBarString(today),
+        dateRangeEnd: formatDateToBarString(new Date(today.getTime() + SEVEN_DAYS)),
         timeRangeStart: '20:00',
         timeRangeEnd: '21:00',
         duration: 60,
         meetingMethod: null,
-        deadline: formatDateToDotString(new Date(today.getTime() + SEVEN_DAYS)),
+        deadline: formatDateToBarString(new Date(today.getTime() + SEVEN_DAYS)),
       }}
     >
       <Flex
@@ -44,6 +45,7 @@ const DiscussionForm = (
         <MeetingMethodDropdown name='meetingMethod' />
         <MeetingLocation name='location' />
         <MeetingDeadlineDropdown name='deadline' />
+        <MeetingPassword name='password' />
         <FormButton type={type} />
       </Flex>
     </FormProvider>

@@ -1,13 +1,13 @@
 import { z } from 'zod';
 
-import { DATE_BAR, TIME  } from '@/constants/regex';
+import { DATE_BAR, PASSWORD, TIME  } from '@/constants/regex';
 import { UserDTO } from '@/features/user/model';
 
 const MeetingMethodENUM = z.enum(['OFFLINE', 'ONLINE']);
 
 const DiscussionDTO = z.object({
-  startDateTime: z.date(),
-  endDateTime: z.date(),
+  startDateTime: z.string(),
+  endDateTime: z.string(),
   usersForAdjust: z.array(UserDTO.pick({ id: true, name: true })),
 });
 
@@ -23,10 +23,22 @@ const DiscussionRequest = z.object({
   meetingMethod: z.union([MeetingMethodENUM, z.null()]),
   location: z.string().optional(),
   deadline: z.string().regex(DATE_BAR),
+  password: z.string().regex(PASSWORD)
+    .optional(),
 });
 
 const DiscussionResponse = z.object({
-  events: z.array(DiscussionDTO),
+  id: z.number(),
+  title: z.string(),
+  dateRangeStart: z.string().regex(DATE_BAR),
+  dateRangeEnd: z.string().regex(DATE_BAR),
+  timeRangeStart: z.string().regex(TIME),
+  timeRangeEnd: z.string().regex(TIME),
+  meetingMethod: z.union([MeetingMethodENUM, z.null()]),
+  location: z.string().optional(),
+  duration: z.number().int(),
+  deadline: z.string().regex(DATE_BAR),
+  timeLeft: z.number().int(),
 });
 
 const DiscussionParticipantResponse = z.object({

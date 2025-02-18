@@ -4,7 +4,7 @@ import { Tab } from '@/components/Tab';
 
 import DiscussionCalendar from '../DiscussionCalendar';
 import DiscussionRank from '../DiscussionRank';
-import { tabContainerStyle } from './index.css';
+import { tabContainerStyle, tabListStyle } from './index.css';
 
 const DiscussionTab = () => {
   const [tab, setTab] = useState('calendar');
@@ -18,7 +18,7 @@ const DiscussionTab = () => {
       onChange={handleChange}
       selectedValue={tab}
     >
-      <Tab.List>
+      <Tab.List className={tabListStyle}>
         <Tab.Item value='calendar'>캘린더로 보기</Tab.Item>
         <Tab.Item value='rank'>순위로 보기</Tab.Item>
       </Tab.List>

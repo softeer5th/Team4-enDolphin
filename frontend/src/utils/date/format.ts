@@ -38,7 +38,9 @@ export const formatDateToTimeString = (date: Date | null): string => {
     .padStart(2, '0');
 
   return `${hours}:${minutes}`;
-};export const formatMinutesToTimeString = (minutes: number): string => {
+};
+
+export const formatMinutesToTimeString = (minutes: number): string => {
   const hours = Math.floor(minutes / HOUR);
   const restMinutes = (minutes % HOUR);
   const minutesString = restMinutes ? ` ${restMinutes.toString().padStart(2, '0')}분` : '';
@@ -57,3 +59,27 @@ export const formatTimeStringToNumber = (timeString: string): number => {
   return Number(hours) * HOUR + Number(minutes);
 };
 
+export const formatDateToString = (date: Date | null): string => {
+  if (!date) return '';
+  const { year, month, day } = getYearMonthDay(date);
+  return `${year.toString().slice(2)}년 ${month}월 ${day}일`;
+};
+
+export const formatMinutesToTimeDuration = (minutes: number): string => {
+  const hours = Math.floor(minutes / HOUR);
+  const restMinutes = (minutes % HOUR);
+
+  if (hours === 0) return `${restMinutes}분`;
+  if (restMinutes === 0) return `${hours}시간`;
+  return `${hours}시간 ${restMinutes}분`;
+};
+
+export const formatMillisecondsToDDay = (milliseconds: number): number => {
+  const DAY = 1000 * 60 * 60 * 24;
+  return Math.floor(milliseconds / DAY);
+};
+
+export const formatBarStringToLocaleString = (dateString: string): string => {
+  const [year, month, day] = dateString.split('-');
+  return `${year.slice(2)}년 ${month}월 ${day}일`;
+};

@@ -13,7 +13,11 @@ const DiscussionPage = () =>(
     width='100%'
   >
     <DiscussionTitle />
-    <Flex gap={700} width='100%'>
+    <Flex
+      gap={700}
+      height='calc(100vh - 112px - 96px)'
+      width='100%'
+    >
       <DiscussionMemberCheckbox members={[
         { id: 1, name: '김동권', email: 'a@naver.com', picture: 'https://picsum.photos/200' },
         { id: 2, name: '김동현', email: 'b@naver.com', picture: 'https://picsum.photos/200' },
