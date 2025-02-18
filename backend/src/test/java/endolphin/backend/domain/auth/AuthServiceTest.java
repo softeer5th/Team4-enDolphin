@@ -6,8 +6,6 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 
 import endolphin.backend.domain.auth.dto.OAuthResponse;
-import endolphin.backend.domain.calendar.entity.Calendar;
-import endolphin.backend.domain.personal_event.PersonalEventService;
 import endolphin.backend.domain.user.UserService;
 import endolphin.backend.domain.user.entity.User;
 import endolphin.backend.global.google.GoogleCalendarService;
@@ -16,12 +14,15 @@ import endolphin.backend.global.google.dto.GoogleTokens;
 import endolphin.backend.global.google.dto.GoogleUserInfo;
 import endolphin.backend.global.security.JwtProvider;
 
+import java.time.LocalDateTime;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.util.ReflectionTestUtils;
 
 @ExtendWith(MockitoExtension.class)
 class AuthServiceTest {
@@ -30,16 +31,21 @@ class AuthServiceTest {
     private UserService userService;
 
     @Mock
-    private GoogleOAuthService googleOAuthService;
+    private GoogleCalendarService googleCalendarService;
 
     @Mock
-    private GoogleCalendarService googleCalendarService;
+    private GoogleOAuthService googleOAuthService;
 
     @Mock
     private JwtProvider jwtProvider;
 
     @InjectMocks
     private AuthService authService;
+
+    @BeforeEach
+    public void setUp() {
+        ReflectionTestUtils.setField(authService, "expired", 10000);
+    }
 
     @Test
     @DisplayName("로그인 테스트 - 캘린더 연동 포함")
@@ -74,5 +80,7 @@ class AuthServiceTest {
 
         // Then
         assertThat(response.accessToken()).isEqualTo("test-jwt-token");
+        assertThat(response.expiredAt()).isNotNull();
+        assertThat(response.expiredAt()).isAfter(LocalDateTime.now());
     }
 }

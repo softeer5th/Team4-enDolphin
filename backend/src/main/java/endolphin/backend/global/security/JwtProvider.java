@@ -11,7 +11,8 @@ import java.util.Date;
 @Component
 public class JwtProvider {
 
-    private final long validityInMs = 60 * 60 * 1000L; // 1시간
+    @Value("${jwt.expired}")
+    private long validityInMs;
     private final SecretKey key;
 
     public JwtProvider(@Value("${jwt.secret}") String secretKey) {

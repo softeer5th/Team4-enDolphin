@@ -46,6 +46,7 @@ google:
 
 jwt:
   secret: "my-very-long-and-secure-secret-key-which-is-at-least-32-chars-test"
+  expired: 1000
 
 springdoc:
   packages-to-scan: endolphin.backend
