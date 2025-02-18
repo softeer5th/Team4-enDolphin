@@ -1,4 +1,6 @@
 
+import { useState } from 'react';
+
 import { Flex } from '@/components/Flex';
 import SegmentControl from '@/components/SegmentControl';
 import { Text } from '@/components/Text';
@@ -19,29 +21,35 @@ const segmentOptions: OngoingSegmentOption[] = [
   { label: '공유 받은 일정', value: 'ATTENDEE' },
 ];
 
-const OngoingSchedules = () => (
-  <Flex
-    className={containerStyle}
-    direction='column'
-    justify='flex-start'
-    width='full'
-  >
-    <Text className={titleStyle} typo='h2'>확정되지 않은 일정</Text>
-    <SegmentControl
-      className={segmentControlStyle}
-      defaultValue='ALL'
-      segmentOptions={segmentOptions}
+const OngoingSchedules = () => {
+  const [selectedDiscussionId, setSelectedDiscussionId] = useState<number>(1);
+  return (
+    <Flex
+      className={containerStyle}
+      direction='column'
+      justify='flex-start'
+      width='full'
     >
-      {segmentOptions.map((option, idx) => (
-        <SegmentControl.Content key={`${option.value}-${idx}`} value={option.value}>
-          <div className={mainContainerStyle} >
-            <OngoingScheduleList segmentOption={option} />
-            {/* <ScheduleContents discussion={} /> */}
-          </div>
-        </SegmentControl.Content>
-      ))}
-    </SegmentControl>
-  </Flex>
-);
+      <Text className={titleStyle} typo='h2'>확정되지 않은 일정</Text>
+      <SegmentControl
+        className={segmentControlStyle}
+        defaultValue='ALL'
+        segmentOptions={segmentOptions}
+      >
+        {segmentOptions.map((option, idx) => (
+          <SegmentControl.Content key={`${option.value}-${idx}`} value={option.value}>
+            <div className={mainContainerStyle} >
+              <OngoingScheduleList 
+                onSelect={(id) => setSelectedDiscussionId(id)} 
+                segmentOption={option}
+              />
+              <ScheduleContents discussionId={selectedDiscussionId} />
+            </div>
+          </SegmentControl.Content>
+        ))}
+      </SegmentControl>
+    </Flex>
+  );
+};
 
 export default OngoingSchedules;

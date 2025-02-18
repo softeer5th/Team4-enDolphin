@@ -13,9 +13,10 @@ const PAGE_SIZE = 6;
 
 interface OngoingScheduleListProps {
   segmentOption: OngoingSegmentOption;
+  onSelect: (discussionId: number) => void;
 }
 
-const OngoingScheduleList = ({ segmentOption }: OngoingScheduleListProps) => {
+const OngoingScheduleList = ({ segmentOption, onSelect }: OngoingScheduleListProps) => {
   const [page, setPage] = useState(1);
   const { data, isPending } = useOngoingQuery(page, PAGE_SIZE, segmentOption.value);
   if (isPending) return <div>pending...</div>;
@@ -38,8 +39,8 @@ const OngoingScheduleList = ({ segmentOption }: OngoingScheduleListProps) => {
         {schedules.map((schedule, index) => (
           <OngoingScheduleListItem
             key={index}
-            participantImageUrls={schedule.participantPictureUrls}
-            scheduleTitle={schedule.title}
+            onSelect={(id) => onSelect(id)}
+            schedule={schedule}
             selected={false}
           />))}
       </Flex>

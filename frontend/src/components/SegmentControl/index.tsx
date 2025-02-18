@@ -26,7 +26,6 @@ const SegmentControl = ({
   shadow = true,
   defaultValue = segmentOptions[0]?.value ?? '',
   onValueChange,
-  className,
   children,
   className,
 }: SegmentControlProps) => {

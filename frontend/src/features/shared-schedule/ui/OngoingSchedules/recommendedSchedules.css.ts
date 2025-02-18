@@ -12,3 +12,11 @@ export const containerStyle = style({
 export const subTextContainerStyle = style({
   paddingTop: vars.spacing[100], 
 });
+
+export const recommendContainerStyle = style({
+  padding: `${vars.spacing[300]} 0`,
+});
+
+export const recommendItemStyle = style({
+  padding: `${vars.spacing[400]} 0`,
+});

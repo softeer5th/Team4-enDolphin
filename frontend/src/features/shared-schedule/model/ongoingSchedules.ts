@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 import { zCoerceToDate } from '@/utils/zod';
 
-const OngoingDiscussionSchema = z.object({
+const OngoingScheduleSchema = z.object({
   discussionId: z.number(),
   title: z.string(),
   dateRangeStart: zCoerceToDate,
@@ -16,10 +16,10 @@ export const OngoingSchedulesResponseSchema = z.object({
   totalPages: z.number(),
   hasNext: z.boolean(),
   hasPrevious: z.boolean(),
-  ongoingDiscussions: z.array(OngoingDiscussionSchema),
+  ongoingDiscussions: z.array(OngoingScheduleSchema),
 });
 
 export type AttendType = 'HOST' | 'ATTENDEE' | 'ALL';
 
 export type OngoingSchedulesResponse = z.infer<typeof OngoingSchedulesResponseSchema>;
-export type OngoingDiscussion = z.infer<typeof OngoingDiscussionSchema>;
+export type OngoingSchedule = z.infer<typeof OngoingScheduleSchema>;
