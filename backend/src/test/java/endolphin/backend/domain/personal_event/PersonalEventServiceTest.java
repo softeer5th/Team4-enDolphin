@@ -79,8 +79,7 @@ class PersonalEventServiceTest {
             personalEvent1, personalEvent2
         );
 
-        given(personalEventRepository.findByUserAndStartTimeBetween(testUser, startDate.atStartOfDay(),
-            endDate.atTime(23, 59))).willReturn(eventList);
+        given(personalEventRepository.findFilteredPersonalEvents(testUser, startDate, endDate)).willReturn(eventList);
 
         // When
         ListResponse<PersonalEventResponse> response = personalEventService.listPersonalEvents(
