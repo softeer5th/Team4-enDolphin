@@ -45,8 +45,8 @@ public class PersonalEventService {
 
         Validator.validateDateTimeRange(startDate, endDate);
 
-        List<PersonalEventResponse> personalEventResponseList = personalEventRepository.findByUserAndStartTimeBetween(
-                user, startDate.atStartOfDay(), endDate.atTime(23, 59))
+        List<PersonalEventResponse> personalEventResponseList = personalEventRepository.findFilteredPersonalEvents(
+                user, startDate, endDate)
             .stream().map(PersonalEventResponse::fromEntity).toList();
         return new ListResponse<>(personalEventResponseList);
     }
