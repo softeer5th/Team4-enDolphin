@@ -17,7 +17,7 @@ public record CreateDiscussionRequest(
     @NotNull LocalDate dateRangeEnd,
     @NotNull LocalTime timeRangeStart,
     @NotNull LocalTime timeRangeEnd,
-    @NotNull @Min(30) @Max(180) Integer duration,
+    @NotNull @Min(30) @Max(360) Integer duration,
     MeetingMethod meetingMethod,
     String location,
     @NotNull @Future LocalDate deadline,
