@@ -14,16 +14,19 @@ import endolphin.backend.domain.user.entity.User;
 import endolphin.backend.global.dto.ListResponse;
 import endolphin.backend.global.error.exception.ApiException;
 import endolphin.backend.global.error.exception.ErrorCode;
+import endolphin.backend.global.google.GoogleCalendarService;
 import endolphin.backend.global.google.dto.GoogleEvent;
 import endolphin.backend.global.google.enums.GoogleEventStatus;
 import endolphin.backend.global.util.Validator;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,6 +40,7 @@ public class PersonalEventService {
     private final UserService userService;
     private final PersonalEventPreprocessor personalEventPreprocessor;
     private final DiscussionParticipantService discussionParticipantService;
+    private final GoogleCalendarService googleCalendarService;
 
     @Transactional(readOnly = true)
     public ListResponse<PersonalEventResponse> listPersonalEvents(LocalDate startDate,
@@ -75,6 +79,8 @@ public class PersonalEventService {
 
         //TODO syncWithGoogleCalendar == true 일 때 구글 캘린더에도 업데이트
 
+        googleCalendarService.insertPersonalEventToGoogleCalendar(personalEvent);
+        // TODO: 비트맵 반영
         return PersonalEventResponse.fromEntity(result);
     }
 
@@ -82,16 +88,21 @@ public class PersonalEventService {
         Discussion discussion,
         SharedEventDto sharedEvent) {
         List<PersonalEvent> events = participants.stream()
-            .map(participant -> PersonalEvent.builder()
-                .title(discussion.getTitle())
-                .startTime(sharedEvent.startDateTime())
-                .endTime(sharedEvent.endDateTime())
-                .user(participant)
-                .isAdjustable(false)
-                .build())
+            .map(participant -> {
+                String googleEventId = createGoogleEventId(participant.getId());
+                return PersonalEvent.builder()
+                    .title(discussion.getTitle())
+                    .startTime(sharedEvent.startDateTime())
+                    .endTime(sharedEvent.endDateTime())
+                    .user(participant)
+                    .isAdjustable(false)
+                    .googleEventId(googleEventId)
+                    .calendarId("primary")
+                    .build();
+            })
             .toList();
-
         personalEventRepository.saveAll(events);
+        googleCalendarService.insertPersonalEvents(events);
 
         //TODO 구글캘린더에 반영
     }
@@ -252,5 +263,13 @@ public class PersonalEventService {
         result.sort(
             Comparator.comparing(UserInfoWithPersonalEvents::requirementOfAdjustment).reversed());
         return result;
+    }
+
+    private String createGoogleEventId(Long id) {
+        final String PREFIX = "endolphin";
+        return String.format("%s%d%s",
+            PREFIX, id,
+            Base64.getEncoder().encodeToString(UUID.randomUUID().toString().getBytes())
+                .toLowerCase());
     }
 }

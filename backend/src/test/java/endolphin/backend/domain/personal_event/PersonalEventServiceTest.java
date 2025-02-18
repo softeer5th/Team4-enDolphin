@@ -12,9 +12,11 @@ import endolphin.backend.global.dto.ListResponse;
 import java.time.LocalDate;
 import endolphin.backend.global.google.dto.GoogleEvent;
 import endolphin.backend.global.google.enums.GoogleEventStatus;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -447,5 +449,10 @@ class PersonalEventServiceTest {
         assertThat(user2Info.selected()).isFalse();
         assertThat(user2Info.requirementOfAdjustment()).isFalse();
         assertThat(user2Info.events()).isEmpty();
+    }
+
+    @Test
+    public void test() {
+        System.out.println(Base64.getEncoder().encodeToString(UUID.randomUUID().toString().getBytes()).toLowerCase());
     }
 }

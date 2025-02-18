@@ -3,6 +3,7 @@ package endolphin.backend.global.google;
 import endolphin.backend.domain.calendar.CalendarService;
 import endolphin.backend.domain.calendar.entity.Calendar;
 import endolphin.backend.domain.personal_event.PersonalEventService;
+import endolphin.backend.domain.personal_event.entity.PersonalEvent;
 import endolphin.backend.domain.user.UserService;
 import endolphin.backend.domain.user.entity.User;
 import endolphin.backend.global.config.GoogleCalendarProperties;
@@ -12,6 +13,7 @@ import endolphin.backend.global.error.exception.ErrorCode;
 import endolphin.backend.global.error.exception.OAuthException;
 import endolphin.backend.global.google.dto.GoogleCalendarDto;
 import endolphin.backend.global.google.dto.GoogleEvent;
+import endolphin.backend.global.google.dto.GoogleEventRequest;
 import endolphin.backend.global.google.enums.GoogleEventStatus;
 import endolphin.backend.global.google.enums.GoogleResourceState;
 import java.time.Duration;
@@ -21,6 +23,7 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
@@ -29,6 +32,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
@@ -65,6 +69,40 @@ public class GoogleCalendarService {
 
             personalEventService.syncWithGoogleEvents(events, user, calendar.getCalendarId());
             subscribeToCalendar(calendar, user);
+        }
+    }
+
+    @Async
+    public void insertPersonalEvents(List<PersonalEvent> personalEvents) {
+        for (PersonalEvent personalEvent : personalEvents) {
+            insertPersonalEventToGoogleCalendar(personalEvent);
+        }
+    }
+
+    @Async
+    public void insertPersonalEventToGoogleCalendar(PersonalEvent personalEvent) {
+        String eventUrl = googleCalendarUrl.eventsUrl().replace("{calendarId}", personalEvent.getCalendarId());
+        User user = personalEvent.getUser();
+
+        GoogleEventRequest body = GoogleEventRequest.of(personalEvent, personalEvent.getGoogleEventId());
+        try {
+            restClient.post()
+                .uri(eventUrl)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + user.getAccessToken())
+                .body(body)
+                .exchange((request, response) -> {
+                    if (response.getStatusCode().is4xxClientError()) {
+                        throw new OAuthException(ErrorCode.OAUTH_UNAUTHORIZED_ERROR);
+                    }
+                    return Optional.empty();
+                });
+
+        } catch (OAuthException e) {
+            String accessToken = googleOAuthService.reissueAccessToken(user.getRefreshToken());
+            userService.updateAccessToken(user, accessToken);
+            insertPersonalEventToGoogleCalendar(personalEvent);
+        } catch (Exception e) {
+            throw new CalendarException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
     }
 
@@ -118,7 +156,7 @@ public class GoogleCalendarService {
 
             return events;
         } catch (OAuthException e) {
-            String accessToken = googleOAuthService.reissueAccessToken(user.getAccessToken());
+            String accessToken = googleOAuthService.reissueAccessToken(user.getRefreshToken());
             userService.updateAccessToken(user, accessToken);
             return getCalendarEvents(calendarId, user);
         } catch (Exception e) {
@@ -184,7 +222,7 @@ public class GoogleCalendarService {
 
             return events;
         } catch (OAuthException e) {
-            String accessToken = googleOAuthService.reissueAccessToken(user.getAccessToken());
+            String accessToken = googleOAuthService.reissueAccessToken(user.getRefreshToken());
             userService.updateAccessToken(user, accessToken);
             return syncWithCalendar(calendarId, user);
         } catch (CalendarException e) {
@@ -221,7 +259,7 @@ public class GoogleCalendarService {
                 throw new CalendarException(HttpStatus.BAD_REQUEST, "Primary 캘린더 조회 실패");
             }
         } catch (OAuthException e) {
-            String accessToken = googleOAuthService.reissueAccessToken(user.getAccessToken());
+            String accessToken = googleOAuthService.reissueAccessToken(user.getRefreshToken());
             userService.updateAccessToken(user, accessToken);
             return getPrimaryCalendar(user);
         } catch (Exception e) {
@@ -270,7 +308,7 @@ public class GoogleCalendarService {
                     "캘린더 구독 실패: " + calendar.getCalendarId());
             }
         } catch (OAuthException e) {
-            String accessToken = googleOAuthService.reissueAccessToken(user.getAccessToken());
+            String accessToken = googleOAuthService.reissueAccessToken(user.getRefreshToken());
             userService.updateAccessToken(user, accessToken);
             subscribeToCalendar(calendar, user);
         } catch (Exception e) {
