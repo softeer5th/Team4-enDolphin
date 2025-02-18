@@ -19,7 +19,7 @@ export const OngoingSchedulesResponseSchema = z.object({
   ongoingDiscussions: z.array(OngoingDiscussionSchema),
 });
 
-export type OngoingQueryType = 'HOST' | 'ATTENDEE' | 'ALL';
+export type AttendType = 'HOST' | 'ATTENDEE' | 'ALL';
 
 export type OngoingSchedulesResponse = z.infer<typeof OngoingSchedulesResponseSchema>;
 export type OngoingDiscussion = z.infer<typeof OngoingDiscussionSchema>;

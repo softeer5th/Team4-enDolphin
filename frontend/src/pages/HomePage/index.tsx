@@ -10,7 +10,7 @@ import {
   prefetchUpcomingSchedules,
 } from '@/features/shared-schedule/api/prefetch';
 import FinishedSchedules from '@/features/shared-schedule/ui/FinishedSchedules';
-import UnConfirmedSchedules from '@/features/shared-schedule/ui/OngoingSchedules';
+import OngoingSchedules from '@/features/shared-schedule/ui/OngoingSchedules';
 import UpcomingSchedules from '@/features/shared-schedule/ui/UpcomingSchedules';
 
 import { containerStyle } from './index.css';
@@ -20,14 +20,14 @@ const HomePage = () => {
   const queryClient = useQueryClient();
 
   useEffect(() => {
-    prefetchUpcomingSchedules(queryClient);
+    // prefetchUpcomingSchedules(queryClient);
     prefetchOngoingSchedules(queryClient);
-    prefetchFinishedSchedules(queryClient);
-  });
+    // prefetchFinishedSchedules(queryClient);
+  }, [queryClient]);
 
   return (
     <div className={containerStyle}>
-      <UpcomingSchedules>
+      {/* <UpcomingSchedules>
         <Text typo='h2'>다가오는 일정</Text>
         <Button
           onClick={() => navigate({ to: '/upcoming-schedule' })}
@@ -35,9 +35,9 @@ const HomePage = () => {
         >
           모두보기
         </Button>
-      </UpcomingSchedules>
-      <UnConfirmedSchedules />
-      <FinishedSchedules />
+      </UpcomingSchedules> */}
+      <OngoingSchedules />
+      {/* <FinishedSchedules /> */}
     </div>
   );
 };
