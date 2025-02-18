@@ -546,7 +546,7 @@ public class DiscussionParticipantRepositoryTest {
 
         // when
 
-        List<Discussion> result = discussionParticipantRepository.findUpcomingDiscussions(
+        List<Discussion> result = discussionParticipantRepository.findUpcomingDiscussionsByUserId(
             user.getId());
 
         assertThat(result).isNotNull();
