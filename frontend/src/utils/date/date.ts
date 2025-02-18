@@ -236,3 +236,9 @@ export const getDateTimeRangeString = (start: Date, end: Date): string => {
   } 
   return `${startMonth}월 ${startDay}일 ${startTime} ~ ${endMonth}월 ${endDay}일 ${endTime}`;
 };
+
+export const getDday = (date: Date): number => {
+  const today = new Date();
+  const diff = date.getTime() - today.getTime();
+  return Math.floor(diff / DAY_IN_MILLISECONDS);
+};

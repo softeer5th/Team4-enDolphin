@@ -3,7 +3,9 @@ import { Chip } from '@/components/Chip';
 import { Flex } from '@/components/Flex';
 import { Text } from '@/components/Text';
 import { vars } from '@/theme/index.css';
+import { getDateRangeString, getDday } from '@/utils/date';
 
+import type { OngoingDiscussion } from '../../model';
 import { 
   containerStyle,
   recommendContainerStyle,
@@ -11,51 +13,59 @@ import {
   subTextContainerStyle, 
 } from './ScheduleDetails.css';
 
-// interface ScheduleDetailsProps {
-//   schedule: object;
-// }
+interface ScheduleDetailsProps {
+  discussion: OngoingDiscussion;
+}
 
-const ScheduleContents = () => (
+const ScheduleContents = ({ discussion }: ScheduleDetailsProps) => (
   <Flex
     className={containerStyle}
     direction='column'
     gap={800}
     justify='flex-start'
   >
-    <ScheduleInfo />
+    <ScheduleInfo discussion={discussion} />
     <RecommendedSchedules />
     <Flex
       gap={200}
       justify='flex-end'
       width='full'
     >
-      <Button size='xl' style='borderless'>링크 복사 </Button>
+      <Button size='xl' style='borderless'>링크 복사</Button>
       <Button size='xl'>자세히 보기</Button>
     </Flex>
   </Flex>
 );
 
-const ScheduleInfo = () => (
-  <Flex
-    direction='column'
-    gap={200}
-    justify='flex-start'
-    width='full'
-  >
-    <Text color={vars.color.Ref.Red[500]} typo='b3M'>마감까지 15일</Text>
-    <Text typo='h3'>기업디(3) 첫 팀플</Text>
+const ScheduleInfo = ({ discussion }: {
+  discussion: OngoingDiscussion;
+}) => {
+  const { title, dateRangeStart, dateRangeEnd  } = discussion;
+  return (
     <Flex
-      className={subTextContainerStyle}
       direction='column'
       gap={200}
+      justify='flex-start'
+      width='full'
     >
-      <Text color={vars.color.Ref.Netural[600]} typo='b2R'>12월 30일 ~ 1월 5일</Text>
-      <Text color={vars.color.Ref.Netural[600]} typo='b2R'>강남역 4번 출구</Text>
-      <Text color={vars.color.Ref.Netural[600]} typo='b2R'>1시간</Text>
+      <Text color={vars.color.Ref.Red[500]} typo='b3M'>
+        {`마감까지 ${getDday(dateRangeEnd)}일`}
+      </Text>
+      <Text typo='h3'>{title}</Text>
+      <Flex
+        className={subTextContainerStyle}
+        direction='column'
+        gap={200}
+      >
+        <Text color={vars.color.Ref.Netural[600]} typo='b2R'>
+          {getDateRangeString(dateRangeStart, dateRangeEnd)}
+        </Text>
+        <Text color={vars.color.Ref.Netural[600]} typo='b2R'>강남역 4번 출구</Text>
+        <Text color={vars.color.Ref.Netural[600]} typo='b2R'>1시간</Text>
+      </Flex>
     </Flex>
-  </Flex>
-);
-
+  );
+};
 const RecommendedSchedules = () => (
   <Flex direction='column' width='full'>
     <Text className={recommendContainerStyle} typo='t2'>추천 일정</Text>

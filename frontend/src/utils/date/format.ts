@@ -1,4 +1,4 @@
-import { DAY_IN_MILLISECONDS, getYearMonthDay } from './date';
+import { getDday, getYearMonthDay } from './date';
 import { HOUR } from './time';
 
 /**
@@ -95,9 +95,7 @@ export const formatTimeStringToLocaleString = (timeString: string): string => {
 };
 
 export const formatDateToDdayString = (date: Date): string => {
-  const now = new Date();
-  const diff = date.getTime() - now.getTime();
-  const diffDays = Math.floor(diff / DAY_IN_MILLISECONDS);
+  const diffDays = getDday(date);
 
   if (diffDays === 0) return 'D-Day';
   if (diffDays > 0) return `D-${diffDays}`;

@@ -21,7 +21,7 @@ const HomePage = () => {
 
   useEffect(() => {
     // prefetchUpcomingSchedules(queryClient);
-    prefetchOngoingSchedules(queryClient);
+    // prefetchOngoingSchedules(queryClient);
     // prefetchFinishedSchedules(queryClient);
   }, [queryClient]);
 
@@ -36,8 +36,8 @@ const HomePage = () => {
           모두보기
         </Button>
       </UpcomingSchedules> */}
-      <OngoingSchedules />
-      {/* <FinishedSchedules /> */}
+      {/* <OngoingSchedules /> */}
+      <FinishedSchedules />
     </div>
   );
 };

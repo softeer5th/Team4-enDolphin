@@ -36,8 +36,8 @@ const OngoingSchedules = () => (
         <SegmentControl.Content key={`${option.value}-${idx}`} value={option.value}>
           <div className={mainContainerStyle} >
             <OngoingScheduleList segmentOption={option} />
-            <ScheduleContents />
-          </div >
+            {/* <ScheduleContents discussion={} /> */}
+          </div>
         </SegmentControl.Content>
       ))}
     </SegmentControl>

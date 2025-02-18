@@ -8,7 +8,7 @@ const SharedEventDtoSchema = z.object({
   endDateTime: zCoerceToDate,
 });
 
-const FinishedDiscussionSchema = z.object({
+const FinishedScheduleSchema = z.object({
   id: z.number(),
   title: z.string(),
   meetingMethodOrLocation: z.string(),
@@ -17,14 +17,14 @@ const FinishedDiscussionSchema = z.object({
 });
 
 export const FinishedSchedulesResponseSchema = z.object({
-  currentYear: z.number(),
   currentPage: z.number(),
+  currentYear: z.number(),
   totalPages: z.number(),
   hasNext: z.boolean(),
   hasPrevious: z.boolean(),
-  finisnedDiscussions: z.array(FinishedDiscussionSchema),
+  finishedDiscussions: z.array(FinishedScheduleSchema),
 });
 
 export type FinishedSchedulesResponse = z.infer<typeof FinishedSchedulesResponseSchema>;
-export type FinisnedDiscussion = z.infer<typeof FinishedDiscussionSchema>;
+export type FinishedSchedule = z.infer<typeof FinishedScheduleSchema>;
 export type SharedEventDto = z.infer<typeof SharedEventDtoSchema>;

@@ -1,46 +1,54 @@
 
-import type { PropsWithChildren } from 'react';
+import { useState } from 'react';
 
 import { Flex } from '@/components/Flex';
 import Pagination from '@/components/Pagination';
 
+import { useFinishedQuery } from '../../api/queries';
 import { paginationStyle } from './finishedScheduleList.css';
-import ExpiredScheduleListItem from './FinishedScheduleListItem';
+import FinishedScheduleListItem from './FinishedScheduleListItem';
 
-interface ScheduleListProps extends PropsWithChildren {
-  schedules: object[];
+const PAGE_SIZE = 7;
+
+interface FinishedScheduleListProps {
+  baseYear: number;
 }
 
-const ScheduleList = ({ schedules }: ScheduleListProps) => (
-  <Flex
-    direction='column'
-    gap={600}
-    justify='space-between'
-    width='full'
-  >
+const FinishedScheduleList = ({ baseYear }: FinishedScheduleListProps) => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const { data, isPending } = useFinishedQuery(currentPage, PAGE_SIZE, baseYear);
+  if (isPending) return <div>pending...</div>;
+  if (!data) return <div>No data available</div>;
+
+  return (
     <Flex
       direction='column'
-      justify='flex-start'
+      gap={600}
+      justify='space-between'
       width='full'
     >
-      {schedules.map((_, index) => (
-        <ExpiredScheduleListItem
-          endDate={new Date()}
-          key={index}
-          participantImageUrls={['https://picsum.photos/200']}
-          scheduleTitle='제목'
-          startDate={new Date()}
-        />))}
+      <Flex
+        direction='column'
+        justify='flex-start'
+        width='full'
+      >
+        {data.finishedDiscussions.map((schedule) => (
+          <FinishedScheduleListItem
+            endDate={schedule.sharedEventDto.endDateTime}
+            key={schedule.id}
+            participantImageUrls={schedule.participantPictureUrls}
+            scheduleTitle={schedule.title}
+            startDate={schedule.sharedEventDto.startDateTime}
+          />))}
+      </Flex>
+      <Pagination
+        className={paginationStyle}
+        currentPage={currentPage}
+        onPageChange={(page) => setCurrentPage(page)}
+        totalPages={data.totalPages}
+      />
     </Flex>
-    <Pagination
-      className={paginationStyle}
-      currentPage={1}
-      onPageChange={()=>{ /**/ }}
-      totalPages={5}
-    />
-  </Flex>
-);
+  ); 
+};
 
-ScheduleList.Item = ExpiredScheduleListItem;
-
-export default ScheduleList;
+export default FinishedScheduleList;
