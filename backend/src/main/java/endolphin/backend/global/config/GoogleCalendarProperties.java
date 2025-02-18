@@ -4,7 +4,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties(prefix = "google.calendar.api")
 public record GoogleCalendarProperties(
-    int subscribeDuration
+    int subscribeDuration,
+    String timeZone
 ) {
 
 }
