@@ -4,7 +4,7 @@ import { Tab } from '@/components/Tab';
 
 import DiscussionCalendar from '../DiscussionCalendar';
 import DiscussionRank from '../DiscussionRank';
-import { tabContainerStyle, tabListStyle } from './index.css';
+import { tabContainerStyle, tabContentStyle, tabListStyle } from './index.css';
 
 const DiscussionTab = () => {
   const [tab, setTab] = useState('calendar');
@@ -25,7 +25,7 @@ const DiscussionTab = () => {
       <Tab.Content value='calendar'>
         <DiscussionCalendar />
       </Tab.Content>
-      <Tab.Content value='rank'>
+      <Tab.Content className={tabContentStyle} value='rank'>
         <DiscussionRank />
       </Tab.Content>
     </Tab>

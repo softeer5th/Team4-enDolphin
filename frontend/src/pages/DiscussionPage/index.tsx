@@ -3,11 +3,10 @@ import DiscussionMemberCheckbox from '@/features/discussion/ui/DiscussionMemberC
 import DiscussionTab from '@/features/discussion/ui/DiscussionTab';
 import DiscussionTitle from '@/features/discussion/ui/DiscussionTitle';
 
-import { containerStyle } from './index.css';
+import { discussionContentStyle } from './index.css';
 
 const DiscussionPage = () =>(
   <Flex
-    className={containerStyle}
     direction='column'
     height='calc(100vh - 112px)'
     justify='flex-start'
@@ -15,8 +14,9 @@ const DiscussionPage = () =>(
   >
     <DiscussionTitle />
     <Flex
+      className={discussionContentStyle}
       gap={700}
-      height='calc(100vh - 112px - 96px)'
+      height='calc(100% - 48px)'
       width='100%'
     >
       <DiscussionMemberCheckbox />

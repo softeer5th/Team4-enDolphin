@@ -1,4 +1,3 @@
-import { QueryClient } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
 
 import { discussionQuery } from '@/features/discussion/api/queries';
