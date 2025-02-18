@@ -23,3 +23,16 @@ export const calendarStyle = style({
   height: 'calc(100vh - 150px)',
   paddingRight: vars.spacing[500],
 });
+
+export const timeBarWrapperStyle = style({
+  paddingLeft: vars.spacing[500],
+  position: 'absolute',
+  alignItems: 'center',
+  gap: vars.spacing[100],
+});
+
+export const timeBarStyle = style({
+  width: '100%',
+  height: 1,
+  backgroundColor: vars.color.Ref.Primary[500],
+});

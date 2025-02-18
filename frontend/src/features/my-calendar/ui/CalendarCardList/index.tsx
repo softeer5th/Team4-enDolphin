@@ -22,7 +22,6 @@ const DefaultCard = (
       calendarId={card.calendarId}
       endTime={new Date(card.endDateTime)}
       id={card.id}
-      key={card.id}
       size={calcSize(height)}
       startTime={new Date(card.startDateTime)}
       status={card.isAdjustable ? 'adjustable' : 'fixed'}
@@ -51,11 +50,13 @@ export const CalendarCardList = ({ cards }: { cards: PersonalEventResponse[] }) 
               <DefaultCard
                 card={card}
                 end={new Date(start.getFullYear(), start.getMonth(), start.getDate(), 23, 59)}
+                key={`${card.id}-start`}
                 start={start}
               />
               <DefaultCard
                 card={card}
                 end={end}
+                key={`${card.id}-end`}
                 start={new Date(end.getFullYear(), end.getMonth(), end.getDate(), 0, 0)}
               />
             </>
@@ -66,6 +67,7 @@ export const CalendarCardList = ({ cards }: { cards: PersonalEventResponse[] }) 
           <DefaultCard
             card={card}
             end={end}
+            key={card.id}
             start={start}
           />
         );
