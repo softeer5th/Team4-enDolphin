@@ -56,9 +56,6 @@ public class PersonalEventService {
 
         Validator.validateDateTimeRange(request.startDateTime(), request.endDateTime());
 
-        List<Discussion> discussions = discussionParticipantService.getDiscussionsByUserId(
-            user.getId());
-
         PersonalEvent personalEvent = PersonalEvent.builder()
             .title(request.title())
             .endTime(request.endDateTime())
@@ -67,7 +64,17 @@ public class PersonalEventService {
             .user(user)
             .build();
         PersonalEvent result = personalEventRepository.save(personalEvent);
-        // TODO: 비트맵 반영
+
+        List<Discussion> discussions = discussionParticipantService.getDiscussionsByUserId(
+            user.getId());
+
+        discussions.forEach(discussion -> {
+            personalEventPreprocessor.preprocessOne(result, discussion, user,
+                true);
+        });
+
+        //TODO syncWithGoogleCalendar == true 일 때 구글 캘린더에도 업데이트
+
         return PersonalEventResponse.fromEntity(result);
     }
 
@@ -85,6 +92,8 @@ public class PersonalEventService {
             .toList();
 
         personalEventRepository.saveAll(events);
+
+        //TODO 구글캘린더에 반영
     }
 
     public PersonalEventResponse updateWithRequest(PersonalEventRequest request,
@@ -99,27 +108,29 @@ public class PersonalEventService {
         List<Discussion> discussions = discussionParticipantService.getDiscussionsByUserId(
             user.getId());
 
-        personalEvent = updatePersonalEvent(request, personalEvent, user, discussions);
+        PersonalEvent result = updatePersonalEvent(request, personalEvent, user, discussions);
 
-        return PersonalEventResponse.fromEntity(personalEvent);
+        //TODO syncWithGoogleCalendar == true 일 때 구글 캘린더에도 업데이트
+
+        return PersonalEventResponse.fromEntity(result);
     }
 
-    private PersonalEvent updatePersonalEvent(PersonalEventRequest request, PersonalEvent personalEvent,
+    private PersonalEvent updatePersonalEvent(PersonalEventRequest request,
+        PersonalEvent personalEvent,
         User user, List<Discussion> discussions) {
-        if (!hasChangedEvent(personalEvent, request)) {
-            return personalEvent;
-        }
 
         PersonalEvent oldEvent = personalEvent.copy();
 
         personalEvent.update(request);
 
-        discussions.forEach(discussion -> {
-            personalEventPreprocessor.
-                preprocessOne(oldEvent, discussion, user, false);
-            personalEventPreprocessor
-                .preprocessOne(personalEvent, discussion, user, true);
-        });
+        if (isChanged(personalEvent, request)) {
+            discussions.forEach(discussion -> {
+                personalEventPreprocessor.
+                    preprocessOne(oldEvent, discussion, user, false);
+                personalEventPreprocessor
+                    .preprocessOne(personalEvent, discussion, user, true);
+            });
+        }
 
         return personalEventRepository.save(personalEvent);
     }
@@ -128,7 +139,14 @@ public class PersonalEventService {
         PersonalEvent personalEvent = getPersonalEvent(personalEventId);
         User user = userService.getCurrentUser();
         validatePersonalEventUser(personalEvent, user);
-        // TODO: 비트맵 반영
+        List<Discussion> discussions = discussionParticipantService.getDiscussionsByUserId(
+            user.getId());
+
+        discussions.forEach(discussion -> {
+            personalEventPreprocessor.preprocessOne(personalEvent, discussion, user, false);
+        });
+        //TODO SyncWithGoogleCalendar == true 일 때 구글 캘린더에도 업데이트
+
         personalEventRepository.delete(personalEvent);
     }
 
@@ -197,13 +215,9 @@ public class PersonalEventService {
             });
     }
 
-    private boolean hasChangedEvent(PersonalEvent personalEvent, PersonalEventRequest newEvent) {
-        if (personalEvent.getStartTime().equals(newEvent.startDateTime())
-            && personalEvent.getEndTime().equals(newEvent.endDateTime())
-            && personalEvent.getTitle().equals(newEvent.title())) {
-            return false;
-        }
-        return true;
+    private boolean isChanged(PersonalEvent personalEvent, PersonalEventRequest newEvent) {
+        return !personalEvent.getStartTime().equals(newEvent.startDateTime())
+            || !personalEvent.getEndTime().equals(newEvent.endDateTime());
     }
 
     @Transactional(readOnly = true)
