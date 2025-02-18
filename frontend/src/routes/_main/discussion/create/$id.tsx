@@ -1,4 +1,3 @@
-import { QueryClient } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
 
 import { discussionQuery } from '@/features/discussion/api/queries';
@@ -18,9 +17,8 @@ const DiscussionCreateFinish = () => {
 };
 
 export const Route = createFileRoute('/_main/discussion/create/$id')({
-  loader: async ({ params: { id } }) => {
-    const queryClient = new QueryClient();
-    const discussion = await queryClient.fetchQuery(discussionQuery(id));
+  loader: async ({ params: { id }, context }) => {
+    const discussion = await context.queryClient.fetchQuery(discussionQuery(id));
     return { discussion };
   },
   component: DiscussionCreateFinish,
