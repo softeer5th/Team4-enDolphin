@@ -135,6 +135,11 @@ public class DiscussionServiceTest {
         Discussion discussion = Discussion.builder()
             .title("Project Sync")
             .meetingMethod(MeetingMethod.ONLINE)
+            .dateStart(LocalDate.of(2025, 3, 1))
+            .dateEnd(LocalDate.of(2025, 3, 1))
+            .timeStart(LocalTime.of(10, 0))
+            .timeEnd(LocalTime.of(12, 0))
+            .duration(120)
             .build();
 
         discussion.setDiscussionStatus(DiscussionStatus.ONGOING);
@@ -195,6 +200,11 @@ public class DiscussionServiceTest {
         Discussion discussion = Discussion.builder()
             .title("Project Sync")
             .meetingMethod(MeetingMethod.ONLINE)
+            .dateStart(LocalDate.of(2025, 3, 1))
+            .dateEnd(LocalDate.of(2025, 3, 1))
+            .timeStart(LocalTime.of(10, 0))
+            .timeEnd(LocalTime.of(12, 0))
+            .duration(120)
             .build();
 
         discussion.setDiscussionStatus(DiscussionStatus.ONGOING);
@@ -253,6 +263,11 @@ public class DiscussionServiceTest {
         Discussion discussion = Discussion.builder()
             .title("Test Discussion")
             .meetingMethod(MeetingMethod.ONLINE)
+            .dateStart(LocalDate.of(2025, 3, 1))
+            .dateEnd(LocalDate.of(2025, 3, 1))
+            .timeStart(LocalTime.of(10, 0))
+            .timeEnd(LocalTime.of(12, 0))
+            .duration(120)
             .build();
 
         discussion.setDiscussionStatus(DiscussionStatus.FINISHED);
