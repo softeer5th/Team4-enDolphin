@@ -563,8 +563,8 @@ class DiscussionParticipantServiceTest {
             LocalDateTime.of(2025, 1, 10, 9, 0),
             LocalDateTime.of(2025, 1, 15, 17, 0));
         SharedEventDto sharedEvent2 = new SharedEventDto(101L,
-            LocalDateTime.of(2025, 2, 5, 10, 0),
-            LocalDateTime.of(2025, 2, 10, 18, 0));
+            LocalDateTime.of(2025, 1, 5, 10, 0),
+            LocalDateTime.of(2025, 1, 10, 18, 0));
         Map<Long, SharedEventDto> sharedEventMap = Map.of(
             100L, sharedEvent1,
             101L, sharedEvent2
@@ -581,20 +581,20 @@ class DiscussionParticipantServiceTest {
         List<SharedEventWithDiscussionInfoResponse> upcomingDiscussions = response.data();
         assertThat(upcomingDiscussions).hasSize(2);
 
-        // 정렬: fixedDate ASC 기준 -> discussion1 (fixedDate=2025-01-01) 먼저, discussion2 (fixedDate=2025-02-01) 이후
+        // 정렬: sharedEvent startTime ASC 기준 -> discussion2 (fixedDate=2025-01-05) 먼저, discussion1 (fixedDate=2025-1-5) 이후
         SharedEventWithDiscussionInfoResponse ded1 = upcomingDiscussions.get(0);
         SharedEventWithDiscussionInfoResponse ded2 = upcomingDiscussions.get(1);
 
-        assertThat(ded1.discussionId()).isEqualTo(100L);
-        assertThat(ded1.title()).isEqualTo("Discussion 1");
-        assertThat(ded1.meetingMethodOrLocation()).isEqualTo("Room 1");
-        assertThat(ded1.sharedEventDto()).isEqualTo(sharedEvent1);
-        assertThat(ded1.participantPictureUrls()).containsExactly("pic1.jpg", "pic2.jpg");
+        assertThat(ded1.discussionId()).isEqualTo(101L);
+        assertThat(ded1.title()).isEqualTo("Discussion 2");
+        assertThat(ded1.meetingMethodOrLocation()).isEqualTo("Room 2");
+        assertThat(ded1.sharedEventDto()).isEqualTo(sharedEvent2);
+        assertThat(ded1.participantPictureUrls()).containsExactly("pic3.jpg");
 
-        assertThat(ded2.discussionId()).isEqualTo(101L);
-        assertThat(ded2.title()).isEqualTo("Discussion 2");
-        assertThat(ded2.meetingMethodOrLocation()).isEqualTo("Room 2");
-        assertThat(ded2.sharedEventDto()).isEqualTo(sharedEvent2);
-        assertThat(ded2.participantPictureUrls()).containsExactly("pic3.jpg");
+        assertThat(ded2.discussionId()).isEqualTo(100L);
+        assertThat(ded2.title()).isEqualTo("Discussion 1");
+        assertThat(ded2.meetingMethodOrLocation()).isEqualTo("Room 1");
+        assertThat(ded2.sharedEventDto()).isEqualTo(sharedEvent1);
+        assertThat(ded2.participantPictureUrls()).containsExactly("pic1.jpg", "pic2.jpg");
     }
 }

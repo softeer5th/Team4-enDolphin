@@ -18,6 +18,7 @@ import endolphin.backend.global.error.exception.ErrorCode;
 import endolphin.backend.global.util.TimeCalculator;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -230,7 +231,8 @@ public class DiscussionParticipantService {
                 sharedEventMap.getOrDefault(discussion.getId(), null),
                 discussionPicturesMap.getOrDefault(discussion.getId(), Collections.emptyList())
             ))
-            .toList();
+            .sorted(Comparator.comparing(key ->
+                key.sharedEventDto().startDateTime())).toList();
 
         return new ListResponse<>(upcomingDiscussions);
     }
