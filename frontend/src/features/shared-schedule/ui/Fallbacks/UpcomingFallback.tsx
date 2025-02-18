@@ -5,7 +5,7 @@ import { vars } from '@/theme/index.css';
 
 import { containerStyle } from './index.css';
 
-const OngoingFallback = () => (
+const UpcomingFallback = () => (
   <Flex
     align='center'
     className={containerStyle}
@@ -19,4 +19,4 @@ const OngoingFallback = () => (
   </Flex>
 );
 
-export default OngoingFallback;
+export default UpcomingFallback;
