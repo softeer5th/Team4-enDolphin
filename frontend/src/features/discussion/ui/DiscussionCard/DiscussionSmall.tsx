@@ -7,7 +7,9 @@ import { formatDateToTimeString } from '@/utils/date/format';
 import type { DiscussionDTO } from '../../model';
 import { containerStyle } from './card.css';
 
-export const DiscussionSmall = ({ discussion }: { discussion: DiscussionDTO }) => {
+export const DiscussionSmall = (
+  { discussion, onClick }: { discussion: DiscussionDTO; onClick: () => void },
+) => {
   const ADJUSTMENT_LENGTH = discussion.usersForAdjust.length;
   const isRecommend = ADJUSTMENT_LENGTH === 0;
   return (
@@ -15,6 +17,7 @@ export const DiscussionSmall = ({ discussion }: { discussion: DiscussionDTO }) =
       className={containerStyle({ isRecommend })}
       direction='column'
       gap={300}
+      onClick={onClick}
       width='100%'
     >
       {isRecommend && <Chip color='blue' size='lg'>추천</Chip>}
