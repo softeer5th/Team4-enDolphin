@@ -5,7 +5,6 @@ import { Flex } from '@/components/Flex';
 import Pagination from '@/components/Pagination';
 
 import { useOngoingQuery } from '../../api/queries';
-import OngoingFallback from '../Fallbacks/OngoingFallback';
 import type { OngoingSegmentOption } from '.';
 import { paginationStyle } from './ongoingScheduleList.css';
 import OngoingScheduleListItem from './OngoingScheduleListItem';

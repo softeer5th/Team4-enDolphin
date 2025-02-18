@@ -13,7 +13,7 @@ const HomePage = () => {
 
   return (
     <div className={containerStyle}>
-      {/* <UpcomingSchedules>
+      <UpcomingSchedules>
         <Text typo='h2'>다가오는 일정</Text>
         <Button
           onClick={() => navigate({ to: '/upcoming-schedule' })}
@@ -21,7 +21,7 @@ const HomePage = () => {
         >
           모두보기
         </Button>
-      </UpcomingSchedules> */}
+      </UpcomingSchedules>
       <OngoingSchedules />
       <FinishedSchedules />
     </div>
