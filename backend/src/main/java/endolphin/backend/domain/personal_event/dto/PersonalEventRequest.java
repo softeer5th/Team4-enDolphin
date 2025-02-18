@@ -14,7 +14,7 @@ public record PersonalEventRequest(
     Boolean syncWithGoogleCalendar
 ) {
 
-    public PersonalEventRequest of(GoogleEvent googleEvent) {
+    public static PersonalEventRequest of(GoogleEvent googleEvent) {
         return new PersonalEventRequest(
             googleEvent.summary(),
             googleEvent.startDateTime(),
