@@ -40,7 +40,7 @@ public class PersonalEvent extends BaseTimeEntity {
     @Column(name = "is_adjustable")
     private Boolean isAdjustable;
 
-    @Column(name = "calender_id")
+    @Column(name = "calendar_id")
     private String calendarId;
 
     @Column(name = "google_event_id")

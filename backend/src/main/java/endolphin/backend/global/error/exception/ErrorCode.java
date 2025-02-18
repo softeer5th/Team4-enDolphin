@@ -8,6 +8,7 @@ public enum ErrorCode {
     // Common
     INTERNAL_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "C001", "Internal Server Error"),
     INVALID_DATE_TIME_RANGE(HttpStatus.BAD_REQUEST, "C002", "End Time must be after Start Time"),
+    INVALID_INPUT(HttpStatus.BAD_REQUEST, "C003", "Invalid Input"),
 
     // User
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "U001", "User not found"),

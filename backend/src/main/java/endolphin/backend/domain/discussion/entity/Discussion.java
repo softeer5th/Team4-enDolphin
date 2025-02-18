@@ -56,7 +56,7 @@ public class Discussion extends BaseTimeEntity {
     @Setter
     @Enumerated(EnumType.STRING)
     @ColumnDefault("'ONGOING'")
-    @Column(name = "status", nullable = false)
+    @Column(name = "discussion_status", nullable = false)
     private DiscussionStatus discussionStatus;
 
     @Setter
