@@ -1,20 +1,13 @@
 package endolphin.backend.domain.shared_event;
 
-import endolphin.backend.domain.discussion.DiscussionParticipantService;
 import endolphin.backend.domain.discussion.entity.Discussion;
 import endolphin.backend.domain.shared_event.dto.SharedEventRequest;
 import endolphin.backend.domain.shared_event.dto.SharedEventDto;
-import endolphin.backend.domain.shared_event.dto.SharedEventWithDiscussionInfoResponse;
 import endolphin.backend.domain.shared_event.entity.SharedEvent;
-import endolphin.backend.domain.user.UserRepository;
-import endolphin.backend.domain.user.UserService;
-import endolphin.backend.domain.user.entity.User;
-import endolphin.backend.global.dto.ListResponse;
 import endolphin.backend.global.error.ErrorResponse;
 import endolphin.backend.global.error.exception.ApiException;
 import endolphin.backend.global.error.exception.ErrorCode;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,7 +15,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import java.time.LocalDateTime;
@@ -30,7 +22,6 @@ import java.util.Optional;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -40,12 +31,6 @@ class SharedEventServiceTest {
 
     @Mock
     private SharedEventRepository sharedEventRepository;
-
-    @Mock
-    private UserService userService;
-
-    @Mock
-    private DiscussionParticipantService discussionParticipantService;
 
     @InjectMocks
     private SharedEventService sharedEventService;
@@ -199,63 +184,5 @@ class SharedEventServiceTest {
         SharedEventDto expectedDto2 = SharedEventDto.of(event2);
         assertThat(result.get(100L)).isEqualTo(expectedDto1);
         assertThat(result.get(101L)).isEqualTo(expectedDto2);
-    }
-
-    @Test
-    public void getUpcomingSharedEvents_ShouldReturnSharedEventsWithDiscussionInfo() {
-        // given
-        User currentUser = Mockito.mock(User.class);
-        given(currentUser.getId()).willReturn(1L);
-
-        Discussion discussion1 = Mockito.mock(Discussion.class);
-        given(discussion1.getId()).willReturn(1L);
-        given(discussion1.getTitle()).willReturn("Discussion 1");
-        given(discussion1.getMeetingMethodOrLocation()).willReturn("Meeting 1");
-
-        Discussion discussion2 = Mockito.mock(Discussion.class);
-        given(discussion2.getId()).willReturn(2L);
-        given(discussion2.getTitle()).willReturn("Discussion 2");
-        given(discussion2.getMeetingMethodOrLocation()).willReturn("Google Meet");
-
-        List<Discussion> discussions = List.of(discussion1, discussion2);
-
-        SharedEvent sharedEvent1 = Mockito.mock(SharedEvent.class);
-        given(sharedEvent1.getDiscussion()).willReturn(discussion1);
-
-        SharedEvent sharedEvent2 = Mockito.mock(SharedEvent.class);
-        given(sharedEvent2.getDiscussion()).willReturn(discussion2);
-
-        List<SharedEvent> sharedEvents = List.of(sharedEvent1, sharedEvent2);
-
-        Map<Long, List<String>> discussionPicturesMap = new HashMap<>();
-        discussionPicturesMap.put(1L, List.of("pic1.png", "pic2.png"));
-        discussionPicturesMap.put(2L, List.of("pic3.png"));
-
-        given(userService.getCurrentUser()).willReturn(currentUser);
-        given(discussionParticipantService.getUpcomingDiscussionsByUserId(1L))
-            .willReturn(discussions);
-        given(sharedEventRepository.findByDiscussionIdIn(List.of(1L, 2L)))
-            .willReturn(sharedEvents);
-        given(discussionParticipantService.getDiscussionPicturesMap(List.of(1L, 2L)))
-            .willReturn(discussionPicturesMap);
-
-        // when
-        ListResponse<SharedEventWithDiscussionInfoResponse> result = sharedEventService.getUpcomingSharedEvents();
-
-        // then
-        assertThat(result).isNotNull();
-        assertThat(result.data()).hasSize(2);
-
-        SharedEventWithDiscussionInfoResponse response1 = result.data().get(0);
-        assertThat(response1.discussionId()).isEqualTo(1L);
-        assertThat(response1.title()).isEqualTo("Discussion 1");
-        assertThat(response1.meetingMethodOrLocation()).isEqualTo("Meeting 1");
-        assertThat(response1.participantPictureUrls()).containsExactly("pic1.png", "pic2.png");
-
-        SharedEventWithDiscussionInfoResponse response2 = result.data().get(1);
-        assertThat(response2.discussionId()).isEqualTo(2L);
-        assertThat(response2.title()).isEqualTo("Discussion 2");
-        assertThat(response2.meetingMethodOrLocation()).isEqualTo("Google Meet");
-        assertThat(response2.participantPictureUrls()).containsExactly("pic3.png");
     }
 }
