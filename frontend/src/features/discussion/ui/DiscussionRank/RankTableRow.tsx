@@ -36,7 +36,7 @@ const RankAdjustable = ({ users }: { users: DiscussionDTO['usersForAdjust'] }) =
         <AdjustmentText />
       </Text>
       <Flex gap={200}>
-        {!isRecommend && users.map((user) => <Chip color='black'>{user.name}</Chip>)}
+        {!isRecommend && users.map((user) => <Chip color='black' key={user.id}>{user.name}</Chip>)}
       </Flex>
     </>
   );

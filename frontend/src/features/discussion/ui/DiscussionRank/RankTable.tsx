@@ -29,7 +29,11 @@ export const RankTable = ({ data }: { data: DiscussionDTO[] }) => (
     </thead>
     <tbody className={tableBodyStyle}>
       {data.map((discussion, rank) => (
-        <RankTableRow discussion={discussion} rank={rank} />
+        <RankTableRow
+          discussion={discussion}
+          key={discussion.startDateTime}
+          rank={rank}
+        />
       ))}
     </tbody>
   </Flex>

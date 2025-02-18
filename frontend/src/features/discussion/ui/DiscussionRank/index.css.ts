@@ -4,7 +4,7 @@ import { recipe } from '@vanilla-extract/recipes';
 import { vars } from '@/theme/index.css';
 
 export const segmentControlStyle = style({
-  paddingTop: vars.spacing[500],
+  paddingTop: vars.spacing[400],
   gap: vars.spacing[500],
 });
 
