@@ -31,6 +31,7 @@ import endolphin.backend.global.util.TimeCalculator;
 import endolphin.backend.global.util.Validator;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -179,10 +180,6 @@ public class DiscussionService {
         Long discussionId, CandidateEventDetailsRequest request) {
         final int TIME_OFFSET = 4;
 
-        if (request.selectedUserIdList().isEmpty()) {
-            throw new ApiException(ErrorCode.EMPTY_SELECTED_USER_IDS);
-        }
-
         LocalDateTime startTime = request.startDateTime();
         LocalDateTime endTime = request.endDateTime();
 
@@ -201,8 +198,11 @@ public class DiscussionService {
             throw new ApiException(ErrorCode.NOT_ALLOWED_USER);
         }
 
+        List<Long> selectedIds = request.selectedUserIdList() != null ?
+            request.selectedUserIdList() : List.of();
+
         Map<Long, Integer> selectedUserIdMap = new HashMap<>();
-        for (int i = 0; i < request.selectedUserIdList().size(); i++) {
+        for (int i = 0; i < selectedIds.size(); i++) {
             selectedUserIdMap.put(request.selectedUserIdList().get(i), i);
         }
 
