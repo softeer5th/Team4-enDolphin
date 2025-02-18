@@ -1,4 +1,5 @@
 import { TIME_HEIGHT } from '@/constants/date';
+import { isAllday } from '@/utils/date';
 import { calcPositionByDate } from '@/utils/date/position';
 
 import type { PersonalEventResponse } from '../../model';
@@ -12,32 +13,33 @@ const calcSize = (height: number) => {
 
 export const CalendarCardList = ({ cards }: { cards: PersonalEventResponse[] }) => (
   <>
-    {cards.map((card) => {
-      const start = new Date(card.startDateTime);
-      const end = new Date(card.endDateTime);
-      const { x: sx, y: sy } = calcPositionByDate(start);
-      const { y: ey } = calcPositionByDate(end);
-      const height = ey - sy;
+    {cards.filter((card) => !isAllday(card.startDateTime, card.endDateTime))
+      .map((card) => {
+        const start = new Date(card.startDateTime);
+        const end = new Date(card.endDateTime);
+        const { x: sx, y: sy } = calcPositionByDate(start);
+        const { y: ey } = calcPositionByDate(end);
+        const height = ey - sy;
 
-      return (
-        <CalendarCard
-          calendarId={card.calendarId}
-          endTime={end}
-          id={card.id}
-          key={card.id}
-          size={calcSize(height)}
-          startTime={start}
-          status={card.isAdjustable ? 'adjustable' : 'fixed'}
-          style={{
-            width: 'calc((100% - 72px) / 7)',
-            height,
-            position: 'absolute',
-            left: `calc(((100% - 72px) / 7 * ${sx}) + 72px)`,
-            top: 16 + sy,
-          }}
-          title={card.title}
-        />
-      );
-    })}
+        return (
+          <CalendarCard
+            calendarId={card.calendarId}
+            endTime={end}
+            id={card.id}
+            key={card.id}
+            size={calcSize(height)}
+            startTime={start}
+            status={card.isAdjustable ? 'adjustable' : 'fixed'}
+            style={{
+              width: 'calc((100% - 72px) / 7)',
+              height,
+              position: 'absolute',
+              left: `calc(((100% - 72px) / 7 * ${sx}) + 72px)`,
+              top: 16 + sy,
+            }}
+            title={card.title}
+          />
+        );
+      })}
   </>
 );
