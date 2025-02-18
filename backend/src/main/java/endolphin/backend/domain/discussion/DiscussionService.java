@@ -97,6 +97,10 @@ public class DiscussionService {
         Discussion discussion = discussionRepository.findById(discussionId)
             .orElseThrow(() -> new ApiException(ErrorCode.DISCUSSION_NOT_FOUND));
 
+        Validator.validateInRange(discussion, request.startDateTime(), request.endDateTime());
+        Validator.validateDuration(request.startDateTime(), request.endDateTime(),
+            discussion.getDuration());
+
         if (discussion.getDiscussionStatus() != DiscussionStatus.ONGOING) {
             throw new ApiException(ErrorCode.DISCUSSION_NOT_ONGOING);
         }
@@ -139,6 +143,32 @@ public class DiscussionService {
         );
     }
 
+    @Transactional(readOnly = true)
+    public SharedEventWithDiscussionInfoResponse getSharedEventInfo(Long discussionId) {
+        Discussion discussion = discussionRepository.findById(discussionId)
+            .orElseThrow(() -> new ApiException(ErrorCode.DISCUSSION_NOT_FOUND));
+
+        SharedEventDto sharedEventDto = sharedEventService.getSharedEvent(discussionId);
+
+        List<User> participants = discussionParticipantService.getUsersByDiscussionId(discussionId);
+
+        if (!participants.contains(userService.getCurrentUser())) {
+            throw new ApiException(ErrorCode.NOT_ALLOWED_USER);
+        }
+
+        List<String> participantPictures = participants.stream().map(User::getPicture)
+            .toList();
+
+        return new SharedEventWithDiscussionInfoResponse(
+            discussionId,
+            discussion.getTitle(),
+            discussion.getMeetingMethodOrLocation(),
+            sharedEventDto,
+            participantPictures
+        );
+    }
+
+    @Transactional(readOnly = true)
     public DiscussionInfo getDiscussionInfo(Long discussionId) {
         Discussion discussion = getDiscussionById(discussionId);
         discussionParticipantService.validateDiscussionParticipant(discussionId);
