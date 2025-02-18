@@ -6,13 +6,13 @@ import { RankContents } from './RankContents';
 
 const data: DiscussionDTO[] = [
   {
-    startDateTime: new Date('2025-02-16'),
-    endDateTime: new Date('2025-02-17'),
+    startDateTime: '2025-02-16',
+    endDateTime: '2025-02-17',
     usersForAdjust: [],
   },
   {
-    startDateTime: new Date('2025-02-20'),
-    endDateTime: new Date('2025-02-21'),
+    startDateTime: '2025-02-20',
+    endDateTime: '2025-02-21',
     usersForAdjust: [
       {
         id: 1,
@@ -25,8 +25,8 @@ const data: DiscussionDTO[] = [
     ],
   },
   {
-    startDateTime: new Date('2025-02-16'),
-    endDateTime: new Date('2025-02-17'),
+    startDateTime: '2025-02-16',
+    endDateTime: '2025-02-17',
     usersForAdjust: [
       {
         id: 3,
@@ -39,8 +39,8 @@ const data: DiscussionDTO[] = [
     ],
   },
   {
-    startDateTime: new Date('2025-02-16'),
-    endDateTime: new Date('2025-02-17'),
+    startDateTime: '2025-02-16',
+    endDateTime: '2025-02-17',
     usersForAdjust: [
       {
         id: 3,

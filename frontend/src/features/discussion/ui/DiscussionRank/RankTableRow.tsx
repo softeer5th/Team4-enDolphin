@@ -48,7 +48,7 @@ export const RankTableRow = (
   <Flex
     as='tr'
     className={tableRowStyle}
-    key={`${rank}-${discussion.startDateTime.getTime()}`}
+    key={`${rank}-${discussion.startDateTime}`}
     width='100%'
   >
     <td className={tableCellStyle({ width: 56 })}>
@@ -62,16 +62,16 @@ export const RankTableRow = (
     </td>
     <td className={tableCellStyle({ width: 158 })}>
       <Text color={vars.color.Ref.Netural[600]} typo='b2R'>
-        {formatDateToString(discussion.startDateTime)}
+        {formatDateToString(new Date(discussion.startDateTime))}
       </Text>
     </td>
     <td className={tableCellStyle({ width: 158 })}>        
       <Text color={vars.color.Ref.Netural[600]} typo='b2R'>
-        {formatDateToTimeString(discussion.startDateTime)}
+        {formatDateToTimeString(new Date(discussion.startDateTime))}
         {' '}
         - 
         {' '}
-        {formatDateToTimeString(discussion.endDateTime)}
+        {formatDateToTimeString(new Date(discussion.endDateTime))}
       </Text>
     </td>
   </Flex>

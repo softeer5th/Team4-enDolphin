@@ -6,8 +6,8 @@ import { UserDTO } from '@/features/user/model';
 const MeetingMethodENUM = z.enum(['OFFLINE', 'ONLINE']);
 
 const DiscussionDTO = z.object({
-  startDateTime: z.date(),
-  endDateTime: z.date(),
+  startDateTime: z.string(),
+  endDateTime: z.string(),
   usersForAdjust: z.array(UserDTO.pick({ id: true, name: true })),
 });
 
