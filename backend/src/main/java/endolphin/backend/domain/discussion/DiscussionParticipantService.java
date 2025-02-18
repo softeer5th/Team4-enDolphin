@@ -12,6 +12,7 @@ import endolphin.backend.domain.shared_event.dto.SharedEventWithDiscussionInfoRe
 import endolphin.backend.domain.user.UserService;
 import endolphin.backend.domain.user.dto.UserIdNameDto;
 import endolphin.backend.domain.user.entity.User;
+import endolphin.backend.global.dto.ListResponse;
 import endolphin.backend.global.error.exception.ApiException;
 import endolphin.backend.global.error.exception.ErrorCode;
 import endolphin.backend.global.util.TimeCalculator;
@@ -206,6 +207,32 @@ public class DiscussionParticipantService {
             discussionPage.hasNext(),
             discussionPage.hasPrevious(),
             finishedDiscussions);
+    }
+
+    @Transactional(readOnly = true)
+    public ListResponse<SharedEventWithDiscussionInfoResponse> getUpcomingDiscussions(User user) {
+        List<Discussion> discussions = getUpcomingDiscussionsByUserId(
+            user.getId());
+
+        List<Long> discussionIds = discussions.stream().map(Discussion::getId).toList();
+
+        Map<Long, SharedEventDto> sharedEventMap = sharedEventService.getSharedEventMap(
+            discussionIds);
+
+        Map<Long, List<String>> discussionPicturesMap =
+            getDiscussionPicturesMap(discussionIds);
+
+        List<SharedEventWithDiscussionInfoResponse> upcomingDiscussions = discussions.stream()
+            .map(discussion -> new SharedEventWithDiscussionInfoResponse(
+                discussion.getId(),
+                discussion.getTitle(),
+                discussion.getMeetingMethodOrLocation(),
+                sharedEventMap.getOrDefault(discussion.getId(), null),
+                discussionPicturesMap.getOrDefault(discussion.getId(), Collections.emptyList())
+            ))
+            .toList();
+
+        return new ListResponse<>(upcomingDiscussions);
     }
 
     @Transactional(readOnly = true)
