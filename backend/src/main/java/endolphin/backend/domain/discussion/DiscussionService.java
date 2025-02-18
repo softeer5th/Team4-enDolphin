@@ -101,6 +101,10 @@ public class DiscussionService {
             throw new ApiException(ErrorCode.DISCUSSION_NOT_ONGOING);
         }
 
+        if (!discussionParticipantService.amIHost(discussionId)) {
+            throw new ApiException(ErrorCode.NOT_ALLOWED_USER);
+        }
+
         SharedEventDto sharedEventDto = sharedEventService.createSharedEvent(discussion,
             request);
 
@@ -137,6 +141,7 @@ public class DiscussionService {
 
     public DiscussionInfo getDiscussionInfo(Long discussionId) {
         Discussion discussion = getDiscussionById(discussionId);
+        discussionParticipantService.validateDiscussionParticipant(discussionId);
 
         return new DiscussionInfo(
             discussionId,
@@ -193,7 +198,7 @@ public class DiscussionService {
             discussionId);
 
         if (!participants.contains(currentUser)) {
-            throw new ApiException(ErrorCode.INVALID_DISCUSSION_PARTICIPANT);
+            throw new ApiException(ErrorCode.NOT_ALLOWED_USER);
         }
 
         Map<Long, Integer> selectedUserIdMap = new HashMap<>();

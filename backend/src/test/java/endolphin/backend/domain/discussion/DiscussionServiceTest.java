@@ -164,6 +164,7 @@ public class DiscussionServiceTest {
             sharedEventDto);
         when(discussionParticipantService.getUsersByDiscussionId(discussionId))
             .thenReturn(dummyParticipants);
+        when(discussionParticipantService.amIHost(discussionId)).thenReturn(true);
 
         when(discussionBitmapService.deleteDiscussionBitmapsUsingScan(
             any(Long.class)
@@ -220,6 +221,7 @@ public class DiscussionServiceTest {
         when(sharedEventService.createSharedEvent(discussion, request)).thenReturn(sharedEventDto);
         when(discussionParticipantService.getUsersByDiscussionId(discussionId))
             .thenReturn(dummyParticipants);
+        when(discussionParticipantService.amIHost(discussionId)).thenReturn(true);
 
         when(discussionBitmapService.deleteDiscussionBitmapsUsingScan(any()))
             .thenReturn(CompletableFuture.failedFuture(new RuntimeException("Redis Error")));
@@ -409,7 +411,7 @@ public class DiscussionServiceTest {
         assertThat(invitationInfo.requirePassword()).isTrue();
     }
 
-
+    @DisplayName("후보 일정 가져오기 테스트")
     @Test
     void retrieveCandidateEventDetails_ValidRequest_ReturnsCorrectResponse() {
         // Given
@@ -440,23 +442,6 @@ public class DiscussionServiceTest {
         given(participant2.getName()).willReturn("Participant 2");
         given(participant2.getPicture()).willReturn("participant2.jpg");
 
-//        PersonalEvent event1 = Mockito.mock(PersonalEvent.class);
-//        PersonalEvent event2 = Mockito.mock(PersonalEvent.class);
-//
-//        // Mock Event 객체들의 동작 정의
-//        // participant1의 이벤트 (검색 범위 내)
-//        given(event1.getUser()).willReturn(participant1);
-//        given(event1.getStartTime()).willReturn(now.plusHours(2));  // 14:00
-//        given(event1.getEndTime()).willReturn(now.plusHours(3));    // 15:00
-//        given(event1.getTitle()).willReturn("Meeting 1");
-//
-//        // participant2의 이벤트 (검색 범위 밖)
-//        given(event2.getUser()).willReturn(participant2);
-//        given(event2.getStartTime()).willReturn(now.plusHours(4));  // 16:00
-//        given(event2.getEndTime()).willReturn(now.plusHours(5));    // 17:00
-//        given(event2.getTitle()).willReturn("Meeting 2");
-
-        // selectedUserIds 초기화 (participant1, participant2 선택)
         List<Long> selectedUserIds = Arrays.asList(2L);
 
         CandidateEventDetailsRequest request = new CandidateEventDetailsRequest(
@@ -572,7 +557,7 @@ public class DiscussionServiceTest {
         assertThatThrownBy(
             () -> discussionService.retrieveCandidateEventDetails(discussionId, request))
             .isInstanceOf(ApiException.class)
-            .hasFieldOrPropertyWithValue("errorCode", ErrorCode.INVALID_DISCUSSION_PARTICIPANT);
+            .hasFieldOrPropertyWithValue("errorCode", ErrorCode.NOT_ALLOWED_USER);
 
         // 날짜 범위 검증 단계에서 예외가 발생하므로 다른 서비스들은 호출되지 않아야 함
         then(personalEventService).shouldHaveNoInteractions();

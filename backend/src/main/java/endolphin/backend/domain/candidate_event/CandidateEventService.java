@@ -30,9 +30,11 @@ public class CandidateEventService {
     private final DiscussionBitmapService discussionBitmapService;
     private final DiscussionService discussionService;
     private final DiscussionParticipantService discussionParticipantService;
+    private final static long MINUTE_PER_DAY = 1440;
 
     public CalendarViewResponse getEventsOnCalendarView(Long discussionId,
         CalendarViewRequest request) {
+        discussionParticipantService.validateDiscussionParticipant(discussionId);
 
         Discussion discussion = discussionService.getDiscussionById(discussionId);
 
@@ -62,6 +64,7 @@ public class CandidateEventService {
     }
 
     public RankViewResponse getEventsOnRankView(Long discussionId, RankViewRequest request) {
+        discussionParticipantService.validateDiscussionParticipant(discussionId);
         Discussion discussion = discussionService.getDiscussionById(discussionId);
 
         int filter = discussionParticipantService.getFilter(discussionId,
@@ -106,7 +109,7 @@ public class CandidateEventService {
             minuteKey = convertToMinute(LocalDate.now().atTime(discussion.getTimeRangeStart()));
         }
 
-        long maxTime = endDateTime % 1440 - duration;
+        long maxTime = endDateTime % MINUTE_PER_DAY - duration;
 
         Map<Long, byte[]> dataBlocks = discussionBitmapService.getDataOfDiscussionId(
             discussion.getId(), minuteKey, endDateTime);
@@ -115,8 +118,8 @@ public class CandidateEventService {
         List<CandidateEvent> events = new ArrayList<>();
 
         while (minuteKey < endDateTime) {
-            if (minuteKey % 1440 > maxTime) {
-                minuteKey = ++day * 1440 + startDateTime;
+            if (minuteKey % MINUTE_PER_DAY > maxTime) {
+                minuteKey = ++day * MINUTE_PER_DAY + startDateTime;
                 continue;
             }
 
