@@ -209,7 +209,12 @@ public class DiscussionParticipantService {
     }
 
     @Transactional(readOnly = true)
-    protected Map<Long, List<String>> getDiscussionPicturesMap(List<Long> discussionIds) {
+    public List<Discussion> getUpcomingDiscussionsByUserId(Long userId) {
+        return discussionParticipantRepository.findUpcomingDiscussionsByUserId(userId);
+    }
+
+    @Transactional(readOnly = true)
+    public Map<Long, List<String>> getDiscussionPicturesMap(List<Long> discussionIds) {
         List<Object[]> pictureResults = discussionParticipantRepository.findUserPicturesByDiscussionIds(
             discussionIds);
 
