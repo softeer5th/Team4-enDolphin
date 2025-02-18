@@ -115,7 +115,7 @@ public class CandidateEventService {
         List<CandidateEvent> events = new ArrayList<>();
 
         while (minuteKey < endDateTime) {
-            if (minuteKey % 1440 >= maxTime) {
+            if (minuteKey % 1440 > maxTime) {
                 minuteKey = ++day * 1440 + startDateTime;
                 continue;
             }
