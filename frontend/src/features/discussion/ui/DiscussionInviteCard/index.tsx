@@ -2,6 +2,7 @@ import Button from '@/components/Button';
 import { Modal } from '@/components/Modal';
 import { Text } from '@/components/Text';
 import { vars } from '@/theme/index.css';
+import type { Time } from '@/utils/date';
 
 import Badges from './Badges';
 import {
@@ -16,7 +17,7 @@ export interface DiscussionInviteCardProps {
   canJoin: boolean;
   // Badge props
   dateRange: { start: Date; end: Date };
-  timeRange: { start: Date; end: Date };
+  timeRange: { start: Time; end: Time };
   meetingDuration: number;
   location?: string;
 }

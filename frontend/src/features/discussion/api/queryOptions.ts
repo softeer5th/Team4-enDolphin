@@ -1,7 +1,7 @@
-import { inviteApi } from './invite';
+import { invitationApi } from './invitationApi';
 import { invitationQueryKey } from './keys';
 
 export const invitationQueryOption = (discussionId: number) => ({
   queryKey: invitationQueryKey(discussionId),
-  queryFn: () => inviteApi.getInvitationInfo(discussionId),
+  queryFn: () => invitationApi.getInvitationInfo(discussionId),
 });

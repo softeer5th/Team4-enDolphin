@@ -8,7 +8,7 @@ import type {
   DiscussionRankResponse,
   DiscussionResponse, 
 } from '../model';
-import type { InviteResponse } from '../model/invite';
+import type { InviteResponse } from '../model/invitation';
 import { candidateApi, discussionApi } from '.';
 import { calendarKeys, discussionKeys, participantKeys, rankKeys } from './keys';
 import { invitationQueryOption } from './queryOptions';
