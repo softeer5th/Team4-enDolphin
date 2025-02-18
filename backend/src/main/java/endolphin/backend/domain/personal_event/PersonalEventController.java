@@ -16,7 +16,6 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import java.net.URI;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -28,7 +27,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @Tag(name = "Personal Event", description = "개인 일정 관리 API")
 @RestController
@@ -96,7 +94,7 @@ public class PersonalEventController {
     public ResponseEntity<PersonalEventResponse> updatePersonalEvent(
         @Valid @RequestBody PersonalEventRequest request,
         @PathVariable("personalEventId") Long personalEventId) {
-        PersonalEventResponse response = personalEventService.updatePersonalEvent(request,
+        PersonalEventResponse response = personalEventService.updateWithRequest(request,
             personalEventId);
         return ResponseEntity.ok(response);
     }

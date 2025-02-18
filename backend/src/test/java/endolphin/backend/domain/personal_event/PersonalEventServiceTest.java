@@ -4,9 +4,7 @@ import endolphin.backend.domain.discussion.DiscussionParticipantService;
 import endolphin.backend.domain.discussion.entity.Discussion;
 import endolphin.backend.domain.personal_event.dto.PersonalEventRequest;
 import endolphin.backend.domain.personal_event.dto.PersonalEventResponse;
-import endolphin.backend.domain.personal_event.dto.PersonalEventWithStatus;
 import endolphin.backend.domain.personal_event.entity.PersonalEvent;
-import endolphin.backend.domain.personal_event.enums.PersonalEventStatus;
 import endolphin.backend.domain.user.UserService;
 import endolphin.backend.domain.user.dto.UserInfoWithPersonalEvents;
 import endolphin.backend.domain.user.entity.User;
@@ -116,15 +114,17 @@ class PersonalEventServiceTest {
 
     @Test
     @DisplayName("개인 일정 업데이트 테스트")
-    void testUpdatePersonalEvent_Success() {
+    void testUpdateWithRequest_Success() {
         // given
         PersonalEvent existingEvent = createPersonalEvent("Old Title", 1, testUser);
+        PersonalEvent updatedEvent = createPersonalEvent(request.title(), 1, testUser);
 
         given(personalEventRepository.findById(anyLong())).willReturn(Optional.of(existingEvent));
         given(userService.getCurrentUser()).willReturn(testUser);
+        given(personalEventRepository.save(any(PersonalEvent.class))).willReturn(updatedEvent);
 
         // when
-        PersonalEventResponse response = personalEventService.updatePersonalEvent(request,
+        PersonalEventResponse response = personalEventService.updateWithRequest(request,
             anyLong());
 
         // then
@@ -138,12 +138,12 @@ class PersonalEventServiceTest {
 
     @Test
     @DisplayName("개인 일정 Not Found 에러")
-    void testUpdatePersonalEvent_NotFound() {
+    void testUpdateWithRequest_NotFound() {
         // given
         given(personalEventRepository.findById(anyLong())).willReturn(Optional.empty());
 
         // when & then
-        assertThatThrownBy(() -> personalEventService.updatePersonalEvent(request, 2L))
+        assertThatThrownBy(() -> personalEventService.updateWithRequest(request, 2L))
             .isInstanceOf(RuntimeException.class);
 
         then(personalEventRepository).should(times(1)).findById(anyLong());
@@ -152,7 +152,7 @@ class PersonalEventServiceTest {
 
     @Test
     @DisplayName("개인 일정 업데이트 사용자 매칭 에러")
-    void testUpdatePersonalEvent_Unauthorized() {
+    void testUpdateWithRequest_Unauthorized() {
         // given
         User anotherUser = User.builder().name("anotherUser").email("another@email.com")
             .picture("another_picture").build();
@@ -163,7 +163,7 @@ class PersonalEventServiceTest {
         given(userService.getCurrentUser()).willReturn(testUser);
 
         // when & then
-        assertThatThrownBy(() -> personalEventService.updatePersonalEvent(request, anyLong()))
+        assertThatThrownBy(() -> personalEventService.updateWithRequest(request, anyLong()))
             .isInstanceOf(RuntimeException.class);
 
         then(personalEventRepository).should(times(1)).findById(anyLong());
@@ -207,7 +207,7 @@ class PersonalEventServiceTest {
 
     @Test
     @DisplayName("업데이트된 구글 일정을 개인 일정에 반영하는 테스트")
-    public void testUpdatePersonalEventByGoogleSync_Success() {
+    public void testUpdateWithRequestByGoogleSync_Success() {
         // given
         User user = createTestUser();
         String googleCalendarId = "testGoogleCalendarId";

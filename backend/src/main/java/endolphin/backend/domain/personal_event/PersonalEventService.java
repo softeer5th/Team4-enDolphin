@@ -84,7 +84,7 @@ public class PersonalEventService {
         personalEventRepository.saveAll(events);
     }
 
-    public PersonalEventResponse updatePersonalEvent(PersonalEventRequest request,
+    public PersonalEventResponse updateWithRequest(PersonalEventRequest request,
         Long personalEventId) {
         PersonalEvent personalEvent = getPersonalEvent(personalEventId);
         User user = userService.getCurrentUser();
@@ -93,10 +93,32 @@ public class PersonalEventService {
 
         validatePersonalEventUser(personalEvent, user);
 
-        personalEvent.update(request);
-        personalEventRepository.save(personalEvent);
-        // TODO: 비트맵 반영
+        List<Discussion> discussions = discussionParticipantService.getDiscussionsByUserId(
+            user.getId());
+
+        personalEvent = updatePersonalEvent(request, personalEvent, user, discussions);
+
         return PersonalEventResponse.fromEntity(personalEvent);
+    }
+
+    private PersonalEvent updatePersonalEvent(PersonalEventRequest request, PersonalEvent personalEvent,
+        User user, List<Discussion> discussions) {
+        if (!hasChangedEvent(personalEvent, request)) {
+            return personalEvent;
+        }
+
+        PersonalEvent oldEvent = personalEvent.copy();
+
+        personalEvent.update(request);
+
+        discussions.forEach(discussion -> {
+            personalEventPreprocessor.
+                preprocessOne(oldEvent, discussion, user, false);
+            personalEventPreprocessor
+                .preprocessOne(personalEvent, discussion, user, true);
+        });
+
+        return personalEventRepository.save(personalEvent);
     }
 
     public void deletePersonalEvent(Long personalEventId) {
@@ -144,19 +166,8 @@ public class PersonalEventService {
         personalEventRepository.findByGoogleEventIdAndCalendarId(googleEvent.eventId(),
                 googleCalendarId)
             .ifPresentOrElse(personalEvent -> {
-                    if (hasChangedGoogleEvent(personalEvent, googleEvent)) {
-                        PersonalEvent oldEvent = personalEvent.copy();
-                        personalEvent.update(googleEvent.startDateTime(), googleEvent.endDateTime(),
-                            googleEvent.summary());
-                        personalEventRepository.save(personalEvent);
-                        // 비트맵 수정
-                        discussions.forEach(discussion -> {
-                            personalEventPreprocessor.
-                                preprocessOne(oldEvent, discussion, user, false);
-                            personalEventPreprocessor
-                                .preprocessOne(personalEvent, discussion, user, true);
-                        });
-                    }
+                    updatePersonalEvent(PersonalEventRequest.of(googleEvent), personalEvent, user,
+                        discussions);
                 },
                 () -> {
                     PersonalEvent personalEvent =
@@ -183,10 +194,10 @@ public class PersonalEventService {
             });
     }
 
-    private boolean hasChangedGoogleEvent(PersonalEvent personalEvent, GoogleEvent googleEvent) {
-        if (personalEvent.getStartTime().equals(googleEvent.startDateTime())
-            && personalEvent.getEndTime().equals(googleEvent.endDateTime())
-            && personalEvent.getTitle().equals(googleEvent.summary())) {
+    private boolean hasChangedEvent(PersonalEvent personalEvent, PersonalEventRequest newEvent) {
+        if (personalEvent.getStartTime().equals(newEvent.startDateTime())
+            && personalEvent.getEndTime().equals(newEvent.endDateTime())
+            && personalEvent.getTitle().equals(newEvent.title())) {
             return false;
         }
         return true;
@@ -200,7 +211,7 @@ public class PersonalEventService {
         List<Long> userIdList = users.stream().map(User::getId).toList();
         List<PersonalEvent> personalEvents =
             personalEventRepository.findAllByUsersAndDateTimeRange(userIdList, searchStartTime,
-                    searchEndTime);
+                searchEndTime);
         Map<Long, List<PersonalEventWithStatus>> personalEventsByUserId = new HashMap<>();
 
         List<UserInfoWithPersonalEvents> result = new ArrayList<>();
@@ -221,7 +232,8 @@ public class PersonalEventService {
                 selectedUserIds.containsKey(user.getId()),
                 requiredOfAdjustment, personalEventWithStatuses));
         }
-        result.sort(Comparator.comparing(UserInfoWithPersonalEvents::requirementOfAdjustment).reversed());
+        result.sort(
+            Comparator.comparing(UserInfoWithPersonalEvents::requirementOfAdjustment).reversed());
         return result;
     }
 }
