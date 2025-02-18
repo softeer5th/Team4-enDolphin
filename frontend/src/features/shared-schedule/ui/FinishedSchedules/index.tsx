@@ -21,7 +21,7 @@ const FinishedSchedules = () => {
         <Flex gap={200}>
           {/* TODO: 연도 validation */}
           <ChevronLeft 
-            clickable={false}
+            clickable={true}
             fill={vars.color.Ref.Netural[400]} 
             onClick={() => setCurrentYear(currentYear - 1)}
           />

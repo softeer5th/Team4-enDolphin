@@ -5,6 +5,7 @@ import { Flex } from '@/components/Flex';
 import Pagination from '@/components/Pagination';
 
 import { useFinishedQuery } from '../../api/queries';
+import FinishedFallback from '../Fallbacks/FinishedFallback';
 import { paginationStyle } from './finishedScheduleList.css';
 import FinishedScheduleListItem from './FinishedScheduleListItem';
 
@@ -18,7 +19,8 @@ const FinishedScheduleList = ({ baseYear }: FinishedScheduleListProps) => {
   const [currentPage, setCurrentPage] = useState(1);
   const { data, isPending } = useFinishedQuery(currentPage, PAGE_SIZE, baseYear);
   if (isPending) return <div>pending...</div>;
-  if (!data) return <div>No data available</div>;
+  if (!data) return <div>data is undefined or null</div>;
+  if (data.finishedDiscussions.length === 0) return <FinishedFallback />;
 
   return (
     <Flex

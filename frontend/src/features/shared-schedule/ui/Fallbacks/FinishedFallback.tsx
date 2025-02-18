@@ -3,20 +3,17 @@ import { ClockGraphic } from '@/components/Icon/component/ClockGraphic';
 import { Text } from '@/components/Text';
 import { vars } from '@/theme/index.css';
 
-import { containerStyle } from './index.css';
-
-const OngoingFallback = () => (
+const FinishedFallback = () => (
   <Flex
     align='center'
-    className={containerStyle}
     direction='column'
     gap={600}
-    height='35.25rem'
+    height='41.375rem'
     width='83.25rem'
   >
     <ClockGraphic height={200} width={200} />
-    <Text color={vars.color.Ref.Netural[700]} typo='h3'>확정되지 않은 일정이 없어요</Text>
+    <Text color={vars.color.Ref.Netural[700]} typo='h3'>지난 일정이 없어요</Text>
   </Flex>
 );
 
-export default OngoingFallback;
+export default FinishedFallback;

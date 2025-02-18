@@ -7,7 +7,7 @@ import SegmentControl from '@/components/SegmentControl';
 import { Text } from '@/components/Text';
 
 import { sharedScheduleQuerykeys } from '../../api/keys';
-import type { AttendType } from '../../model/';
+import type { AttendType, OngoingSchedulesResponse } from '../../model/';
 import OngoingFallback from '../Fallbacks/OngoingFallback';
 import { containerStyle, mainContainerStyle, segmentControlStyle, titleStyle } from './index.css';
 import OngoingScheduleList from './OngoingScheduleList';
@@ -24,38 +24,44 @@ const segmentOptions: OngoingSegmentOption[] = [
   { label: '공유 받은 일정', value: 'ATTENDEE' },
 ];
 
-const OngoingSchedules = () => {
+const OngoingSchedules = () => (
+  <Flex
+    className={containerStyle}
+    direction='column'
+    justify='flex-start'
+    width='full'
+  >
+    <Text className={titleStyle} typo='h2'>확정되지 않은 일정</Text>
+    <Content />
+  </Flex>
+);
+
+const Content = () => {
   const [selectedDiscussionId, setSelectedDiscussionId] = useState<number>(1);
   const queryClient = useQueryClient();
-  if (!queryClient.getQueryCache().find({ queryKey: sharedScheduleQuerykeys.ongoing(1, 6, 'ALL') }))
+  if (queryClient.getQueryData<OngoingSchedulesResponse>(
+    sharedScheduleQuerykeys.ongoing(1, 6, 'ALL'),
+  )?.totalPages === 0)
     return <OngoingFallback />;
 
   return (
-    <Flex
-      className={containerStyle}
-      direction='column'
-      justify='flex-start'
-      width='full'
+    <SegmentControl
+      className={segmentControlStyle}
+      defaultValue='ALL'
+      segmentOptions={segmentOptions}
     >
-      <Text className={titleStyle} typo='h2'>확정되지 않은 일정</Text>
-      <SegmentControl
-        className={segmentControlStyle}
-        defaultValue='ALL'
-        segmentOptions={segmentOptions}
-      >
-        {segmentOptions.map((option, idx) => (
-          <SegmentControl.Content key={`${option.value}-${idx}`} value={option.value}>
-            <div className={mainContainerStyle} >
-              <OngoingScheduleList 
-                onSelect={(id) => setSelectedDiscussionId(id)} 
-                segmentOption={option}
-              />
-              <ScheduleContents discussionId={selectedDiscussionId} />
-            </div>
-          </SegmentControl.Content>
-        ))}
-      </SegmentControl>
-    </Flex>
+      {segmentOptions.map((option, idx) => (
+        <SegmentControl.Content key={`${option.value}-${idx}`} value={option.value}>
+          <div className={mainContainerStyle} >
+            <OngoingScheduleList 
+              onSelect={(id) => setSelectedDiscussionId(id)} 
+              segmentOption={option}
+            />
+            <ScheduleContents discussionId={selectedDiscussionId} />
+          </div>
+        </SegmentControl.Content>
+      ))}
+    </SegmentControl>
   );
 };
 

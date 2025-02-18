@@ -1,5 +1,5 @@
 import { Flex } from '@/components/Flex';
-import { ClockGraphic } from '@/components/Icon/component/ClockGraphic';
+import { CheckGraphic } from '@/components/Icon/component/CheckGraphic';
 import { Text } from '@/components/Text';
 import { vars } from '@/theme/index.css';
 
@@ -11,11 +11,11 @@ const OngoingFallback = () => (
     className={containerStyle}
     direction='column'
     gap={600}
-    height='35.25rem'
+    height='19.75rem'
     width='83.25rem'
   >
-    <ClockGraphic height={200} width={200} />
-    <Text color={vars.color.Ref.Netural[700]} typo='h3'>확정되지 않은 일정이 없어요</Text>
+    <CheckGraphic height={180} width={180} />
+    <Text color={vars.color.Ref.Netural[700]} typo='h3'>아직 다가오는 일정이 없어요!</Text>
   </Flex>
 );
 
