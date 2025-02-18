@@ -1,4 +1,16 @@
 export const HOUR = 60;
+const HOUR_IN_MILLISECONDS = 1000 * 60 * 60;
+
+export const formatDateToTimeString = (date: Date | null): string => {
+  if (!date) return '';
+
+  const hours = date.getHours().toString()
+    .padStart(2, '0');
+  const minutes = date.getMinutes().toString()
+    .padStart(2, '0');
+
+  return `${hours}:${minutes}`;
+};
 
 export const getTimeParts = (date: Date) => ({
   hour: date.getHours(),
@@ -19,4 +31,24 @@ export const getMinuteDiff = (startTime: Date, endTime: Date): number => {
   const MINUTE_IN_MILLISECONDS = 60000;
   const diff = endTime.getTime() - startTime.getTime();
   return Math.floor(diff / MINUTE_IN_MILLISECONDS);
+};
+
+export const formatNumberToTimeString = (number: number): string => {
+  const hours = Math.floor(number / HOUR).toString();
+  const minutes = (number % HOUR).toString().padStart(2, '0');
+
+  return `${hours}:${minutes}`;
+};
+
+export const formatTimeStringToNumber = (timeString: string): number => {
+  const [hours, minutes] = timeString.split(':');
+  return Number(hours) * HOUR + Number(minutes);
+};
+
+export const getHourDiff = (startTime: Date, endTime: Date, ignoreDateDiff = true): number => {
+  if (ignoreDateDiff) {
+    return endTime.getHours() - startTime.getHours();
+  } 
+  const diffMilliseconds = endTime.getTime() - startTime.getTime();
+  return Math.floor(diffMilliseconds / HOUR_IN_MILLISECONDS);
 };

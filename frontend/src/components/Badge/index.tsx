@@ -22,7 +22,7 @@ export const Badge = ({
 }: BadgeProps) => (
   <div className={badgeStyle}>
     {getIcon(iconType)}
-    <Text typo='b3R'>{children}</Text>
+    <Text color={vars.color.Ref.Netural[700]} typo='b3R'>{children}</Text>
   </div>
 );
 
