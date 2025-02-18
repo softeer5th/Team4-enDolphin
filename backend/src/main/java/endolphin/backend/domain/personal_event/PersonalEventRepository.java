@@ -14,9 +14,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PersonalEventRepository extends JpaRepository<PersonalEvent, Long> {
 
-    List<PersonalEvent> findByUserAndStartTimeBetween(User user, LocalDateTime start,
-        LocalDateTime end);
-
     @Query("SELECT p FROM PersonalEvent p " +
         "WHERE p.user = :user " +
         "AND (" +
@@ -28,7 +25,8 @@ public interface PersonalEventRepository extends JpaRepository<PersonalEvent, Lo
         @Param("startDate") LocalDate startDate,
         @Param("endDate") LocalDate endDate);
 
-    Optional<PersonalEvent> findByGoogleEventIdAndCalendarId(String googleEventId, String calendarId);
+    Optional<PersonalEvent> findByGoogleEventIdAndCalendarId(String googleEventId,
+        String calendarId);
 
     @Query("SELECT p "
         + "FROM PersonalEvent p "

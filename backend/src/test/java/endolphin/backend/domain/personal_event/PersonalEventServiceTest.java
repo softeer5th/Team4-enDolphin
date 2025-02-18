@@ -4,9 +4,7 @@ import endolphin.backend.domain.discussion.DiscussionParticipantService;
 import endolphin.backend.domain.discussion.entity.Discussion;
 import endolphin.backend.domain.personal_event.dto.PersonalEventRequest;
 import endolphin.backend.domain.personal_event.dto.PersonalEventResponse;
-import endolphin.backend.domain.personal_event.dto.PersonalEventWithStatus;
 import endolphin.backend.domain.personal_event.entity.PersonalEvent;
-import endolphin.backend.domain.personal_event.enums.PersonalEventStatus;
 import endolphin.backend.domain.user.UserService;
 import endolphin.backend.domain.user.dto.UserInfoWithPersonalEvents;
 import endolphin.backend.domain.user.entity.User;
@@ -74,15 +72,14 @@ class PersonalEventServiceTest {
         LocalDate startDate = LocalDate.of(2025, 2, 2);
         LocalDate endDate = LocalDate.of(2025, 2, 9);
 
-        PersonalEvent personalEvent1 = createPersonalEvent("Meeting1", 2, testUser);
+        PersonalEvent personalEvent1 = createWithRequest("Meeting1", 2, testUser);
 
-        PersonalEvent personalEvent2 = createPersonalEvent("Meeting2", 4, testUser);
+        PersonalEvent personalEvent2 = createWithRequest("Meeting2", 4, testUser);
         List<PersonalEvent> eventList = List.of(
             personalEvent1, personalEvent2
         );
 
-        given(personalEventRepository.findByUserAndStartTimeBetween(testUser, startDate.atStartOfDay(),
-            endDate.atTime(23, 59))).willReturn(eventList);
+        given(personalEventRepository.findFilteredPersonalEvents(testUser, startDate, endDate)).willReturn(eventList);
 
         // When
         ListResponse<PersonalEventResponse> response = personalEventService.listPersonalEvents(
@@ -94,16 +91,16 @@ class PersonalEventServiceTest {
 
     @Test
     @DisplayName("개인 일정 생성 테스트")
-    void testCreatePersonalEvent() {
+    void testCreateWithRequest() {
         // given
         given(userService.getCurrentUser()).willReturn(testUser);
 
-        PersonalEvent savedEvent = createPersonalEvent(request.title(), 0, testUser);
+        PersonalEvent savedEvent = createWithRequest(request.title(), 0, testUser);
 
         given(personalEventRepository.save(any(PersonalEvent.class))).willReturn(savedEvent);
 
         // when
-        PersonalEventResponse response = personalEventService.createPersonalEvent(request);
+        PersonalEventResponse response = personalEventService.createWithRequest(request);
 
         // then
         assertThat(response).isNotNull();
@@ -116,15 +113,17 @@ class PersonalEventServiceTest {
 
     @Test
     @DisplayName("개인 일정 업데이트 테스트")
-    void testUpdatePersonalEvent_Success() {
+    void testUpdateWithRequest_Success() {
         // given
-        PersonalEvent existingEvent = createPersonalEvent("Old Title", 1, testUser);
+        PersonalEvent existingEvent = createWithRequest("Old Title", 1, testUser);
+        PersonalEvent updatedEvent = createWithRequest(request.title(), 1, testUser);
 
         given(personalEventRepository.findById(anyLong())).willReturn(Optional.of(existingEvent));
         given(userService.getCurrentUser()).willReturn(testUser);
+        given(personalEventRepository.save(any(PersonalEvent.class))).willReturn(updatedEvent);
 
         // when
-        PersonalEventResponse response = personalEventService.updatePersonalEvent(request,
+        PersonalEventResponse response = personalEventService.updateWithRequest(request,
             anyLong());
 
         // then
@@ -138,12 +137,12 @@ class PersonalEventServiceTest {
 
     @Test
     @DisplayName("개인 일정 Not Found 에러")
-    void testUpdatePersonalEvent_NotFound() {
+    void testUpdateWithRequest_NotFound() {
         // given
         given(personalEventRepository.findById(anyLong())).willReturn(Optional.empty());
 
         // when & then
-        assertThatThrownBy(() -> personalEventService.updatePersonalEvent(request, 2L))
+        assertThatThrownBy(() -> personalEventService.updateWithRequest(request, 2L))
             .isInstanceOf(RuntimeException.class);
 
         then(personalEventRepository).should(times(1)).findById(anyLong());
@@ -152,18 +151,18 @@ class PersonalEventServiceTest {
 
     @Test
     @DisplayName("개인 일정 업데이트 사용자 매칭 에러")
-    void testUpdatePersonalEvent_Unauthorized() {
+    void testUpdateWithRequest_Unauthorized() {
         // given
         User anotherUser = User.builder().name("anotherUser").email("another@email.com")
             .picture("another_picture").build();
 
-        PersonalEvent existingEvent = createPersonalEvent("Old Title", 1, anotherUser);
+        PersonalEvent existingEvent = createWithRequest("Old Title", 1, anotherUser);
 
         given(personalEventRepository.findById(anyLong())).willReturn(Optional.of(existingEvent));
         given(userService.getCurrentUser()).willReturn(testUser);
 
         // when & then
-        assertThatThrownBy(() -> personalEventService.updatePersonalEvent(request, anyLong()))
+        assertThatThrownBy(() -> personalEventService.updateWithRequest(request, anyLong()))
             .isInstanceOf(RuntimeException.class);
 
         then(personalEventRepository).should(times(1)).findById(anyLong());
@@ -177,7 +176,7 @@ class PersonalEventServiceTest {
         User anotherUser = User.builder().name("anotherUser").email("another@email.com")
             .picture("another_picture").build();
 
-        PersonalEvent existingEvent = createPersonalEvent("Old Title", 1, anotherUser);
+        PersonalEvent existingEvent = createWithRequest("Old Title", 1, anotherUser);
         given(personalEventRepository.findById(anyLong())).willReturn(Optional.of(existingEvent));
         given(userService.getCurrentUser()).willReturn(testUser);
 
@@ -193,7 +192,7 @@ class PersonalEventServiceTest {
     @DisplayName("개인 일정 삭제 성공")
     void testDeletePersonalEvent_Success() {
         // given
-        PersonalEvent event = createPersonalEvent("test Title", 0, testUser);
+        PersonalEvent event = createWithRequest("test Title", 0, testUser);
 
         given(personalEventRepository.findById(anyLong())).willReturn(Optional.of(event));
         given(userService.getCurrentUser()).willReturn(testUser);
@@ -207,7 +206,7 @@ class PersonalEventServiceTest {
 
     @Test
     @DisplayName("업데이트된 구글 일정을 개인 일정에 반영하는 테스트")
-    public void testUpdatePersonalEventByGoogleSync_Success() {
+    public void testUpdateWithRequestByGoogleSync_Success() {
         // given
         User user = createTestUser();
         String googleCalendarId = "testGoogleCalendarId";
@@ -223,11 +222,11 @@ class PersonalEventServiceTest {
         given(discussionParticipantService.getDiscussionsByUserId(anyLong())).willReturn(
             List.of(discussion, anotherDiscussion));
 
-        PersonalEvent existingEvent = createPersonalEvent("new Title");
+        PersonalEvent existingEvent = createWithRequest("new Title");
         given(existingEvent.getStartTime()).willReturn(LocalDateTime.of(2024, 3, 10, 10, 0));
-        PersonalEvent oldExistingEvent = createPersonalEvent("Old Title");
+        PersonalEvent oldExistingEvent = createWithRequest("Old Title");
         given(existingEvent.copy()).willReturn(oldExistingEvent);
-        PersonalEvent existingEvent2 = createPersonalEvent("Old Title2");
+        PersonalEvent existingEvent2 = createWithRequest("Old Title2");
 
         given(personalEventRepository.findByGoogleEventIdAndCalendarId(
             eq(updatedGoogleEvent.eventId()), eq(googleCalendarId))).willReturn(Optional.of(existingEvent));
@@ -254,7 +253,7 @@ class PersonalEventServiceTest {
             .preprocessOne(eq(existingEvent2), eq(anotherDiscussion), any(User.class), eq(false));
     }
 
-    PersonalEvent createPersonalEvent(String title, int minusHour, User user) {
+    PersonalEvent createWithRequest(String title, int minusHour, User user) {
         return PersonalEvent.builder()
             .title(title)
             .startTime(startTime.minusHours(minusHour))
@@ -276,7 +275,7 @@ class PersonalEventServiceTest {
         return discussion;
     }
 
-    PersonalEvent createPersonalEvent(String title) {
+    PersonalEvent createWithRequest(String title) {
         PersonalEvent personalEvent = Mockito.mock(PersonalEvent.class);
         return personalEvent;
     }

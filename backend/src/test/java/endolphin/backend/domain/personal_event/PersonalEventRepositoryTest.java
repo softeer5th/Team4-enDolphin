@@ -61,11 +61,11 @@ class PersonalEventRepositoryTest {
     @DisplayName("개인 일정 검색 테스트")
     void searchTest() {
         // given
-        LocalDateTime startTime = LocalDateTime.of(2025, 2, 2, 10, 0);
-        LocalDateTime endTime = LocalDateTime.of(2025, 2, 9, 10, 0);
+        LocalDate startTime = LocalDate.of(2025, 2, 2);
+        LocalDate endTime = LocalDate.of(2025, 2, 9);
 
         // when
-        List<PersonalEvent> personalEventList = personalEventRepository.findByUserAndStartTimeBetween(
+        List<PersonalEvent> personalEventList = personalEventRepository.findFilteredPersonalEvents(
             testUser, startTime, endTime
         );
 
