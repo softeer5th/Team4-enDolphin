@@ -235,8 +235,7 @@ public class DiscussionParticipantService {
         return new ListResponse<>(upcomingDiscussions);
     }
 
-    @Transactional(readOnly = true)
-    public List<Discussion> getUpcomingDiscussionsByUserId(Long userId) {
+    private List<Discussion> getUpcomingDiscussionsByUserId(Long userId) {
         return discussionParticipantRepository.findUpcomingDiscussionsByUserId(userId);
     }
 
