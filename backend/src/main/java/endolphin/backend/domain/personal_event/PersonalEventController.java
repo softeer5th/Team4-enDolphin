@@ -72,7 +72,7 @@ public class PersonalEventController {
     @PostMapping
     public ResponseEntity<PersonalEventResponse> createPersonalEvent(
         @Valid @RequestBody PersonalEventRequest request) {
-        PersonalEventResponse response = personalEventService.createPersonalEvent(request);
+        PersonalEventResponse response = personalEventService.createWithRequest(request);
         URI location = URIUtil.buildResourceUri(response.id());
         return ResponseEntity.created(location).body(response);
     }

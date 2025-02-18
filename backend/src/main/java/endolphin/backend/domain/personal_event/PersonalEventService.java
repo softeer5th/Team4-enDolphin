@@ -51,10 +51,13 @@ public class PersonalEventService {
         return new ListResponse<>(personalEventResponseList);
     }
 
-    public PersonalEventResponse createPersonalEvent(PersonalEventRequest request) {
+    public PersonalEventResponse createWithRequest(PersonalEventRequest request) {
         User user = userService.getCurrentUser();
 
         Validator.validateDateTimeRange(request.startDateTime(), request.endDateTime());
+
+        List<Discussion> discussions = discussionParticipantService.getDiscussionsByUserId(
+            user.getId());
 
         PersonalEvent personalEvent = PersonalEvent.builder()
             .title(request.title())
