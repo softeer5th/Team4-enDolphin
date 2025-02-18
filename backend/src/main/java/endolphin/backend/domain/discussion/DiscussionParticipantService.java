@@ -81,7 +81,11 @@ public class DiscussionParticipantService {
     @Transactional(readOnly = true)
     public int getFilter(Long discussionId, List<Long> userIds) {
 
-        if (userIds == null || userIds.isEmpty()) {
+        if (userIds == null) {
+            return 0XFFFF;
+        }
+
+        if (userIds.isEmpty()) {
             return 0;
         }
 
@@ -233,5 +237,11 @@ public class DiscussionParticipantService {
     public Boolean isFull(Long discussionId) {
         Long offset = discussionParticipantRepository.findMaxOffsetByDiscussionId(discussionId);
         return offset >= MAX_PARTICIPANT - 1;
+    }
+
+    @Transactional(readOnly = true)
+    public void validateDiscussionParticipant(Long discussionId) {
+        discussionParticipantRepository.findOffsetByDiscussionIdAndUserId(discussionId, userService.getCurrentUser().getId())
+            .orElseThrow(() -> new ApiException(ErrorCode.NOT_ALLOWED_USER));
     }
 }
