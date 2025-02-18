@@ -8,7 +8,8 @@ type State = {
 type Action = 
   | { type: 'TOGGLE_ITEM'; id: number; itemIds: number[] }
   | { type: 'TOGGLE_ALL'; itemIds: number[] }
-  | { type: 'RESET' };
+  | { type: 'RESET' }
+  | { type: 'INIT'; defaultCheckedList: number[]; itemIds: number[] };
   
 const reducer = (state: State, action: Action): State => {
   switch (action.type) {
@@ -34,13 +35,20 @@ const reducer = (state: State, action: Action): State => {
       return { checkedList: new Set(), isAllChecked: false };
     }
 
+    case 'INIT': {
+      return { 
+        checkedList: new Set(action.defaultCheckedList),
+        isAllChecked: action.defaultCheckedList.length === action.itemIds.length, 
+      };
+    }
+
     default:
       return state;
   }
 };
 
 interface GroupStateProps {
-  defaultCheckedList?: Set<number>;
+  defaultCheckedList?: number[];
   itemIds: number[];
 }
 
@@ -50,15 +58,18 @@ export interface GroupStateReturn {
   isAllChecked: boolean;
   handleToggleAllCheck: () => void;
   reset: () => void;
+  init: () => void;
 }
 
 export const useGroup = ({ 
-  defaultCheckedList = new Set(), 
+  defaultCheckedList = [], 
   itemIds, 
 }: GroupStateProps): GroupStateReturn => {  
-  const isAllChecked = defaultCheckedList.size === itemIds.length;
-
-  const [state, dispatch] = useReducer(reducer, { checkedList: defaultCheckedList, isAllChecked });
+  const [state, dispatch] = useReducer(
+    reducer, { 
+      checkedList: new Set(defaultCheckedList), 
+      isAllChecked: defaultCheckedList.length === itemIds.length, 
+    });
 
   const handleToggleCheck = (id: number) => {
     dispatch({ type: 'TOGGLE_ITEM', id, itemIds });
@@ -78,5 +89,6 @@ export const useGroup = ({
     isAllChecked: state.isAllChecked,
     handleToggleAllCheck, 
     reset,
+    init: () => dispatch({ type: 'INIT', defaultCheckedList, itemIds }),
   };
 };
