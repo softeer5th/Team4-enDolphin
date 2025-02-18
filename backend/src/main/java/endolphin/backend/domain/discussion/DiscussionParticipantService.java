@@ -128,6 +128,7 @@ public class DiscussionParticipantService {
 
     @Transactional(readOnly = true)
     public DiscussionParticipantsResponse getDiscussionParticipants(Long discussionId) {
+        validateDiscussionParticipant(discussionId);
         List<UserIdNameDto> participants = discussionParticipantRepository.findUserIdNameDtosByDiscussionId(
             discussionId);
 
@@ -241,7 +242,8 @@ public class DiscussionParticipantService {
 
     @Transactional(readOnly = true)
     public void validateDiscussionParticipant(Long discussionId) {
-        discussionParticipantRepository.findOffsetByDiscussionIdAndUserId(discussionId, userService.getCurrentUser().getId())
+        discussionParticipantRepository.findOffsetByDiscussionIdAndUserId(discussionId,
+                userService.getCurrentUser().getId())
             .orElseThrow(() -> new ApiException(ErrorCode.NOT_ALLOWED_USER));
     }
 }
