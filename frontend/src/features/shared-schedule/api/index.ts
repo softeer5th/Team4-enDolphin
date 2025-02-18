@@ -17,8 +17,8 @@ const ENDPOINT_PREFIX = '/api/v1/schedules';
 export const schedulesApi = {
   getUpcomingSchedules: async (): Promise<UpcomingSchedulesResponse> => {
     const response = await request.get(ENDPOINT_PREFIX + '/upcoming');
-    const validData = UpcomingSchedulesResponseSchema.parse(response);
-    return validData;
+    UpcomingSchedulesResponseSchema.parse(response);
+    return response;
   },
   getOngoingSchedules: async (
     page: number,
@@ -32,8 +32,8 @@ export const schedulesApi = {
         attendType: attendType,
       },
     });
-    const validData = OngoingSchedulesResponseSchema.parse(response);
-    return validData;
+    OngoingSchedulesResponseSchema.parse(response);
+    return response;
   },
   getFinishedSchedules: async (
     page: number,
@@ -47,7 +47,7 @@ export const schedulesApi = {
         year: year.toString(),
       },
     });
-    const validData = FinishedSchedulesResponseSchema.parse(response);
-    return validData;
+    FinishedSchedulesResponseSchema.parse(response);
+    return response;
   },
 };

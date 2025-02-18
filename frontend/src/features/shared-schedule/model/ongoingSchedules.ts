@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { zCoerceToDate } from '@/utils/zod';
 
 const OngoingDiscussionSchema = z.object({
-  id: z.number(),
+  discussionId: z.number(),
   title: z.string(),
   dateRangeStart: zCoerceToDate,
   dateRangeEnd: zCoerceToDate,

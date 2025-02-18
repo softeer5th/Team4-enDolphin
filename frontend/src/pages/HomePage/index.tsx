@@ -1,14 +1,7 @@
-import { useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
-import { useEffect } from 'react';
 
 import Button from '@/components/Button';
 import { Text } from '@/components/Text';
-import {
-  prefetchFinishedSchedules,
-  prefetchOngoingSchedules,
-  prefetchUpcomingSchedules,
-} from '@/features/shared-schedule/api/prefetch';
 import FinishedSchedules from '@/features/shared-schedule/ui/FinishedSchedules';
 import OngoingSchedules from '@/features/shared-schedule/ui/OngoingSchedules';
 import UpcomingSchedules from '@/features/shared-schedule/ui/UpcomingSchedules';
@@ -17,13 +10,6 @@ import { containerStyle } from './index.css';
 
 const HomePage = () => {
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
-
-  useEffect(() => {
-    // prefetchUpcomingSchedules(queryClient);
-    // prefetchOngoingSchedules(queryClient);
-    // prefetchFinishedSchedules(queryClient);
-  }, [queryClient]);
 
   return (
     <div className={containerStyle}>
@@ -36,7 +22,7 @@ const HomePage = () => {
           모두보기
         </Button>
       </UpcomingSchedules> */}
-      {/* <OngoingSchedules /> */}
+      <OngoingSchedules />
       <FinishedSchedules />
     </div>
   );

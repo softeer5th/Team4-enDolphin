@@ -8,9 +8,9 @@ export const useUpcomingQuery = () => useQuery<UpcomingSchedulesResponse>(
   sharedSchedulesQueryOptions.upcoming,
 );
 
-export const useOngoingQuery = (page: number, size: number, type: AttendType) => 
+export const useOngoingQuery = (page: number, size: number, attendType: AttendType) => 
   useQuery<OngoingSchedulesResponse>(
-    sharedSchedulesQueryOptions.ongoing(page, size, type),
+    sharedSchedulesQueryOptions.ongoing(page, size, attendType),
   );
 
 export const useFinishedQuery = (page: number, size: number, year: number) =>

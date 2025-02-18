@@ -38,7 +38,7 @@ const OngoingScheduleList = ({ segmentOption }: OngoingScheduleListProps) => {
           <OngoingScheduleListItem
             key={index}
             participantImageUrls={schedule.participantPictureUrls}
-            scheduleTitle='제목'
+            scheduleTitle={schedule.title}
             selected={false}
           />))}
       </Flex>
