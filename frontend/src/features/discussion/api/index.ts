@@ -3,6 +3,8 @@ import { request } from '@/utils/fetch';
 import type { 
   DiscussionCalendarRequest,
   DiscussionCalendarResponse, 
+  DiscussionConfirmRequest,
+  DiscussionConfirmResponse, 
   DiscussionParticipantResponse, 
   DiscussionRankRequest, 
   DiscussionRankResponse, 
@@ -44,5 +46,12 @@ export const candidateApi = {
     const response 
       = await request.get(`/api/v1/discussion/${discussionId}/participants`);
     return response.participants;
+  },
+  
+  postDiscussionConfirm: async (
+    { id, body }: { id: string; body: DiscussionConfirmRequest },
+  ): Promise<DiscussionConfirmResponse> => {
+    const response = await request.post(`/api/v1/discussion/${id}/confirm`, { body });
+    return response;
   },
 };
