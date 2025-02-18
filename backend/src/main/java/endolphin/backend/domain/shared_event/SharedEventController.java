@@ -84,8 +84,8 @@ public class SharedEventController {
     })
     @GetMapping("/upcoming")
     public ResponseEntity<ListResponse<SharedEventWithDiscussionInfoResponse>> getUpcomingDiscussions() {
-        List<SharedEventWithDiscussionInfoResponse> responses =
+        ListResponse<SharedEventWithDiscussionInfoResponse> responses =
             sharedEventService.getUpcomingSharedEvents();
-        return ResponseEntity.ok(new ListResponse<>(responses));
+        return ResponseEntity.ok(responses);
     }
 }

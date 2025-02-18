@@ -8,6 +8,7 @@ import endolphin.backend.domain.shared_event.dto.SharedEventWithDiscussionInfoRe
 import endolphin.backend.domain.shared_event.entity.SharedEvent;
 import endolphin.backend.domain.user.UserService;
 import endolphin.backend.domain.user.entity.User;
+import endolphin.backend.global.dto.ListResponse;
 import endolphin.backend.global.error.exception.ApiException;
 import endolphin.backend.global.error.exception.ErrorCode;
 import endolphin.backend.global.util.Validator;
@@ -67,7 +68,7 @@ public class SharedEventService {
     }
 
     @Transactional(readOnly = true)
-    public List<SharedEventWithDiscussionInfoResponse> getUpcomingSharedEvents() {
+    public ListResponse<SharedEventWithDiscussionInfoResponse> getUpcomingSharedEvents() {
         User currentUser = userService.getCurrentUser();
         List<Discussion> discussions = discussionParticipantService.getUpcomingDiscussionsByUserId(
             currentUser.getId());
@@ -80,7 +81,7 @@ public class SharedEventService {
         Map<Long, List<String>> discussionParticipantsPicturesMap =
             discussionParticipantService.getDiscussionPicturesMap(discussionIds);
 
-        return sharedEvents.stream().map(se -> {
+        return new ListResponse<>(sharedEvents.stream().map(se -> {
             Discussion d = se.getDiscussion();
 
             List<String> pictures = discussionParticipantsPicturesMap.getOrDefault(d.getId(),
@@ -90,6 +91,6 @@ public class SharedEventService {
                 d.getId(), d.getTitle(), d.getMeetingMethodOrLocation(), SharedEventDto.of(se),
                 pictures
             );
-        }).toList();
+        }).toList());
     }
 }
