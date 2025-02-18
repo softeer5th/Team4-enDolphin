@@ -5,6 +5,7 @@ import { Flex } from '@/components/Flex';
 import Pagination from '@/components/Pagination';
 
 import { useOngoingQuery } from '../../api/queries';
+import OngoingFallback from '../Fallbacks/OngoingFallback';
 import type { OngoingSegmentOption } from '.';
 import { paginationStyle } from './ongoingScheduleList.css';
 import OngoingScheduleListItem from './OngoingScheduleListItem';
@@ -20,7 +21,7 @@ const OngoingScheduleList = ({ segmentOption, onSelect }: OngoingScheduleListPro
   const [page, setPage] = useState(1);
   const { data, isPending } = useOngoingQuery(page, PAGE_SIZE, segmentOption.value);
   if (isPending) return <div>pending...</div>;
-  if (!data) return <div>No data available</div>;
+  if (!data || data.ongoingDiscussions.length === 0) return <div>no data available</div>;
   const schedules = data.ongoingDiscussions;
 
   return (

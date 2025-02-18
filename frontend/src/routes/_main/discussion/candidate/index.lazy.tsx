@@ -10,6 +10,6 @@ const CandidateSchedule = () => (
   </>
 );
 
-export const Route = createLazyFileRoute('/discussion/candidate/')({
+export const Route = createLazyFileRoute('/_main/discussion/candidate/')({
   component: CandidateSchedule,
 });

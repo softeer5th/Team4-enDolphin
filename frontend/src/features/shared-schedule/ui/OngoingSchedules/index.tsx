@@ -1,11 +1,14 @@
 
+import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 
 import { Flex } from '@/components/Flex';
 import SegmentControl from '@/components/SegmentControl';
 import { Text } from '@/components/Text';
 
+import { sharedScheduleQuerykeys } from '../../api/keys';
 import type { AttendType } from '../../model/';
+import OngoingFallback from '../Fallbacks/OngoingFallback';
 import { containerStyle, mainContainerStyle, segmentControlStyle, titleStyle } from './index.css';
 import OngoingScheduleList from './OngoingScheduleList';
 import ScheduleContents from './ScheduleDetails';
@@ -23,6 +26,10 @@ const segmentOptions: OngoingSegmentOption[] = [
 
 const OngoingSchedules = () => {
   const [selectedDiscussionId, setSelectedDiscussionId] = useState<number>(1);
+  const queryClient = useQueryClient();
+  if (!queryClient.getQueryCache().find({ queryKey: sharedScheduleQuerykeys.ongoing(1, 6, 'ALL') }))
+    return <OngoingFallback />;
+
   return (
     <Flex
       className={containerStyle}
