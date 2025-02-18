@@ -7,22 +7,18 @@ import type { Size } from './type';
 
 interface CheckboxLabelProps extends PropsWithChildren {
   size: Size;
-  id: string;
   style: 'rest' | 'selected';
 }
 
-export const CheckboxLabel = ({ size, id, style, children }: CheckboxLabelProps) => {
+export const CheckboxLabel = ({ size, style, children }: CheckboxLabelProps) => {
   const fontMap: Record<typeof size, Typo> = {
     sm: 'caption',
     md: 'b2M',
   };
 
   return(
-    <label
-      className={labelStyle({ size, style })}
-      htmlFor={id}
-    >
+    <span className={labelStyle({ size, style })}>
       <Text typo={fontMap[size]}>{children}</Text>
-    </label>
+    </span>
   );
 };
