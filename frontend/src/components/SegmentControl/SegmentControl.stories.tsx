@@ -24,13 +24,13 @@ export const Default: StoryObj<typeof SegmentControl> = {
       { label: '라벨2', value: 'value2' },
       { label: '라벨3', value: 'value3' },
     ],
-    defaultValue: '라벨1',
+    defaultValue: 'value1',
   },
 };
 
 export const WithContent = () => (
   <SegmentControl
-    defaultValue='라벨1'
+    defaultValue='value1'
     segmentOptions={[
       { label: '라벨1', value: 'value1' },
       { label: '라벨2', value: 'value2' },
