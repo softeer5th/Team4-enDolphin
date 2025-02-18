@@ -31,6 +31,7 @@ const OngoingScheduleList = ({ segmentOption }: OngoingScheduleListProps) => {
     >
       <Flex
         direction='column'
+        height='30rem'
         justify='flex-start'
         width='full'
       >
