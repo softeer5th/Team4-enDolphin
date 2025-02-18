@@ -442,4 +442,114 @@ public class DiscussionParticipantRepositoryTest {
         assertThat(results.get(0).getId()).isEqualTo(discussion1.getId());
         assertThat(results.get(1).getId()).isEqualTo(discussion2.getId());
     }
+
+    @Test
+    @DisplayName("다가오는 논의")
+    public void findUpcomingDiscussionsTest() {
+        // 사용자 생성
+        User user = User.builder()
+            .name("Test User")
+            .email("test@example.com")
+            .picture("userpic.jpg")
+            .build();
+        entityManager.persist(user);
+
+        // Discussion 1: FINISHED, dateRangeEnd 연도 2025, fixedDate = 2025-01-01
+        Discussion discussion1 = Discussion.builder()
+            .title("Discussion 1")
+            .dateStart(LocalDate.of(2025, 1, 10))
+            .dateEnd(LocalDate.of(2025, 1, 15))
+            .timeStart(LocalTime.of(9, 0))
+            .timeEnd(LocalTime.of(17, 0))
+            .duration(60)
+            .deadline(LocalDate.of(2025, 1, 20))
+            .location("Room 1")
+            .build();
+        ReflectionTestUtils.setField(discussion1, "discussionStatus", DiscussionStatus.FINISHED);
+        ReflectionTestUtils.setField(discussion1, "fixedDate", LocalDate.of(2025, 1, 1));
+        entityManager.persist(discussion1);
+
+        // Discussion 2: UPCOMING, dateRangeEnd 연도 2025, fixedDate = 2025-02-01
+        Discussion discussion2 = Discussion.builder()
+            .title("Discussion 2")
+            .dateStart(LocalDate.of(2025, 2, 5))
+            .dateEnd(LocalDate.of(2025, 2, 10))
+            .timeStart(LocalTime.of(10, 0))
+            .timeEnd(LocalTime.of(18, 0))
+            .duration(60)
+            .deadline(LocalDate.of(2025, 2, 15))
+            .location("Room 2")
+            .build();
+        ReflectionTestUtils.setField(discussion2, "discussionStatus", DiscussionStatus.UPCOMING);
+        entityManager.persist(discussion2);
+
+        // Discussion 3: UPCOMING, 하지만 dateRangeEnd 연도가 2024 -> 필터링되어야 함
+        Discussion discussion3 = Discussion.builder()
+            .title("Discussion 3")
+            .dateStart(LocalDate.of(2024, 12, 1))
+            .dateEnd(LocalDate.of(2024, 12, 5))
+            .timeStart(LocalTime.of(9, 0))
+            .timeEnd(LocalTime.of(17, 0))
+            .duration(60)
+            .deadline(LocalDate.of(2024, 12, 10))
+            .location("Room 3")
+            .build();
+        ReflectionTestUtils.setField(discussion3, "discussionStatus", DiscussionStatus.UPCOMING);
+        entityManager.persist(discussion3);
+
+        // Discussion 4: ONGOING 상태 -> 필터링되어야 함
+        Discussion discussion4 = Discussion.builder()
+            .title("Discussion 4")
+            .dateStart(LocalDate.of(2025, 3, 1))
+            .dateEnd(LocalDate.of(2025, 3, 5))
+            .timeStart(LocalTime.of(10, 0))
+            .timeEnd(LocalTime.of(18, 0))
+            .duration(60)
+            .deadline(LocalDate.of(2025, 3, 10))
+            .location("Room 4")
+            .build();
+        ReflectionTestUtils.setField(discussion4, "discussionStatus", DiscussionStatus.ONGOING);
+        ReflectionTestUtils.setField(discussion4, "fixedDate", LocalDate.of(2025, 3, 1));
+        entityManager.persist(discussion4);
+
+        // DiscussionParticipant 생성: user가 모든 Discussion에 참여하도록 생성
+        DiscussionParticipant dp1 = DiscussionParticipant.builder()
+            .discussion(discussion1)
+            .user(user)
+            .userOffset(0L)
+            .build();
+        entityManager.persist(dp1);
+
+        DiscussionParticipant dp2 = DiscussionParticipant.builder()
+            .discussion(discussion2)
+            .user(user)
+            .userOffset(1L)
+            .build();
+        entityManager.persist(dp2);
+
+        DiscussionParticipant dp3 = DiscussionParticipant.builder()
+            .discussion(discussion3)
+            .user(user)
+            .userOffset(2L)
+            .build();
+        entityManager.persist(dp3);
+
+        DiscussionParticipant dp4 = DiscussionParticipant.builder()
+            .discussion(discussion4)
+            .user(user)
+            .userOffset(3L)
+            .build();
+        entityManager.persist(dp4);
+
+        entityManager.flush();
+        entityManager.clear();
+
+        // when
+
+        List<Discussion> result = discussionParticipantRepository.findUpcomingDiscussions(
+            user.getId());
+
+        assertThat(result).isNotNull();
+        assertThat(result.size()).isEqualTo(2);
+    }
 }
