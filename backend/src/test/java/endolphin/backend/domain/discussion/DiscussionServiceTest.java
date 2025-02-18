@@ -10,7 +10,6 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.atLeast;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -136,6 +135,11 @@ public class DiscussionServiceTest {
         Discussion discussion = Discussion.builder()
             .title("Project Sync")
             .meetingMethod(MeetingMethod.ONLINE)
+            .dateStart(LocalDate.of(2025, 3, 1))
+            .dateEnd(LocalDate.of(2025, 3, 1))
+            .timeStart(LocalTime.of(10, 0))
+            .timeEnd(LocalTime.of(12, 0))
+            .duration(120)
             .build();
 
         discussion.setDiscussionStatus(DiscussionStatus.ONGOING);
@@ -196,6 +200,11 @@ public class DiscussionServiceTest {
         Discussion discussion = Discussion.builder()
             .title("Project Sync")
             .meetingMethod(MeetingMethod.ONLINE)
+            .dateStart(LocalDate.of(2025, 3, 1))
+            .dateEnd(LocalDate.of(2025, 3, 1))
+            .timeStart(LocalTime.of(10, 0))
+            .timeEnd(LocalTime.of(12, 0))
+            .duration(120)
             .build();
 
         discussion.setDiscussionStatus(DiscussionStatus.ONGOING);
@@ -254,6 +263,11 @@ public class DiscussionServiceTest {
         Discussion discussion = Discussion.builder()
             .title("Test Discussion")
             .meetingMethod(MeetingMethod.ONLINE)
+            .dateStart(LocalDate.of(2025, 3, 1))
+            .dateEnd(LocalDate.of(2025, 3, 1))
+            .timeStart(LocalTime.of(10, 0))
+            .timeEnd(LocalTime.of(12, 0))
+            .duration(120)
             .build();
 
         discussion.setDiscussionStatus(DiscussionStatus.FINISHED);
@@ -526,7 +540,7 @@ public class DiscussionServiceTest {
         assertThatThrownBy(
             () -> discussionService.retrieveCandidateEventDetails(discussionId, request))
             .isInstanceOf(ApiException.class)
-            .hasFieldOrPropertyWithValue("errorCode", ErrorCode.INVALID_DATE_TIME_RANGE);
+            .hasFieldOrPropertyWithValue("errorCode", ErrorCode.INVALID_DATE_TIME_REQUEST);
 
         // 날짜 범위 검증 단계에서 예외가 발생하므로 다른 서비스들은 호출되지 않아야 함
         then(userService).shouldHaveNoInteractions();

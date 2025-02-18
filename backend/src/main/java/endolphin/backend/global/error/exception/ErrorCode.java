@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 public enum ErrorCode {
     // Common
     INTERNAL_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "C001", "Internal Server Error"),
-    INVALID_DATE_TIME_RANGE(HttpStatus.BAD_REQUEST, "C002", "End Time must be after Start Time"),
+    INVALID_DATE_TIME_REQUEST(HttpStatus.BAD_REQUEST, "C002", "Invalid Date Time Request"),
     INVALID_INPUT(HttpStatus.BAD_REQUEST, "C003", "Invalid Input"),
 
     // User

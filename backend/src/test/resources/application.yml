@@ -10,6 +10,10 @@ spring:
     hibernate:
       ddl-auto: create
 
+  sql:
+    init:
+      mode: never
+
   data:
     redis:
       port: 6379
