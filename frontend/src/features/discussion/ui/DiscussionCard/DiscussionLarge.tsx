@@ -33,7 +33,7 @@ const DiscussionContents = (
       typo='b2R'
     >
       <CalendarCheck width={16} />
-      {formatDateToString(discussion.startDateTime)}
+      {formatDateToString(new Date(discussion.startDateTime))}
     </Text>
     <Text
       className={textStyle}
@@ -41,11 +41,11 @@ const DiscussionContents = (
       typo='b2R'
     >
       <Clock color={vars.color.Ref.Netural[400]} width={16} />
-      {formatDateToTimeString(discussion.startDateTime)}
+      {formatDateToTimeString(new Date(discussion.startDateTime))}
       {' '}
       - 
       {' '}
-      {formatDateToTimeString(discussion.endDateTime)}
+      {formatDateToTimeString(new Date(discussion.endDateTime))}
     </Text>
   </Flex>
 );
