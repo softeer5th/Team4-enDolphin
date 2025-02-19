@@ -21,3 +21,5 @@ export const participantKeys = {
   all: ['participants'],
   detail: (id: string) => [...participantKeys.all, id],
 };
+
+export const invitationQueryKey = (discussionId: number) => ['invitation', discussionId];
