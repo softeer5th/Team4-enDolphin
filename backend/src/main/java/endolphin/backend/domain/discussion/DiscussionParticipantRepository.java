@@ -108,4 +108,11 @@ public interface DiscussionParticipantRepository extends
     Page<Discussion> findFinishedDiscussions(@Param("userId") Long userId,
         Pageable pageable,
         @Param("year") int year);
+
+    @Query("SELECT d "
+        + "FROM DiscussionParticipant dp "
+        + "JOIN dp.discussion d "
+        + "WHERE dp.user.id = :userId "
+        + "AND d.discussionStatus = 'UPCOMING' ")
+    List<Discussion> findUpcomingDiscussionsByUserId(@Param("userId") Long userId);
 }

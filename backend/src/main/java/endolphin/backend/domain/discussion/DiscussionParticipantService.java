@@ -12,11 +12,13 @@ import endolphin.backend.domain.shared_event.dto.SharedEventWithDiscussionInfoRe
 import endolphin.backend.domain.user.UserService;
 import endolphin.backend.domain.user.dto.UserIdNameDto;
 import endolphin.backend.domain.user.entity.User;
+import endolphin.backend.global.dto.ListResponse;
 import endolphin.backend.global.error.exception.ApiException;
 import endolphin.backend.global.error.exception.ErrorCode;
 import endolphin.backend.global.util.TimeCalculator;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -209,7 +211,38 @@ public class DiscussionParticipantService {
     }
 
     @Transactional(readOnly = true)
-    protected Map<Long, List<String>> getDiscussionPicturesMap(List<Long> discussionIds) {
+    public ListResponse<SharedEventWithDiscussionInfoResponse> getUpcomingDiscussions(User user) {
+        List<Discussion> discussions = getUpcomingDiscussionsByUserId(
+            user.getId());
+
+        List<Long> discussionIds = discussions.stream().map(Discussion::getId).toList();
+
+        Map<Long, SharedEventDto> sharedEventMap = sharedEventService.getSharedEventMap(
+            discussionIds);
+
+        Map<Long, List<String>> discussionPicturesMap =
+            getDiscussionPicturesMap(discussionIds);
+
+        List<SharedEventWithDiscussionInfoResponse> upcomingDiscussions = discussions.stream()
+            .map(discussion -> new SharedEventWithDiscussionInfoResponse(
+                discussion.getId(),
+                discussion.getTitle(),
+                discussion.getMeetingMethodOrLocation(),
+                sharedEventMap.getOrDefault(discussion.getId(), null),
+                discussionPicturesMap.getOrDefault(discussion.getId(), Collections.emptyList())
+            ))
+            .sorted(Comparator.comparing(key ->
+                key.sharedEventDto().startDateTime())).toList();
+
+        return new ListResponse<>(upcomingDiscussions);
+    }
+
+    private List<Discussion> getUpcomingDiscussionsByUserId(Long userId) {
+        return discussionParticipantRepository.findUpcomingDiscussionsByUserId(userId);
+    }
+
+    @Transactional(readOnly = true)
+    public Map<Long, List<String>> getDiscussionPicturesMap(List<Long> discussionIds) {
         List<Object[]> pictureResults = discussionParticipantRepository.findUserPicturesByDiscussionIds(
             discussionIds);
 

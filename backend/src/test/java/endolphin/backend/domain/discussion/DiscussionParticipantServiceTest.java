@@ -14,9 +14,11 @@ import endolphin.backend.domain.discussion.enums.DiscussionStatus;
 import endolphin.backend.domain.shared_event.SharedEventService;
 import endolphin.backend.domain.shared_event.dto.SharedEventDto;
 import endolphin.backend.domain.shared_event.dto.SharedEventWithDiscussionInfoResponse;
+import endolphin.backend.domain.shared_event.entity.SharedEvent;
 import endolphin.backend.domain.user.UserService;
 import endolphin.backend.domain.user.dto.UserIdNameDto;
 import endolphin.backend.domain.user.entity.User;
+import endolphin.backend.global.dto.ListResponse;
 import endolphin.backend.global.error.exception.ApiException;
 import endolphin.backend.global.error.exception.ErrorCode;
 
@@ -24,6 +26,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -33,6 +36,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -475,4 +479,122 @@ class DiscussionParticipantServiceTest {
         assertThat(ded2.participantPictureUrls()).containsExactly("pic3.jpg");
     }
 
+    @Test
+    @DisplayName("다가오는 일정 조회 테스트")
+    public void getUpcomingSharedEvents_ShouldReturnSharedEventsWithDiscussionInfo() {
+        User user = Mockito.mock(User.class);
+        given(user.getId()).willReturn(1L);
+
+
+        // --- 준비: 4개의 Discussion 생성 ---
+        // Discussion 1: UPCOMING, year=2025, fixedDate = 2025-01-01, id=100L
+        Discussion discussion1 = Discussion.builder()
+            .title("Discussion 1")
+            .dateStart(LocalDate.of(2025, 1, 10))
+            .dateEnd(LocalDate.of(2025, 1, 15))
+            .timeStart(LocalTime.of(9, 0))
+            .timeEnd(LocalTime.of(17, 0))
+            .duration(60)
+            .deadline(LocalDate.of(2025, 1, 20))
+            .location("Room 1")
+            .build();
+        ReflectionTestUtils.setField(discussion1, "discussionStatus", DiscussionStatus.UPCOMING);
+        ReflectionTestUtils.setField(discussion1, "fixedDate", LocalDate.of(2025, 1, 1));
+        ReflectionTestUtils.setField(discussion1, "id", 100L);
+
+        // Discussion 2: UPCOMING, year=2025, fixedDate = 2025-02-01, id=101L
+        Discussion discussion2 = Discussion.builder()
+            .title("Discussion 2")
+            .dateStart(LocalDate.of(2025, 2, 5))
+            .dateEnd(LocalDate.of(2025, 2, 10))
+            .timeStart(LocalTime.of(10, 0))
+            .timeEnd(LocalTime.of(18, 0))
+            .duration(60)
+            .deadline(LocalDate.of(2025, 2, 15))
+            .location("Room 2")
+            .build();
+        ReflectionTestUtils.setField(discussion2, "discussionStatus", DiscussionStatus.UPCOMING);
+        ReflectionTestUtils.setField(discussion2, "fixedDate", LocalDate.of(2025, 2, 1));
+        ReflectionTestUtils.setField(discussion2, "id", 101L);
+
+        // Discussion 3: FINISHED, but year=2024 -> 필터링되어야 함, id=102L
+        Discussion discussion3 = Discussion.builder()
+            .title("Discussion 3")
+            .dateStart(LocalDate.of(2024, 12, 1))
+            .dateEnd(LocalDate.of(2024, 12, 5))
+            .timeStart(LocalTime.of(9, 0))
+            .timeEnd(LocalTime.of(17, 0))
+            .duration(60)
+            .deadline(LocalDate.of(2024, 12, 10))
+            .location("Room 3")
+            .build();
+        ReflectionTestUtils.setField(discussion3, "discussionStatus", DiscussionStatus.FINISHED);
+        ReflectionTestUtils.setField(discussion3, "fixedDate", LocalDate.of(2024, 12, 1));
+        ReflectionTestUtils.setField(discussion3, "id", 102L);
+
+        // Discussion 4: ONGOING 상태 -> 필터링되어야 함, id=103L
+        Discussion discussion4 = Discussion.builder()
+            .title("Discussion 4")
+            .dateStart(LocalDate.of(2025, 3, 1))
+            .dateEnd(LocalDate.of(2025, 3, 5))
+            .timeStart(LocalTime.of(10, 0))
+            .timeEnd(LocalTime.of(18, 0))
+            .duration(60)
+            .deadline(LocalDate.of(2025, 3, 10))
+            .location("Room 4")
+            .build();
+        ReflectionTestUtils.setField(discussion4, "discussionStatus", DiscussionStatus.ONGOING);
+        ReflectionTestUtils.setField(discussion4, "fixedDate", LocalDate.of(2025, 3, 1));
+        ReflectionTestUtils.setField(discussion4, "id", 103L);
+
+        given(discussionParticipantRepository.findUpcomingDiscussionsByUserId(user.getId()))
+            .willReturn(Arrays.asList(discussion1, discussion2));
+
+        List<Object[]> pictureResults = Arrays.asList(
+            new Object[]{100L, "pic1.jpg"},
+            new Object[]{100L, "pic2.jpg"},
+            new Object[]{101L, "pic3.jpg"}
+        );
+        given(discussionParticipantRepository.findUserPicturesByDiscussionIds(Arrays.asList(100L, 101L)))
+            .willReturn(pictureResults);
+
+        // --- 목업: sharedEventService.getSharedEventMap ---
+        SharedEventDto sharedEvent1 = new SharedEventDto(100L,
+            LocalDateTime.of(2025, 1, 10, 9, 0),
+            LocalDateTime.of(2025, 1, 15, 17, 0));
+        SharedEventDto sharedEvent2 = new SharedEventDto(101L,
+            LocalDateTime.of(2025, 1, 5, 10, 0),
+            LocalDateTime.of(2025, 1, 10, 18, 0));
+        Map<Long, SharedEventDto> sharedEventMap = Map.of(
+            100L, sharedEvent1,
+            101L, sharedEvent2
+        );
+        given(sharedEventService.getSharedEventMap(Arrays.asList(100L, 101L)))
+            .willReturn(sharedEventMap);
+
+        // when
+        ListResponse<SharedEventWithDiscussionInfoResponse> response =
+            discussionParticipantService.getUpcomingDiscussions(user);
+
+        // then
+
+        List<SharedEventWithDiscussionInfoResponse> upcomingDiscussions = response.data();
+        assertThat(upcomingDiscussions).hasSize(2);
+
+        // 정렬: sharedEvent startTime ASC 기준 -> discussion2 (fixedDate=2025-01-05) 먼저, discussion1 (fixedDate=2025-1-5) 이후
+        SharedEventWithDiscussionInfoResponse ded1 = upcomingDiscussions.get(0);
+        SharedEventWithDiscussionInfoResponse ded2 = upcomingDiscussions.get(1);
+
+        assertThat(ded1.discussionId()).isEqualTo(101L);
+        assertThat(ded1.title()).isEqualTo("Discussion 2");
+        assertThat(ded1.meetingMethodOrLocation()).isEqualTo("Room 2");
+        assertThat(ded1.sharedEventDto()).isEqualTo(sharedEvent2);
+        assertThat(ded1.participantPictureUrls()).containsExactly("pic3.jpg");
+
+        assertThat(ded2.discussionId()).isEqualTo(100L);
+        assertThat(ded2.title()).isEqualTo("Discussion 1");
+        assertThat(ded2.meetingMethodOrLocation()).isEqualTo("Room 1");
+        assertThat(ded2.sharedEventDto()).isEqualTo(sharedEvent1);
+        assertThat(ded2.participantPictureUrls()).containsExactly("pic1.jpg", "pic2.jpg");
+    }
 }

@@ -22,6 +22,7 @@ import endolphin.backend.domain.shared_event.dto.SharedEventDto;
 import endolphin.backend.domain.user.UserService;
 import endolphin.backend.domain.user.dto.UserInfoWithPersonalEvents;
 import endolphin.backend.domain.user.entity.User;
+import endolphin.backend.global.dto.ListResponse;
 import endolphin.backend.global.error.exception.ApiException;
 import endolphin.backend.global.error.exception.ErrorCode;
 import endolphin.backend.global.redis.DiscussionBitmapService;
@@ -269,6 +270,13 @@ public class DiscussionService {
 
         return discussionParticipantService
             .getFinishedDiscussions(currentUser.getId(), page - 1, size, year);
+    }
+
+    @Transactional(readOnly = true)
+    public ListResponse<SharedEventWithDiscussionInfoResponse> getUpcomingDiscussions() {
+        User currentUser = userService.getCurrentUser();
+
+        return discussionParticipantService.getUpcomingDiscussions(currentUser);
     }
 
     @Transactional(readOnly = true)

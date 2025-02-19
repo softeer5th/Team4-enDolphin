@@ -9,8 +9,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface SharedEventRepository extends JpaRepository<SharedEvent, Long> {
 
-    public List<SharedEvent> findByDiscussionIdIn(List<Long> discussionIds);
-
     Optional<SharedEvent> findByDiscussionId(Long discussionId);
 
+
+    List<SharedEvent> findByDiscussionIdIn(List<Long> discussionIds);
 }
