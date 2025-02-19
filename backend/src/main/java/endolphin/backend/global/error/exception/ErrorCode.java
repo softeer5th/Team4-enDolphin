@@ -15,7 +15,6 @@ public enum ErrorCode {
 
     // Discussion
     DISCUSSION_NOT_FOUND(HttpStatus.NOT_FOUND, "D001", "Discussion not found"),
-    EMPTY_SELECTED_USER_IDS(HttpStatus.BAD_REQUEST, "D002", "Empty Selected User IDs"),
     DISCUSSION_NOT_ONGOING(HttpStatus.BAD_REQUEST, "D003", "Discussion not ongoing"),
     TOO_MANY_FAILED_ATTEMPTS(HttpStatus.FORBIDDEN, "D004", "Too many failed attempts"),
     PASSWORD_REQUIRED(HttpStatus.BAD_REQUEST, "D005", "Password required"),

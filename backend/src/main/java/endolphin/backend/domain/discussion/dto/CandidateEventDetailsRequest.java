@@ -7,7 +7,7 @@ import java.util.List;
 public record CandidateEventDetailsRequest(
     @NotNull LocalDateTime startDateTime,
     @NotNull LocalDateTime endDateTime,
-    @NotNull List<Long> selectedUserIdList
+    List<Long> selectedUserIdList
 ) {
 
 }
