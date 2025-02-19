@@ -128,8 +128,9 @@ public class PersonalEventService {
         PersonalEvent result = updatePersonalEvent(request, personalEvent, user, discussions);
 
         if (request.syncWithGoogleCalendar()) {
-            if (result.getGoogleEventId() == null) {
-                eventPublisher.publishEvent(new InsertPersonalEvent(List.of(personalEvent)));
+            if (result.getGoogleEventId() == null && result.getCalendarId() == null) {
+                result.update(IdGenerator.generateId(user.getId()), PRIMARY);
+                eventPublisher.publishEvent(new InsertPersonalEvent(List.of(result)));
             } else {
                 eventPublisher.publishEvent(new UpdatePersonalEvent(result));
             }
@@ -145,12 +146,6 @@ public class PersonalEventService {
         PersonalEvent oldEvent = personalEvent.copy();
 
         personalEvent.update(request);
-
-        if (request.syncWithGoogleCalendar()
-            && personalEvent.getGoogleEventId() == null
-            && personalEvent.getCalendarId() == null) {
-            personalEvent.update(IdGenerator.generateId(user.getId()), PRIMARY);
-        }
 
         if (isChanged(personalEvent, request)) {
             discussions.forEach(discussion -> {
