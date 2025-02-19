@@ -17,8 +17,14 @@ export const discussionApi = {
     const response = await request.post('/api/v1/discussion', { body });
     return response;
   },
+
   getDiscussion: async (id: string): Promise<DiscussionResponse> => {
     const response = await request.get(`/api/v1/discussion/${id}`);
+    return response;
+  },
+
+  getIsHost: async (id: string): Promise<boolean> => {
+    const response = await request.get(`/api/v1/discussion/${id}/role`);
     return response;
   },
 };

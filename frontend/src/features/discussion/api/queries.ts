@@ -10,7 +10,14 @@ import type {
   DiscussionResponse, 
 } from '../model';
 import { candidateApi, discussionApi } from '.';
-import { calendarKeys, discussionKeys, participantKeys, rankKeys, sharedEventKeys } from './keys';
+import { 
+  calendarKeys, 
+  discussionKeys,
+  hostKeys, 
+  participantKeys, 
+  rankKeys, 
+  sharedEventKeys, 
+} from './keys';
 
 export const discussionQuery = (discussionId: string) => ({
   queryKey: discussionKeys.detail(discussionId), 
@@ -41,6 +48,11 @@ export const discussionParticipantQuery = (discussionId: string) => ({
 export const discussionConfirmQuery = (discussionId: string) => ({
   queryKey: sharedEventKeys.detail(discussionId),
   queryFn: () => candidateApi.getDiscussionConfirm(discussionId),
+});
+
+export const discussionHostQuery = (discussionId: string) => ({
+  queryKey: hostKeys.detail(discussionId),
+  queryFn: () => discussionApi.getIsHost(discussionId),
 });
 
 export const useDiscussionQuery = (discussionId: string) => {
@@ -85,4 +97,11 @@ export const useDiscussionConfirmQuery = (discussionId: string) => {
     = useQuery<DiscussionConfirmResponse>(discussionConfirmQuery(discussionId));
 
   return { sharedEvent, isPending };
+};
+
+export const useDiscussionHostQuery = (discussionId: string) => {
+  const { data: isHost, isPending }
+    = useQuery<boolean>(discussionHostQuery(discussionId));
+
+  return { isHost, isPending };
 };
