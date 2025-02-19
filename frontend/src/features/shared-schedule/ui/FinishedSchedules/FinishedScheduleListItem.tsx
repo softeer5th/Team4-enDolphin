@@ -8,9 +8,9 @@ import {
   detailsContainerStyle,
   dotStyle,
   scheduleItemContainerStyle,
-} from './expiredScheduleListItem.css';
+} from './finishedScheduleListItem.css';
 
-interface ExpiredScheduleListItemProps {
+interface FinishedScheduleListItemProps {
   scheduleTitle: string;
   participantImageUrls: string[];
   meetingPlace?: string;
@@ -19,13 +19,13 @@ interface ExpiredScheduleListItemProps {
   onClick?: () => void;
 }
 
-const ExpiredScheduleListItem = ({ 
+const FinishedScheduleListItem = ({ 
   scheduleTitle,
   participantImageUrls,
   meetingPlace,
   startDate,
   endDate,
-}: ExpiredScheduleListItemProps) => (
+}: FinishedScheduleListItemProps) => (
   <Flex
     className={scheduleItemContainerStyle}
     direction='column'
@@ -72,4 +72,4 @@ const MeetDate = ({ startDate, endDate }: { startDate: Date; endDate: Date }) =>
   </Text>
 );
 
-export default ExpiredScheduleListItem;
+export default FinishedScheduleListItem;

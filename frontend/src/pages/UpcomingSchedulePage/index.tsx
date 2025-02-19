@@ -14,9 +14,8 @@ const UpcomingSchedulePage = () => {
       direction='column'
       gap={700}
     > 
-      <UpcomingSchedules schedules={schedules}>
+      <UpcomingSchedules>
         <Text typo='h2'>다가오는 일정</Text>
-
       </UpcomingSchedules>
       <UpcomingScheduleList schedules={schedules} />
     </Flex>

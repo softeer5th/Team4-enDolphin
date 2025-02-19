@@ -1,5 +1,9 @@
 import { WEEK_MAP } from '@/constants/date';
 
+import { formatMinutesToTimeString } from './format';
+
+export const DAY_IN_MILLISECONDS = 24 * 60 * 60 * 1000;
+
 const SUNDAY_CODE = 0;
 const SATURDAY_CODE = 6;
 
@@ -186,17 +190,6 @@ export const getDateParts = (date: Date) => ({
   day: date.getDate(),
 });
 
-export const getDateRangeString = (startDate: Date, endDate: Date): string => {
-  const { year: startY, month: startM, day: startD } = getDateParts(startDate);
-  const { year: endY, month: endM, day: endD } = getDateParts(endDate);
-
-  const isSameYear = startY !== endY;
-  const format = (year: number, month: number, day: number): string =>
-    isSameYear ? `${year}년 ${month + 1}월 ${day}일` : `${month + 1}월 ${day}일`;
-
-  return `${format(startY, startM, startD)} ~ ${format(endY, endM, endD)}`;
-};
-
 /**
  * 날짜 객체를 year, month, day로 분리합니다.
  * @param date - 날짜 객체
@@ -217,3 +210,35 @@ export const isAllday = (startDate: Date | null, endDate: Date | null): boolean 
   return endDate.getTime() - startDate.getTime() >= ALL_DAY;
 };
 
+export const getDateRangeString = (startDate: Date, endDate: Date): string => {
+  const { year: startY, month: startM, day: startD } = getDateParts(startDate);
+  const { year: endY, month: endM, day: endD } = getDateParts(endDate);
+
+  const isSameYear = startY !== endY;
+  const format = (year: number, month: number, day: number): string =>
+    isSameYear ? `${year}년 ${month + 1}월 ${day}일` : `${month + 1}월 ${day}일`;
+
+  return `${format(startY, startM, startD)} ~ ${format(endY, endM, endD)}`;
+};
+
+export const getDateTimeRangeString = (start: Date, end: Date): string => {
+  const { month: startMonth, day: startDay } = getYearMonthDay(start);
+  const { month: endMonth, day: endDay } = getYearMonthDay(end);
+
+  const startMinutes = start.getHours() * 60 + start.getMinutes();
+  const endMinutes = end.getHours() * 60 + end.getMinutes();
+
+  const startTime = formatMinutesToTimeString(startMinutes);
+  const endTime = formatMinutesToTimeString(endMinutes);
+
+  if (startMonth === endMonth && startDay === endDay) {
+    return `${startMonth}월 ${startDay}일 ${startTime} ~ ${endTime}`;
+  } 
+  return `${startMonth}월 ${startDay}일 ${startTime} ~ ${endMonth}월 ${endDay}일 ${endTime}`;
+};
+
+export const getDday = (date: Date): number => {
+  const today = new Date();
+  const diff = date.getTime() - today.getTime();
+  return Math.floor(diff / DAY_IN_MILLISECONDS);
+};

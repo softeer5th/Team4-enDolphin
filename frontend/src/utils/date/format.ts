@@ -1,4 +1,4 @@
-import { getYearMonthDay } from './date';
+import { getDday, getYearMonthDay } from './date';
 import { HOUR } from './time';
 
 /**
@@ -29,6 +29,7 @@ export const formatTimeToColonString = (date: Date | null): string => {
   const minutes = date.getMinutes();
   return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
 };
+
 export const formatDateToTimeString = (date: Date | null): string => {
   if (!date) return '';
 
@@ -91,4 +92,12 @@ export const formatTimeStringToLocaleString = (timeString: string): string => {
   if (!minutes) return `${hours}시`;
   
   return `${hours}시 ${minutes}분`;
+};
+
+export const formatDateToDdayString = (date: Date): string => {
+  const diffDays = getDday(date);
+
+  if (diffDays === 0) return 'D-Day';
+  if (diffDays > 0) return `D-${diffDays}`;
+  return `D+${Math.abs(diffDays)}`;
 };

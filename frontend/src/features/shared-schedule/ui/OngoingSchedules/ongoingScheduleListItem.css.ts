@@ -9,6 +9,7 @@ export const scheduleItemContainerStyle = recipe({
     padding: `${vars.spacing[400]} ${vars.spacing[600]}`,
     borderRadius: vars.radius[500],
     cursor: 'pointer',
+    height: '5rem',
   },
   variants: {
     selected: {

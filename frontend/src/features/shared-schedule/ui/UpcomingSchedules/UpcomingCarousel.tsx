@@ -1,9 +1,10 @@
 
+import type { UpcomingSchedule } from '../../model';
 import ScheduleCard from './ScheduleCard';
 import { carouselStyle, carouselTrackStyle } from './UpcomingCarousel.css';
 
 interface UpcomingCarouselProps {
-  schedules: object[];
+  schedules: UpcomingSchedule[];
   offsetX: number;
 }
 
@@ -13,8 +14,12 @@ const UpcomingCarousel = ({ schedules, offsetX }: UpcomingCarouselProps) => (
       className={carouselTrackStyle}
       style={{ transform: `translateX(${offsetX}px)` }}
     >
-      {schedules.map((_, index) => (
-        <ScheduleCard key={index} selected={false} />
+      {schedules.map((schedule) => (
+        <ScheduleCard
+          key={schedule.id}
+          latest={false}
+          schedule={schedule}
+        />
       ))}
     </div>
   </div>

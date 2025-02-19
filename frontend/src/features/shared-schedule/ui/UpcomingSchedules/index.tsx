@@ -1,30 +1,32 @@
-import { Link } from '@tanstack/react-router';
 import type { PropsWithChildren } from 'react';
 
 import { Flex } from '@/components/Flex';
 import { useCarouselControl } from '@/hooks/useCarousel';
 
+import { useUpcomingQuery } from '../../api/queries';
+import UpcomingFallback from '../Fallbacks/UpcomingFallback';
 import ControlButtons from './ControlButton';
 import { containerStyle } from './index.css';
 import UpcomingCarousel from './UpcomingCarousel';
 
-interface UpcomingSchedulesProps extends PropsWithChildren {
-  schedules: object[];
-}
-
-const UpcomingSchedules = ({ schedules, children }: UpcomingSchedulesProps) => {
+const UpcomingSchedules = ({ children }: PropsWithChildren) => {
+  const { data, isPending } = useUpcomingQuery();
+  const schedules = data?.data ?? [];
+  
   const { offsetX, translateCarousel, canTranslateLeft, canTranslateRight } = useCarouselControl({ 
     totalCards: schedules.length,
   });
+
+  if (isPending) return <div>pending...</div>;
+  if (schedules.length === 0) return <UpcomingFallback />;
+
   return (
     <Flex
-      as={Link}
       className={containerStyle}
       direction='column'
       gap={700}
       height={448}
       justify='space-between'
-      to='/discussion/1'
       width='full'
     > 
       <Flex justify='space-between' width='full'>

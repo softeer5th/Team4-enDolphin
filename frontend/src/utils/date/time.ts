@@ -1,5 +1,6 @@
 export const HOUR = 60;
 const HOUR_IN_MILLISECONDS = 1000 * 60 * 60;
+export const MINUTE_IN_MILLISECONDS = 60000;
 
 export const formatDateToTimeString = (date: Date | null): string => {
   if (!date) return '';
@@ -51,4 +52,31 @@ export const getHourDiff = (startTime: Date, endTime: Date, ignoreDateDiff = tru
   } 
   const diffMilliseconds = endTime.getTime() - startTime.getTime();
   return Math.floor(diffMilliseconds / HOUR_IN_MILLISECONDS);
+};
+
+export interface Time {
+  hour: number;
+  minute: number;
+  second?: number;
+}
+
+export const parseTime = (timeStr: string): Time => {
+  const parts = timeStr.trim().split(':');
+  if (parts.length < 2 || parts.length > 3) {
+    throw new Error('parseTime: Invalid time format');
+  }
+
+  const [hourStr, minuteStr, secondStr = '0'] = parts;
+  const hour = Number(hourStr);
+  const minute = Number(minuteStr);
+  const second = Number(secondStr);
+
+  if (isNaN(hour) || isNaN(minute) || isNaN(second)) {
+    throw new Error('parseTime: Invalid numeric values in time string');
+  }
+  if (hour < 0 || hour > 23) throw new Error('parseTime: Hour must be between 0 and 23');
+  if (minute < 0 || minute > 59) throw new Error('parseTime: Minute must be between 0 and 59');
+  if (second < 0 || second > 59) throw new Error('parseTime: Second must be between 0 and 59');
+
+  return { hour, minute, second };
 };
