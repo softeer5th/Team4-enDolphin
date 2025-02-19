@@ -70,7 +70,7 @@ public class CandidateEventServiceTest {
         when(discussionService.getDiscussionById(discussionId)).thenReturn(discussion);
 
         // 참가자 관련 스텁: 필터값과 사용자 목록 (여기서는 빈 리스트)
-        when(discussionParticipantService.getFilter(eq(discussionId), anyList()))
+        when(discussionParticipantService.getFilter(anyList(), anyMap()))
             .thenReturn(0xFFFF);
         when(discussionParticipantService.getUsersFromData(anyInt(), discussionParticipantService.getUserOffsetsMap(discussionId)))
             .thenReturn(Collections.emptyList());

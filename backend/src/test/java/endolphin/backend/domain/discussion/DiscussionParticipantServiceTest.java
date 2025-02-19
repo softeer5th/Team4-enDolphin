@@ -188,12 +188,16 @@ class DiscussionParticipantServiceTest {
         List<Long> userIds = Arrays.asList(1L, 2L, 3L);
         List<Long> offsets = Arrays.asList(0L, 3L, 8L);
 
-        given(discussionParticipantRepository.findOffsetsByDiscussionIdAndUserIds(discussionId,
-            userIds))
-            .willReturn(offsets);
+        given(discussionParticipantRepository.findUserIdNameDtosWithOffset(discussionId))
+            .willReturn(Arrays.asList(
+                new Object[]{3L, new UserIdNameDto(2L, "User2")},
+                new Object[]{0L, new UserIdNameDto(1L, "User1")},
+                new Object[]{8L, new UserIdNameDto(3L, "User3")}
+            ));
 
         // When
-        int filter = discussionParticipantService.getFilter(discussionId, userIds);
+        int filter = discussionParticipantService.getFilter(userIds,
+            discussionParticipantService.getUserOffsetsMap(discussionId));
 
         // Then
         int expectedFilter = (1 << 15) | (1 << 12) | (1 << 7); // 0, 3, 8에 해당하는 비트만 1인 필터

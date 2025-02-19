@@ -135,7 +135,13 @@ public class DiscussionParticipantRepositoryTest {
     @Test
     public void testFindOffsetsByDiscussionIdAndUserIds() {
         List<Long> userIds = Arrays.asList(user1.getId(), user3.getId());
-        List<Long> offsets = discussionParticipantRepository.findOffsetsByDiscussionIdAndUserIds(discussion.getId(), userIds);
+        List<Object[]> offsetAndUserIdNameDtos = discussionParticipantRepository.findUserIdNameDtosWithOffset(
+            discussion.getId());
+
+        List<Long> offsets = offsetAndUserIdNameDtos.stream()
+            .filter(row -> userIds.contains(((UserIdNameDto) row[1]).id()))
+            .map(row -> (Long) row[0])
+            .toList();
         assertThat(offsets).containsExactlyInAnyOrder(0L, 2L);
     }
 
