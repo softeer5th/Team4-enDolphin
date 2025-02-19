@@ -1,4 +1,3 @@
-import { useQueryClient } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 import { useEffect } from 'react';
 
