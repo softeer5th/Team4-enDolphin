@@ -95,7 +95,7 @@ public class DiscussionParticipantService {
     }
 
     @Transactional(readOnly = true)
-    public int getFilter(Long discussionId, List<Long> userIds) {
+    public int getFilter(List<Long> userIds, Map<Long, UserIdNameDto> usersMap) {
 
         if (userIds == null) {
             return 0XFFFF;
@@ -105,16 +105,11 @@ public class DiscussionParticipantService {
             return 0;
         }
 
-        List<Long> userOffsets = discussionParticipantRepository.findOffsetsByDiscussionIdAndUserIds(
-            discussionId, userIds);
-
-        int filter = 0;
-
-        for (Long offset : userOffsets) {
-            filter |= (1 << MAX_PARTICIPANT - offset);
-        }
-
-        return filter;
+        return usersMap.entrySet().stream()
+            .filter(entry -> userIds.contains(entry.getValue().id()))
+            .map(Map.Entry::getKey)
+            .mapToInt(offset -> 1 << (MAX_PARTICIPANT - offset))
+            .reduce(0, (a, b) -> a | b);
     }
 
     @Transactional(readOnly = true)
