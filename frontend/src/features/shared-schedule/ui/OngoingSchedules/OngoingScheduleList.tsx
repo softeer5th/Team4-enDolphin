@@ -15,16 +15,16 @@ export const ONGOING_PAGE_SIZE = 6;
 
 interface OngoingScheduleListProps {
   segmentOption: OngoingSegmentOption;
+  selectedId: number;
   onSelect: (discussionId: number) => void;
 }
 
-const OngoingScheduleList = ({ segmentOption, onSelect }: OngoingScheduleListProps) => {
+const OngoingScheduleList = ({ segmentOption, selectedId, onSelect }: OngoingScheduleListProps) => {
   const queryClient = useQueryClient();
   const { currentPage, onPageChange } = usePagination(1);
   const { data, isPending } = useOngoingQuery(currentPage, ONGOING_PAGE_SIZE, segmentOption.value);
   if (isPending) return <div>pending...</div>;
   if (!data || data.ongoingDiscussions.length === 0) return <div>no data available</div>;
-  const schedules = data.ongoingDiscussions;
   return (
     <Flex
       direction='column'
@@ -38,23 +38,24 @@ const OngoingScheduleList = ({ segmentOption, onSelect }: OngoingScheduleListPro
         justify='flex-start'
         width='full'
       >
-        {schedules.map((schedule, index) => (
+        {data.ongoingDiscussions.map((schedule, index) => (
           <OngoingScheduleListItem
             key={index}
             onSelect={(id) => onSelect(id)}
             schedule={schedule}
-            selected={false}
+            selected={selectedId === schedule.discussionId}
           />))}
       </Flex>
-      <Pagination
-        className={paginationStyle}
-        currentPage={currentPage}
-        onPageButtonHover={(page) => prefetchOngoingSchedules(
-          queryClient, page, ONGOING_PAGE_SIZE, segmentOption.value,
-        )}
-        onPageChange={onPageChange}
-        totalPages={data.totalPages}
-      />
+      {data.totalPages > 0 && 
+        <Pagination
+          className={paginationStyle}
+          currentPage={currentPage}
+          onPageButtonHover={(page) => prefetchOngoingSchedules(
+            queryClient, page, ONGOING_PAGE_SIZE, segmentOption.value,
+          )}
+          onPageChange={onPageChange}
+          totalPages={data.totalPages}
+        />}
     </Flex>
   );
 };

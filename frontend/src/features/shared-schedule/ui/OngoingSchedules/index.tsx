@@ -59,8 +59,9 @@ const Content = () => {
         <SegmentControl.Content key={`${option.value}-${idx}`} value={option.value}>
           <div className={mainContainerStyle} >
             <OngoingScheduleList 
-              onSelect={(id) => setSelectedDiscussionId(id)} 
-              segmentOption={option}
+              onSelect={(id) => setSelectedDiscussionId(id)}
+              segmentOption={option} 
+              selectedId={selectedDiscussionId}
             />
             <ScheduleContents discussionId={selectedDiscussionId} />
           </div>
