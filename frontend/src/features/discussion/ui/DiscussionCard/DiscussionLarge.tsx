@@ -51,7 +51,7 @@ const DiscussionContents = (
 );
 
 export const DiscussionLarge = (
-  { discussion, rank, onClick }: { discussion: DiscussionDTO; rank: number; onClick: () => void },
+  { discussion, rank }: { discussion: DiscussionDTO; rank: number },
 ) => {
   const ADJUSTMENT_LENGTH = discussion.usersForAdjust.length;
   const isRecommend = ADJUSTMENT_LENGTH === 0;
@@ -60,7 +60,6 @@ export const DiscussionLarge = (
       className={largeContainerStyle}
       direction='column'
       gap={800}
-      onClick={onClick}
       width='100%'
     >
       <Flex direction='column' gap={300}>
