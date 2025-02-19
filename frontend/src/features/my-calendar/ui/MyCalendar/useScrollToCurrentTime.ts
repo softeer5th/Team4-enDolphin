@@ -10,10 +10,10 @@ export const useScrollToCurrentTime = () => {
   useEffect(() => {
     if (tableRef.current) {
       const { hour, minute } = getTimeParts(new Date());
-      const offset = (hour + minute / 60) * TIME_HEIGHT + 8;
+      const offset = (hour + minute / 60) * TIME_HEIGHT + 16;
       heightRef.current = offset;
       tableRef.current.scrollTo({
-        top: heightRef.current / 2,
+        top: heightRef.current - 5 * TIME_HEIGHT,
         behavior: 'smooth',
       });
     }
