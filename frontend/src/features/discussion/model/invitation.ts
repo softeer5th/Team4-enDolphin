@@ -15,7 +15,9 @@ export const InvitationResponseSchema = z.object({
 });
 
 export const InvitationJoinRequestSchema = z.object({
-  password: z.string().regex(/^\d{4,6}$/, 'Password must be a 4 to 6 digit number'),
+  password: z.string()
+    .regex(/^\d{4,6}$/, 'Password must be a 4 to 6 digit number')
+    .nullable(),
 });
 
 export const InvitationJoinResponseSchema = z.object({

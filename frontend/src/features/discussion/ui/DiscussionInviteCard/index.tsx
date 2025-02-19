@@ -43,7 +43,7 @@ const DiscussionInviteCard = ({
   const { addNoti } = useSafeContext(NotificationContext);
   const handleJoinClick = () => {
     mutate(
-      { body: { discussionId, password: password } },
+      { body: { discussionId, password: password === '' ? undefined : password } },
       {
         onSuccess: (data) => {
           if (data.isSuccess) {
