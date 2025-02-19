@@ -69,10 +69,9 @@ public class PersonalEvent extends BaseTimeEntity {
         this.isAdjustable = personalEventRequest.isAdjustable();
     }
 
-    public void update(LocalDateTime startDateTime, LocalDateTime endDateTime, String title) {
-        this.startTime = startDateTime;
-        this.endTime = endDateTime;
-        this.title = title;
+    public void update(String googleEventId, String calendarId) {
+        this.googleEventId = googleEventId;
+        this.calendarId = calendarId;
     }
 
     public PersonalEvent copy() {

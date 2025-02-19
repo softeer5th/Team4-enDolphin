@@ -71,15 +71,15 @@ public class PersonalEventService {
             .isAdjustable(request.isAdjustable())
             .user(user)
             .build();
-
+        
         PersonalEvent result = personalEventRepository.save(personalEvent);
-
+        
         if (request.syncWithGoogleCalendar()) {
             personalEvent.setGoogleEventId(IdGenerator.generateId(user.getId()));
             personalEvent.setCalendarId(PRIMARY);
             eventPublisher.publishEvent(new InsertPersonalEvent(List.of(personalEvent)));
         }
-        
+
         List<Discussion> discussions = discussionParticipantService.getDiscussionsByUserId(
             user.getId());
 
@@ -129,7 +129,7 @@ public class PersonalEventService {
 
         if (request.syncWithGoogleCalendar()) {
             if (result.getGoogleEventId() == null) {
-                eventPublisher.publishEvent(new InsertPersonalEvent(List.of(result)));
+                eventPublisher.publishEvent(new InsertPersonalEvent(List.of(personalEvent)));
             } else {
                 eventPublisher.publishEvent(new UpdatePersonalEvent(result));
             }
@@ -145,6 +145,10 @@ public class PersonalEventService {
         PersonalEvent oldEvent = personalEvent.copy();
 
         personalEvent.update(request);
+
+        if (request.syncWithGoogleCalendar()) {
+            personalEvent.update(IdGenerator.generateId(user.getId()), PRIMARY);
+        }
 
         if (isChanged(personalEvent, request)) {
             discussions.forEach(discussion -> {
