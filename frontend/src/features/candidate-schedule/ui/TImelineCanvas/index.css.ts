@@ -71,7 +71,7 @@ export const timelineBlockStyle = recipe({
         backgroundColor: vars.color.Ref.Red[50],
         borderColor: vars.color.Ref.Red[100],
       },
-      notInRange: {
+      outOfRange: {
         backgroundColor: vars.color.Ref.Netural[100],
         borderColor: vars.color.Ref.Netural[200],
       },

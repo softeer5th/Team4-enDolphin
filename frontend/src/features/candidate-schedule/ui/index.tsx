@@ -2,41 +2,43 @@ import { Flex } from '@/components/Flex';
 import { Close } from '@/components/Icon';
 import { vars } from '@/theme/index.css';
 
-import type { CandidateScheduleGetResponse, Participant } from '../model';
-import { mockedCandidateScheduleGetResponse } from '../model';
+import { useCandidateDetailQuery } from '../api/queries';
+import type { CandidateDetailResponse, Participant } from '../model';
 import Header from './Header';
 import { containerStyle, contentContainerStyle, topBarStyle } from './index.css';
 import TimelineContent from './TimelineContent';
 import { splitParticipantsBySelection } from './timelineHelper';
 
 // TODO: 라우팅 param 정의 위치 옮기기
-interface CandidateScheduleDetailParams {
+interface CandidateScheduleDetailProps {
   adjustCount: number;
-  startTime: Date;
-  endTime: Date;
+  discussionId: number;
+  startDateTime: Date;
+  endDateTime: Date;
+  selectedParticipantIds: number[];
 }
 
-const CandidateScheduleDetail = () => {
-  const mockData = mockedCandidateScheduleGetResponse;
-  const mockRouteParams = {
-    adjustCount: 1,
-    startTime: mockData.startDateTime,
-    endTime: mockData.endDateTime,
-    selectedParticipantIds: [1, 3, 4, 5, 6, 7, 8],
-  };
+const CandidateScheduleDetail = ({ 
+  adjustCount, discussionId, startDateTime, endDateTime, selectedParticipantIds,
+}: CandidateScheduleDetailProps) => {
+  const { data, isPending } = useCandidateDetailQuery(
+    discussionId, startDateTime, endDateTime, selectedParticipantIds,
+  );
+  if (isPending) return <div>Pending...</div>;
+  if (!data) return <div>data is undefined or null</div>;
   const { selectedParticipants, ignoredParticipants } = splitParticipantsBySelection(
-    mockData.participants, 
-    mockRouteParams.selectedParticipantIds,
+    data.participants, 
+    selectedParticipantIds,
   );
 
   return (
     <Flex className={containerStyle} direction='column'>
       <TopBar />
       <Content
+        adjustCount={adjustCount}
         ignoredParticipants={ignoredParticipants}
         selectedParticipants={selectedParticipants}
-        {...mockData}
-        {...mockRouteParams}
+        {...data}
       />
     </Flex>
   );
@@ -56,22 +58,28 @@ const TopBar = () => (
   </Flex>
 );
 
-interface ContentProps extends CandidateScheduleGetResponse, CandidateScheduleDetailParams {
+interface ContentProps extends CandidateDetailResponse {
+  adjustCount: number;
   selectedParticipants: Participant[];
   ignoredParticipants: Participant[];
 }
 
-const Content = ({ selectedParticipants, ignoredParticipants, ...props }: ContentProps) => (
+const Content = ({ 
+  adjustCount,
+  selectedParticipants,
+  ignoredParticipants,
+  ...props 
+}: ContentProps) => (
   <Flex
     className={contentContainerStyle}
     direction='column'
     justify='flex-start'
     width='full'
   >
-    <Header {...props} />
+    <Header adjustCount={adjustCount} {...props} />
     <TimelineContent
-      conflictEnd={props.endTime}
-      conflictStart={props.startTime} 
+      conflictEnd={props.endDateTime}
+      conflictStart={props.startDateTime} 
       ignoredParticipants={ignoredParticipants}
       selectedParticipants={selectedParticipants}
     />

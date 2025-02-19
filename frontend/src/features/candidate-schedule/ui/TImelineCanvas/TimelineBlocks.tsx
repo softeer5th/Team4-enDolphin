@@ -2,10 +2,10 @@ import { Flex } from '@/components/Flex';
 
 import type { Participant, ScheduleEvent } from '../../model';
 import { calculateBlockStyle } from '../timelineHelper';
-import { 
+import {
   timelineBlockContainerStyle,
-  timelineBlockRowStyle, 
-  timelineBlockStyle, 
+  timelineBlockRowStyle,
+  timelineBlockStyle,
 } from './index.css';
 
 const TimelineBlocks = ({ participants, gridStart }: {

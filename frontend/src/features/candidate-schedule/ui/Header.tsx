@@ -4,10 +4,10 @@ import { Text } from '@/components/Text';
 import { vars } from '@/theme/index.css';
 import { formatTimeToColonString } from '@/utils/date/format';
 
-const Header = ({ adjustCount, startTime, endTime }: {
+const Header = ({ adjustCount, startDateTime, endDateTime }: {
   adjustCount: number;
-  startTime: Date;
-  endTime: Date;
+  startDateTime: Date;
+  endDateTime: Date;
 }) => (
   <Flex
     align='center'
@@ -16,8 +16,8 @@ const Header = ({ adjustCount, startTime, endTime }: {
   >
     <HeaderTextInfo
       adjustCount={adjustCount}
-      endTime={endTime}
-      startTime={startTime}
+      endTime={endDateTime}
+      startTime={startDateTime}
     />
     <Flex
       align='center'
