@@ -11,6 +11,7 @@ export const candidateDetailQueryOption = (
 ) => ({
   queryKey: candidateDetailQueryKey(discussionId, startDateTime, endDateTime, selectedUserIdList),
   queryFn: () => candidateDetailApi.getCandidateScheduleDetail(
-    discussionId, startDateTime, endDateTime, selectedUserIdList),
+    discussionId, startDateTime, endDateTime, selectedUserIdList,
+  ),
   cacheTime: 1 * MINUTE_IN_MILLISECONDS,
 });
