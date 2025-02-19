@@ -8,7 +8,13 @@ import { createRoot } from 'react-dom/client';
 
 import { routeTree } from './routeTree.gen';
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: Infinity,
+    },
+  },
+});
 
 const router = createRouter({ 
   routeTree,
