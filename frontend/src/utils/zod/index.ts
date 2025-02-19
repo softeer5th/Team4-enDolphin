@@ -10,3 +10,4 @@ export const zTime = z.string().regex(TIME)
 
 const datelike = z.union([z.number(), z.string(), z.date()]);
 export const zCoerceToDate = datelike.pipe(z.coerce.date());
+

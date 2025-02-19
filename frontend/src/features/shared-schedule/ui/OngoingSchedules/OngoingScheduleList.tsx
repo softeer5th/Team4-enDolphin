@@ -20,12 +20,11 @@ interface OngoingScheduleListProps {
 
 const OngoingScheduleList = ({ segmentOption, onSelect }: OngoingScheduleListProps) => {
   const queryClient = useQueryClient();
-  const paginationProps = usePagination(1);
-  const { data, isPending } = useOngoingQuery(1, ONGOING_PAGE_SIZE, segmentOption.value);
+  const { currentPage, onPageChange } = usePagination(1);
+  const { data, isPending } = useOngoingQuery(currentPage, ONGOING_PAGE_SIZE, segmentOption.value);
   if (isPending) return <div>pending...</div>;
   if (!data || data.ongoingDiscussions.length === 0) return <div>no data available</div>;
   const schedules = data.ongoingDiscussions;
-
   return (
     <Flex
       direction='column'
@@ -49,10 +48,11 @@ const OngoingScheduleList = ({ segmentOption, onSelect }: OngoingScheduleListPro
       </Flex>
       <Pagination
         className={paginationStyle}
-        {...paginationProps}
+        currentPage={currentPage}
         onPageButtonHover={(page) => prefetchOngoingSchedules(
           queryClient, page, ONGOING_PAGE_SIZE, segmentOption.value,
         )}
+        onPageChange={onPageChange}
         totalPages={data.totalPages}
       />
     </Flex>
