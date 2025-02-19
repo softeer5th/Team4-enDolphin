@@ -28,9 +28,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.codec.binary.Base32;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -74,13 +72,14 @@ public class PersonalEventService {
             .user(user)
             .build();
 
+        PersonalEvent result = personalEventRepository.save(personalEvent);
+
         if (request.syncWithGoogleCalendar()) {
             personalEvent.setGoogleEventId(IdGenerator.generateId(user.getId()));
             personalEvent.setCalendarId(PRIMARY);
             eventPublisher.publishEvent(new InsertPersonalEvent(List.of(personalEvent)));
         }
-        PersonalEvent result = personalEventRepository.save(personalEvent);
-
+        
         List<Discussion> discussions = discussionParticipantService.getDiscussionsByUserId(
             user.getId());
 
@@ -170,13 +169,13 @@ public class PersonalEventService {
             personalEventPreprocessor.preprocessOne(personalEvent, discussion, user, false);
         });
 
+        personalEventRepository.delete(personalEvent);
+
         if (syncWithGoogleCalendar
             && personalEvent.getGoogleEventId() != null
             && personalEvent.getCalendarId() != null) {
             eventPublisher.publishEvent(new DeletePersonalEvent(personalEvent));
         }
-
-        personalEventRepository.delete(personalEvent);
     }
 
     @Transactional(readOnly = true)

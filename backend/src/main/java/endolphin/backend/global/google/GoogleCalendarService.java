@@ -67,7 +67,8 @@ public class GoogleCalendarService {
             Calendar calendar = calendarService.createCalendar(googleCalendarDto, user);
             List<GoogleEvent> events = getCalendarEvents(googleCalendarDto.id(), user);
 
-            eventPublisher.publishEvent(new GoogleEventChanged(events, user, calendar.getCalendarId()));
+            eventPublisher.publishEvent(
+                new GoogleEventChanged(events, user, calendar.getCalendarId()));
             subscribeToCalendar(calendar, user);
         }
     }
@@ -79,10 +80,12 @@ public class GoogleCalendarService {
     }
 
     public void insertPersonalEventToGoogleCalendar(PersonalEvent personalEvent) {
-        String eventUrl = googleCalendarUrl.eventsUrl().replace("{calendarId}", personalEvent.getCalendarId());
+        String eventUrl = googleCalendarUrl.eventsUrl()
+            .replace("{calendarId}", personalEvent.getCalendarId());
         User user = personalEvent.getUser();
 
-        GoogleEventRequest body = GoogleEventRequest.of(personalEvent, personalEvent.getGoogleEventId());
+        GoogleEventRequest body = GoogleEventRequest.of(personalEvent,
+            personalEvent.getGoogleEventId());
 
         try {
             restClient.post()
@@ -91,13 +94,15 @@ public class GoogleCalendarService {
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .body(body)
                 .exchange((request, response) -> {
-                    if (!response.getStatusCode().is2xxSuccessful()) {
-                        log.error("Invalid request: {}", response.bodyTo(String.class));
+                    if (response.getStatusCode().is2xxSuccessful()) {
+                        return Optional.empty();
                     }
+                    log.error("Invalid request: {}", response.bodyTo(String.class));
                     if (response.getStatusCode().isSameCodeAs(HttpStatus.UNAUTHORIZED)) {
                         throw new OAuthException(ErrorCode.OAUTH_UNAUTHORIZED_ERROR);
                     }
-                    return Optional.empty();
+                    throw new CalendarException((HttpStatus) response.getStatusCode(),
+                        response.bodyTo(String.class));
                 });
 
         } catch (OAuthException e) {
@@ -115,7 +120,8 @@ public class GoogleCalendarService {
         User user = personalEvent.getUser();
         String token = user.getAccessToken();
 
-        GoogleEventRequest body = GoogleEventRequest.of(personalEvent, personalEvent.getGoogleEventId());
+        GoogleEventRequest body = GoogleEventRequest.of(personalEvent,
+            personalEvent.getGoogleEventId());
         try {
             restClient.put()
                 .uri(eventUrl)
@@ -123,13 +129,15 @@ public class GoogleCalendarService {
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .body(body)
                 .exchange((request, response) -> {
-                    if (!response.getStatusCode().is2xxSuccessful()) {
-                        log.error("Invalid request: {}", response.bodyTo(String.class));
+                    if (response.getStatusCode().is2xxSuccessful()) {
+                        return Optional.empty();
                     }
+                    log.error("Invalid request: {}", response.bodyTo(String.class));
                     if (response.getStatusCode().isSameCodeAs(HttpStatus.UNAUTHORIZED)) {
                         throw new OAuthException(ErrorCode.OAUTH_UNAUTHORIZED_ERROR);
                     }
-                    return Optional.empty();
+                    throw new CalendarException((HttpStatus) response.getStatusCode(),
+                        response.bodyTo(String.class));
                 });
 
         } catch (OAuthException e) {
@@ -150,19 +158,21 @@ public class GoogleCalendarService {
                 .uri(eventUrl)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                 .exchange((request, response) -> {
-                    if (!response.getStatusCode().is2xxSuccessful()) {
-                        log.error("Invalid request: {}", response.bodyTo(String.class));
+                    if (response.getStatusCode().is2xxSuccessful()) {
+                        return Optional.empty();
                     }
+                    log.error("Invalid request: {}", response.bodyTo(String.class));
                     if (response.getStatusCode().isSameCodeAs(HttpStatus.UNAUTHORIZED)) {
                         throw new OAuthException(ErrorCode.OAUTH_UNAUTHORIZED_ERROR);
                     }
-                    return Optional.empty();
+                    throw new CalendarException((HttpStatus) response.getStatusCode(),
+                        response.bodyTo(String.class));
                 });
 
         } catch (OAuthException e) {
             String accessToken = googleOAuthService.reissueAccessToken(user.getRefreshToken());
             userService.updateAccessToken(user, accessToken);
-            updatePersonalEventToGoogleCalendar(personalEvent);
+            deletePersonalEventFromGoogleCalender(personalEvent);
         }
     }
 
@@ -403,7 +413,6 @@ public class GoogleCalendarService {
 
                 User user = userService.getUser(userId);
                 List<GoogleEvent> events = syncWithCalendar(calendarId, user);
-//                personalEventService.syncWithGoogleEvents(events, user, calendarId);
                 eventPublisher.publishEvent(new GoogleEventChanged(events, user, calendarId));
             } else {
                 throw new CalendarException(HttpStatus.BAD_REQUEST,

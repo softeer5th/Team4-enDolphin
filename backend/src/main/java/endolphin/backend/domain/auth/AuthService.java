@@ -43,8 +43,6 @@ public class AuthService {
         validateUserInfo(userInfo);
         User user = userService.upsertUser(userInfo, tokenResponse);
 
-//        googleCalendarService.upsertGoogleCalendar(user);
-
         String accessToken = jwtProvider.createToken(user.getId(), user.getEmail());
         LocalDateTime expiredAt = LocalDateTime.now().plus(expired, ChronoUnit.MILLIS);
 
