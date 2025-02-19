@@ -37,12 +37,11 @@ export const Checkbox = ({
     useCheckbox({ value, defaultChecked, type, isChecked, onToggleCheck });
 
   return(
-    <div className={containerStyle}>
+    <label className={containerStyle} htmlFor={id}>
       <span className={checkboxStyle({ size, style: checked ? 'selected' : 'rest' })}>
         {checked && <Check clickable width={16} />}
       </span>
       <CheckboxLabel
-        id={id}
         size={size}
         style={checked ? 'selected' : 'rest'}
       >
@@ -54,6 +53,6 @@ export const Checkbox = ({
         id={id}
         inputProps={inputProps}
       />
-    </div>
+    </label>
   ); 
 };

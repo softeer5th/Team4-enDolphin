@@ -2,15 +2,17 @@ import type { PropsWithChildren } from 'react';
 import { useId } from 'react';
 
 import { useSafeContext } from '@/hooks/useSafeContext';
+import clsx from '@/utils/clsx';
 
 import { tabContentStyle } from './index.css';
 import { TabContext } from './TabContext';
 
 interface TabContentProps extends PropsWithChildren {
   value: string;
+  className?: string;
 }
 
-export const TabContent = ({ value, children }: TabContentProps) => {
+export const TabContent = ({ value, className, children }: TabContentProps) => {
   const { controlId, selectedValue, onChange } = useSafeContext(TabContext);
   const defaultId = `${controlId}-item-${useId()}`;
 
@@ -23,7 +25,7 @@ export const TabContent = ({ value, children }: TabContentProps) => {
   if (!isSelected) return null;
   return (
     <section 
-      className={tabContentStyle}
+      className={clsx(className, tabContentStyle)}
       id={defaultId}
       onClick={handleClick}
     >

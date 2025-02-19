@@ -48,12 +48,14 @@ export const formatMinutesToTimeString = (minutes: number): string => {
 
   return `${amOrPm} ${hours}시${minutesString}`;
 };
+
 export const formatNumberToTimeString = (number: number): string => {
   const hours = Math.floor(number / HOUR).toString();
   const minutes = (number % HOUR).toString().padStart(2, '0');
 
   return `${hours}:${minutes}`;
 };
+
 export const formatTimeStringToNumber = (timeString: string): number => {
   const [hours, minutes] = timeString.split(':');
   return Number(hours) * HOUR + Number(minutes);
@@ -82,4 +84,11 @@ export const formatMillisecondsToDDay = (milliseconds: number): number => {
 export const formatBarStringToLocaleString = (dateString: string): string => {
   const [year, month, day] = dateString.split('-');
   return `${year.slice(2)}년 ${month}월 ${day}일`;
+};
+
+export const formatTimeStringToLocaleString = (timeString: string): string => {
+  const [hours, minutes] = timeString.split(':').map(Number);
+  if (!minutes) return `${hours}시`;
+  
+  return `${hours}시 ${minutes}분`;
 };

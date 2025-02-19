@@ -33,9 +33,7 @@ const SegmentControl = ({
   };
 
   return (
-    <SegmentControlContext.Provider 
-      value={{ selectedValue, handleSelect }}
-    >
+    <SegmentControlContext.Provider value={{ selectedValue, handleSelect }}>
       <Flex className={className} direction='column'>
         <Flex
           as='ul'

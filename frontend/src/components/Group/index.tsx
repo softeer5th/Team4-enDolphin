@@ -9,7 +9,7 @@ export interface GroupProps extends PropsWithChildren {
   groupInfos: GroupStateReturn;
   controlId?: string;
   itemIds?: number[];
-  defaultCheckedList?: Set<number>;
+  defaultCheckedList?: number[];
   showAllCheck?: boolean;
 }
   

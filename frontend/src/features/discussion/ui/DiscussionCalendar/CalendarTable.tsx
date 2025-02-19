@@ -1,47 +1,16 @@
 
+import { useParams } from '@tanstack/react-router';
+
 import { useCalendarContext } from '@/components/Calendar/context/CalendarContext';
 import { Flex } from '@/components/Flex';
 import { WEEK } from '@/constants/date';
+import { formatDateToWeekRange } from '@/utils/date';
+import { formatDateToBarString } from '@/utils/date/format';
 
+import { useDiscussionCalendarQuery } from '../../api/queries';
 import type { DiscussionDTO } from '../../model';
-import DiscussionCard from '../DiscussionCard';
-import { calendarTableStyle, dayStyle } from './index.css';
-
-const data: DiscussionDTO[] = [
-  {
-    startDateTime: '2025-02-16',
-    endDateTime: '2025-02-17',
-    usersForAdjust: [],
-  },
-  {
-    startDateTime: '2025-02-20',
-    endDateTime: '2025-02-21',
-    usersForAdjust: [
-      {
-        id: 1,
-        name: '이현영', 
-      },
-      {
-        id: 2,
-        name: '이재영',
-      },
-    ],
-  },
-  {
-    startDateTime: '2025-02-16',
-    endDateTime: '2025-02-17',
-    usersForAdjust: [
-      {
-        id: 3,
-        name: '김동권', 
-      },
-      {
-        id: 4,
-        name: '김동현',
-      },
-    ],
-  },
-];
+import { CalendarDate } from './CalendarDate';
+import { calendarTableStyle } from './index.css';
 
 const groupByDayOfWeek = (data: DiscussionDTO[]) => 
   data.reduce<Map<string, DiscussionDTO[]>>(
@@ -54,8 +23,14 @@ const groupByDayOfWeek = (data: DiscussionDTO[]) =>
   );
 
 export const CalendarTable = () => {
-  const { dates } = useCalendarContext();
-  const groupMap = groupByDayOfWeek(data);
+  const params: { id: string } = useParams({ from: '/_main/discussion/$id' });
+  const { dates, selected } = useCalendarContext();
+  const { startDate, endDate } = formatDateToWeekRange(selected);
+  const { calendar, isLoading } = useDiscussionCalendarQuery(params.id, {
+    startDate: formatDateToBarString(startDate),
+    endDate: formatDateToBarString(endDate),
+    selectedUserIdList: [1],
+  });
 
   return (
     <Flex
@@ -63,28 +38,12 @@ export const CalendarTable = () => {
       height='36.5rem'
       width='100%'
     >
-      {dates.map((date) => {
-        const day = WEEK[date.getDay()];
-        return (
-          <Flex
-            className={dayStyle}
-            direction='column'
-            gap={400}
-            height='100%'
-            justify='flex-start'
-            key={date.getTime()}
-            width='calc(100% / 7)'
-          >
-            {groupMap.get(day)?.map((discussion, idx) =>
-              <DiscussionCard 
-                discussion={discussion}
-                key={`${discussion.startDateTime}-${idx}`}
-                size='sm'
-              />,
-            )}
-          </Flex>
-        );
-      },
+      {!isLoading && dates.map((date) => 
+        <CalendarDate
+          date={date}
+          groupMap={groupByDayOfWeek(calendar || [])}
+          key={date.getTime()}
+        />,
       )}
     </Flex>
   );

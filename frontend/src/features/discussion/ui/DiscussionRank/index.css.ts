@@ -4,11 +4,30 @@ import { recipe } from '@vanilla-extract/recipes';
 import { vars } from '@/theme/index.css';
 
 export const segmentControlStyle = style({
+  height: '100%',
+  overflow: 'hidden',
+  
   paddingTop: vars.spacing[400],
   gap: vars.spacing[500],
+
+  justifyContent: 'flex-start',
+});
+
+export const segmentControlContentsStyle = style({
+  height: '100%',
 });
 
 export const rankContainerStyle = style({
+  height: '100%',
+  justifyContent: 'flex-start',
+
+  overflowY: 'scroll',
+  '::-webkit-scrollbar': {
+    display: 'none',
+  },
+});
+
+export const rankTopStyle = style({
   padding: vars.spacing[400],
   backgroundColor: vars.color.Ref.Netural[100],
 
@@ -23,7 +42,7 @@ export const calendarWrapperStyle = style({
 });
 
 export const tableStyle = style({
-  flexGrow: 1,
+  paddingBottom: '5rem',
 });
 
 export const tableHeaderStyle = style({
@@ -35,7 +54,6 @@ export const tableHeaderStyle = style({
 
 export const tableBodyStyle = style({
   width: '100%',
-  overflowY: 'scroll',
 });
 
 export const tableRowStyle = style({

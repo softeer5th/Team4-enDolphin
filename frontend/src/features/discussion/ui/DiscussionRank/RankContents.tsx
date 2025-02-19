@@ -3,19 +3,20 @@ import { Calendar } from '@/components/Icon';
 
 import type { DiscussionDTO } from '../../model';
 import DiscussionCard from '../DiscussionCard';
-import { calendarWrapperStyle, rankContainerStyle } from './index.css';
+import { calendarWrapperStyle, rankContainerStyle, rankTopStyle } from './index.css';
 import { RankTable } from './RankTable';
 
 export const RankContents = ({ data }: { data: DiscussionDTO[] }) => {
   const TOP_CARD_NUM = 3;
   return (
     <Flex
+      className={rankContainerStyle}
       direction='column'
       gap={400}
       width='100%'
     >
       <Flex
-        className={rankContainerStyle}
+        className={rankTopStyle}
         gap={200}
         width='100%'
       >

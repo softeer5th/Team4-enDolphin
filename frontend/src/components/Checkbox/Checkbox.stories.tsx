@@ -68,7 +68,7 @@ export const ControlledGroupCheck = () => {
   ];
 
   const groupInfos = useGroup({
-    defaultCheckedList: new Set([1, 2]),
+    defaultCheckedList: [1, 2],
     itemIds: members.map(({ id }) => id ),
   });
   
