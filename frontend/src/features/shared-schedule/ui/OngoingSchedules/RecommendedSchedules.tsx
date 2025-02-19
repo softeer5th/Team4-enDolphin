@@ -3,12 +3,14 @@ import { Link } from '@tanstack/react-router';
 import { Chip } from '@/components/Chip';
 import { Flex } from '@/components/Flex';
 import { Text } from '@/components/Text';
-import type { 
-  DiscussionCalendarResponse, 
+import type {
+  DiscussionCalendarResponse,
   DiscussionDTO,
-  DiscussionResponse, 
+  DiscussionResponse,
 } from '@/features/discussion/model';
 import { vars } from '@/theme/index.css';
+import { getHourDiff, getTimeRangeString } from '@/utils/date';
+import { formatKoreanDate } from '@/utils/date/format';
 
 import { recommendContainerStyle, recommendItemStyle } from './recommendedSchedules.css';
 
@@ -20,48 +22,56 @@ const RecommendedSchedules = ({ candidates, discussion }: {
     <Text className={recommendContainerStyle} typo='t2'>추천 일정</Text>
     {candidates.map((candidate, idx) => (
       <RecommendedScheduleItem 
+        adjustCount={candidate.usersForAdjust.length}
         candidate={candidate}
-        discussion={discussion}
-        key={`${JSON.stringify(candidate)}-${idx}`} 
+        discussionId={discussion.id}
+        end={new Date(candidate.endDateTime)}
+        key={`${JSON.stringify(candidate)}-${idx}`}
+        start={new Date(candidate.startDateTime)} 
       />
     ))}
   </Flex>
 );
 
-const RecommendedScheduleItem = ({ candidate, discussion }: {
+const RecommendedScheduleItem = ({ 
+  candidate, discussionId, start, end, adjustCount, 
+}: {
   candidate: DiscussionDTO;
-  discussion: DiscussionResponse;
+  discussionId: number;
+  start: Date;
+  end: Date;
+  adjustCount: number;
 }) => (
   <Link
-    params={{ id: discussion.id.toString() }}
+    className={recommendItemStyle}
+    params={{ id: discussionId.toString() }}
     state={{ candidate: {
       adjustCount: candidate.usersForAdjust.length,
-      startDateTime: new Date(discussion.dateRangeStart),
-      endDateTime: new Date(discussion.dateRangeEnd),
+      startDateTime: start,
+      endDateTime: end,
       selectedParticipantIds: [1],
     } }}
     to={'/discussion/candidate/$id'}
   >
-    <Flex
-      align='center'
-      className={recommendItemStyle}
-      justify='space-between'
-      width='full'
-    >
-      <Flex direction='column' gap={100}>
-        <Text typo='b2M'>12월 11일 목요일</Text>
-        <Text color={vars.color.Ref.Netural[700]} typo='b3R'>오전 11시 ~ 오후 2시 (3시간)</Text>
-      </Flex >
-      <Chip
-        color='blue'
-        radius='max'
-        size='md'
-        style='weak'
-      >
-        모두 가능
-      </Chip>
-    </Flex>
+    <Flex direction='column' gap={100}>
+      <Text typo='b2M'>{formatKoreanDate(start, { year: true })}</Text>
+      <Text color={vars.color.Ref.Netural[700]} typo='b3R'>
+        {`${getTimeRangeString(start, end)} (${getHourDiff(start, end)}시간)`}
+      </Text>
+    </Flex >
+    <AvailableChip adjustCount={adjustCount} />
   </Link>
+);
+
+const AvailableChip = ({ adjustCount }: { adjustCount: number }) => (
+  <Chip
+    color={adjustCount > 0 ? 'red' : 'blue'}
+    radius='max'
+    size='md'
+    style='weak'
+  >
+    {adjustCount > 0 ? `조율 필요 ${adjustCount}` : '모두 가능'}
+  </Chip>
 );
 
 export default RecommendedSchedules;

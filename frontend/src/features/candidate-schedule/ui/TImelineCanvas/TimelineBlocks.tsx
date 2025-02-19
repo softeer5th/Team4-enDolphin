@@ -15,6 +15,7 @@ const TimelineBlocks = ({ participants, gridStart }: {
   <Flex
     className={timelineBlockContainerStyle}
     direction='column'
+    justify='flex-start'
   >
     {participants.map((participant) => (
       <div

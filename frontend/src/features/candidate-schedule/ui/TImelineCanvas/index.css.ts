@@ -8,6 +8,7 @@ export const timelineCanvasStyle = style({
   width: '37.5rem',
   height: 'fit-content',
   overflowX: 'hidden',
+  minHeight: '23.25rem',
 });
 
 export const timelineColumnContainerStyle = style({
@@ -44,6 +45,7 @@ export const timelineBlockContainerStyle = style({
   overflowX: 'hidden',
   flexShrink: 0,
   overflowY: 'hidden',
+  minHeight: '23.25rem',
 });
 
 export const timelineBlockRowStyle = style({
@@ -82,6 +84,7 @@ export const timelineBlockStyle = recipe({
 export const conflictRangeTimeBlockStyle = style({
   position: 'fixed',
   height: '23.25rem',
+  // maxWidth: '100%',
   borderRadius: vars.radius[400],
   border: `1px solid ${vars.color.Ref.Primary[400]}`,
   pointerEvents: 'none',
