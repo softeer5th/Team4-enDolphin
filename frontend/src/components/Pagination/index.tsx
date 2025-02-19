@@ -13,6 +13,7 @@ interface PaginationProps {
   totalPages: number;
   onPageChange: (page: number) => void;
   className?: string;
+  prefetchCallback?: (page: number) => void;
 }
 
 const Pagination = ({

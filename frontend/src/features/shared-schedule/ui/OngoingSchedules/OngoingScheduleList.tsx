@@ -1,15 +1,17 @@
 
-import { useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 
 import { Flex } from '@/components/Flex';
 import Pagination from '@/components/Pagination';
+import { usePagination } from '@/hooks/usePagination';
 
+import { prefetchOngoingSchedules } from '../../api/prefetch';
 import { useOngoingQuery } from '../../api/queries';
 import type { OngoingSegmentOption } from '.';
 import { paginationStyle } from './ongoingScheduleList.css';
 import OngoingScheduleListItem from './OngoingScheduleListItem';
 
-const PAGE_SIZE = 6;
+export const ONGOING_PAGE_SIZE = 6;
 
 interface OngoingScheduleListProps {
   segmentOption: OngoingSegmentOption;
@@ -17,12 +19,13 @@ interface OngoingScheduleListProps {
 }
 
 const OngoingScheduleList = ({ segmentOption, onSelect }: OngoingScheduleListProps) => {
-  const [page, setPage] = useState(1);
-  const { data, isPending } = useOngoingQuery(page, PAGE_SIZE, segmentOption.value);
+  const queryClient = useQueryClient();
+  const paginationProps = usePagination(1);
+  const { data, isPending } = useOngoingQuery(1, ONGOING_PAGE_SIZE, segmentOption.value);
   if (isPending) return <div>pending...</div>;
   if (!data || data.ongoingDiscussions.length === 0) return <div>no data available</div>;
   const schedules = data.ongoingDiscussions;
-
+  
   return (
     <Flex
       direction='column'
@@ -46,8 +49,10 @@ const OngoingScheduleList = ({ segmentOption, onSelect }: OngoingScheduleListPro
       </Flex>
       <Pagination
         className={paginationStyle}
-        currentPage={page}
-        onPageChange={(page)=>setPage(page)}
+        {...paginationProps}
+        prefetchCallback={(page) => prefetchOngoingSchedules(
+          queryClient, page, ONGOING_PAGE_SIZE, segmentOption.value,
+        )}
         totalPages={data.totalPages}
       />
     </Flex>
