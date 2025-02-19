@@ -1,6 +1,6 @@
 import { Badge } from '@/components/Badge';
 import { Flex } from '@/components/Flex';
-import { getDateRangeString, getHourDiff, getMinuteDiff, getTimeRangeString } from '@/utils/date';
+import { getMinuteDiff, getTimeRangeString } from '@/utils/date';
 import { formatDateToString } from '@/utils/date/format';
 
 import { badgeContainerStyle } from './index.css';
