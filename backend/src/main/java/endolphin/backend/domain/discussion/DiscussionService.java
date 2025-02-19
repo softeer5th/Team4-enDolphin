@@ -299,7 +299,9 @@ public class DiscussionService {
 
         User currentUser = userService.getCurrentUser();
 
-        if (hasDiscussionPassword(discussionId) && !checkPassword(discussion, request.password())) {
+        discussionParticipantService.checkAlreadyParticipated(discussionId, currentUser.getId());
+
+        if (discussion.getPassword() != null && !checkPassword(discussion, request.password())) {
             int failedCount = passwordCountService.increaseCount(currentUser.getId(), discussionId);
             return new JoinDiscussionResponse(false, failedCount);
         }
@@ -340,13 +342,5 @@ public class DiscussionService {
         }
 
         return passwordEncoder.matches(discussion.getId(), password, discussion.getPassword());
-    }
-
-    @Transactional(readOnly = true)
-    protected boolean hasDiscussionPassword(Long discussionId) {
-        Discussion discussion = discussionRepository.findById(discussionId)
-            .orElseThrow(() -> new ApiException(ErrorCode.DISCUSSION_NOT_FOUND));
-
-        return discussion.getPassword() != null;
     }
 }
