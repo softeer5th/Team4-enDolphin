@@ -13,13 +13,14 @@ interface PaginationProps {
   totalPages: number;
   onPageChange: (page: number) => void;
   className?: string;
-  prefetchCallback?: (page: number) => void;
+  onPageButtonHover?: (page: number) => void;
 }
 
 const Pagination = ({
   currentPage,
   totalPages,
   onPageChange,
+  onPageButtonHover,
   className,
 }: PaginationProps) => {
   const pages = getPaginationItems(currentPage, totalPages);
@@ -31,6 +32,7 @@ const Pagination = ({
           currentPage={currentPage} 
           item={item} 
           key={index}
+          onHover={onPageButtonHover}
           onPageChange={onPageChange}
         />,
       )}

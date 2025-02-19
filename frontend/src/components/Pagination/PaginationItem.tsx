@@ -11,14 +11,14 @@ interface PaginationItemProps {
   item: PaginationItemType;
   currentPage: number;
   onPageChange: (page: number) => void;
-  prefetchCallback?: (page: number) => void;
+  onHover?: (page: number) => void;
 }
 
 const PaginationItem = ({ 
   item,
   currentPage,
   onPageChange,
-  prefetchCallback,
+  onHover,
 }: PaginationItemProps) => {
   // 구분자 렌더링
   if (item === SEPARATOR) {
@@ -36,7 +36,7 @@ const PaginationItem = ({
       className={paginationItemStyle({ selected: isSelected })}
       key={`page-${item}`}
       onClick={() => onPageChange(item)}
-      onMouseEnter={() => prefetchCallback?.(item)}
+      onMouseEnter={() => onHover?.(item)}
     >
       <Text typo={isSelected ? 't2' : 'b2M'}>{item}</Text>
     </button>

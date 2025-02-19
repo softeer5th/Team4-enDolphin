@@ -7,10 +7,11 @@ import SegmentControl from '@/components/SegmentControl';
 import { Text } from '@/components/Text';
 
 import { sharedScheduleQuerykeys } from '../../api/keys';
+import { prefetchOngoingSchedules } from '../../api/prefetch';
 import type { AttendType, OngoingSchedulesResponse } from '../../model/';
 import OngoingFallback from '../Fallbacks/OngoingFallback';
 import { containerStyle, mainContainerStyle, segmentControlStyle, titleStyle } from './index.css';
-import OngoingScheduleList from './OngoingScheduleList';
+import OngoingScheduleList, { ONGOING_PAGE_SIZE } from './OngoingScheduleList';
 import ScheduleContents from './ScheduleDetails';
 
 export interface OngoingSegmentOption {
@@ -48,6 +49,10 @@ const Content = () => {
     <SegmentControl
       className={segmentControlStyle}
       defaultValue='ALL'
+      onButtonHover={(value) => prefetchOngoingSchedules(
+        // TODO: segmentOption value의 타입을 제네릭으로 지정할 수 있게 구현 (as 변환 리팩토룅)
+        queryClient, 1, ONGOING_PAGE_SIZE, value as AttendType,
+      )}
       segmentOptions={segmentOptions}
     >
       {segmentOptions.map((option, idx) => (

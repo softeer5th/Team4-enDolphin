@@ -7,11 +7,13 @@ import { SegmentControlContext } from './SegmentControlContext';
 interface ControlButtonProps {
   segmentOption: SegmentOption;
   segmentControlStyle: SegmentControlProps['style'];
+  onButtonHover?: (value: string) => void;
 }
 
 const ControlButton = ({ 
   segmentOption, 
   segmentControlStyle,
+  onButtonHover,
 }: ControlButtonProps ) => {
   const { selectedValue, handleSelect } = useSafeContext(SegmentControlContext);
   const { label, value } = segmentOption;
@@ -19,6 +21,7 @@ const ControlButton = ({
     <Button
       as='li'
       onClick={() => handleSelect(value)}
+      onMouseEnter={() => onButtonHover?.(value)}
       radius='max'
       size='lg'
       style={getButtonStyle(selectedValue === value, segmentControlStyle)}

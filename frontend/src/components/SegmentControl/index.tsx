@@ -18,6 +18,7 @@ export interface SegmentControlProps extends PropsWithChildren {
   defaultValue?: string;
   onValueChange?: (value: string) => void;
   className?: string;
+  onButtonHover?: (value: string) => void;
 };
 
 const SegmentControl = ({
@@ -28,9 +29,9 @@ const SegmentControl = ({
   onValueChange,
   children,
   className,
+  onButtonHover,
 }: SegmentControlProps) => {
   const [selectedValue, setSelectedValue] = useState(defaultValue);
-
   const handleSelect = (value: string) => {
     setSelectedValue(value);
     onValueChange?.(value);
@@ -47,6 +48,7 @@ const SegmentControl = ({
           {segmentOptions.map((segmentOption, idx) => (
             <ControlButton 
               key={`${segmentOption.value}-${idx}`}
+              onButtonHover={onButtonHover}
               segmentControlStyle={style}
               segmentOption={segmentOption}
             />

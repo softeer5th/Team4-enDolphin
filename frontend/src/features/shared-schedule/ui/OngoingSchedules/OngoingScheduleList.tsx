@@ -25,7 +25,7 @@ const OngoingScheduleList = ({ segmentOption, onSelect }: OngoingScheduleListPro
   if (isPending) return <div>pending...</div>;
   if (!data || data.ongoingDiscussions.length === 0) return <div>no data available</div>;
   const schedules = data.ongoingDiscussions;
-  
+
   return (
     <Flex
       direction='column'
@@ -50,7 +50,7 @@ const OngoingScheduleList = ({ segmentOption, onSelect }: OngoingScheduleListPro
       <Pagination
         className={paginationStyle}
         {...paginationProps}
-        prefetchCallback={(page) => prefetchOngoingSchedules(
+        onPageButtonHover={(page) => prefetchOngoingSchedules(
           queryClient, page, ONGOING_PAGE_SIZE, segmentOption.value,
         )}
         totalPages={data.totalPages}
