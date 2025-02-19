@@ -188,12 +188,16 @@ class DiscussionParticipantServiceTest {
         List<Long> userIds = Arrays.asList(1L, 2L, 3L);
         List<Long> offsets = Arrays.asList(0L, 3L, 8L);
 
-        given(discussionParticipantRepository.findOffsetsByDiscussionIdAndUserIds(discussionId,
-            userIds))
-            .willReturn(offsets);
+        given(discussionParticipantRepository.findUserIdNameDtosWithOffset(discussionId))
+            .willReturn(Arrays.asList(
+                new Object[]{3L, new UserIdNameDto(2L, "User2")},
+                new Object[]{0L, new UserIdNameDto(1L, "User1")},
+                new Object[]{8L, new UserIdNameDto(3L, "User3")}
+            ));
 
         // When
-        int filter = discussionParticipantService.getFilter(discussionId, userIds);
+        int filter = discussionParticipantService.getFilter(userIds,
+            discussionParticipantService.getUserOffsetsMap(discussionId));
 
         // Then
         int expectedFilter = (1 << 15) | (1 << 12) | (1 << 7); // 0, 3, 8에 해당하는 비트만 1인 필터
@@ -210,20 +214,22 @@ class DiscussionParticipantServiceTest {
         // 위의 data를 바탕으로, 내부에서 생성되는 userOffsets는 [0, 3, 8]이어야 함.
         List<Long> expectedOffsets = Arrays.asList(0L, 3L, 8L);
         List<Long> userIds = Arrays.asList(10L, 20L, 30L);
-        given(discussionParticipantRepository.findUserIdsByDiscussionIdAndOffset(discussionId,
-            expectedOffsets))
-            .willReturn(userIds);
+        given(discussionParticipantRepository.findUserIdNameDtosWithOffset(discussionId))
+            .willReturn(Arrays.asList(
+                new Object[]{3L, new UserIdNameDto(20L, "User20")},
+                new Object[]{0L, new UserIdNameDto(10L, "User10")},
+                new Object[]{8L, new UserIdNameDto(30L, "User30")}
+            ));
 
         List<UserIdNameDto> dtos = Arrays.asList(
             new UserIdNameDto(10L, "User10"),
             new UserIdNameDto(20L, "User20"),
             new UserIdNameDto(30L, "User30")
         );
-        given(userService.getUserIdNameInIds(userIds)).willReturn(dtos);
 
         // When
-        List<UserIdNameDto> result = discussionParticipantService.getUsersFromData(discussionId,
-            data);
+        List<UserIdNameDto> result = discussionParticipantService.getUsersFromData(data,
+            discussionParticipantService.getUserOffsetsMap(discussionId));
 
         // Then
         assertThat(result).isEqualTo(dtos);
@@ -320,7 +326,8 @@ class DiscussionParticipantServiceTest {
             2 // 전체 결과 건수
         );
 
-        given(discussionParticipantRepository.findOngoingDiscussions(userId, isHost, PageRequest.of(page, size)))
+        given(discussionParticipantRepository.findOngoingDiscussions(userId, isHost,
+            PageRequest.of(page, size)))
             .willReturn(pagedDiscussionPage);
 
         List<Object[]> pictureResults = Arrays.asList(
@@ -331,7 +338,8 @@ class DiscussionParticipantServiceTest {
             .willReturn(pictureResults);
 
         // When: Service 메서드 호출
-        OngoingDiscussionsResponse response = discussionParticipantService.getOngoingDiscussions(userId, page, size, isHost);
+        OngoingDiscussionsResponse response = discussionParticipantService.getOngoingDiscussions(
+            userId, page, size, isHost);
         List<OngoingDiscussion> ods = response.ongoingDiscussions();
 
         // Then: 페이징 관련 메타 데이터 검증
@@ -421,7 +429,8 @@ class DiscussionParticipantServiceTest {
 
         Pageable pageable = PageRequest.of(page, size);
         // Finished Discussions 중 year=2025에 해당하는 것은 discussion1과 discussion2만 있음.
-        Page<Discussion> discussionPage = new PageImpl<>(Arrays.asList(discussion1, discussion2), pageable, 2);
+        Page<Discussion> discussionPage = new PageImpl<>(Arrays.asList(discussion1, discussion2),
+            pageable, 2);
         given(discussionParticipantRepository.findFinishedDiscussions(userId, pageable, year))
             .willReturn(discussionPage);
 
@@ -430,7 +439,8 @@ class DiscussionParticipantServiceTest {
             new Object[]{100L, "pic2.jpg"},
             new Object[]{101L, "pic3.jpg"}
         );
-        given(discussionParticipantRepository.findUserPicturesByDiscussionIds(Arrays.asList(100L, 101L)))
+        given(discussionParticipantRepository.findUserPicturesByDiscussionIds(
+            Arrays.asList(100L, 101L)))
             .willReturn(pictureResults);
 
         // --- 목업: sharedEventService.getSharedEventMap ---
@@ -448,7 +458,8 @@ class DiscussionParticipantServiceTest {
             .willReturn(sharedEventMap);
 
         // When: Service 메서드 호출
-        FinishedDiscussionsResponse response = discussionParticipantService.getFinishedDiscussions(userId, page, size, year);
+        FinishedDiscussionsResponse response = discussionParticipantService.getFinishedDiscussions(
+            userId, page, size, year);
 
         // Then: FinishedDiscussionResponse 검증
         assertThat(response.currentYear()).isEqualTo(year);

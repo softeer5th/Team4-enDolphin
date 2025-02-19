@@ -9,6 +9,7 @@ import endolphin.backend.domain.candidate_event.dto.RankViewResponse;
 import endolphin.backend.domain.discussion.DiscussionParticipantService;
 import endolphin.backend.domain.discussion.DiscussionService;
 import endolphin.backend.domain.discussion.entity.Discussion;
+import endolphin.backend.domain.user.dto.UserIdNameDto;
 import endolphin.backend.global.redis.DiscussionBitmapService;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -38,10 +39,13 @@ public class CandidateEventService {
 
         Discussion discussion = discussionService.getDiscussionById(discussionId);
 
-        int filter = discussionParticipantService.getFilter(discussionId,
-            request.selectedUserIdList());
+        Map<Long, UserIdNameDto> usersMap = discussionParticipantService.getUserOffsetsMap(
+            discussionId);
 
-        if(filter == 0) {
+        int filter = discussionParticipantService.getFilter(request.selectedUserIdList(),
+            usersMap);
+
+        if (filter == 0) {
             return new CalendarViewResponse(Collections.emptyList());
         }
 
@@ -60,17 +64,20 @@ public class CandidateEventService {
                 .collect(Collectors.toList());
         }
 
-        return convertToResponse(discussionId, events);
+        return convertToResponse(events, usersMap);
     }
 
     public RankViewResponse getEventsOnRankView(Long discussionId, RankViewRequest request) {
         discussionParticipantService.validateDiscussionParticipant(discussionId);
         Discussion discussion = discussionService.getDiscussionById(discussionId);
 
-        int filter = discussionParticipantService.getFilter(discussionId,
-            request.selectedUserIdList());
+        Map<Long, UserIdNameDto> usersMap = discussionParticipantService.getUserOffsetsMap(
+            discussionId);
 
-        if(filter == 0) {
+        int filter = discussionParticipantService.getFilter(request.selectedUserIdList(),
+            usersMap);
+
+        if (filter == 0) {
             return new RankViewResponse(Collections.emptyList(), Collections.emptyList());
         }
 
@@ -78,7 +85,7 @@ public class CandidateEventService {
 
         events = sortCandidateEvents(events, getReturnSize(discussion));
 
-        List<CandidateEventResponse> eventsRankedDefault = convertToResponse(discussionId, events)
+        List<CandidateEventResponse> eventsRankedDefault = convertToResponse(events, usersMap)
             .events();
 
         List<CandidateEventResponse> eventsRankedOfTime = eventsRankedDefault.stream()
@@ -194,12 +201,12 @@ public class CandidateEventService {
         return dateTime.toEpochSecond(ZoneOffset.UTC) / 60;
     }
 
-    private CalendarViewResponse convertToResponse(Long discussionId, List<CandidateEvent> events) {
+    private CalendarViewResponse convertToResponse(List<CandidateEvent> events, Map<Long, UserIdNameDto> usersMap) {
         List<CandidateEventResponse> responses = events.stream()
             .map(event -> new CandidateEventResponse(
                 convertToLocalDateTime(event.startDateTime()),
                 convertToLocalDateTime(event.endDateTime()),
-                discussionParticipantService.getUsersFromData(discussionId, event.usersData())
+                discussionParticipantService.getUsersFromData(event.usersData(), usersMap)
             ))
             .collect(Collectors.toList());
         return new CalendarViewResponse(responses);
