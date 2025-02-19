@@ -1,10 +1,9 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useNavigate, useRouter } from '@tanstack/react-router';
 
 import type { DiscussionRequest } from '../model';
 import { discussionApi } from '.';
 import { invitationApi } from './invitationApi';
-import { discussionKeys, invitationQueryKey } from './keys';
+import { discussionKeys } from './keys';
 
 export const useDiscussionMutation = () => {
   const queryClient = useQueryClient();
