@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { zCoerceToBoolean, zCoerceToDate, zCoerceToTime } from '@/utils/zod';
+import { zCoerceToDate, zCoerceToTime } from '@/utils/zod';
 
 export const InvitationResponseSchema = z.object({
   host: z.string(),
@@ -10,8 +10,8 @@ export const InvitationResponseSchema = z.object({
   timeRangeStart: zCoerceToTime,
   timeRangeEnd: zCoerceToTime,
   duration: z.number(),
-  isFull: zCoerceToBoolean,
-  requirePassword: zCoerceToBoolean,
+  isFull: z.boolean(),
+  requirePassword: z.boolean(),
 });
 
 export const InvitationJoinRequestSchema = z.object({

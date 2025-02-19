@@ -14,7 +14,7 @@ const UpcomingCarousel = ({ schedules, offsetX }: UpcomingCarouselProps) => (
       className={carouselTrackStyle}
       style={{ transform: `translateX(${offsetX}px)` }}
     >
-      {schedules.map((schedule, index) => (
+      {schedules.map((schedule) => (
         <ScheduleCard
           key={schedule.id}
           latest={false}
