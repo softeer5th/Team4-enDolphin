@@ -54,4 +54,9 @@ export const candidateApi = {
     const response = await request.post(`/api/v1/discussion/${id}/confirm`, { body });
     return response;
   },
+
+  getDiscussionConfirm: async (id: string): Promise<DiscussionConfirmResponse> => {
+    const response = await request.get(`/api/v1/discussion/${id}/shared-event`);
+    return response;
+  },
 };

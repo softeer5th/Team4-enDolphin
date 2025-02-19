@@ -1,32 +1,36 @@
 import { Badge } from '@/components/Badge';
 import { Flex } from '@/components/Flex';
-import { getHourDiff, getTimeRangeString } from '@/utils/date';
+import { getDateRangeString, getHourDiff, getMinuteDiff, getTimeRangeString } from '@/utils/date';
+import { formatDateToString } from '@/utils/date/format';
 
-import type { DiscussionConfirmCardProps } from '.';
 import { badgeContainerStyle } from './index.css';
 
-interface BadgeContainerProps {
-  meetingDateTimeRange: DiscussionConfirmCardProps['meetingDateTimeRange'];
-  location?: DiscussionConfirmCardProps['location'];
-}
-
-const BadgeContainer = ({ 
-  meetingDateTimeRange, 
-  location,
-}: BadgeContainerProps) => {
-  const [timeStart, timeEnd] = [meetingDateTimeRange.start, meetingDateTimeRange.end];
-  const timeRangeString = getTimeRangeString(timeStart, timeEnd);
-  return (
+const BadgeContainer = (
+  { startDateTime, endDateTime, location }: 
+  {
+    startDateTime: Date; 
+    endDateTime: Date; 
+    location: string;
+  }) => 
+  (
     <Flex
       align='center'
       className={badgeContainerStyle}
       gap={250}
       justify='flex-start'
     >
-      <Badge iconType='date'>{`${timeRangeString} (${getHourDiff(timeStart, timeEnd)}시간)`}</Badge>
+      <Badge iconType='date'>
+        {formatDateToString(startDateTime)}
+      </Badge>
+      <Badge iconType='date'>
+        {getTimeRangeString(startDateTime, endDateTime)}
+      </Badge>
+      <Badge iconType='time'>
+        {getMinuteDiff(startDateTime, endDateTime)}
+        분
+      </Badge>
       {location && <Badge iconType='location'>{location}</Badge>}
     </Flex>
   );
-};
 
 export default BadgeContainer;

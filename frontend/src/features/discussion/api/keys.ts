@@ -21,3 +21,8 @@ export const participantKeys = {
   all: ['participants'],
   detail: (id: string) => [...participantKeys.all, id],
 };
+
+export const sharedEventKeys = {
+  all: ['sharedEvents'],
+  detail: (id: string) => [...sharedEventKeys.all, id],
+};

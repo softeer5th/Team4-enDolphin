@@ -1,24 +1,13 @@
 
 import { Flex } from '@/components/Flex';
 import { Text } from '@/components/Text';
+import type { DiscussionConfirmResponse } from '@/features/discussion/model';
 import DiscussionConfirmCard from '@/features/discussion/ui/DiscussionConfirmCard';
 import { vars } from '@/theme/index.css';
 
 import { backdropStyle, containerStyle, subtitleStyle, titleStyle } from './index.css';
 
-const mockData = {
-  participantImageUrls: [
-    'https://via.placeholder.com/150',
-    'https://via.placeholder.com/150',
-  ],
-  dateTimeRange: {
-    start: new Date('2023-10-20T10:00:00'),
-    end: new Date('2023-10-20T11:00:00'),
-  },
-  meetingDuration: 60,
-};
-
-const DiscussionConfirmPage = () => (
+const DiscussionConfirmPage = ({ confirm }: { confirm: DiscussionConfirmResponse }) => (
   <>
     <div className={backdropStyle} />
     <Flex
@@ -38,11 +27,7 @@ const DiscussionConfirmPage = () => (
       >
         참여한 모든 인원의 개인 캘린더에 확정된 일정이 추가되었어요.
       </Text>
-      <DiscussionConfirmCard
-        meetingDateTimeRange={mockData.dateTimeRange}
-        meetingDuration={mockData.meetingDuration}
-        participantImageUrls={mockData.participantImageUrls}
-      />
+      <DiscussionConfirmCard {...confirm} />
     </Flex>
   </>
 );
