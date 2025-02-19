@@ -12,9 +12,11 @@ import endolphin.backend.global.dto.ListResponse;
 import java.time.LocalDate;
 import endolphin.backend.global.google.dto.GoogleEvent;
 import endolphin.backend.global.google.enums.GoogleEventStatus;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -26,6 +28,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
+import org.springframework.context.ApplicationEventPublisher;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
@@ -38,6 +41,9 @@ class PersonalEventServiceTest {
 
     @Mock
     private DiscussionParticipantService discussionParticipantService;
+
+    @Mock
+    private ApplicationEventPublisher applicationEventPublisher;
 
     @Mock
     private UserService userService;
@@ -180,7 +186,7 @@ class PersonalEventServiceTest {
         given(personalEventRepository.findById(anyLong())).willReturn(Optional.of(existingEvent));
         given(userService.getCurrentUser()).willReturn(testUser);
 
-        assertThatThrownBy(() -> personalEventService.deletePersonalEvent(anyLong()))
+        assertThatThrownBy(() -> personalEventService.deletePersonalEvent(anyLong(), false))
             .isInstanceOf(RuntimeException.class);
 
         then(personalEventRepository).should(times(1)).findById(anyLong());
@@ -198,7 +204,7 @@ class PersonalEventServiceTest {
         given(userService.getCurrentUser()).willReturn(testUser);
 
         // when
-        personalEventService.deletePersonalEvent(anyLong());
+        personalEventService.deletePersonalEvent(anyLong(), false);
 
         // then
         then(personalEventRepository).should(times(1)).delete(any(PersonalEvent.class));

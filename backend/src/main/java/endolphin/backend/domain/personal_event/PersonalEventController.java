@@ -113,8 +113,9 @@ public class PersonalEventController {
     })
     @DeleteMapping("/{personalEventId}")
     public ResponseEntity<Void> deletePersonalEvent(
-        @PathVariable("personalEventId") Long personalEventId) {
-        personalEventService.deletePersonalEvent(personalEventId);
+        @PathVariable("personalEventId") Long personalEventId,
+        @RequestParam("syncWithGoogleCalendar") Boolean syncWithGoogleCalendar) {
+        personalEventService.deletePersonalEvent(personalEventId, syncWithGoogleCalendar);
         return ResponseEntity.noContent().build();
     }
 }

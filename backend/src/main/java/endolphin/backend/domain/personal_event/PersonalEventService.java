@@ -7,6 +7,8 @@ import endolphin.backend.domain.personal_event.dto.PersonalEventResponse;
 import endolphin.backend.domain.personal_event.dto.PersonalEventWithStatus;
 import endolphin.backend.domain.personal_event.entity.PersonalEvent;
 import endolphin.backend.domain.personal_event.enums.PersonalEventStatus;
+import endolphin.backend.domain.personal_event.event.DeletePersonalEvent;
+import endolphin.backend.domain.personal_event.event.UpdatePersonalEvent;
 import endolphin.backend.domain.shared_event.dto.SharedEventDto;
 import endolphin.backend.domain.user.UserService;
 import endolphin.backend.domain.user.dto.UserInfoWithPersonalEvents;
@@ -16,6 +18,8 @@ import endolphin.backend.global.error.exception.ApiException;
 import endolphin.backend.global.error.exception.ErrorCode;
 import endolphin.backend.global.google.dto.GoogleEvent;
 import endolphin.backend.global.google.enums.GoogleEventStatus;
+import endolphin.backend.domain.personal_event.event.InsertPersonalEvent;
+import endolphin.backend.global.util.IdGenerator;
 import endolphin.backend.global.util.Validator;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -25,6 +29,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,6 +42,9 @@ public class PersonalEventService {
     private final UserService userService;
     private final PersonalEventPreprocessor personalEventPreprocessor;
     private final DiscussionParticipantService discussionParticipantService;
+    private final ApplicationEventPublisher eventPublisher;
+
+    private final String PRIMARY = "primary";
 
     @Transactional(readOnly = true)
     public ListResponse<PersonalEventResponse> listPersonalEvents(LocalDate startDate,
@@ -63,7 +71,14 @@ public class PersonalEventService {
             .isAdjustable(request.isAdjustable())
             .user(user)
             .build();
+        
         PersonalEvent result = personalEventRepository.save(personalEvent);
+        
+        if (request.syncWithGoogleCalendar()) {
+            personalEvent.setGoogleEventId(IdGenerator.generateId(user.getId()));
+            personalEvent.setCalendarId(PRIMARY);
+            eventPublisher.publishEvent(new InsertPersonalEvent(List.of(personalEvent)));
+        }
 
         List<Discussion> discussions = discussionParticipantService.getDiscussionsByUserId(
             user.getId());
@@ -73,8 +88,6 @@ public class PersonalEventService {
                 true);
         });
 
-        //TODO syncWithGoogleCalendar == true 일 때 구글 캘린더에도 업데이트
-
         return PersonalEventResponse.fromEntity(result);
     }
 
@@ -82,18 +95,22 @@ public class PersonalEventService {
         Discussion discussion,
         SharedEventDto sharedEvent) {
         List<PersonalEvent> events = participants.stream()
-            .map(participant -> PersonalEvent.builder()
-                .title(discussion.getTitle())
-                .startTime(sharedEvent.startDateTime())
-                .endTime(sharedEvent.endDateTime())
-                .user(participant)
-                .isAdjustable(false)
-                .build())
+            .map(participant -> {
+                String googleEventId = IdGenerator.generateId(participant.getId());
+                return PersonalEvent.builder()
+                    .title(discussion.getTitle())
+                    .startTime(sharedEvent.startDateTime())
+                    .endTime(sharedEvent.endDateTime())
+                    .user(participant)
+                    .isAdjustable(false)
+                    .googleEventId(googleEventId)
+                    .calendarId(PRIMARY)
+                    .build();
+            })
             .toList();
 
         personalEventRepository.saveAll(events);
-
-        //TODO 구글캘린더에 반영
+        eventPublisher.publishEvent(new InsertPersonalEvent(events));
     }
 
     public PersonalEventResponse updateWithRequest(PersonalEventRequest request,
@@ -110,7 +127,13 @@ public class PersonalEventService {
 
         PersonalEvent result = updatePersonalEvent(request, personalEvent, user, discussions);
 
-        //TODO syncWithGoogleCalendar == true 일 때 구글 캘린더에도 업데이트
+        if (request.syncWithGoogleCalendar()) {
+            if (result.getGoogleEventId() == null) {
+                eventPublisher.publishEvent(new InsertPersonalEvent(List.of(personalEvent)));
+            } else {
+                eventPublisher.publishEvent(new UpdatePersonalEvent(result));
+            }
+        }
 
         return PersonalEventResponse.fromEntity(result);
     }
@@ -122,6 +145,10 @@ public class PersonalEventService {
         PersonalEvent oldEvent = personalEvent.copy();
 
         personalEvent.update(request);
+
+        if (request.syncWithGoogleCalendar()) {
+            personalEvent.update(IdGenerator.generateId(user.getId()), PRIMARY);
+        }
 
         if (isChanged(personalEvent, request)) {
             discussions.forEach(discussion -> {
@@ -135,7 +162,7 @@ public class PersonalEventService {
         return personalEventRepository.save(personalEvent);
     }
 
-    public void deletePersonalEvent(Long personalEventId) {
+    public void deletePersonalEvent(Long personalEventId, Boolean syncWithGoogleCalendar) {
         PersonalEvent personalEvent = getPersonalEvent(personalEventId);
         User user = userService.getCurrentUser();
         validatePersonalEventUser(personalEvent, user);
@@ -145,9 +172,14 @@ public class PersonalEventService {
         discussions.forEach(discussion -> {
             personalEventPreprocessor.preprocessOne(personalEvent, discussion, user, false);
         });
-        //TODO SyncWithGoogleCalendar == true 일 때 구글 캘린더에도 업데이트
 
         personalEventRepository.delete(personalEvent);
+
+        if (syncWithGoogleCalendar
+            && personalEvent.getGoogleEventId() != null
+            && personalEvent.getCalendarId() != null) {
+            eventPublisher.publishEvent(new DeletePersonalEvent(personalEvent));
+        }
     }
 
     @Transactional(readOnly = true)
