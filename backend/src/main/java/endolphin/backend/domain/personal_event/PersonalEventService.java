@@ -14,9 +14,9 @@ import endolphin.backend.domain.user.entity.User;
 import endolphin.backend.global.dto.ListResponse;
 import endolphin.backend.global.error.exception.ApiException;
 import endolphin.backend.global.error.exception.ErrorCode;
-import endolphin.backend.global.google.GoogleCalendarService;
 import endolphin.backend.global.google.dto.GoogleEvent;
 import endolphin.backend.global.google.enums.GoogleEventStatus;
+import endolphin.backend.domain.personal_event.event.InsertPersonalEvent;
 import endolphin.backend.global.util.Validator;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,7 +41,7 @@ public class PersonalEventService {
     private final UserService userService;
     private final PersonalEventPreprocessor personalEventPreprocessor;
     private final DiscussionParticipantService discussionParticipantService;
-    private final GoogleCalendarService googleCalendarService;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Transactional(readOnly = true)
     public ListResponse<PersonalEventResponse> listPersonalEvents(LocalDate startDate,
@@ -80,6 +81,8 @@ public class PersonalEventService {
         //TODO syncWithGoogleCalendar == true 일 때 구글 캘린더에도 업데이트
 
         googleCalendarService.insertPersonalEventToGoogleCalendar(personalEvent);
+//        googleCalendarService.insertPersonalEventToGoogleCalendar(personalEvent);
+        eventPublisher.publishEvent(new InsertPersonalEvent(List.of(result)));
         // TODO: 비트맵 반영
         return PersonalEventResponse.fromEntity(result);
     }
@@ -105,6 +108,8 @@ public class PersonalEventService {
         googleCalendarService.insertPersonalEvents(events);
 
         //TODO 구글캘린더에 반영
+//        googleCalendarService.insertPersonalEvents(events);
+        eventPublisher.publishEvent(new InsertPersonalEvent(events));
     }
 
     public PersonalEventResponse updateWithRequest(PersonalEventRequest request,

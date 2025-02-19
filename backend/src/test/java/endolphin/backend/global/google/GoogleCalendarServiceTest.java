@@ -28,6 +28,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.ApplicationEventPublisher;
 
 @ExtendWith(MockitoExtension.class)
 class GoogleCalendarServiceTest {
@@ -37,6 +38,9 @@ class GoogleCalendarServiceTest {
 
     @Mock
     private GoogleCalendarUrl googleCalendarUrl;
+
+    @Mock
+    private ApplicationEventPublisher eventPublisher;
 
     @Mock
     private PersonalEventService personalEventService;
@@ -108,7 +112,6 @@ class GoogleCalendarServiceTest {
         then(googleCalendarService).should().getPrimaryCalendar(user);
         then(calendarService).should().createCalendar(googleCalendarDto, user);
         then(googleCalendarService).should().getCalendarEvents(googleCalendarDto.id(), user);
-        then(personalEventService).should().syncWithGoogleEvents(events, user, googleCalendarDto.id());
     }
 
     @Test

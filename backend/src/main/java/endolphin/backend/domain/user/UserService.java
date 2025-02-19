@@ -1,6 +1,7 @@
 package endolphin.backend.domain.user;
 
 import endolphin.backend.domain.user.dto.UserIdNameDto;
+import endolphin.backend.domain.user.event.LoginEvent;
 import endolphin.backend.global.google.dto.GoogleUserInfo;
 import endolphin.backend.global.google.dto.GoogleTokens;
 import endolphin.backend.domain.user.entity.User;
@@ -11,6 +12,7 @@ import endolphin.backend.global.security.UserInfo;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class UserService {
     private final UserRepository userRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Transactional(readOnly = true)
     public User getCurrentUser() {
@@ -55,7 +58,8 @@ public class UserService {
             });
         user.setAccessToken(tokenResponse.accessToken());
         user.setRefreshToken(tokenResponse.refreshToken());
-        userRepository.save(user);
+        user = userRepository.save(user);
+        eventPublisher.publishEvent(new LoginEvent(user));
         return user;
     }
 }

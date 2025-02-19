@@ -23,7 +23,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class AuthService {
 
     private final GoogleOAuthService googleOAuthService;
-    private final GoogleCalendarService googleCalendarService;
     private final UserService userService;
     private final JwtProvider jwtProvider;
 
@@ -44,7 +43,7 @@ public class AuthService {
         validateUserInfo(userInfo);
         User user = userService.upsertUser(userInfo, tokenResponse);
 
-        googleCalendarService.upsertGoogleCalendar(user);
+//        googleCalendarService.upsertGoogleCalendar(user);
 
         String accessToken = jwtProvider.createToken(user.getId(), user.getEmail());
         LocalDateTime expiredAt = LocalDateTime.now().plus(expired, ChronoUnit.MILLIS);

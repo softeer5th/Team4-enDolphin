@@ -16,6 +16,7 @@ import endolphin.backend.global.google.dto.GoogleEvent;
 import endolphin.backend.global.google.dto.GoogleEventRequest;
 import endolphin.backend.global.google.enums.GoogleEventStatus;
 import endolphin.backend.global.google.enums.GoogleResourceState;
+import endolphin.backend.global.google.event.GoogleEventChanged;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -26,13 +27,13 @@ import java.util.ArrayList;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
@@ -53,9 +54,10 @@ public class GoogleCalendarService {
     private final GoogleCalendarUrl googleCalendarUrl;
     private final CalendarService calendarService;
     private final UserService userService;
-    private final PersonalEventService personalEventService;
+//    private final PersonalEventService personalEventService;
     private final GoogleOAuthService googleOAuthService;
     private final GoogleCalendarProperties googleCalendarProperties;
+    private final ApplicationEventPublisher eventPublisher;
 
     public void upsertGoogleCalendar(User user) {
         if (calendarService.isExistingCalendar(user.getId())) {
@@ -67,19 +69,18 @@ public class GoogleCalendarService {
             Calendar calendar = calendarService.createCalendar(googleCalendarDto, user);
             List<GoogleEvent> events = getCalendarEvents(googleCalendarDto.id(), user);
 
-            personalEventService.syncWithGoogleEvents(events, user, calendar.getCalendarId());
+//            personalEventService.syncWithGoogleEvents(events, user, calendar.getCalendarId());
+            eventPublisher.publishEvent(new GoogleEventChanged(events, user, calendar.getCalendarId()));
             subscribeToCalendar(calendar, user);
         }
     }
 
-    @Async
     public void insertPersonalEvents(List<PersonalEvent> personalEvents) {
         for (PersonalEvent personalEvent : personalEvents) {
             insertPersonalEventToGoogleCalendar(personalEvent);
         }
     }
 
-    @Async
     public void insertPersonalEventToGoogleCalendar(PersonalEvent personalEvent) {
         String eventUrl = googleCalendarUrl.eventsUrl().replace("{calendarId}", personalEvent.getCalendarId());
         User user = personalEvent.getUser();
@@ -276,12 +277,12 @@ public class GoogleCalendarService {
         body.add("id", UUID.randomUUID().toString());
         body.add("type", "web_hook");
         body.add("address",
-            googleCalendarUrl.webhookUrl()); //TODO: 실제 도메인 엔드포인트로 변경
+            googleCalendarUrl.webhookUrl());
         body.add("token", user.getId().toString());
 
         long expirationTime = Instant.now().plus(Duration.ofMinutes(
             googleCalendarProperties.subscribeDuration())).toEpochMilli();
-        body.add("expiration", expirationTime); //TODO: 구독 만료 시간 설정, 현재 테스트용으로 5분
+        body.add("expiration", expirationTime);
 
         try {
             String subscribeUrl = googleCalendarUrl.subscribeUrl()
@@ -343,7 +344,8 @@ public class GoogleCalendarService {
 
                 User user = userService.getUser(userId);
                 List<GoogleEvent> events = syncWithCalendar(calendarId, user);
-                personalEventService.syncWithGoogleEvents(events, user, calendarId);
+//                personalEventService.syncWithGoogleEvents(events, user, calendarId);
+                eventPublisher.publishEvent(new GoogleEventChanged(events, user, calendarId));
             } else {
                 throw new CalendarException(HttpStatus.BAD_REQUEST,
                     "Unknown State: " + resourceState);
