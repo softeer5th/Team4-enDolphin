@@ -5,19 +5,17 @@ import { getTimeParts } from '@/utils/date';
 
 export const useScrollToCurrentTime = () => {
   const tableRef = useRef<HTMLDivElement | null>(null);
-  const heightRef = useRef<number>(0);
+  const { hour, minute } = getTimeParts(new Date());
+  const offset = 6.5 + (hour + minute / 60) * TIME_HEIGHT;
 
   useEffect(() => {
     if (tableRef.current) {
-      const { hour, minute } = getTimeParts(new Date());
-      const offset = (hour + minute / 60) * TIME_HEIGHT + 16;
-      heightRef.current = offset;
       tableRef.current.scrollTo({
-        top: heightRef.current - 5 * TIME_HEIGHT,
+        top: offset - 5 * TIME_HEIGHT,
         behavior: 'smooth',
       });
     }
-  }, []);
+  }, [offset]);
 
-  return { tableRef, height: heightRef.current };
+  return { tableRef, height: offset };
 };
