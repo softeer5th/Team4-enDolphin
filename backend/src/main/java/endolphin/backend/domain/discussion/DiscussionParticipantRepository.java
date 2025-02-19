@@ -44,15 +44,6 @@ public interface DiscussionParticipantRepository extends
         @Param("userIds") List<Long> userIds
     );
 
-    @Query("SELECT dp.user.id " +
-        "FROM DiscussionParticipant dp " +
-        "WHERE dp.discussion.id = :discussionId " +
-        "AND dp.userOffset IN :offset")
-    List<Long> findUserIdsByDiscussionIdAndOffset(
-        @Param("discussionId") Long discussionId,
-        @Param("offset") List<Long> offsets
-    );
-
     @Query("SELECT dp.discussion " +
         "FROM DiscussionParticipant dp " +
         "WHERE dp.user.id = :userId")
@@ -64,6 +55,13 @@ public interface DiscussionParticipantRepository extends
         "WHERE dp.discussion.id = :discussionId " +
         "ORDER BY dp.userOffset ASC")
     List<UserIdNameDto> findUserIdNameDtosByDiscussionId(@Param("discussionId") Long discussionId);
+
+    @Query("SELECT dp.userOffset, new endolphin.backend.domain.user.dto.UserIdNameDto(u.id, u.name) " +
+        "FROM DiscussionParticipant dp " +
+        "JOIN dp.user u " +
+        "WHERE dp.discussion.id = :discussionId " +
+        "ORDER BY dp.userOffset ASC")
+    List<Object[]> findUserIdNameDtosWithOffset(@Param("discussionId") Long discussionId);
 
     @Query("SELECT dp.isHost " +
         "FROM DiscussionParticipant dp " +
