@@ -28,7 +28,7 @@ export const CalendarTable = () => {
   const members = useMemberContext();
   const { dates, selected } = useCalendarContext();
   const { startDate, endDate } = formatDateToWeekRange(selected);
-  const { calendar, isPending } = useDiscussionCalendarQuery(params.id, {
+  const { calendar } = useDiscussionCalendarQuery(params.id, {
     startDate: formatDateToBarString(startDate),
     endDate: formatDateToBarString(endDate),
     selectedUserIdList: members?.formState.checkedList || null,
@@ -40,7 +40,7 @@ export const CalendarTable = () => {
       height='36.5rem'
       width='100%'
     >
-      {!isPending && dates.map((date) => 
+      {dates.map((date) => 
         <CalendarDate
           date={date}
           groupMap={groupByDayOfWeek(calendar || [])}
