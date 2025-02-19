@@ -72,7 +72,7 @@ public class CandidateEventServiceTest {
         // 참가자 관련 스텁: 필터값과 사용자 목록 (여기서는 빈 리스트)
         when(discussionParticipantService.getFilter(eq(discussionId), anyList()))
             .thenReturn(0xFFFF);
-        when(discussionParticipantService.getUsersFromData(eq(discussionId), anyInt()))
+        when(discussionParticipantService.getUsersFromData(anyInt(), discussionParticipantService.getUserOffsetsMap(discussionId)))
             .thenReturn(Collections.emptyList());
 
         // 테스트 시작 전에 Redis에 이미 등록된 candidate event 관련 키 삭제

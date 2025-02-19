@@ -142,10 +142,13 @@ public class DiscussionParticipantRepositoryTest {
     @DisplayName("discussionId, offsets로 user ID 조회")
     @Test
     public void testFindUserIdsByDiscussionIdAndOffset() {
-        List<Long> offsets = Arrays.asList(1L, 2L);
-        List<Long> userIds = discussionParticipantRepository.findUserIdsByDiscussionIdAndOffset(discussion.getId(), offsets);
+        List<Object[]> users = discussionParticipantRepository.findUserIdNameDtosWithOffset(discussion.getId());
         // 예상: user2와 user3의 ID
-        assertThat(userIds).containsExactlyInAnyOrder(user2.getId(), user3.getId());
+        assertThat(users).containsExactlyInAnyOrder(
+            new Object[]{0L, new UserIdNameDto(user1.getId(), user1.getName())},
+            new Object[]{1L, new UserIdNameDto(user2.getId(), user2.getName())},
+            new Object[]{2L, new UserIdNameDto(user3.getId(), user3.getName())}
+        );
     }
 
     @DisplayName("userId로 참여한 논의 목록 조회")
