@@ -1,4 +1,4 @@
-import { useSearch } from '@tanstack/react-router';
+import { useParams } from '@tanstack/react-router';
 
 import { useDiscussionConfirmMutation } from '../../api/mutations';
 import type { DiscussionDTO } from '../../model';
@@ -12,7 +12,7 @@ interface DiscussionCardProps {
 }
 
 const DiscussionCard = ({ size, discussion, rank }: DiscussionCardProps) => {
-  const param: { id: string } = useSearch({ from: '/_main/discussion/$id' });
+  const param: { id: string } = useParams({ from: '/_main/discussion/$id' });
   const { mutate } = useDiscussionConfirmMutation();
 
   const handleClickConfirm = () => {

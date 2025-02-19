@@ -12,6 +12,8 @@ export const containerStyle = recipe({
     borderLeft: '3px solid transparent',
 
     backgroundColor: vars.color.Ref.Netural.White,
+
+    cursor: 'pointer',
   },
   variants: {
     isRecommend: {
@@ -34,6 +36,8 @@ export const largeContainerStyle = style({
   borderRadius: vars.radius[500],
 
   backgroundColor: vars.color.Ref.Netural.White,
+
+  cursor: 'pointer',
 });
 
 export const rankContainerStyle = recipe({

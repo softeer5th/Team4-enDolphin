@@ -4,7 +4,7 @@ import { useNavigate } from '@tanstack/react-router';
 import { personalEventKeys } from '@/features/my-calendar/api/keys';
 
 import type { DiscussionConfirmRequest, DiscussionRequest } from '../model';
-import { discussionApi } from '.';
+import { candidateApi, discussionApi } from '.';
 import { discussionKeys } from './keys';
 
 export const useDiscussionMutation = () => {
@@ -34,7 +34,7 @@ export const useDiscussionConfirmMutation = () => {
     mutationFn: ({ id, body }: { 
       id: string;
       body: DiscussionConfirmRequest;
-    }) => discussionApi.postDiscussionConfirm({ id, body }),
+    }) => candidateApi.postDiscussionConfirm({ id, body }),
     onSuccess: ({ discussionId }) => {
       queryClient.invalidateQueries({
         queryKey: personalEventKeys.all,
