@@ -54,9 +54,11 @@ const DiscussionParticipantResponse = z.object({
 });
 
 const DiscussionCalendarRequest = z.object({
-  startDate: z.string().regex(DATE_BAR),
-  endDate: z.string().regex(DATE_BAR),
-  selectedUserIdList: z.array(z.number()).nullable(),
+  startDate: z.string().regex(DATE_BAR)
+    .optional(),
+  endDate: z.string().regex(DATE_BAR)
+    .optional(),
+  selectedUserIdList: z.array(z.number()).optional(),
   size: z.number().int()
     .optional(),
 });

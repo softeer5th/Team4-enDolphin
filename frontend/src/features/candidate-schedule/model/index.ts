@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+import { zCoerceToDate } from '@/utils/zod';
+
 const ScheduleEventStatusSchema = z.union([
   z.literal('adjustable'),
   z.literal('fixed'),
@@ -19,24 +21,25 @@ const ParticipantSchema = z.object({
   name: z.string(),
   picture: z.string(),
   selected: z.boolean().optional(),
+  requirementOfAdjustment: z.boolean(),
   events: z.array(ScheduleEvent),
 });
 
 export const CandidateDetailRequestSchema = z.object({
-  startDateTime: z.date(),
-  endDateTime: z.date(),
+  startDateTime: zCoerceToDate,
+  endDateTime: zCoerceToDate,
   selectedUserIdList: z.array(z.number()),
 });
 
 export const CandidateDetailResponseSchema = z.object({
   discussionId: z.number(),
-  startDateTime: z.date(),
-  endDateTime: z.date(),
+  startDateTime: zCoerceToDate,
+  endDateTime: zCoerceToDate,
   participants: z.array(ParticipantSchema), 
 });
 
-export type ScheduleEvent = z.infer<typeof ScheduleEvent>;
 export type ScheduleEventStatus = z.infer<typeof ScheduleEventStatusSchema>;
+export type ScheduleEvent = z.infer<typeof ScheduleEvent>;
 
 export type Participant = z.infer<typeof ParticipantSchema>;
 
