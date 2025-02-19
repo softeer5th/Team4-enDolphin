@@ -11,6 +11,7 @@ import { vars } from '@/theme/index.css';
 import type { Time } from '@/utils/date';
 
 import { useInvitationJoinMutation } from '../../api/mutations';
+import { modalContainerStyle } from '../DiscussionConfirmCard/index.css';
 import Badges from './Badges';
 import {
   inputStyle,
@@ -58,6 +59,7 @@ const DiscussionInviteCard = ({
 
   return (
     <Modal
+      className={modalContainerStyle}
       isOpen
       subTitle={`${hostName}님이 일정 조율에 초대했어요!`}
       title={title}
