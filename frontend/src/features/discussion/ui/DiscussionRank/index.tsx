@@ -1,6 +1,7 @@
 import { useParams } from '@tanstack/react-router';
 
 import SegmentControl from '@/components/SegmentControl';
+import { useMemberContext } from '@/pages/DiscussionPage/MemberContext';
 
 import { useDiscussionRankQuery } from '../../api/queries';
 import { segmentControlContentsStyle, segmentControlStyle } from './index.css';
@@ -12,8 +13,11 @@ const segmentOptions = [
 ];
 const DiscussionRank = () => {
   const params: { id: string } = useParams({ from: '/_main/discussion/$id' });
+  const members = useMemberContext();
   const { rank, isLoading } 
-    = useDiscussionRankQuery(params.id, { selectedUserIdList: [1] });
+    = useDiscussionRankQuery(params.id, { 
+      selectedUserIdList: members?.formState.checkedList || null, 
+    });
 
   return (
     <SegmentControl

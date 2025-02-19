@@ -56,13 +56,13 @@ const DiscussionParticipantResponse = z.object({
 const DiscussionCalendarRequest = z.object({
   startDate: z.string().regex(DATE_BAR),
   endDate: z.string().regex(DATE_BAR),
-  selectedUserIdList: z.array(z.number()),
+  selectedUserIdList: z.array(z.number()).nullable(),
   size: z.number().int()
     .optional(),
 });
 
 const DiscussionRankRequest = z.object({
-  selectedUserIdList: z.array(z.number()),
+  selectedUserIdList: z.array(z.number()).nullable(),
 });
 
 const DiscussionCalendarResponse = z.object({

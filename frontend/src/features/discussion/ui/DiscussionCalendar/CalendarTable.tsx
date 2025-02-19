@@ -4,6 +4,7 @@ import { useParams } from '@tanstack/react-router';
 import { useCalendarContext } from '@/components/Calendar/context/CalendarContext';
 import { Flex } from '@/components/Flex';
 import { WEEK } from '@/constants/date';
+import { useMemberContext } from '@/pages/DiscussionPage/MemberContext';
 import { formatDateToWeekRange } from '@/utils/date';
 import { formatDateToBarString } from '@/utils/date/format';
 
@@ -24,12 +25,13 @@ const groupByDayOfWeek = (data: DiscussionDTO[]) =>
 
 export const CalendarTable = () => {
   const params: { id: string } = useParams({ from: '/_main/discussion/$id' });
+  const members = useMemberContext();
   const { dates, selected } = useCalendarContext();
   const { startDate, endDate } = formatDateToWeekRange(selected);
-  const { calendar, isLoading } = useDiscussionCalendarQuery(params.id, {
+  const { calendar, isPending } = useDiscussionCalendarQuery(params.id, {
     startDate: formatDateToBarString(startDate),
     endDate: formatDateToBarString(endDate),
-    selectedUserIdList: [1],
+    selectedUserIdList: members?.formState.checkedList || null,
   });
 
   return (
@@ -38,7 +40,7 @@ export const CalendarTable = () => {
       height='36.5rem'
       width='100%'
     >
-      {!isLoading && dates.map((date) => 
+      {!isPending && dates.map((date) => 
         <CalendarDate
           date={date}
           groupMap={groupByDayOfWeek(calendar || [])}
