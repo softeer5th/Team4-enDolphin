@@ -19,17 +19,18 @@ import endolphin.backend.global.error.exception.ErrorCode;
 import endolphin.backend.global.google.dto.GoogleEvent;
 import endolphin.backend.global.google.enums.GoogleEventStatus;
 import endolphin.backend.domain.personal_event.event.InsertPersonalEvent;
+import endolphin.backend.global.util.IdGenerator;
 import endolphin.backend.global.util.Validator;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.codec.binary.Base32;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -74,7 +75,7 @@ public class PersonalEventService {
             .build();
 
         if (request.syncWithGoogleCalendar()) {
-            personalEvent.setGoogleEventId(createGoogleEventId(user.getId()));
+            personalEvent.setGoogleEventId(IdGenerator.generateId(user.getId()));
             personalEvent.setCalendarId(PRIMARY);
             eventPublisher.publishEvent(new InsertPersonalEvent(List.of(personalEvent)));
         }
@@ -96,7 +97,7 @@ public class PersonalEventService {
         SharedEventDto sharedEvent) {
         List<PersonalEvent> events = participants.stream()
             .map(participant -> {
-                String googleEventId = createGoogleEventId(participant.getId());
+                String googleEventId = IdGenerator.generateId(participant.getId());
                 return PersonalEvent.builder()
                     .title(discussion.getTitle())
                     .startTime(sharedEvent.startDateTime())
@@ -280,13 +281,5 @@ public class PersonalEventService {
         result.sort(
             Comparator.comparing(UserInfoWithPersonalEvents::requirementOfAdjustment).reversed());
         return result;
-    }
-
-    private String createGoogleEventId(Long id) {
-        final String PREFIX = "endolphin";
-        return String.format("%s%d%s",
-            PREFIX, id,
-            Base64.getEncoder().encodeToString(UUID.randomUUID().toString().getBytes())
-                .toLowerCase());
     }
 }

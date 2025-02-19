@@ -67,7 +67,6 @@ public class GoogleCalendarService {
             Calendar calendar = calendarService.createCalendar(googleCalendarDto, user);
             List<GoogleEvent> events = getCalendarEvents(googleCalendarDto.id(), user);
 
-//            personalEventService.syncWithGoogleEvents(events, user, calendar.getCalendarId());
             eventPublisher.publishEvent(new GoogleEventChanged(events, user, calendar.getCalendarId()));
             subscribeToCalendar(calendar, user);
         }
@@ -84,13 +83,18 @@ public class GoogleCalendarService {
         User user = personalEvent.getUser();
 
         GoogleEventRequest body = GoogleEventRequest.of(personalEvent, personalEvent.getGoogleEventId());
+
         try {
             restClient.post()
                 .uri(eventUrl)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + user.getAccessToken())
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .body(body)
                 .exchange((request, response) -> {
-                    if (response.getStatusCode().is4xxClientError()) {
+                    if (!response.getStatusCode().is2xxSuccessful()) {
+                        log.error("Invalid request: {}", response.bodyTo(String.class));
+                    }
+                    if (response.getStatusCode().isSameCodeAs(HttpStatus.UNAUTHORIZED)) {
                         throw new OAuthException(ErrorCode.OAUTH_UNAUTHORIZED_ERROR);
                     }
                     return Optional.empty();
@@ -116,9 +120,13 @@ public class GoogleCalendarService {
             restClient.put()
                 .uri(eventUrl)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .body(body)
                 .exchange((request, response) -> {
-                    if (response.getStatusCode().is4xxClientError()) {
+                    if (!response.getStatusCode().is2xxSuccessful()) {
+                        log.error("Invalid request: {}", response.bodyTo(String.class));
+                    }
+                    if (response.getStatusCode().isSameCodeAs(HttpStatus.UNAUTHORIZED)) {
                         throw new OAuthException(ErrorCode.OAUTH_UNAUTHORIZED_ERROR);
                     }
                     return Optional.empty();
@@ -142,7 +150,10 @@ public class GoogleCalendarService {
                 .uri(eventUrl)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                 .exchange((request, response) -> {
-                    if (response.getStatusCode().is4xxClientError()) {
+                    if (!response.getStatusCode().is2xxSuccessful()) {
+                        log.error("Invalid request: {}", response.bodyTo(String.class));
+                    }
+                    if (response.getStatusCode().isSameCodeAs(HttpStatus.UNAUTHORIZED)) {
                         throw new OAuthException(ErrorCode.OAUTH_UNAUTHORIZED_ERROR);
                     }
                     return Optional.empty();
