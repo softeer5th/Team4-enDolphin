@@ -285,4 +285,12 @@ public class DiscussionParticipantService {
                 userService.getCurrentUser().getId())
             .orElseThrow(() -> new ApiException(ErrorCode.NOT_ALLOWED_USER));
     }
+
+    @Transactional(readOnly = true)
+    public void checkAlreadyParticipated(Long discussionId, Long userId) {
+        discussionParticipantRepository.findOffsetByDiscussionIdAndUserId(discussionId, userId)
+            .ifPresent(offset -> {
+                throw new ApiException(ErrorCode.ALREADY_PARTICIPATED);
+            });
+    }
 }

@@ -32,6 +32,7 @@ public enum ErrorCode {
     INVALID_DISCUSSION_PARTICIPANT(HttpStatus.BAD_REQUEST, "DP003", "Invalid Discussion participant"),
     DISCUSSION_HOST_NOT_FOUND(HttpStatus.NOT_FOUND, "DP004", "Discussion host not found"),
     NOT_ALLOWED_USER(HttpStatus.FORBIDDEN, "DP005", "Not allowed user"),
+    ALREADY_PARTICIPATED(HttpStatus.BAD_REQUEST, "DP006", "Already participated"),
 
     //Calendar
     CALENDAR_UNAUTHORIZED_ERROR(HttpStatus.UNAUTHORIZED, "CA001", "Unauthorized"),
