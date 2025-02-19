@@ -46,8 +46,24 @@ export const fadeHighlight = keyframes({
   },
 });
 
+export const fadeTimeBar = keyframes({
+  '0%': { opacity: 0 },
+  '5%': { opacity: 1 },
+  '50%': { opacity: 1 },
+  '100%': {
+    opacity: 0,
+    display: 'none',
+  },
+});
+
 export const fadeHighlightProps: CSSProperties = {
   animationName: fadeHighlight,
+  animationDuration: '2s',
+  animationFillMode: 'forwards',
+};
+
+export const fadeTimeBarProps: CSSProperties = {
+  animationName: fadeTimeBar,
   animationDuration: '2s',
   animationFillMode: 'forwards',
 };

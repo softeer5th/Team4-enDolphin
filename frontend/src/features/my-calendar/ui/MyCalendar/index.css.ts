@@ -1,6 +1,7 @@
 import { style } from '@vanilla-extract/css';
 import { recipe } from '@vanilla-extract/recipes';
 
+import { fadeTimeBarProps } from '@/theme/animation.css';
 import { vars } from '@/theme/index.css';
 
 export const containerStyle = recipe({
@@ -29,6 +30,8 @@ export const timeBarWrapperStyle = style({
   position: 'absolute',
   alignItems: 'center',
   gap: vars.spacing[100],
+
+  ...fadeTimeBarProps,
 });
 
 export const timeBarStyle = style({

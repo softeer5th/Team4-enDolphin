@@ -11,7 +11,8 @@ export const CalendarTimeBar = ({ height }: { height: number }) => (
     style={{ top: height }}
     width='100%'
   >
-    <Text color={vars.color.Ref.Primary[500]} typo='caption'>
+    <div className={timeBarStyle} />
+    <Text color={vars.color.Ref.Primary[500]} typo='t3'>
       {formatDateToTimeString(new Date())}
     </Text>
     <div className={timeBarStyle} />

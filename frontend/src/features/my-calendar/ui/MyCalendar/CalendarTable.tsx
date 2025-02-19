@@ -7,6 +7,7 @@ import { formatDateToDateTimeString } from '@/utils/date/format';
 import type { PersonalEventResponse } from '../../model';
 import { CalendarCardList } from '../CalendarCardList';
 import { SchedulePopover } from '../SchedulePopover';
+import { CalendarTimeBar } from './CalendarTimeBar';
 import { containerStyle } from './index.css';
 import { useScrollToCurrentTime } from './useScrollToCurrentTime';
 
@@ -15,7 +16,7 @@ const CalendarTable = (
 ) => {
   const { handleMouseUp, reset, ...time } = useSelectTime();
   const [open, setOpen] = useState(false);
-  const { tableRef } = useScrollToCurrentTime();
+  const { tableRef, height } = useScrollToCurrentTime();
   
   const handleMouseUpAddSchedule = () => {
     setOpen(true);
@@ -32,6 +33,7 @@ const CalendarTable = (
           type='add'
         />}
       <CalendarCardList cards={personalEvents} />
+      <CalendarTimeBar height={height} />
       <Calendar.Table 
         context={{
           handleMouseUp: () => handleMouseUp(handleMouseUpAddSchedule),
