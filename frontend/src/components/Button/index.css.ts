@@ -8,6 +8,7 @@ export const containerStyle = recipe({
     alignItems: 'center',
     gap: vars.spacing[200],
     cursor: 'pointer',
+    flexShrink: 0,
   },
   variants: {
     variant: {

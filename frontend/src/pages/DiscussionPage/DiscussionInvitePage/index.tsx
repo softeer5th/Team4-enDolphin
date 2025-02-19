@@ -9,7 +9,6 @@ const DiscussionInvitePage = ({ discussionId }:
   if (isPending) return <div>Loading...</div>;
   if (!data) return <div>response contains no data</div>;
   const {
-    
     host,
     title,
     dateRangeStart,
@@ -18,6 +17,7 @@ const DiscussionInvitePage = ({ discussionId }:
     timeRangeEnd,
     duration,
     isFull,
+    requirePassword,
   } = data;
 
   return (
@@ -27,6 +27,7 @@ const DiscussionInvitePage = ({ discussionId }:
       discussionId={discussionId}
       hostName={host}
       meetingDuration={duration}
+      requirePassword={requirePassword}
       timeRange={{ start: timeRangeStart, end: timeRangeEnd }}
       title={title}
     />
