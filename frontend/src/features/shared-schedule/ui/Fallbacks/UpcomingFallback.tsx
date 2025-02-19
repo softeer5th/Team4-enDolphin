@@ -12,7 +12,7 @@ const UpcomingFallback = () => (
     direction='column'
     gap={600}
     height='19.75rem'
-    width='83.25rem'
+    width='full'
   >
     <CheckGraphic height={180} width={180} />
     <Text color={vars.color.Ref.Netural[700]} typo='h3'>아직 다가오는 일정이 없어요!</Text>

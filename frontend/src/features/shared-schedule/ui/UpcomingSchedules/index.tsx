@@ -4,6 +4,7 @@ import { Flex } from '@/components/Flex';
 import { useCarouselControl } from '@/hooks/useCarousel';
 
 import { useUpcomingQuery } from '../../api/queries';
+import UpcomingFallback from '../Fallbacks/UpcomingFallback';
 import ControlButtons from './ControlButton';
 import { containerStyle } from './index.css';
 import UpcomingCarousel from './UpcomingCarousel';
@@ -17,7 +18,7 @@ const UpcomingSchedules = ({ children }: PropsWithChildren) => {
   });
 
   if (isPending) return <div>pending...</div>;
-  if (!data || !data.data) return <div>No data available</div>;
+  if (schedules.length === 0) return <UpcomingFallback />;
 
   return (
     <Flex

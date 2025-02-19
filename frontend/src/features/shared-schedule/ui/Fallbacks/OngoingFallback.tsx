@@ -12,7 +12,7 @@ const OngoingFallback = () => (
     direction='column'
     gap={600}
     height='35.25rem'
-    width='83.25rem'
+    width='full'
   >
     <ClockGraphic height={200} width={200} />
     <Text color={vars.color.Ref.Netural[700]} typo='h3'>확정되지 않은 일정이 없어요</Text>
