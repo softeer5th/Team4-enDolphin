@@ -1,6 +1,8 @@
 package endolphin.backend.global.google.event.handler;
 
 import endolphin.backend.domain.personal_event.entity.PersonalEvent;
+import endolphin.backend.domain.personal_event.event.DeletePersonalEvent;
+import endolphin.backend.domain.personal_event.event.UpdatePersonalEvent;
 import endolphin.backend.domain.user.entity.User;
 import endolphin.backend.domain.user.event.LoginEvent;
 import endolphin.backend.global.google.GoogleCalendarService;
@@ -29,5 +31,17 @@ public class GoogleEventHandler {
     public void login(LoginEvent event) {
         User user = event.user();
         googleCalendarService.upsertGoogleCalendar(user);
+    }
+
+    @Async
+    @TransactionalEventListener(classes = {UpdatePersonalEvent.class})
+    public void update(UpdatePersonalEvent event) {
+        googleCalendarService.updatePersonalEventToGoogleCalendar(event.personalEvent());
+    }
+
+    @Async
+    @TransactionalEventListener(classes = {DeletePersonalEvent.class})
+    public void delete(DeletePersonalEvent event) {
+        googleCalendarService.deletePersonalEventFromGoogleCalender(event.personalEvent());
     }
 }

@@ -2,7 +2,6 @@ package endolphin.backend.global.google;
 
 import endolphin.backend.domain.calendar.CalendarService;
 import endolphin.backend.domain.calendar.entity.Calendar;
-import endolphin.backend.domain.personal_event.PersonalEventService;
 import endolphin.backend.domain.personal_event.entity.PersonalEvent;
 import endolphin.backend.domain.user.UserService;
 import endolphin.backend.domain.user.entity.User;
@@ -54,7 +53,6 @@ public class GoogleCalendarService {
     private final GoogleCalendarUrl googleCalendarUrl;
     private final CalendarService calendarService;
     private final UserService userService;
-//    private final PersonalEventService personalEventService;
     private final GoogleOAuthService googleOAuthService;
     private final GoogleCalendarProperties googleCalendarProperties;
     private final ApplicationEventPublisher eventPublisher;
@@ -104,6 +102,56 @@ public class GoogleCalendarService {
             insertPersonalEventToGoogleCalendar(personalEvent);
         } catch (Exception e) {
             throw new CalendarException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
+    }
+
+    public void updatePersonalEventToGoogleCalendar(PersonalEvent personalEvent) {
+        String eventUrl = String.format(googleCalendarUrl.updateUrl(),
+            personalEvent.getCalendarId(), personalEvent.getGoogleEventId());
+        User user = personalEvent.getUser();
+        String token = user.getAccessToken();
+
+        GoogleEventRequest body = GoogleEventRequest.of(personalEvent, personalEvent.getGoogleEventId());
+        try {
+            restClient.put()
+                .uri(eventUrl)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                .body(body)
+                .exchange((request, response) -> {
+                    if (response.getStatusCode().is4xxClientError()) {
+                        throw new OAuthException(ErrorCode.OAUTH_UNAUTHORIZED_ERROR);
+                    }
+                    return Optional.empty();
+                });
+
+        } catch (OAuthException e) {
+            String accessToken = googleOAuthService.reissueAccessToken(user.getRefreshToken());
+            userService.updateAccessToken(user, accessToken);
+            updatePersonalEventToGoogleCalendar(personalEvent);
+        }
+    }
+
+    public void deletePersonalEventFromGoogleCalender(PersonalEvent personalEvent) {
+        String eventUrl = String.format(googleCalendarUrl.updateUrl(),
+            personalEvent.getCalendarId(), personalEvent.getGoogleEventId());
+        User user = personalEvent.getUser();
+        String token = user.getAccessToken();
+
+        try {
+            restClient.delete()
+                .uri(eventUrl)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                .exchange((request, response) -> {
+                    if (response.getStatusCode().is4xxClientError()) {
+                        throw new OAuthException(ErrorCode.OAUTH_UNAUTHORIZED_ERROR);
+                    }
+                    return Optional.empty();
+                });
+
+        } catch (OAuthException e) {
+            String accessToken = googleOAuthService.reissueAccessToken(user.getRefreshToken());
+            userService.updateAccessToken(user, accessToken);
+            updatePersonalEventToGoogleCalendar(personalEvent);
         }
     }
 

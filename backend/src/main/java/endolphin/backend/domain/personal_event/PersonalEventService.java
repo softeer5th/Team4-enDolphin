@@ -7,6 +7,8 @@ import endolphin.backend.domain.personal_event.dto.PersonalEventResponse;
 import endolphin.backend.domain.personal_event.dto.PersonalEventWithStatus;
 import endolphin.backend.domain.personal_event.entity.PersonalEvent;
 import endolphin.backend.domain.personal_event.enums.PersonalEventStatus;
+import endolphin.backend.domain.personal_event.event.DeletePersonalEvent;
+import endolphin.backend.domain.personal_event.event.UpdatePersonalEvent;
 import endolphin.backend.domain.shared_event.dto.SharedEventDto;
 import endolphin.backend.domain.user.UserService;
 import endolphin.backend.domain.user.dto.UserInfoWithPersonalEvents;
@@ -43,6 +45,8 @@ public class PersonalEventService {
     private final DiscussionParticipantService discussionParticipantService;
     private final ApplicationEventPublisher eventPublisher;
 
+    private final String PRIMARY = "primary";
+
     @Transactional(readOnly = true)
     public ListResponse<PersonalEventResponse> listPersonalEvents(LocalDate startDate,
         LocalDate endDate) {
@@ -68,6 +72,12 @@ public class PersonalEventService {
             .isAdjustable(request.isAdjustable())
             .user(user)
             .build();
+
+        if (request.syncWithGoogleCalendar()) {
+            personalEvent.setGoogleEventId(createGoogleEventId(user.getId()));
+            personalEvent.setCalendarId(PRIMARY);
+            eventPublisher.publishEvent(new InsertPersonalEvent(List.of(personalEvent)));
+        }
         PersonalEvent result = personalEventRepository.save(personalEvent);
 
         List<Discussion> discussions = discussionParticipantService.getDiscussionsByUserId(
@@ -78,12 +88,6 @@ public class PersonalEventService {
                 true);
         });
 
-        //TODO syncWithGoogleCalendar == true 일 때 구글 캘린더에도 업데이트
-
-        googleCalendarService.insertPersonalEventToGoogleCalendar(personalEvent);
-//        googleCalendarService.insertPersonalEventToGoogleCalendar(personalEvent);
-        eventPublisher.publishEvent(new InsertPersonalEvent(List.of(result)));
-        // TODO: 비트맵 반영
         return PersonalEventResponse.fromEntity(result);
     }
 
@@ -100,15 +104,12 @@ public class PersonalEventService {
                     .user(participant)
                     .isAdjustable(false)
                     .googleEventId(googleEventId)
-                    .calendarId("primary")
+                    .calendarId(PRIMARY)
                     .build();
             })
             .toList();
-        personalEventRepository.saveAll(events);
-        googleCalendarService.insertPersonalEvents(events);
 
-        //TODO 구글캘린더에 반영
-//        googleCalendarService.insertPersonalEvents(events);
+        personalEventRepository.saveAll(events);
         eventPublisher.publishEvent(new InsertPersonalEvent(events));
     }
 
@@ -126,7 +127,13 @@ public class PersonalEventService {
 
         PersonalEvent result = updatePersonalEvent(request, personalEvent, user, discussions);
 
-        //TODO syncWithGoogleCalendar == true 일 때 구글 캘린더에도 업데이트
+        if (request.syncWithGoogleCalendar()) {
+            if (result.getGoogleEventId() == null) {
+                eventPublisher.publishEvent(new InsertPersonalEvent(List.of(result)));
+            } else {
+                eventPublisher.publishEvent(new UpdatePersonalEvent(result));
+            }
+        }
 
         return PersonalEventResponse.fromEntity(result);
     }
@@ -151,7 +158,7 @@ public class PersonalEventService {
         return personalEventRepository.save(personalEvent);
     }
 
-    public void deletePersonalEvent(Long personalEventId) {
+    public void deletePersonalEvent(Long personalEventId, Boolean syncWithGoogleCalendar) {
         PersonalEvent personalEvent = getPersonalEvent(personalEventId);
         User user = userService.getCurrentUser();
         validatePersonalEventUser(personalEvent, user);
@@ -161,7 +168,12 @@ public class PersonalEventService {
         discussions.forEach(discussion -> {
             personalEventPreprocessor.preprocessOne(personalEvent, discussion, user, false);
         });
-        //TODO SyncWithGoogleCalendar == true 일 때 구글 캘린더에도 업데이트
+
+        if (syncWithGoogleCalendar
+            && personalEvent.getGoogleEventId() != null
+            && personalEvent.getCalendarId() != null) {
+            eventPublisher.publishEvent(new DeletePersonalEvent(personalEvent));
+        }
 
         personalEventRepository.delete(personalEvent);
     }

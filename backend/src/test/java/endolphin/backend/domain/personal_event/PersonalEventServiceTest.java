@@ -186,7 +186,7 @@ class PersonalEventServiceTest {
         given(personalEventRepository.findById(anyLong())).willReturn(Optional.of(existingEvent));
         given(userService.getCurrentUser()).willReturn(testUser);
 
-        assertThatThrownBy(() -> personalEventService.deletePersonalEvent(anyLong()))
+        assertThatThrownBy(() -> personalEventService.deletePersonalEvent(anyLong(), false))
             .isInstanceOf(RuntimeException.class);
 
         then(personalEventRepository).should(times(1)).findById(anyLong());
@@ -204,7 +204,7 @@ class PersonalEventServiceTest {
         given(userService.getCurrentUser()).willReturn(testUser);
 
         // when
-        personalEventService.deletePersonalEvent(anyLong());
+        personalEventService.deletePersonalEvent(anyLong(), false);
 
         // then
         then(personalEventRepository).should(times(1)).delete(any(PersonalEvent.class));

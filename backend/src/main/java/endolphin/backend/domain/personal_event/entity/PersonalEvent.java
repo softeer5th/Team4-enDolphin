@@ -9,6 +9,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
+import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
 
@@ -40,9 +41,11 @@ public class PersonalEvent extends BaseTimeEntity {
     @Column(name = "is_adjustable")
     private Boolean isAdjustable;
 
+    @Setter
     @Column(name = "calendar_id")
     private String calendarId;
 
+    @Setter
     @Column(name = "google_event_id")
     private String googleEventId;
 
