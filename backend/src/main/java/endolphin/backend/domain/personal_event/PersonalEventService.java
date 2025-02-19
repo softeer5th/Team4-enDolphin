@@ -146,7 +146,9 @@ public class PersonalEventService {
 
         personalEvent.update(request);
 
-        if (request.syncWithGoogleCalendar()) {
+        if (request.syncWithGoogleCalendar()
+            && personalEvent.getGoogleEventId() == null
+            && personalEvent.getCalendarId() == null) {
             personalEvent.update(IdGenerator.generateId(user.getId()), PRIMARY);
         }
 
