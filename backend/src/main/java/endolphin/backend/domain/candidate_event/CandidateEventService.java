@@ -9,6 +9,7 @@ import endolphin.backend.domain.candidate_event.dto.RankViewResponse;
 import endolphin.backend.domain.discussion.DiscussionParticipantService;
 import endolphin.backend.domain.discussion.DiscussionService;
 import endolphin.backend.domain.discussion.entity.Discussion;
+import endolphin.backend.domain.user.dto.UserIdNameDto;
 import endolphin.backend.global.redis.DiscussionBitmapService;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -41,7 +42,7 @@ public class CandidateEventService {
         int filter = discussionParticipantService.getFilter(discussionId,
             request.selectedUserIdList());
 
-        if(filter == 0) {
+        if (filter == 0) {
             return new CalendarViewResponse(Collections.emptyList());
         }
 
@@ -70,7 +71,7 @@ public class CandidateEventService {
         int filter = discussionParticipantService.getFilter(discussionId,
             request.selectedUserIdList());
 
-        if(filter == 0) {
+        if (filter == 0) {
             return new RankViewResponse(Collections.emptyList(), Collections.emptyList());
         }
 
@@ -195,11 +196,14 @@ public class CandidateEventService {
     }
 
     private CalendarViewResponse convertToResponse(Long discussionId, List<CandidateEvent> events) {
+        Map<Long, UserIdNameDto> usersMap = discussionParticipantService.getUserOffsetsMap(
+            discussionId);
+
         List<CandidateEventResponse> responses = events.stream()
             .map(event -> new CandidateEventResponse(
                 convertToLocalDateTime(event.startDateTime()),
                 convertToLocalDateTime(event.endDateTime()),
-                discussionParticipantService.getUsersFromData(discussionId, event.usersData())
+                discussionParticipantService.getUsersFromData(event.usersData(), usersMap)
             ))
             .collect(Collectors.toList());
         return new CalendarViewResponse(responses);
