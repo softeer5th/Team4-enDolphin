@@ -454,9 +454,4 @@ class PersonalEventServiceTest {
         assertThat(user2Info.requirementOfAdjustment()).isFalse();
         assertThat(user2Info.events()).isEmpty();
     }
-
-    @Test
-    public void test() {
-        System.out.println(Base64.getEncoder().encodeToString(UUID.randomUUID().toString().getBytes()).toLowerCase());
-    }
 }
