@@ -9,6 +9,7 @@ import endolphin.backend.domain.discussion.entity.DiscussionParticipant;
 import endolphin.backend.domain.shared_event.SharedEventService;
 import endolphin.backend.domain.shared_event.dto.SharedEventDto;
 import endolphin.backend.domain.shared_event.dto.SharedEventWithDiscussionInfoResponse;
+import endolphin.backend.domain.shared_event.entity.SharedEvent;
 import endolphin.backend.domain.user.UserService;
 import endolphin.backend.domain.user.dto.UserIdNameDto;
 import endolphin.backend.domain.user.entity.User;
@@ -81,6 +82,19 @@ public class DiscussionParticipantService {
     }
 
     @Transactional(readOnly = true)
+    public Map<Long, UserIdNameDto> getUserOffsetsMap(Long discussionId) {
+        List<Object[]> usersWithOffset = discussionParticipantRepository.findUserIdNameDtosWithOffset(
+            discussionId);
+
+        return usersWithOffset.stream()
+            .collect(Collectors.toMap(
+                    user -> (Long) user[0],
+                    user -> (UserIdNameDto) user[1]
+                )
+            );
+    }
+
+    @Transactional(readOnly = true)
     public int getFilter(Long discussionId, List<Long> userIds) {
 
         if (userIds == null) {
@@ -104,23 +118,20 @@ public class DiscussionParticipantService {
     }
 
     @Transactional(readOnly = true)
-    public List<UserIdNameDto> getUsersFromData(Long discussionId, int data) {
+    public List<UserIdNameDto> getUsersFromData(int data, Map<Long, UserIdNameDto> usersMap) {
         if (data == 0) {
             return new ArrayList<>();
         }
 
-        List<Long> userOffsets = new ArrayList<>();
+        List<UserIdNameDto> users = new ArrayList<>();
 
         for (int i = 0; i < MAX_PARTICIPANT + 1; i++) {
             if ((data & (1 << (MAX_PARTICIPANT - i))) != 0) {
-                userOffsets.add((long) i);
+                users.add(usersMap.get((long) i));
             }
         }
 
-        List<Long> userIds = discussionParticipantRepository.findUserIdsByDiscussionIdAndOffset(
-            discussionId, userOffsets);
-
-        return userService.getUserIdNameInIds(userIds);
+        return users;
     }
 
     @Transactional(readOnly = true)
