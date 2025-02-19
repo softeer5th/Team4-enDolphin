@@ -35,15 +35,6 @@ public interface DiscussionParticipantRepository extends
         "WHERE dp.discussion.id = :discussionId")
     Long findMaxOffsetByDiscussionId(@Param("discussionId") Long discussionId);
 
-    @Query("SELECT dp.userOffset " +
-        "FROM DiscussionParticipant dp " +
-        "WHERE dp.discussion.id = :discussionId " +
-        "AND dp.user.id IN :userIds")
-    List<Long> findOffsetsByDiscussionIdAndUserIds(
-        @Param("discussionId") Long discussionId,
-        @Param("userIds") List<Long> userIds
-    );
-
     @Query("SELECT dp.discussion " +
         "FROM DiscussionParticipant dp " +
         "WHERE dp.user.id = :userId")
