@@ -1,6 +1,5 @@
 import { WEEK_MAP } from '@/constants/date';
 
-import { formatMinutesToTimeString } from './format';
 import { getTimeParts } from './time';
 
 export const DAY_IN_MILLISECONDS = 24 * 60 * 60 * 1000;

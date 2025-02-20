@@ -1,4 +1,5 @@
 import { useCanGoBack, useRouter } from '@tanstack/react-router';
+import type { PropsWithChildren } from 'react';
 
 import { Flex } from '@/components/Flex';
 import { Close } from '@/components/Icon';
@@ -6,28 +7,31 @@ import { vars } from '@/theme/index.css';
 
 import { useCandidateDetailQuery } from '../api/queries';
 import type { CandidateDetailResponse, Participant } from '../model';
-import Header from './Header';
-import { containerStyle, contentContainerStyle, topBarStyle } from './index.css';
+import { 
+  closeButtonStyle,
+  containerStyle,
+  contentContainerStyle,
+  headerStyle,
+  topBarStyle,
+} from './index.css';
 import TimelineContent from './TimelineContent';
 import { splitParticipantsBySelection } from './timelineHelper';
 
 // TODO: 라우팅 param 정의 위치 옮기기
-interface CandidateScheduleDetailProps {
-  adjustCount: number;
+interface TimelineScheduleModalProps extends PropsWithChildren {
   discussionId: number;
   startDateTime: string;
   endDateTime: string;
   selectedParticipantIds?: number[];
 }
 
-const CandidateScheduleDetail = ({ 
-  adjustCount, discussionId, startDateTime, endDateTime, selectedParticipantIds,
-}: CandidateScheduleDetailProps) => {
+const TimelineScheduleModal = ({ 
+  discussionId, startDateTime, endDateTime, selectedParticipantIds, children,
+}: TimelineScheduleModalProps) => {
   const { data, isPending } = useCandidateDetailQuery(
     discussionId, startDateTime, endDateTime, selectedParticipantIds,
   );
-  if (isPending) return <div>Pending...</div>;
-  if (!data) return <div>data is undefined or null</div>;
+  if (isPending || !data) return <div className={containerStyle} />;
   const { selectedParticipants, ignoredParticipants } = splitParticipantsBySelection(
     data.participants, 
     selectedParticipantIds,
@@ -35,10 +39,9 @@ const CandidateScheduleDetail = ({
 
   return (
     <Flex className={containerStyle} direction='column'>
-      <TopBar />
+      {children}
       <Content
         {...data}
-        adjustCount={adjustCount}
         endDateTime={new Date(endDateTime)}
         ignoredParticipants={ignoredParticipants}
         selectedParticipants={selectedParticipants}
@@ -48,7 +51,7 @@ const CandidateScheduleDetail = ({
   );
 };
 
-const TopBar = () => {
+const TopBar = ({ children }: PropsWithChildren) => {
   const router = useRouter();
   const canGoBack = useCanGoBack();
   const handleGoBack = () => canGoBack && router.history.back();
@@ -57,9 +60,11 @@ const TopBar = () => {
     <Flex
       align='center'
       className={topBarStyle}
-      justify='flex-end'
+      justify='flex-start'
     >
+      {children}
       <Close
+        className={closeButtonStyle}
         clickable
         fill={vars.color.Ref.Netural[500]}
         onClick={handleGoBack}
@@ -70,13 +75,11 @@ const TopBar = () => {
 };
 
 interface ContentProps extends CandidateDetailResponse {
-  adjustCount: number;
   selectedParticipants: Participant[];
   ignoredParticipants: Participant[];
 }
 
 const Content = ({ 
-  adjustCount,
   selectedParticipants,
   ignoredParticipants,
   ...props 
@@ -87,7 +90,6 @@ const Content = ({
     justify='flex-start'
     width='full'
   >
-    <Header adjustCount={adjustCount} {...props} />
     <TimelineContent
       conflictEnd={props.endDateTime}
       conflictStart={props.startDateTime} 
@@ -97,4 +99,13 @@ const Content = ({
   </Flex>
 );
 
-export default CandidateScheduleDetail;
+const Header = ({ children }: PropsWithChildren) => (
+  <div className={headerStyle}>
+    {children}
+  </div>
+);
+
+TimelineScheduleModal.TopBar = TopBar;
+TimelineScheduleModal.Header = Header;
+
+export default TimelineScheduleModal;
