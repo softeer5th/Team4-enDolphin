@@ -1,6 +1,5 @@
 
 import { useQueryClient } from '@tanstack/react-query';
-import { useState } from 'react';
 
 import { Flex } from '@/components/Flex';
 import SegmentControl from '@/components/SegmentControl';
@@ -10,9 +9,8 @@ import { ongoingQueryKey } from '../../api/keys';
 import { prefetchOngoingSchedules } from '../../api/prefetch';
 import type { AttendType, OngoingSchedulesResponse } from '../../model/';
 import OngoingFallback from '../Fallbacks/OngoingFallback';
-import { containerStyle, mainContainerStyle, segmentControlStyle, titleStyle } from './index.css';
+import { containerStyle, segmentControlStyle, titleStyle } from './index.css';
 import OngoingScheduleList, { PAGE_SIZE } from './OngoingScheduleList';
-import ScheduleContents from './ScheduleDetails';
 
 export interface OngoingSegmentOption {
   label: string;
@@ -39,10 +37,10 @@ const OngoingSchedules = () => (
 
 const Content = () => {
   const queryClient = useQueryClient();
-  
-  if (queryClient.getQueryData<OngoingSchedulesResponse>(
+  const ongoingData = queryClient.getQueryData<OngoingSchedulesResponse>(
     ongoingQueryKey.detail(1, 6, 'ALL'),
-  )?.totalPages === 0)
+  );
+  if (!ongoingData || ongoingData.totalPages === 0)
     return <OngoingFallback />;
   
   return (
@@ -57,11 +55,9 @@ const Content = () => {
     >
       {segmentOptions.map((option, idx) => (
         <SegmentControl.Content key={`${option.value}-${idx}`} value={option.value}>
-          <div className={mainContainerStyle} >
-            <OngoingScheduleList 
-              segmentOption={option} 
-            />
-          </div>
+          <OngoingScheduleList 
+            segmentOption={option} 
+          />
         </SegmentControl.Content>
       ))}
     </SegmentControl>
