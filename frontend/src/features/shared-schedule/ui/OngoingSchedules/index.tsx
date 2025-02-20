@@ -39,15 +39,13 @@ const OngoingSchedules = () => (
 
 const Content = () => {
   const queryClient = useQueryClient();
-  const [selectedDiscussionId, setSelectedDiscussionId] = useState(-1);
+  const [selectedDiscussionId, setSelectedDiscussionId] = useState(1);
   
   if (queryClient.getQueryData<OngoingSchedulesResponse>(
     ongoingQueryKey.detail(1, 6, 'ALL'),
   )?.totalPages === 0)
     return <OngoingFallback />;
   
-  // TODO: useEffect 뺄 수 있으면 다른 걸로 대체
-
   return (
     <SegmentControl
       className={segmentControlStyle}

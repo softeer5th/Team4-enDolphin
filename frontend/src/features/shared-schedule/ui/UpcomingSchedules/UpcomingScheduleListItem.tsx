@@ -5,7 +5,8 @@ import { Chip } from '@/components/Chip';
 import { Flex } from '@/components/Flex';
 import { Text } from '@/components/Text';
 import { vars } from '@/theme/index.css';
-import { isSameDate } from '@/utils/date';
+import { getDateTimeRangeString } from '@/utils/date';
+import { formatDateToDdayString } from '@/utils/date/format';
 
 import type { UpcomingSchedule } from '../../model';
 import {
@@ -68,7 +69,7 @@ const Content = ({
     >
       <Text typo='t2'>{schedule.title}</Text>
       <Chip color='black' style='weak'>
-        {getDDay(startDate)}
+        {formatDateToDdayString(startDate)}
       </Chip>
     </Flex>
     <Flex
@@ -85,6 +86,12 @@ const Content = ({
   </>
 );
 
+const MeetDate = ({ startDate, endDate }: { startDate: Date; endDate: Date }) => (
+  <Text color={vars.color.Ref.Netural[600]} typo='b3R'>
+    {getDateTimeRangeString(startDate, endDate)}
+  </Text>
+);
+
 const MeetingPlace = ({ meetingPlace }: { meetingPlace?: string }) => (
   meetingPlace && 
   <>
@@ -92,23 +99,5 @@ const MeetingPlace = ({ meetingPlace }: { meetingPlace?: string }) => (
     <Text color={vars.color.Ref.Netural[600]} typo='b3R'>{meetingPlace}</Text>
   </>
 );
-
-const MeetDate = ({ startDate, endDate }: { startDate: Date; endDate: Date }) => (
-  <Text color={vars.color.Ref.Netural[600]} typo='b3R'>
-    {`${startDate.toLocaleDateString()} ~ `}
-    {isSameDate(startDate, endDate) ? 
-      endDate.toLocaleDateString()
-      :
-      endDate.toLocaleDateString().slice(5)}
-  </Text>
-);
-const getDDay = (startDate: Date) => {
-  const today = new Date();
-  const timeDiff = startDate.getTime() - today.getTime();
-  const dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
-  if (dayDiff > 0) return `D-${dayDiff}`;
-  if (dayDiff < 0) return `D+${Math.abs(dayDiff)}`;
-  return 'D-Day';
-};
 
 export default UpcomingScheduleListItem;

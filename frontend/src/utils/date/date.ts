@@ -1,6 +1,7 @@
 import { WEEK_MAP } from '@/constants/date';
 
 import { formatMinutesToTimeString } from './format';
+import { getTimeParts } from './time';
 
 export const DAY_IN_MILLISECONDS = 24 * 60 * 60 * 1000;
 
@@ -225,11 +226,16 @@ export const getDateTimeRangeString = (start: Date, end: Date): string => {
   const { month: startMonth, day: startDay } = getYearMonthDay(start);
   const { month: endMonth, day: endDay } = getYearMonthDay(end);
 
-  const startMinutes = start.getHours() * 60 + start.getMinutes();
-  const endMinutes = end.getHours() * 60 + end.getMinutes();
+  const convertTime = (date: Date): string => {
+    const { hour, minute } = getTimeParts(date);
+    const period = hour >= 12 ? '오후' : '오전';
+    const hour12 = hour % 12 || 12;
+    const paddedMinutes = minute.toString().padStart(2, '0');
+    return minute === 0 ? `${period} ${hour12}시` : `${period} ${hour12}시 ${paddedMinutes}분`;
+  };
 
-  const startTime = formatMinutesToTimeString(startMinutes);
-  const endTime = formatMinutesToTimeString(endMinutes);
+  const startTime = convertTime(start);
+  const endTime = convertTime(end);
 
   if (startMonth === endMonth && startDay === endDay) {
     return `${startMonth}월 ${startDay}일 ${startTime} ~ ${endTime}`;

@@ -19,6 +19,7 @@ interface OngoingScheduleListProps {
   onSelect: (discussionId: number) => void;
 }
 
+// TODO: useEffect 뺄 수 있으면 다른 걸로 대체
 const OngoingScheduleList = ({ segmentOption, selectedId, onSelect }: OngoingScheduleListProps) => {
   const queryClient = useQueryClient();
   const { currentPage, onPageChange } = usePagination(1);
@@ -31,7 +32,7 @@ const OngoingScheduleList = ({ segmentOption, selectedId, onSelect }: OngoingSch
       if (!exists) onSelect(data.ongoingDiscussions[0].discussionId);
     }
   }, [data, selectedId, onSelect]);
-
+  
   if (isPending) return <div>pending...</div>;
   if (!data || data.ongoingDiscussions.length === 0) return <div>no data available</div>;
   return (
