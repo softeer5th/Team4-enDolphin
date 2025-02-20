@@ -8,15 +8,17 @@ import type {
   DiscussionDTO,
   DiscussionResponse,
 } from '@/features/discussion/model';
+import type { UserDTO } from '@/features/user/model';
 import { vars } from '@/theme/index.css';
 import { getHourDiff, getTimeRangeString } from '@/utils/date';
 import { formatKoreanDate } from '@/utils/date/format';
 
 import { recommendContainerStyle, recommendItemStyle } from './recommendedSchedules.css';
 
-const RecommendedSchedules = ({ candidates, discussion }: { 
+const RecommendedSchedules = ({ candidates, discussion, participants }: { 
   candidates: DiscussionCalendarResponse['events'];
   discussion: DiscussionResponse;
+  participants: UserDTO[];
 }) => (
   <Flex direction='column' width='full'>
     <Text className={recommendContainerStyle} typo='t2'>추천 일정</Text>
@@ -27,20 +29,22 @@ const RecommendedSchedules = ({ candidates, discussion }: {
         discussionId={discussion.id}
         endDTStr={candidate.endDateTime}
         key={`${JSON.stringify(candidate)}-${idx}`}
-        startDTStr={candidate.startDateTime} 
+        participants={participants} 
+        startDTStr={candidate.startDateTime}
       />
     ))}
   </Flex>
 );
 
 const RecommendedScheduleItem = ({ 
-  candidate, discussionId, startDTStr, endDTStr, adjustCount, 
+  candidate, discussionId, startDTStr, endDTStr, adjustCount, participants,
 }: {
   candidate: DiscussionDTO;
   discussionId: number;
   startDTStr: string;
   endDTStr: string;
   adjustCount: number;
+  participants: UserDTO[];
 }) => {
   const [startDT, endDT] = [new Date(startDTStr), new Date(endDTStr)];
   return(
@@ -51,7 +55,7 @@ const RecommendedScheduleItem = ({
         adjustCount: candidate.usersForAdjust.length,
         startDateTime: startDTStr,
         endDateTime: endDTStr,
-        selectedParticipantIds: [1],
+        selectedParticipantIds: participants.map(v => v.id),
       } }}
       to={'/discussion/candidate/$id'}
     >

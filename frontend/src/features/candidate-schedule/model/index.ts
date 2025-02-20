@@ -3,9 +3,9 @@ import { z } from 'zod';
 import { zCoerceToDate } from '@/utils/zod';
 
 const ScheduleEventStatusSchema = z.union([
-  z.literal('adjustable'),
-  z.literal('fixed'),
-  z.literal('outOfRange'),
+  z.literal('ADJUSTABLE'),
+  z.literal('FIXED'),
+  z.literal('OUT_OF_RANGE'),
 ]);
 
 const ScheduleEvent = z.object({

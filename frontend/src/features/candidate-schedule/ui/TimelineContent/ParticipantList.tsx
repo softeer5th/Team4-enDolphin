@@ -49,8 +49,8 @@ const ParticipantItem = ({ participant, isIgnoredParticipant }: {
         <Avatar imageUrls={[participant.picture]} size='lg' />
         <Text typo='b2M'>{participant.name}</Text>
       </Flex>
-      {!isIgnoredParticipant && chipStatus !== 'outOfRange' &&
-        <ChipAble isAdjustable={chipStatus === 'adjustable'} />}
+      {!isIgnoredParticipant && chipStatus !== 'OUT_OF_RANGE' &&
+        <ChipAble isAdjustable={chipStatus === 'ADJUSTABLE'} />}
     </Flex>
   );
 };
@@ -58,14 +58,14 @@ const ParticipantItem = ({ participant, isIgnoredParticipant }: {
 const getChipStatus = (participant: Participant): ScheduleEventStatus => {
   let isOutOfRange = true;
   for (const event of participant.events) {
-    if (event.status === 'fixed') {
-      return 'fixed';
+    if (event.status === 'FIXED') {
+      return 'FIXED';
     }
-    if (event.status === 'adjustable') {
+    if (event.status === 'ADJUSTABLE') {
       isOutOfRange =  false;
     }
   }
-  return isOutOfRange ? 'outOfRange' : 'adjustable';
+  return isOutOfRange ? 'OUT_OF_RANGE' : 'ADJUSTABLE';
 };
 
 export default ParticipantList;

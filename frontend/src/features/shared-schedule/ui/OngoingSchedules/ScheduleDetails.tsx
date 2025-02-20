@@ -2,7 +2,11 @@
 import Button from '@/components/Button';
 import { Flex } from '@/components/Flex';
 import { Text } from '@/components/Text';
-import { useDiscussionCalendarQuery, useDiscussionQuery } from '@/features/discussion/api/queries';
+import {
+  useDiscussionCalendarQuery,
+  useDiscussionParticipantsQuery,
+  useDiscussionQuery,
+} from '@/features/discussion/api/queries';
 import type { DiscussionResponse } from '@/features/discussion/model';
 import { vars } from '@/theme/index.css';
 
@@ -21,12 +25,15 @@ const ScheduleContents = ({ discussionId }: ScheduleDetailsProps) => {
   const { discussion, isLoading: isDiscussionLoading } = useDiscussionQuery(
     discussionId.toString(),
   );
+  const { participants, isLoading: isParticipantsLoading } = 
+    useDiscussionParticipantsQuery(discussionId.toString());
   const { calendar: candidates, isLoading: isCandidateLoading } = useDiscussionCalendarQuery(
     discussionId.toString(),
     { size: 3 },
   );
-  if (isDiscussionLoading || isCandidateLoading) return <div>pending ...</div>;
-  if (!discussion || !candidates) return <div>No data available</div>;
+  if (isDiscussionLoading || isCandidateLoading || isParticipantsLoading)
+    return <div>pending ...</div>;
+  if (!discussion || !candidates || !participants) return <div>No data available</div>;
   return (
     <Flex
       className={containerStyle}
@@ -39,6 +46,7 @@ const ScheduleContents = ({ discussionId }: ScheduleDetailsProps) => {
       <RecommendedSchedules 
         candidates={candidates!}
         discussion={discussion}
+        participants={participants}
       />
       <Flex
         gap={200}

@@ -65,15 +65,15 @@ export const timelineBlockStyle = recipe({
   },
   variants: {
     status: {
-      adjustable: {
+      ADJUSTABLE: {
         backgroundColor: vars.color.Ref.Primary[50],
         borderColor: vars.color.Ref.Primary[100],
       },
-      fixed: {
+      FIXED: {
         backgroundColor: vars.color.Ref.Red[50],
         borderColor: vars.color.Ref.Red[100],
       },
-      outOfRange: {
+      OUT_OF_RANGE: {
         backgroundColor: vars.color.Ref.Netural[100],
         borderColor: vars.color.Ref.Netural[200],
       },

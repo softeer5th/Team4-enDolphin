@@ -20,7 +20,7 @@ export const candidateDetailApi = {
         },
       },
     );
-    const validData = CandidateDetailResponseSchema.parse(response);
-    return validData;
+    const parsedData = CandidateDetailResponseSchema.parse(response);
+    return parsedData;
   },
 };
