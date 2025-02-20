@@ -9,6 +9,9 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -78,4 +81,19 @@ public class CalendarService {
             () -> new CalendarException(ErrorCode.CALENDAR_NOT_FOUND_ERROR));
     }
 
+    @Transactional(readOnly = true)
+    public String getCalendarIdByUser(User user) {
+        Calendar calendar = getCalendarByUserId(user.getId());
+        return calendar.getCalendarId() == null ? user.getEmail() : calendar.getCalendarId();
+    }
+
+    @Transactional(readOnly = true)
+    public Map<Long, String> getCalendarIdByUsers(List<Long> userIds) {
+        List<Object[]> response = calendarRepository.findCalendarIdsByUserIds(userIds);
+
+        return response.stream().collect(Collectors.toMap(
+            o -> (Long) o[0],
+            o -> (String) o[1]
+        ));
+    }
 }
