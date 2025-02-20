@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,6 +39,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class PersonalEventService {
 
     private final PersonalEventRepository personalEventRepository;
@@ -206,6 +208,7 @@ public class PersonalEventService {
             user.getId());
         Set<LocalDate> changedDates = new HashSet<>();
         for (GoogleEvent googleEvent : googleEvents) {
+            log.info("Processing Google event: {}", googleEvent);
             if (googleEvent.status().equals(GoogleEventStatus.CONFIRMED)) {
                 upsertPersonalEventByGoogleEvent(googleEvent, discussions, user, googleCalendarId,
                     changedDates);
@@ -228,6 +231,7 @@ public class PersonalEventService {
     private void upsertPersonalEventByGoogleEvent(GoogleEvent googleEvent,
         List<Discussion> discussions, User user, String googleCalendarId,
         Set<LocalDate> changedDates) {
+        log.info("Upserting personal event by Google event: {}", googleEvent);
         personalEventRepository.findByGoogleEventIdAndCalendarId(googleEvent.eventId(),
                 googleCalendarId)
             .ifPresentOrElse(personalEvent -> {
@@ -251,6 +255,7 @@ public class PersonalEventService {
     private void deletePersonalEventByGoogleEvent(GoogleEvent googleEvent,
         List<Discussion> discussions, User user, String googleCalendarId,
         Set<LocalDate> changedDates) {
+        log.info("Deleting personal event by Google event: {}", googleEvent);
         personalEventRepository.findByGoogleEventIdAndCalendarId(googleEvent.eventId(),
                 googleCalendarId)
             .ifPresent(personalEvent -> {
