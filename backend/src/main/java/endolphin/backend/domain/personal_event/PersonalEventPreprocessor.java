@@ -1,12 +1,17 @@
 package endolphin.backend.domain.personal_event;
 
+import static endolphin.backend.global.util.TimeUtil.convertToMinute;
+import static endolphin.backend.global.util.TimeUtil.getCurrentDateTime;
+import static endolphin.backend.global.util.TimeUtil.getUntilDateTime;
+import static endolphin.backend.global.util.TimeUtil.roundDownToNearestHalfHour;
+import static endolphin.backend.global.util.TimeUtil.roundUpToNearestHalfHour;
+
 import endolphin.backend.domain.discussion.DiscussionParticipantService;
 import endolphin.backend.domain.discussion.entity.Discussion;
 import endolphin.backend.domain.discussion.enums.DiscussionStatus;
 import endolphin.backend.domain.personal_event.entity.PersonalEvent;
 import endolphin.backend.domain.user.entity.User;
 import endolphin.backend.global.redis.DiscussionBitmapService;
-import endolphin.backend.global.util.TimeUtil;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -69,10 +74,12 @@ public class PersonalEventPreprocessor {
 
     private void convert(PersonalEvent personalEvent, Discussion discussion, Long offset,
         boolean value) {
+        long MINUTE_PER_DAY = 1440;
+
         Long discussionId = discussion.getId();
-        LocalDateTime personalEventStartTime = TimeUtil.roundDownToNearestHalfHour(
+        LocalDateTime personalEventStartTime = roundDownToNearestHalfHour(
             personalEvent.getStartTime());
-        LocalDateTime personalEventEndTime = TimeUtil.roundUpToNearestHalfHour(
+        LocalDateTime personalEventEndTime = roundUpToNearestHalfHour(
             personalEvent.getEndTime());
 
         LocalDate discussionStartDate = discussion.getDateRangeStart();
@@ -80,23 +87,25 @@ public class PersonalEventPreprocessor {
         LocalTime discussionStartTime = discussion.getTimeRangeStart();
         LocalTime discussionEndTime = discussion.getTimeRangeEnd();
 
-        LocalDateTime currentDateTime = TimeUtil.getCurrentDateTime(personalEventStartTime,
+        long currentDateTime = getCurrentDateTime(personalEventStartTime,
             discussionStartDate, discussionStartTime, discussionEndTime);
 
-        LocalDateTime untilDateTime = TimeUtil.getUntilDateTime(personalEventEndTime,
+        long untilDateTime = getUntilDateTime(personalEventEndTime,
             discussionEndDate, discussionEndTime, discussionStartTime);
+
+        long currentDate = currentDateTime / MINUTE_PER_DAY;
+        long minTime = convertToMinute(discussionStartTime);
+        long maxTime = convertToMinute(discussionEndTime);
 
         log.info("id: {}, currentDateTime: {} untilDateTime: {}", personalEvent.getId(),
             currentDateTime, untilDateTime);
 
-        while (!currentDateTime.toLocalDate().isAfter(untilDateTime.toLocalDate())) {
-            while (currentDateTime.toLocalTime().isBefore(discussionEndTime)
-                && currentDateTime.isBefore(untilDateTime)) {
+        while (currentDateTime < untilDateTime) {
+            while (currentDateTime % MINUTE_PER_DAY < maxTime && currentDateTime < untilDateTime) {
                 discussionBitmapService.setBitValue(discussionId, currentDateTime, offset, value);
-                currentDateTime = currentDateTime.plusMinutes(30);
+                currentDateTime += 30;
             }
-            currentDateTime = currentDateTime.plusDays(1);
-            currentDateTime = currentDateTime.toLocalDate().atTime(discussionStartTime);
+            currentDateTime = ++currentDate * MINUTE_PER_DAY + minTime;
         }
     }
 

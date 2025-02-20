@@ -45,12 +45,12 @@ public class TimeUtil {
         return time;
     }
 
-    public static LocalDateTime getCurrentDateTime(LocalDateTime personalEventStartTime,
+    public static Long getCurrentDateTime(LocalDateTime personalEventStartTime,
         LocalDate discussionStartDate, LocalTime discussionStartTime, LocalTime discussionEndTime) {
 
         LocalDate currentDate = personalEventStartTime.toLocalDate();
         if (currentDate.isBefore(discussionStartDate)) {
-            return discussionStartDate.atTime(discussionStartTime);
+            return convertToMinute(discussionStartDate.atTime(discussionStartTime));
         }
 
         LocalTime currentTime = personalEventStartTime.toLocalTime();
@@ -61,14 +61,14 @@ public class TimeUtil {
             currentDate = currentDate.plusDays(1);
         }
 
-        return currentDate.atTime(currentTime);
+        return convertToMinute(currentDate.atTime(currentTime));
     }
 
-    public static LocalDateTime getUntilDateTime(LocalDateTime personalEventEndTime,
+    public static Long getUntilDateTime(LocalDateTime personalEventEndTime,
         LocalDate discussionEndDate, LocalTime discussionEndTime, LocalTime discussionStartTime) {
         LocalDate untilDate = personalEventEndTime.toLocalDate();
         if (untilDate.isAfter(discussionEndDate)) {
-            return discussionEndDate.atTime(discussionEndTime);
+            return convertToMinute(discussionEndDate.atTime(discussionEndTime));
         }
 
         LocalTime untilTime = personalEventEndTime.toLocalTime();
@@ -79,11 +79,15 @@ public class TimeUtil {
             untilDate = untilDate.minusDays(1);
         }
 
-        return untilDate.atTime(untilTime);
+        return convertToMinute(untilDate.atTime(untilTime));
     }
 
     public static Long convertToMinute(LocalDateTime dateTime) {
         return dateTime.toEpochSecond(ZoneOffset.UTC) / 60;
+    }
+
+    public static Long convertToMinute(LocalTime time) {
+        return (long) (time.toSecondOfDay() / 60);
     }
 
     public static LocalDateTime convertToLocalDateTime(long minuteKey) {
