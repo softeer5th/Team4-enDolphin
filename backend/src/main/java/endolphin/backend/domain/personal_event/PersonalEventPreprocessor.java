@@ -6,6 +6,7 @@ import endolphin.backend.domain.discussion.enums.DiscussionStatus;
 import endolphin.backend.domain.personal_event.entity.PersonalEvent;
 import endolphin.backend.domain.user.entity.User;
 import endolphin.backend.global.redis.DiscussionBitmapService;
+import endolphin.backend.global.util.TimeUtil;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -26,7 +27,8 @@ public class PersonalEventPreprocessor {
     private final DiscussionParticipantService discussionParticipantService;
 
     public void preprocess(List<PersonalEvent> personalEvents, Discussion discussion, User user) {
-        Long offset = discussionParticipantService.getDiscussionParticipantOffset(discussion.getId(),
+        Long offset = discussionParticipantService.getDiscussionParticipantOffset(
+            discussion.getId(),
             user.getId());
         for (PersonalEvent personalEvent : personalEvents) {
             if (discussion.getDiscussionStatus() == DiscussionStatus.ONGOING
@@ -37,7 +39,8 @@ public class PersonalEventPreprocessor {
     }
 
     public void preprocess(List<PersonalEvent> personalEvents, boolean value) {
-        List<Long> userIds = personalEvents.stream().map(PersonalEvent::getUser).map(User::getId).toList();
+        List<Long> userIds = personalEvents.stream().map(PersonalEvent::getUser).map(User::getId)
+            .toList();
 
         Map<Long, Map<Discussion, Long>> userDiscussionOffsetMap =
             discussionParticipantService.getOngoingDiscussionOffsetsByUserIds(userIds);
@@ -54,7 +57,8 @@ public class PersonalEventPreprocessor {
         }
     }
 
-    public void preprocessOne(PersonalEvent personalEvent, Discussion discussion, User user, boolean value) {
+    public void preprocessOne(PersonalEvent personalEvent, Discussion discussion, User user,
+        boolean value) {
         Long index = discussionParticipantService.getDiscussionParticipantOffset(discussion.getId(),
             user.getId());
         if (discussion.getDiscussionStatus() == DiscussionStatus.ONGOING
@@ -66,9 +70,10 @@ public class PersonalEventPreprocessor {
     private void convert(PersonalEvent personalEvent, Discussion discussion, Long offset,
         boolean value) {
         Long discussionId = discussion.getId();
-        LocalDateTime personalEventStartTime = roundDownToNearestHalfHour(
+        LocalDateTime personalEventStartTime = TimeUtil.roundDownToNearestHalfHour(
             personalEvent.getStartTime());
-        LocalDateTime personalEventEndTime = roundUpToNearestHalfHour(personalEvent.getEndTime());
+        LocalDateTime personalEventEndTime = TimeUtil.roundUpToNearestHalfHour(
+            personalEvent.getEndTime());
 
         LocalDate discussionStartDate = discussion.getDateRangeStart();
         LocalDate discussionEndDate = discussion.getDateRangeEnd();
@@ -78,14 +83,15 @@ public class PersonalEventPreprocessor {
         LocalDateTime currentDateTime = getCurrentDateTime(personalEventStartTime,
             discussionStartDate, discussionStartTime, discussionEndTime);
 
-        LocalDateTime untilDateTime = getUntilDateTime(personalEventEndTime, discussionEndDate,
-            discussionEndTime, discussionStartTime);
+        LocalDateTime untilDateTime = TimeUtil.getUntilDateTime(personalEventEndTime,
+            discussionEndDate, discussionEndTime, discussionStartTime);
 
-        log.info("id: {}, currentDateTime: {} untilDateTime: {}", personalEvent.getId(), currentDateTime, untilDateTime);
+        log.info("id: {}, currentDateTime: {} untilDateTime: {}", personalEvent.getId(),
+            currentDateTime, untilDateTime);
 
         while (!currentDateTime.toLocalDate().isAfter(untilDateTime.toLocalDate())) {
             while (currentDateTime.toLocalTime().isBefore(discussionEndTime)
-            && currentDateTime.isBefore(untilDateTime)) {
+                && currentDateTime.isBefore(untilDateTime)) {
                 discussionBitmapService.setBitValue(discussionId, currentDateTime, offset, value);
                 currentDateTime = currentDateTime.plusMinutes(30);
             }
@@ -111,47 +117,6 @@ public class PersonalEventPreprocessor {
         }
 
         return currentDate.atTime(currentTime);
-    }
-
-    private LocalDateTime getUntilDateTime(LocalDateTime personalEventEndTime,
-        LocalDate discussionEndDate, LocalTime discussionEndTime, LocalTime discussionStartTime) {
-        LocalDate untilDate = personalEventEndTime.toLocalDate();
-        if (untilDate.isAfter(discussionEndDate)) {
-            return discussionEndDate.atTime(discussionEndTime);
-        }
-
-        LocalTime untilTime = personalEventEndTime.toLocalTime();
-        if (untilTime.isAfter(discussionEndTime)) {
-            untilTime = discussionEndTime;
-        } else if (untilTime.isBefore(discussionStartTime)) {
-            untilTime = discussionEndTime;
-            untilDate = untilDate.minusDays(1);
-        }
-
-        return untilDate.atTime(untilTime);
-    }
-
-    private LocalDateTime roundDownToNearestHalfHour(LocalDateTime time) {
-        int minute = time.getMinute();
-        if (minute < 30) {
-            time = time.minusMinutes(minute);
-        } else {
-            time = time.minusMinutes(minute - 30);
-        }
-        return time;
-    }
-
-    private LocalDateTime roundUpToNearestHalfHour(LocalDateTime time) {
-        int minute = time.getMinute();
-        if (minute == 0) {
-            time = time.plusMinutes(minute);
-        }
-        else if (minute < 30) {
-            time = time.plusMinutes(30 - minute);
-        } else {
-            time = time.plusMinutes(60 - minute);
-        }
-        return time;
     }
 
     private boolean isTimeRangeOverlapping(
