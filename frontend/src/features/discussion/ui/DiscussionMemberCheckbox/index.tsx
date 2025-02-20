@@ -1,4 +1,5 @@
 import { useParams } from '@tanstack/react-router';
+import { useMemo } from 'react';
 
 import Button from '@/components/Button';
 import { Checkbox } from '@/components/Checkbox';
@@ -44,9 +45,10 @@ const CheckboxContents = (
 const DiscussionMemberCheckbox = () => {
   const params: { id: string } = useParams({ from: '/_main/discussion/$id' });
   const { participants = [], isPending } = useDiscussionParticipantsQuery(params.id);
+  const participantsIds = useMemo(() => participants.map(({ id }) => id), [participants]);
   const groupInfos = useGroup({
-    defaultCheckedList: participants.map(({ id }) => id),
-    itemIds: participants.map(({ id }) => id),
+    defaultCheckedList: participantsIds,
+    itemIds: participantsIds,
   });
 
   const members = useMemberContext();
