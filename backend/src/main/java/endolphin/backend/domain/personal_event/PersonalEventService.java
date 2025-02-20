@@ -73,9 +73,9 @@ public class PersonalEventService {
             .isAdjustable(request.isAdjustable())
             .user(user)
             .build();
-        
+
         PersonalEvent result = personalEventRepository.save(personalEvent);
-        
+
         if (request.syncWithGoogleCalendar()) {
             personalEvent.setGoogleEventId(IdGenerator.generateId(user.getId()));
             personalEvent.setCalendarId(PRIMARY);
@@ -168,17 +168,22 @@ public class PersonalEventService {
         List<Discussion> discussions = discussionParticipantService.getDiscussionsByUserId(
             user.getId());
 
-        discussions.forEach(discussion -> {
-            personalEventPreprocessor.preprocessOne(personalEvent, discussion, user, false);
-        });
-
-        personalEventRepository.delete(personalEvent);
+        deletePersonalEvent(personalEvent, user, discussions);
 
         if (syncWithGoogleCalendar
             && personalEvent.getGoogleEventId() != null
             && personalEvent.getCalendarId() != null) {
             eventPublisher.publishEvent(new DeletePersonalEvent(personalEvent));
         }
+    }
+
+    private void deletePersonalEvent(PersonalEvent personalEvent, User user,
+        List<Discussion> discussions) {
+        discussions.forEach(discussion -> {
+            personalEventPreprocessor.preprocessOne(personalEvent, discussion, user, false);
+        });
+
+        personalEventRepository.delete(personalEvent);
     }
 
     @Transactional(readOnly = true)
@@ -201,9 +206,13 @@ public class PersonalEventService {
         Set<LocalDate> changedDates = new HashSet<>();
         for (GoogleEvent googleEvent : googleEvents) {
             if (googleEvent.status().equals(GoogleEventStatus.CONFIRMED)) {
-                upsertPersonalEventByGoogleEvent(googleEvent, discussions, user, googleCalendarId);
+                upsertPersonalEventByGoogleEvent(googleEvent, discussions, user, googleCalendarId,
+                    changedDates);
+                changedDates.add(googleEvent.startDateTime().toLocalDate());
+                changedDates.add(googleEvent.endDateTime().toLocalDate());
             } else if (googleEvent.status().equals(GoogleEventStatus.CANCELLED)) {
-                deletePersonalEventByGoogleEvent(googleEvent, discussions, user, googleCalendarId);
+                deletePersonalEventByGoogleEvent(googleEvent, discussions, user, googleCalendarId,
+                    changedDates);
             }
         }
         return changedDates;
@@ -216,10 +225,13 @@ public class PersonalEventService {
     }
 
     private void upsertPersonalEventByGoogleEvent(GoogleEvent googleEvent,
-        List<Discussion> discussions, User user, String googleCalendarId) {
+        List<Discussion> discussions, User user, String googleCalendarId,
+        Set<LocalDate> changedDates) {
         personalEventRepository.findByGoogleEventIdAndCalendarId(googleEvent.eventId(),
                 googleCalendarId)
             .ifPresentOrElse(personalEvent -> {
+                    changedDates.add(personalEvent.getStartTime().toLocalDate());
+                    changedDates.add(personalEvent.getEndTime().toLocalDate());
                     updatePersonalEvent(PersonalEventRequest.of(googleEvent), personalEvent, user,
                         discussions);
                 },
@@ -236,15 +248,14 @@ public class PersonalEventService {
     }
 
     private void deletePersonalEventByGoogleEvent(GoogleEvent googleEvent,
-        List<Discussion> discussions, User user, String googleCalendarId) {
+        List<Discussion> discussions, User user, String googleCalendarId,
+        Set<LocalDate> changedDates) {
         personalEventRepository.findByGoogleEventIdAndCalendarId(googleEvent.eventId(),
                 googleCalendarId)
             .ifPresent(personalEvent -> {
-                // 비트맵 삭제
-                discussions.forEach(discussion -> {
-                    personalEventPreprocessor.preprocessOne(personalEvent, discussion, user, false);
-                });
-                personalEventRepository.delete(personalEvent);
+                changedDates.add(personalEvent.getStartTime().toLocalDate());
+                changedDates.add(personalEvent.getEndTime().toLocalDate());
+                deletePersonalEvent(personalEvent, user, discussions);
             });
     }
 
