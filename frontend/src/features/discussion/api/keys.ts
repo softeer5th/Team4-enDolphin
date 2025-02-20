@@ -5,16 +5,17 @@ export const discussionKeys = {
   detail: (id: string) => [...discussionKeys.all, id],
 };
 
-export const calendarKeys = {
-  all: ['calendars'],
-  detail: (id: string, body: DiscussionCalendarRequest) => 
-    [...calendarKeys.all, id, JSON.stringify(body)],
-};
-
-export const rankKeys = {
-  all: ['ranks'],
-  detail: (id: string, body: DiscussionRankRequest) => 
-    [...rankKeys.all, id, JSON.stringify(body)],
+export const candidateKeys = {
+  all: ['candidates'],
+  calendar: (
+    id: string, {
+      startDate,
+      endDate,
+      selectedUserIdList,
+    }: DiscussionCalendarRequest) => 
+    [...candidateKeys.all, id, 'calendar', startDate, endDate, selectedUserIdList?.join(',')],
+  rank: (id: string, { selectedUserIdList }: DiscussionRankRequest) => 
+    [...candidateKeys.all, id, 'rank', selectedUserIdList?.join(',')],
 };
 
 export const participantKeys = {
@@ -23,3 +24,13 @@ export const participantKeys = {
 };
 
 export const invitationQueryKey = (discussionId: number) => ['invitation', discussionId];
+
+export const sharedEventKeys = {
+  all: ['sharedEvents'],
+  detail: (id: string) => [...sharedEventKeys.all, id],
+};
+
+export const hostKeys = {
+  all: ['hosts'],
+  detail: (id: string) => [...hostKeys.all, id],
+};

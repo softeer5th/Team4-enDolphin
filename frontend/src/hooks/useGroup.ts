@@ -1,4 +1,4 @@
-import { useReducer } from 'react';
+import { useEffect, useReducer } from 'react';
 
 type State = {
   checkedList: Set<number>;
@@ -38,7 +38,7 @@ const reducer = (state: State, action: Action): State => {
     case 'INIT': {
       return { 
         checkedList: new Set(action.defaultCheckedList),
-        isAllChecked: action.defaultCheckedList.length === action.itemIds.length, 
+        isAllChecked: action.defaultCheckedList.length === action.itemIds.length,
       };
     }
 
@@ -70,6 +70,10 @@ export const useGroup = ({
       checkedList: new Set(defaultCheckedList), 
       isAllChecked: defaultCheckedList.length === itemIds.length, 
     });
+
+  useEffect(() => {
+    dispatch({ type: 'INIT', defaultCheckedList, itemIds });
+  }, [defaultCheckedList, itemIds]);
 
   const handleToggleCheck = (id: number) => {
     dispatch({ type: 'TOGGLE_ITEM', id, itemIds });

@@ -23,7 +23,7 @@ export const RankContents = ({ data }: { data: DiscussionDTO[] }) => {
         {data.slice(0, TOP_CARD_NUM).map((discussion, idx) => 
           <DiscussionCard
             discussion={discussion}
-            key={discussion.endDateTime}
+            key={`${discussion.endDateTime}-${idx}`}
             rank={idx + 1}
             size='lg'
           />)}

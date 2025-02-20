@@ -50,7 +50,7 @@ export const cardBackgroundStyle = recipe({
 export const cardContentStyle = recipe({
   base: {
     width: '100%',
-    maxWidth: '100%',
+    maxWidth: 'calc(100% - 50px)',
     maxHeight: '100%',
     padding: `${vars.spacing[200]} ${vars.spacing[400]} ${vars.spacing[100]}`,
     borderLeft: '3px solid transparent',

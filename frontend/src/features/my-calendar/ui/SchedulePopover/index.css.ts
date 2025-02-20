@@ -65,6 +65,6 @@ export const backgroundStyle = style({
   right: 0,
   bottom: 0,
 
-  zIndex: 2,
+  zIndex: 3,
   backgroundColor: 'rgba(0, 0, 0, 0.2)',
 });

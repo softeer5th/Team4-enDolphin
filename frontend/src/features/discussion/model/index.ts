@@ -11,6 +11,12 @@ const DiscussionDTO = z.object({
   usersForAdjust: z.array(UserDTO.pick({ id: true, name: true })),
 });
 
+const SharedEventDTO = z.object({
+  id: z.number(),
+  startDateTime: z.string().datetime(),
+  endDateTime: z.string().datetime(),
+});
+
 const DiscussionRequest = z.object({
   title: z.string().min(1, '제목은 필수입니다')
     .max(15, '제목은 15자 이하로 입력해주세요'),
@@ -26,6 +32,8 @@ const DiscussionRequest = z.object({
   password: z.string().regex(PASSWORD)
     .optional(),
 });
+
+const DiscussionConfirmRequest = SharedEventDTO.omit({ id: true });
 
 const DiscussionResponse = z.object({
   id: z.number(),
@@ -48,13 +56,13 @@ const DiscussionParticipantResponse = z.object({
 const DiscussionCalendarRequest = z.object({
   startDate: z.string().regex(DATE_BAR),
   endDate: z.string().regex(DATE_BAR),
-  selectedUserIdList: z.array(z.number()),
+  selectedUserIdList: z.array(z.number()).nullable(),
   size: z.number().int()
     .optional(),
 });
 
 const DiscussionRankRequest = z.object({
-  selectedUserIdList: z.array(z.number()),
+  selectedUserIdList: z.array(z.number()).nullable(),
 });
 
 const DiscussionCalendarResponse = z.object({
@@ -66,9 +74,19 @@ const DiscussionRankResponse = z.object({
   eventsRankedOfTime: z.array(DiscussionDTO),
 });
 
+const DiscussionConfirmResponse = z.object({
+  discussionId: z.number(),
+  title: z.string(),
+  meetingMethodOrLocation: z.string(),
+  sharedEventDto: SharedEventDTO,
+  participantPictureUrls: z.array(z.string()),
+});
+
 export type DiscussionRequest = z.infer<typeof DiscussionRequest>;
+export type DiscussionConfirmRequest = z.infer<typeof DiscussionConfirmRequest>;
 export type DiscussionResponse = z.infer<typeof DiscussionResponse>;
 export type DiscussionParticipantResponse = z.infer<typeof DiscussionParticipantResponse>;
+export type DiscussionConfirmResponse = z.infer<typeof DiscussionConfirmResponse>;
 
 export type DiscussionCalendarRequest = z.infer<typeof DiscussionCalendarRequest>;
 export type DiscussionCalendarResponse = z.infer<typeof DiscussionCalendarResponse>;

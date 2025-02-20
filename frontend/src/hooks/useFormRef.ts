@@ -3,7 +3,7 @@ import { useRef } from 'react';
 // Form의 value로는 다양한 값이 올 수 있습니다.
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type FormValues<T> = { [K in keyof T]: any };
-export type ChangeEvent<T> = { name: keyof T; value: string | boolean };
+export type ChangeEvent<T> = { name: keyof T; value: T[keyof T] };
 
 export interface FormRef<T> {
   valuesRef: { current: FormValues<T> };

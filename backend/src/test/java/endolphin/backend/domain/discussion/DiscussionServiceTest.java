@@ -659,6 +659,7 @@ public class DiscussionServiceTest {
         discussion.setPassword("encodedPassword123");
 
         when(discussionRepository.findById(discussionId)).thenReturn(Optional.of(discussion));
+        when(userService.getCurrentUser()).thenReturn(new User());
 
         // When & Then
         assertThatThrownBy(() -> discussionService.joinDiscussion(discussionId, new JoinDiscussionRequest(null)))

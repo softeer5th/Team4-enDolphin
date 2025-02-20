@@ -1,8 +1,8 @@
 import { Badge } from '@/components/Badge';
 import { Flex } from '@/components/Flex';
 import { getHourDiff, getTimeRangeString, parseTime } from '@/utils/date';
+import { formatDateToString } from '@/utils/date/format';
 
-import type { DiscussionConfirmCardProps } from '.';
 import { badgeContainerStyle } from './index.css';
 
 interface BadgeContainerProps {
@@ -29,10 +29,18 @@ const BadgeContainer = ({
       gap={250}
       justify='flex-start'
     >
-      <Badge iconType='date'>{`${timeRangeString} (${getHourDiff(timeStart, timeEnd)}시간)`}</Badge>
+      <Badge iconType='date'>
+        {formatDateToString(startDateTime)}
+      </Badge>
+      <Badge iconType='date'>
+        {getTimeRangeString(startDateTime, endDateTime)}
+      </Badge>
+      <Badge iconType='time'>
+        {getMinuteDiff(startDateTime, endDateTime)}
+        분
+      </Badge>
       {location && <Badge iconType='location'>{location}</Badge>}
     </Flex>
   );
-};
 
 export default BadgeContainer;

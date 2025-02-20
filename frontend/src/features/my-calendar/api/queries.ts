@@ -5,10 +5,10 @@ import { personalEventApi } from '.';
 import { personalEventKeys } from './keys';
 
 export const usePersonalEventsQuery = (params: DateRangeParams) => {
-  const { data: personalEvents, isLoading } = useQuery<PersonalEventResponse[]>({
+  const { data: personalEvents, isPending } = useQuery<PersonalEventResponse[]>({
     queryKey: personalEventKeys.detail(params), 
     queryFn: () => personalEventApi.getPersonalEvent(params),
   });
 
-  return { personalEvents, isLoading };
+  return { personalEvents, isPending };
 };
