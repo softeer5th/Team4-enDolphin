@@ -2,6 +2,7 @@
 
 import { serviceENV } from '@/envconfig';
 
+import { getAccessToken } from '../auth';
 import type { HTTPErrorProps } from '../error';
 import { HTTPError } from '../error';
 
@@ -14,7 +15,7 @@ export type RequestOptions = {
 const buildFetchOptions = (options?: RequestInit): RequestInit => {
   const defaultHeaders = {
     'Content-Type': 'application/json',
-    Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+    Authorization: `Bearer ${getAccessToken()}`,
   };
 
   const headers = { ...defaultHeaders, ...options?.headers };
