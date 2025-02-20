@@ -25,9 +25,9 @@ const ScheduleContents = ({ discussionId }: ScheduleDetailsProps) => {
   const { discussion, isLoading: isDiscussionLoading } = useDiscussionQuery(
     discussionId.toString(),
   );
-  const { participants, isLoading: isParticipantsLoading } = 
+  const { participants, isPending: isParticipantsLoading } = 
     useDiscussionParticipantsQuery(discussionId.toString());
-  const { calendar: candidates, isLoading: isCandidateLoading } = useDiscussionCalendarQuery(
+  const { calendar: candidates, isPending: isCandidateLoading } = useDiscussionCalendarQuery(
     discussionId.toString(),
     { size: 3 },
   );
