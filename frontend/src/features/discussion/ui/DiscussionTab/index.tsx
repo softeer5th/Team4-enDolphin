@@ -22,7 +22,7 @@ const DiscussionTab = () => {
         <Tab.Item value='calendar'>캘린더로 보기</Tab.Item>
         <Tab.Item value='rank'>순위로 보기</Tab.Item>
       </Tab.List>
-      <Tab.Content value='calendar'>
+      <Tab.Content className={tabContentStyle} value='calendar'>
         <DiscussionCalendar />
       </Tab.Content>
       <Tab.Content className={tabContentStyle} value='rank'>
