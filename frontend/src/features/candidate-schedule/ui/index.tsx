@@ -13,8 +13,8 @@ import { splitParticipantsBySelection } from './timelineHelper';
 interface CandidateScheduleDetailProps {
   adjustCount: number;
   discussionId: number;
-  startDateTime: Date;
-  endDateTime: Date;
+  startDateTime: string;
+  endDateTime: string;
   selectedParticipantIds: number[];
 }
 
@@ -37,10 +37,8 @@ const CandidateScheduleDetail = ({
       <Content
         {...data}
         adjustCount={adjustCount}
-        endDateTime={endDateTime}
         ignoredParticipants={ignoredParticipants}
         selectedParticipants={selectedParticipants}
-        startDateTime={startDateTime}
       />
     </Flex>
   );

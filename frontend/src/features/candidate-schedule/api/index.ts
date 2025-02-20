@@ -6,8 +6,8 @@ import { CandidateDetailResponseSchema } from '../model';
 export const candidateDetailApi = {
   getCandidateScheduleDetail: async (
     discussionId: number,
-    startDateTime: Date,
-    endDateTime: Date,
+    startDateTime: string,
+    endDateTime: string,
     selectedUserIdList: number[], 
   ) => {
     const response = await request.post(

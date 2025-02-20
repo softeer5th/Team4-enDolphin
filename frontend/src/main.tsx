@@ -31,8 +31,8 @@ declare module '@tanstack/react-router' {
   interface HistoryState {
     candidate?: {
       adjustCount: number;
-      startDateTime: Date;
-      endDateTime: Date;
+      startDateTime: string;
+      endDateTime: string;
       selectedParticipantIds: number[];
     };
   }

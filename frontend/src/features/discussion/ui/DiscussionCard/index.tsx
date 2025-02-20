@@ -20,8 +20,8 @@ const DiscussionCard = ({ size, discussion, rank }: DiscussionCardProps) => {
       params={{ id: discussionId.toString() }}
       state={{ candidate: {
         adjustCount: discussion.usersForAdjust.length,
-        startDateTime: new Date(discussion.startDateTime),
-        endDateTime: new Date(discussion.endDateTime),
+        startDateTime: discussion.startDateTime,
+        endDateTime: discussion.endDateTime,
         // TODO: selectedParticipantIds를 외부에서 주입 (현재는 모든 참여자가 선택된 것으로 간주됨)
         selectedParticipantIds: discussion.usersForAdjust.map((user) => user.id),
       } }}

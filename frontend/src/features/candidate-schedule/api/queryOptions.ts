@@ -5,8 +5,8 @@ import { candidateDetailQueryKey } from './keys';
 
 export const candidateDetailQueryOption = (
   discussionId: number,
-  startDateTime: Date,
-  endDateTime: Date,
+  startDateTime: string,
+  endDateTime: string,
   selectedUserIdList: number[],
 ) => ({
   queryKey: candidateDetailQueryKey(discussionId, startDateTime, endDateTime, selectedUserIdList),

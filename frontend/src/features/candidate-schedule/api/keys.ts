@@ -1,6 +1,6 @@
 export const candidateDetailQueryKey = (
   discussionId: number, 
-  startDateTime: Date,
-  endDateTime: Date,
+  startDateTime: string,
+  endDateTime: string,
   selectedUserIdList: number[],
 ) => ['candidateDetail', discussionId, startDateTime, endDateTime, selectedUserIdList];

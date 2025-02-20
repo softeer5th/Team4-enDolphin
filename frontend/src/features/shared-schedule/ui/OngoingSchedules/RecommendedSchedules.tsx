@@ -25,43 +25,46 @@ const RecommendedSchedules = ({ candidates, discussion }: {
         adjustCount={candidate.usersForAdjust.length}
         candidate={candidate}
         discussionId={discussion.id}
-        end={new Date(candidate.endDateTime)}
+        endDTStr={candidate.endDateTime}
         key={`${JSON.stringify(candidate)}-${idx}`}
-        start={new Date(candidate.startDateTime)} 
+        startDTStr={candidate.startDateTime} 
       />
     ))}
   </Flex>
 );
 
 const RecommendedScheduleItem = ({ 
-  candidate, discussionId, start, end, adjustCount, 
+  candidate, discussionId, startDTStr, endDTStr, adjustCount, 
 }: {
   candidate: DiscussionDTO;
   discussionId: number;
-  start: Date;
-  end: Date;
+  startDTStr: string;
+  endDTStr: string;
   adjustCount: number;
-}) => (
-  <Link
-    className={recommendItemStyle}
-    params={{ id: discussionId.toString() }}
-    state={{ candidate: {
-      adjustCount: candidate.usersForAdjust.length,
-      startDateTime: start,
-      endDateTime: end,
-      selectedParticipantIds: [1],
-    } }}
-    to={'/discussion/candidate/$id'}
-  >
-    <Flex direction='column' gap={100}>
-      <Text typo='b2M'>{formatKoreanDate(start, { year: true })}</Text>
-      <Text color={vars.color.Ref.Netural[700]} typo='b3R'>
-        {`${getTimeRangeString(start, end)} (${getHourDiff(start, end)}시간)`}
-      </Text>
-    </Flex >
-    <AvailableChip adjustCount={adjustCount} />
-  </Link>
-);
+}) => {
+  const [startDT, endDT] = [new Date(startDTStr), new Date(endDTStr)];
+  return(
+    <Link
+      className={recommendItemStyle}
+      params={{ id: discussionId.toString() }}
+      state={{ candidate: {
+        adjustCount: candidate.usersForAdjust.length,
+        startDateTime: startDTStr,
+        endDateTime: endDTStr,
+        selectedParticipantIds: [1],
+      } }}
+      to={'/discussion/candidate/$id'}
+    >
+      <Flex direction='column' gap={100}>
+        <Text typo='b2M'>{formatKoreanDate(startDT, { year: true })}</Text>
+        <Text color={vars.color.Ref.Netural[700]} typo='b3R'>
+          {`${getTimeRangeString(startDT, endDT)} (${getHourDiff(startDT, endDT)}시간)`}
+        </Text>
+      </Flex >
+      <AvailableChip adjustCount={adjustCount} />
+    </Link>
+  ); 
+};
 
 const AvailableChip = ({ adjustCount }: { adjustCount: number }) => (
   <Chip

@@ -5,8 +5,8 @@ import { candidateDetailQueryOption } from './queryOptions';
 
 export const useCandidateDetailQuery = (
   discussionId: number,
-  startDateTime: Date,
-  endDateTime: Date,
+  startDateTime: string,
+  endDateTime: string,
   selectedUserIdList: number[],
 ) => useQuery<CandidateDetailResponse>(candidateDetailQueryOption(
   discussionId, startDateTime, endDateTime, selectedUserIdList,

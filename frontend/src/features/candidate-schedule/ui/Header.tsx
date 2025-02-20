@@ -1,11 +1,14 @@
+import { Link } from '@tanstack/react-router';
+
 import Button from '@/components/Button';
 import { Flex } from '@/components/Flex';
 import { Text } from '@/components/Text';
 import { vars } from '@/theme/index.css';
 import { formatTimeToColonString } from '@/utils/date/format';
 
-const Header = ({ adjustCount, startDateTime, endDateTime }: {
+const Header = ({ adjustCount, discussionId, startDateTime, endDateTime }: {
   adjustCount: number;
+  discussionId: number;
   startDateTime: Date;
   endDateTime: Date;
 }) => (
@@ -30,11 +33,16 @@ const Header = ({ adjustCount, startDateTime, endDateTime }: {
       >
         링크 복사
       </Button> */}
-      <Button
-        size='lg'
+      <Link
+        params={{ id: discussionId.toString() }}
+        to='/discussion/confirm/$id'
       >
-        일정 확정하기
-      </Button>
+        <Button
+          size='lg'
+        >
+          일정 확정하기
+        </Button>
+      </Link>
     </Flex>
   </Flex>
 );
