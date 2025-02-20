@@ -32,11 +32,13 @@ public class RetryExecutor {
             try {
                 return action.get();
             } catch (OAuthException e) {
+                log.error("OAuth exception: {}", e.getMessage());
                 if (e.getErrorCode() == ErrorCode.OAUTH_UNAUTHORIZED_ERROR) {
                     String newAccessToken = googleOAuthService.reissueAccessToken(user.getRefreshToken());
                     userService.updateAccessToken(user, newAccessToken);
                 }
             } catch (CalendarException e) {
+                log.error("Calendar exception: {}", e.getMessage());
                 if (switch (e.getErrorCode()) {
                     case GC_EXPIRED_SYNC_TOKEN -> {
                         if (calendarId != null) {
@@ -47,6 +49,7 @@ public class RetryExecutor {
                     case GC_BAD_REQUEST_ERROR, GC_CONFLICT_ERROR, GC_GONE_ERROR -> true;
                     default -> false;
                 }) {
+                    log.error("Unexpected error occurred {}", e.getMessage());
                     throw e;
                 }
             }
