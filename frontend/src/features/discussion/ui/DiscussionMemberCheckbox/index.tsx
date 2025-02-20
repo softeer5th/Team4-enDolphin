@@ -1,3 +1,4 @@
+import { useQueryClient } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 import { useMemo } from 'react';
 
@@ -8,6 +9,7 @@ import { Group } from '@/components/Group';
 import { useGroup } from '@/hooks/useGroup';
 import { useMemberContext } from '@/pages/DiscussionPage/MemberContext';
 
+import { candidateKeys } from '../../api/keys';
 import { useDiscussionParticipantsQuery } from '../../api/queries';
 import type { DiscussionParticipantResponse } from '../../model';
 import { checkboxContainerStyle } from './index.css';
@@ -51,10 +53,14 @@ const DiscussionMemberCheckbox = () => {
     itemIds: participantsIds,
   });
 
+  const queryClient = useQueryClient();
   const members = useMemberContext();
   const handleClickSearch = async () => {
     if (!members) return;
     members.handleUpdateField('checkedList', Array.from(groupInfos.checkedList));
+    queryClient.invalidateQueries({
+      queryKey: candidateKeys.detail(params.id),
+    });
   };
       
   return (
