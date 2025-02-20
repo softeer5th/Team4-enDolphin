@@ -44,9 +44,12 @@ google:
       webhook-url: "test"
       primary-calendar-url: "test"
       events-url: "test"
+      update-url: "test"
+
 
     api:
       subscribe-duration: 0
+      time-zone: "Asia/Seoul"
 
 jwt:
   secret: "my-very-long-and-secure-secret-key-which-is-at-least-32-chars-test"

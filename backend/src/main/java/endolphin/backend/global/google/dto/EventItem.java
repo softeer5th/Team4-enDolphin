@@ -1,9 +1,11 @@
 package endolphin.backend.global.google.dto;
 
-public record GoogleCalendarDto(
+public record EventItem(
     String id,
     String summary,
-    String description
+    String status,
+    EventTime start,
+    EventTime end
 ) {
 
 }

@@ -48,7 +48,13 @@ public enum ErrorCode {
     INVALID_OAUTH_USER_INFO(HttpStatus.UNAUTHORIZED, "O005", "Invalid OAuth User Info"),
 
     // Google Calendar
-    EXPIRED_SYNC_TOKEN(HttpStatus.GONE, "GC001", "Expired Sync Token"),
+    GC_EXPIRED_SYNC_TOKEN(HttpStatus.GONE, "GC001", "Expired Sync Token"),
+    GC_CONFLICT_ERROR(HttpStatus.CONFLICT, "GC002", "Conflict"),
+    GC_NOT_FOUND_ERROR(HttpStatus.NOT_FOUND, "GC003", "Not Found"),
+    GC_BAD_REQUEST_ERROR(HttpStatus.BAD_REQUEST, "GC004", "Bad Request"),
+    GC_FORBIDDEN_ERROR(HttpStatus.FORBIDDEN, "GC005", "Forbidden"),
+    GC_GONE_ERROR(HttpStatus.GONE, "GC006", "이미 삭제된 이벤트입니다."),
+    GC_INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "GC007", "Internal Server Error"),
     ;
     private final HttpStatus httpStatus;
     private final String code;

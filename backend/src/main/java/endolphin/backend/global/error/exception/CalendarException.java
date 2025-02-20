@@ -10,17 +10,23 @@ public class CalendarException extends RuntimeException {
     public CalendarException(HttpStatus status, String message) {
         super(message);
 
-        switch (status) {
-            case UNAUTHORIZED -> errorCode = ErrorCode.CALENDAR_UNAUTHORIZED_ERROR;
-            case FORBIDDEN -> errorCode = ErrorCode.CALENDAR_FORBIDDEN_ERROR;
-            case BAD_REQUEST -> errorCode = ErrorCode.CALENDAR_BAD_REQUEST_ERROR;
-            case NOT_FOUND -> errorCode = ErrorCode.CALENDAR_NOT_FOUND_ERROR;
-            default -> errorCode = ErrorCode.INTERNAL_ERROR;
-        }
+        this.errorCode = switch (status) {
+            case UNAUTHORIZED -> ErrorCode.OAUTH_UNAUTHORIZED_ERROR;
+            case FORBIDDEN, TOO_MANY_REQUESTS -> ErrorCode.GC_FORBIDDEN_ERROR;
+            case BAD_REQUEST -> ErrorCode.GC_BAD_REQUEST_ERROR;
+            case NOT_FOUND -> ErrorCode.GC_NOT_FOUND_ERROR;
+            case CONFLICT -> ErrorCode.GC_CONFLICT_ERROR;
+            default -> ErrorCode.GC_INTERNAL_SERVER_ERROR;
+        };
     }
 
     public CalendarException(ErrorCode errorCode) {
         super(errorCode.getMessage());
+        this.errorCode = errorCode;
+    }
+
+    public CalendarException(ErrorCode errorCode, String message) {
+        super(message);
         this.errorCode = errorCode;
     }
 }
