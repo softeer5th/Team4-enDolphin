@@ -10,23 +10,30 @@ interface HeaderProps {
   endDateTime: Date;
 }
 
-const Header = ({ startDateTime, endDateTime }: HeaderProps) => (
-  <Flex
-    align='center'
-    justify='space-between'
-    width='full'
-  >
-    <HeaderTextInfo
-      endDateTime={endDateTime}
-      startDateTime={startDateTime}
-    />
-    <Flex align='center' gap={200}>
-      {/* <Button size='lg'>
-          다시 일정 조율하기
+// 링크 복사 : 시간 정보를 param 으로 넘겨받아야 하는데, 나중에 url 인코딩 구현하게 되면 그때 만들면 될 듯
+const Header = ({ startDateTime, endDateTime }: HeaderProps) => 
+  // const { handleCopyToClipboard } = useClipboard();
+  (
+    <Flex
+      align='center'
+      justify='space-between'
+      width='full'
+    >
+      <HeaderTextInfo
+        endDateTime={endDateTime}
+        startDateTime={startDateTime}
+      />
+      <Flex align='center' gap={200}>
+        {/* <Button
+          onClick={() => handleCopyToClipboard(window.location.href)}
+          size='lg'
+        >
+          링크 복사
         </Button> */}
+      </Flex>
     </Flex>
-  </Flex>
-);
+  ) 
+;
 
 const HeaderTextInfo = ({ startDateTime, endDateTime }: {
   startDateTime: Date;
