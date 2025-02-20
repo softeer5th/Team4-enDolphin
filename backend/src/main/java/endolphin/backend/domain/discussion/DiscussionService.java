@@ -9,7 +9,6 @@ import endolphin.backend.domain.discussion.dto.FinishedDiscussionsResponse;
 import endolphin.backend.domain.discussion.dto.JoinDiscussionRequest;
 import endolphin.backend.domain.discussion.dto.InvitationInfo;
 import endolphin.backend.domain.discussion.dto.JoinDiscussionResponse;
-import endolphin.backend.domain.discussion.dto.OngoingDiscussion;
 import endolphin.backend.domain.discussion.dto.OngoingDiscussionsResponse;
 import endolphin.backend.domain.discussion.entity.Discussion;
 import endolphin.backend.domain.discussion.enums.AttendType;
@@ -28,11 +27,10 @@ import endolphin.backend.global.error.exception.ErrorCode;
 import endolphin.backend.global.redis.DiscussionBitmapService;
 import endolphin.backend.global.redis.PasswordCountService;
 import endolphin.backend.global.security.PasswordEncoder;
-import endolphin.backend.global.util.TimeCalculator;
+import endolphin.backend.global.util.TimeUtil;
 import endolphin.backend.global.util.Validator;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -89,7 +87,7 @@ public class DiscussionService {
             discussion.getMeetingMethod(),
             discussion.getLocation(),
             discussion.getDuration(),
-            TimeCalculator.calculateTimeLeft(discussion.getDeadline())
+            TimeUtil.calculateTimeLeft(discussion.getDeadline())
         );
     }
 
@@ -185,7 +183,7 @@ public class DiscussionService {
             discussion.getLocation(),
             discussion.getDuration(),
             discussion.getDeadline(),
-            TimeCalculator.calculateTimeLeft(discussion.getDeadline())
+            TimeUtil.calculateTimeLeft(discussion.getDeadline())
         );
     }
 
@@ -215,7 +213,7 @@ public class DiscussionService {
 
         Validator.validateDateTimeRange(startTime, endTime);
 
-        LocalDateTime midTime = TimeCalculator.calculateMidTime(startTime, endTime);
+        LocalDateTime midTime = TimeUtil.calculateMidTime(startTime, endTime);
 
         LocalDateTime searchStartTime = midTime.minusHours(TIME_OFFSET);
         LocalDateTime searchEndTime = midTime.plusHours(TIME_OFFSET);

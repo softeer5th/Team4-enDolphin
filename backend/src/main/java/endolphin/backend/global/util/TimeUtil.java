@@ -4,7 +4,7 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-public class TimeCalculator {
+public class TimeUtil {
 
     public static long calculateTimeLeft(LocalDate deadline) {
         LocalDateTime now = LocalDateTime.now();
