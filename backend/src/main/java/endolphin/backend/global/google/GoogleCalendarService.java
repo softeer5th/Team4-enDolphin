@@ -105,6 +105,8 @@ public class GoogleCalendarService {
                         throw new CalendarException((HttpStatus) response.getStatusCode(),
                             response.bodyTo(String.class));
                     });
+                log.info("[insertPersonalEventToGoogleCalendar] success: ");
+
                 return true;
             }, user, personalEvent.getCalendarId()
         );
@@ -138,6 +140,8 @@ public class GoogleCalendarService {
                         throw new CalendarException((HttpStatus) response.getStatusCode(),
                             response.bodyTo(String.class));
                     });
+                log.info("[updatePersonalEventToGoogleCalendar] success: ");
+
                 return true;
             }, user, personalEvent.getCalendarId()
         );
@@ -166,6 +170,8 @@ public class GoogleCalendarService {
                         throw new CalendarException((HttpStatus) response.getStatusCode(),
                             response.bodyTo(String.class));
                     });
+                log.info("[deletePersonalEventFromGoogleCalender] success: ");
+
                 return true;
             }, user, personalEvent.getCalendarId()
         );
@@ -197,7 +203,7 @@ public class GoogleCalendarService {
                         throw new CalendarException((HttpStatus) response.getStatusCode(),
                             response.bodyTo(String.class));
                     });
-
+                log.info("[getCalendarEvents] success: {}", result);
                 List<GoogleEvent> events = extractEventList(result);
 
                 extractSyncToken(calendarId, result);
@@ -249,20 +255,24 @@ public class GoogleCalendarService {
         String accessToken = user.getAccessToken();
 
         return retryExecutor.executeCalendarApiWithRetry(
-            () -> restClient.get()
-                .uri(googleCalendarUrl.primaryCalendarUrl())
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
-                .exchange((request, response) -> {
-                    if (response.getStatusCode().is2xxSuccessful()) {
-                        return response.bodyTo(GoogleCalendarDto.class);
-                    }
-                    log.error("Invalid request: {}", response.bodyTo(String.class));
-                    if (response.getStatusCode().isSameCodeAs(HttpStatus.UNAUTHORIZED)) {
-                        throw new OAuthException(ErrorCode.OAUTH_UNAUTHORIZED_ERROR);
-                    }
-                    throw new CalendarException((HttpStatus) response.getStatusCode(),
-                        response.bodyTo(String.class));
-                }), user, null
+            () -> {
+                GoogleCalendarDto result = restClient.get()
+                    .uri(googleCalendarUrl.primaryCalendarUrl())
+                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                    .exchange((request, response) -> {
+                        if (response.getStatusCode().is2xxSuccessful()) {
+                            return response.bodyTo(GoogleCalendarDto.class);
+                        }
+                        log.error("Invalid request: {}", response.bodyTo(String.class));
+                        if (response.getStatusCode().isSameCodeAs(HttpStatus.UNAUTHORIZED)) {
+                            throw new OAuthException(ErrorCode.OAUTH_UNAUTHORIZED_ERROR);
+                        }
+                        throw new CalendarException((HttpStatus) response.getStatusCode(),
+                            response.bodyTo(String.class));
+                    });
+                log.info("[getPrimaryCalendar] success: {}", result);
+                return result;
+            }, user, null
         );
     }
 
@@ -297,7 +307,7 @@ public class GoogleCalendarService {
                         throw new CalendarException((HttpStatus) response.getStatusCode(),
                             response.bodyTo(String.class));
                     });
-
+                log.info("[subscribeToCalendar] success: {}", result);
                 log.info("Subscribed to {}", result.resourceUri());
                 log.info("Subscribed to {}", result.resourceId());
                 log.info("Token is {}", result.token());

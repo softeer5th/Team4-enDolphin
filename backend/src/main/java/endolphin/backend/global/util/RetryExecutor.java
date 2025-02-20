@@ -58,7 +58,8 @@ public class RetryExecutor {
             delay =  INITIAL_DELAY_MS * (long) Math.pow(2, attempts);
             delay += ThreadLocalRandom.current().nextLong(delay);
             if (attempts >= MAX_RETRIES - 1) {
-                log.error("Retry exceeded maximum number of retries");
+                log.error("Retry exceeded maximum number of retries: username: {}, calendarId: {}",
+                    user.getName(), calendarId);
                 throw new CalendarException(HttpStatus.INTERNAL_SERVER_ERROR, "Retry exceeded maximum number of retries");
             }
         }
