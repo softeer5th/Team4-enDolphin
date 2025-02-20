@@ -9,7 +9,7 @@ type Action =
   | { type: 'TOGGLE_ITEM'; id: number; itemIds: number[] }
   | { type: 'TOGGLE_ALL'; itemIds: number[] }
   | { type: 'RESET' }
-  | { type: 'INIT'; defaultCheckedList: number[] };
+  | { type: 'INIT'; defaultCheckedList: number[]; itemIds: number[] };
   
 const reducer = (state: State, action: Action): State => {
   switch (action.type) {
@@ -38,7 +38,7 @@ const reducer = (state: State, action: Action): State => {
     case 'INIT': {
       return { 
         checkedList: new Set(action.defaultCheckedList),
-        isAllChecked: state.isAllChecked,
+        isAllChecked: action.defaultCheckedList.length === action.itemIds.length,
       };
     }
 
@@ -72,8 +72,8 @@ export const useGroup = ({
     });
 
   useEffect(() => {
-    dispatch({ type: 'INIT', defaultCheckedList });
-  }, [defaultCheckedList]);
+    dispatch({ type: 'INIT', defaultCheckedList, itemIds });
+  }, [defaultCheckedList, itemIds]);
 
   const handleToggleCheck = (id: number) => {
     dispatch({ type: 'TOGGLE_ITEM', id, itemIds });
@@ -93,6 +93,6 @@ export const useGroup = ({
     isAllChecked: state.isAllChecked,
     handleToggleAllCheck, 
     reset,
-    init: () => dispatch({ type: 'INIT', defaultCheckedList }),
+    init: () => dispatch({ type: 'INIT', defaultCheckedList, itemIds }),
   };
 };
