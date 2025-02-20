@@ -87,6 +87,6 @@ export const request = {
     executeFetch('POST', endpoint, props),
   put: (endpoint: string, props?: Pick<FetchRequest, 'body'>) => 
     executeFetch('PUT', endpoint, props),
-  delete: (endpoint: string) => 
-    executeFetch('DELETE', endpoint),
+  delete: (endpoint: string, props?: Pick<FetchRequest, 'params'>) => 
+    executeFetch('DELETE', endpoint, props),
 };
