@@ -3,7 +3,9 @@ import { useState } from 'react';
 
 import { Flex } from '@/components/Flex';
 import Pagination from '@/components/Pagination';
+import { Text } from '@/components/Text';
 import { usePagination } from '@/hooks/usePagination';
+import { vars } from '@/theme/index.css';
 
 import { prefetchOngoingSchedules } from '../../api/prefetch';
 import { useOngoingQuery } from '../../api/queries';
@@ -14,6 +16,19 @@ import OngoingScheduleListItem from './OngoingScheduleListItem';
 import ScheduleContents from './ScheduleDetails';
 
 export const PAGE_SIZE = 6;
+
+const NoDataAlt = () => (
+  <Flex
+    align='center'
+    height={637}
+    justify='center'
+    width='full'
+  >
+    <Text color={vars.color.Ref.Netural[600]} typo='h3'>
+      해당하는 일정이 없어요
+    </Text>
+  </Flex>
+);
 
 interface OngoingScheduleListProps {
   segmentOption: OngoingSegmentOption;
@@ -26,7 +41,7 @@ const OngoingScheduleList = ({ segmentOption }: OngoingScheduleListProps) => {
   const { data, isPending } = useOngoingQuery(currentPage, PAGE_SIZE, segmentOption.value );
   const [selectedIndex, setSelectedIndex] = useState(0);
   if (isPending) return <div>pending...</div>;
-  if (!data || data.ongoingDiscussions.length === 0) return <div>no data available</div>;
+  if (!data || data.ongoingDiscussions.length === 0) return <NoDataAlt />;
 
   return (
     <div className={mainContainerStyle}>
