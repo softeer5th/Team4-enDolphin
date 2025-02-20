@@ -428,14 +428,20 @@ public class GoogleCalendarService {
                     log.debug("[end time]: {}", item.end().dateTime());
                 }
             }
+
             String eventId = item.id();
-            String summary = item.summary() == null ? "제목 없음" : item.summary();
-
-            LocalDateTime startDateTime = convertLocalDateTime(item.start());
-
-            LocalDateTime endDateTime = convertLocalDateTime(item.end());
-
             GoogleEventStatus status = GoogleEventStatus.fromValue(item.status());
+            String summary = null;
+            LocalDateTime startDateTime = null;
+            LocalDateTime endDateTime = null;
+            if (status == GoogleEventStatus.CONFIRMED) {
+                summary = item.summary() == null ? "제목 없음" : item.summary();
+
+                startDateTime = convertLocalDateTime(item.start());
+
+                endDateTime = convertLocalDateTime(item.end());
+            }
+            
             events.add(new GoogleEvent(eventId, summary, startDateTime, endDateTime, status));
         }
         return events;
