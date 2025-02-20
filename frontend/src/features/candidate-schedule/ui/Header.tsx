@@ -43,23 +43,26 @@ const HeaderTextInfo = ({ adjustCount, startTime, endTime }: {
   adjustCount: number;
   startTime: Date;
   endTime: Date;
-}) => (
-  <Flex
-    direction='column'
-    gap={100}
-  >
-    <span>
-      <Text color={vars.color.Ref.Primary[500]} typo='h3'>
-        {`${adjustCount}명`}
+}) => {
+  const needsAdjust = adjustCount > 0;
+  return (
+    <Flex
+      direction='column'
+      gap={100}
+    >
+      <span>
+        <Text color={vars.color.Ref.Primary[500]} typo='h3'>
+          {needsAdjust ? `${adjustCount}명` : '모두 '}
+        </Text>
+        <Text typo='h3'>
+          {needsAdjust ? '만 조율하면 돼요' : '가능해요'}
+        </Text>
+      </span>
+      <Text typo='h2'>
+        {`${formatTimeToColonString(startTime)} ~ ${formatTimeToColonString(endTime)}`}
       </Text>
-      <Text typo='h3'>
-        만 조율하면 돼요
-      </Text>
-    </span>
-    <Text typo='h2'>
-      {`${formatTimeToColonString(startTime)} ~ ${formatTimeToColonString(endTime)}`}
-    </Text>
-  </Flex>
-);
+    </Flex>
+  ); 
+};
 
 export default Header;
