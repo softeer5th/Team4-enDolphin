@@ -6,7 +6,7 @@ import { Flex } from '@/components/Flex';
 import SegmentControl from '@/components/SegmentControl';
 import { Text } from '@/components/Text';
 
-import { sharedScheduleQuerykeys } from '../../api/keys';
+import { ongoingQueryKey } from '../../api/keys';
 import { prefetchOngoingSchedules } from '../../api/prefetch';
 import type { AttendType, OngoingSchedulesResponse } from '../../model/';
 import OngoingFallback from '../Fallbacks/OngoingFallback';
@@ -41,7 +41,7 @@ const Content = () => {
   const [selectedDiscussionId, setSelectedDiscussionId] = useState<number>(1);
   const queryClient = useQueryClient();
   if (queryClient.getQueryData<OngoingSchedulesResponse>(
-    sharedScheduleQuerykeys.ongoing(1, 6, 'ALL'),
+    ongoingQueryKey.detail(1, 6, 'ALL'),
   )?.totalPages === 0)
     return <OngoingFallback />;
 

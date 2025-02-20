@@ -1,4 +1,4 @@
-import { useCanGoBack, useLocation, useRouter } from '@tanstack/react-router';
+import { useCanGoBack, useRouter } from '@tanstack/react-router';
 
 import { Flex } from '@/components/Flex';
 import { Close } from '@/components/Icon';
