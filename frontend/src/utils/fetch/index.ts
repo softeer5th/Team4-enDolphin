@@ -71,6 +71,7 @@ export const executeFetch = async (
     return data;
 
   } catch (error) {
+    if (error instanceof HTTPError) throw error;
     throw new Error(`Network Error : ${error}`);
   }
 };
