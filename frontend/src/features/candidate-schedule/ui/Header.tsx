@@ -8,6 +8,8 @@ import { ongoingQueryKey, upcomingQueryKey } from '@/features/shared-schedule/ap
 import { vars } from '@/theme/index.css';
 import { formatDateToDateTimeString, formatTimeToColonString } from '@/utils/date/format';
 
+import { candidateDetailQueryKey } from '../api/keys';
+
 interface HeaderProps {
   adjustCount: number;
   discussionId: number;
