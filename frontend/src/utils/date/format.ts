@@ -103,32 +103,5 @@ export const formatDateToDdayString = (date: Date): string => {
   return `D+${Math.abs(diffDays)}`;
 };
 
-export const formatKoreanDate = (
-  date: Date,
-  exclude?: {
-    year?: boolean;
-    month?: boolean;
-    date?: boolean;
-    dow?: boolean;
-  },
-): string => {
-  const parts = [];
-
-  if (!exclude?.year) {
-    parts.push(date.getFullYear().toString()
-      .slice(2) + '년');
-  }
-  if (!exclude?.month) {
-    parts.push((date.getMonth() + 1) + '월');
-  }
-  if (!exclude?.date) {
-    parts.push(date.getDate() + '일');
-  }
-
-  let result = parts.join(' ');
-  if (!exclude?.dow) {
-    result += ` ${date.toLocaleString('ko-KR', { weekday: 'short' })}요일`;
-  }
-
-  return result;
-};
+export const getDowString = (date: Date): string => 
+  date.toLocaleString('ko-KR', { weekday: 'short' });

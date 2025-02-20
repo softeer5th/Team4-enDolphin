@@ -10,8 +10,8 @@ import type {
 } from '@/features/discussion/model';
 import type { UserDTO } from '@/features/user/model';
 import { vars } from '@/theme/index.css';
-import { getHourDiff, getTimeParts, getTimeRangeString } from '@/utils/date';
-import { formatKoreanDate } from '@/utils/date/format';
+import { getHourDiff, getTimeParts, getTimeRangeString, getYearMonthDay } from '@/utils/date';
+import { getDowString } from '@/utils/date/format';
 
 import { recommendContainerStyle, recommendItemStyle } from './recommendedSchedules.css';
 
@@ -48,6 +48,8 @@ const RecommendedScheduleItem = ({
 }) => {
   const [startDT, endDT] = [new Date(startDTStr), new Date(endDTStr)];
   const [startTime, endTime] = [getTimeParts(startDT), getTimeParts(endDT)];
+  const { month, day } = getYearMonthDay(startDT);
+  const dow = getDowString(startDT);
   return(
     <Link
       className={recommendItemStyle}
@@ -61,7 +63,7 @@ const RecommendedScheduleItem = ({
       to={'/discussion/candidate/$id'}
     >
       <Flex direction='column' gap={100}>
-        <Text typo='b2M'>{formatKoreanDate(startDT, { year: true })}</Text>
+        <Text typo='b2M'>{`${month}월 ${day}일 ${dow}요일`}</Text>
         <Text color={vars.color.Ref.Netural[700]} typo='b3R'>
           {`${getTimeRangeString(startTime, endTime)} (${getHourDiff(startDT, endDT)}시간)`}
         </Text>
