@@ -1,5 +1,5 @@
 import { TIME_HEIGHT } from '@/constants/date';
-import { isAllday } from '@/utils/date';
+import { getDateParts, isAllday } from '@/utils/date';
 import { calcPositionByDate } from '@/utils/date/position';
 
 import type { PersonalEventResponse } from '../../model';
@@ -43,13 +43,15 @@ export const CalendarCardList = ({ cards }: { cards: PersonalEventResponse[] }) 
       .map((card) => {
         const start = new Date(card.startDateTime);
         const end = new Date(card.endDateTime);
+        const { year: sy, month: sm, day: sd } = getDateParts(start);
+        const { year: ey, month: em, day: ed } = getDateParts(end);
 
-        if (start.getDate() !== end.getDate()) {
+        if (sd !== ed) {
           return (
             <>
               <DefaultCard
                 card={card}
-                end={new Date(start.getFullYear(), start.getMonth(), start.getDate(), 23, 59)}
+                end={new Date(sy, sm, sd, 23, 59)}
                 key={`${card.id}-start`}
                 start={start}
               />
@@ -57,7 +59,7 @@ export const CalendarCardList = ({ cards }: { cards: PersonalEventResponse[] }) 
                 card={card}
                 end={end}
                 key={`${card.id}-end`}
-                start={new Date(end.getFullYear(), end.getMonth(), end.getDate(), 0, 0)}
+                start={new Date(ey, em, ed, 0, 0)}
               />
             </>
           );
