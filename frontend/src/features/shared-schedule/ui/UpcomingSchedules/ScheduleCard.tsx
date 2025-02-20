@@ -22,12 +22,12 @@ const ScheduleCard = ({ schedule, latest }: ScheduleCardProps) => (
     justify='space-between'
   >
     <Flex direction='column' gap={300}>
-      <DdayChip endDateTime={schedule.endDateTime} latest={latest} />
+      <DdayChip endDateTime={schedule.sharedEventDto.endDateTime} latest={latest} />
       <Text typo='h3'>{schedule.title}</Text>
       <Flex direction='column'>
         <MeetingDateTimeInfo 
-          endDateTime={schedule.endDateTime}
-          startDateTime={schedule.startDateTime}
+          endDateTime={schedule.sharedEventDto.endDateTime}
+          startDateTime={schedule.sharedEventDto.startDateTime}
         />
         <Text color={vars.color.Ref.Netural[600]} typo='b2R'>
           {schedule.meetingMethodOrLocation}

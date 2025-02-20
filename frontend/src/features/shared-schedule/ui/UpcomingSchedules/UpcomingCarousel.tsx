@@ -16,7 +16,7 @@ const UpcomingCarousel = ({ schedules, offsetX }: UpcomingCarouselProps) => (
     >
       {schedules.map((schedule) => (
         <ScheduleCard
-          key={schedule.id}
+          key={schedule.discussionId}
           latest={false}
           schedule={schedule}
         />

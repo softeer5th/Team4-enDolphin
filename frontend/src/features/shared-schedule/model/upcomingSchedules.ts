@@ -2,12 +2,17 @@ import { z } from 'zod';
 
 import { zCoerceToDate } from '@/utils/zod';
 
-const UpcomingScheduleSchema = z.object({
+const SharedEventDtoSchema = z.object({
   id: z.number(),
-  title: z.string(),
   startDateTime: zCoerceToDate,
   endDateTime: zCoerceToDate,
-  meetingMethodOrLocation: z.enum(['ONLINE', 'OFFLINE']),
+});
+
+export const UpcomingScheduleSchema = z.object({
+  discussionId: z.number(),
+  title: z.string(),
+  meetingMethodOrLocation: z.string(),
+  sharedEventDto: SharedEventDtoSchema,
   participantPictureUrls: z.array(z.string()),
 });
 
