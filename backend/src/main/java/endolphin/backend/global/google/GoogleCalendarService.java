@@ -416,6 +416,18 @@ public class GoogleCalendarService {
 
         List<GoogleEvent> events = new ArrayList<>();
         for (EventItem item : result.items()) {
+            log.debug("[extractEventList] {}", item);
+            if (item != null) {
+                log.debug("[id]: {}", item.id());
+                log.debug("[start]: {}", item.start());
+                log.debug("[end]: {}", item.end());
+                if (item.start() != null) {
+                    log.debug("[start time]: {}", item.start().dateTime());
+                }
+                if (item.end() != null) {
+                    log.debug("[end time]: {}", item.end().dateTime());
+                }
+            }
             String eventId = item.id();
             String summary = item.summary() == null ? "제목 없음" : item.summary();
 
