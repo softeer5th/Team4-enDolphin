@@ -1,6 +1,8 @@
 import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
 
+import { setLogin } from '@/utils/auth';
+
 import type { JWTRequest } from '../model';
 import { loginApi } from '.';
 
@@ -13,8 +15,8 @@ export const useJWTMutation = () => {
   
   const { mutate } = useMutation({
     mutationFn: ({ code }: JWTMutationProps) => loginApi.getJWT(code),
-    onSuccess: ({ accessToken }, { lastPath }) => {
-      localStorage.setItem('accessToken', accessToken);
+    onSuccess: (response, { lastPath }) => {
+      setLogin(response);
       navigate({
         to: lastPath || '/home',
       });
