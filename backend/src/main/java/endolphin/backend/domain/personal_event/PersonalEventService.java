@@ -108,6 +108,7 @@ public class PersonalEventService {
                     .build();
             })
             .toList();
+        personalEventPreprocessor.preprocess(events, true);
 
         personalEventRepository.saveAll(events);
         eventPublisher.publishEvent(new InsertPersonalEvent(events));

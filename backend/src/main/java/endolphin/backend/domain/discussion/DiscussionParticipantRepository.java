@@ -2,7 +2,6 @@ package endolphin.backend.domain.discussion;
 
 import endolphin.backend.domain.discussion.entity.Discussion;
 import endolphin.backend.domain.discussion.entity.DiscussionParticipant;
-import endolphin.backend.domain.discussion.enums.DiscussionStatus;
 import endolphin.backend.domain.user.dto.UserIdNameDto;
 import endolphin.backend.domain.user.entity.User;
 import java.util.List;
@@ -104,4 +103,11 @@ public interface DiscussionParticipantRepository extends
         + "WHERE dp.user.id = :userId "
         + "AND d.discussionStatus = 'UPCOMING' ")
     List<Discussion> findUpcomingDiscussionsByUserId(@Param("userId") Long userId);
+
+    @Query("SELECT dp.user.id, d, dp.userOffset " +
+        "FROM DiscussionParticipant dp " +
+        "JOIN dp.discussion d " +
+        "WHERE d.discussionStatus = 'ONGOING' " +
+        "AND dp.user.id IN :userIds")
+    List<Object[]> findOffsetsByUserIds(@Param("userIds") List<Long> userIds);
 }

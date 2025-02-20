@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,24 @@ public class PersonalEventPreprocessor {
             if (discussion.getDiscussionStatus() == DiscussionStatus.ONGOING
                 && isTimeRangeOverlapping(discussion, personalEvent)) {
                 convert(personalEvent, discussion, offset, true);
+            }
+        }
+    }
+
+    public void preprocess(List<PersonalEvent> personalEvents, boolean value) {
+        List<Long> userIds = personalEvents.stream().map(PersonalEvent::getUser).map(User::getId).toList();
+
+        Map<Long, Map<Discussion, Long>> userDiscussionOffsetMap =
+            discussionParticipantService.getOngoingDiscussionOffsetsByUserIds(userIds);
+
+        for (PersonalEvent personalEvent : personalEvents) {
+            Long userId = personalEvent.getUser().getId();
+            for (Discussion discussion : userDiscussionOffsetMap.get(userId).keySet()) {
+                Long offset = userDiscussionOffsetMap.get(userId).get(discussion);
+                if (discussion.getDiscussionStatus() == DiscussionStatus.ONGOING
+                    && isTimeRangeOverlapping(discussion, personalEvent)) {
+                    convert(personalEvent, discussion, offset, value);
+                }
             }
         }
     }
