@@ -141,7 +141,9 @@ public class PersonalEventService {
                 result.update(IdGenerator.generateId(user.getId()), calendarId);
                 eventPublisher.publishEvent(new InsertPersonalEvent(List.of(result)));
             } else {
-                eventPublisher.publishEvent(new UpdatePersonalEvent(result));
+                if (haveToSync(personalEvent, request)) {
+                    eventPublisher.publishEvent(new UpdatePersonalEvent(result));
+                }
             }
         }
 
@@ -272,6 +274,10 @@ public class PersonalEventService {
     private boolean isChanged(PersonalEvent personalEvent, PersonalEventRequest newEvent) {
         return !personalEvent.getStartTime().equals(newEvent.startDateTime())
             || !personalEvent.getEndTime().equals(newEvent.endDateTime());
+    }
+
+    private boolean haveToSync(PersonalEvent personalEvent, PersonalEventRequest newEvent) {
+        return isChanged(personalEvent, newEvent) || personalEvent.getTitle() != newEvent.title();
     }
 
     @Transactional(readOnly = true)
