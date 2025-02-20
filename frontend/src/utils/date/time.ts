@@ -29,18 +29,6 @@ export const getMinuteDiff = (startTime: Date, endTime: Date): number => {
   return Math.floor(diff / MINUTE_IN_MILLISECONDS);
 };
 
-export const formatNumberToTimeString = (number: number): string => {
-  const hours = Math.floor(number / HOUR).toString();
-  const minutes = (number % HOUR).toString().padStart(2, '0');
-
-  return `${hours}:${minutes}`;
-};
-
-export const formatTimeStringToNumber = (timeString: string): number => {
-  const [hours, minutes] = timeString.split(':');
-  return Number(hours) * HOUR + Number(minutes);
-};
-
 export const getHourDiff = (startTime: Date, endTime: Date, ignoreDateDiff = true): number => {
   if (ignoreDateDiff) {
     return endTime.getHours() - startTime.getHours();

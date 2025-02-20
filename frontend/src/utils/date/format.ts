@@ -51,7 +51,8 @@ export const formatMinutesToTimeString = (minutes: number): string => {
 };
 
 export const formatNumberToTimeString = (number: number): string => {
-  const hours = Math.floor(number / HOUR).toString();
+  const hours = Math.floor(number / HOUR).toString()
+    .padStart(2, '0');
   const minutes = (number % HOUR).toString().padStart(2, '0');
 
   return `${hours}:${minutes}`;
