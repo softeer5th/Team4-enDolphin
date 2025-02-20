@@ -9,7 +9,10 @@ import type {
   DiscussionRankResponse,
   DiscussionResponse, 
 } from '../model';
+import type { InviteResponse } from '../model/invitation';
 import { candidateApi, discussionApi } from '.';
+import { calendarKeys, discussionKeys, participantKeys, rankKeys } from './keys';
+import { invitationQueryOption } from './queryOptions';
 import { 
   candidateKeys, 
   discussionKeys,
@@ -104,3 +107,5 @@ export const useDiscussionHostQuery = (discussionId: string) => {
 
   return { isHost, isPending };
 };
+export const useInviteInfoQuery = (discussionId: number) => 
+  useQuery<InviteResponse>(invitationQueryOption(discussionId));

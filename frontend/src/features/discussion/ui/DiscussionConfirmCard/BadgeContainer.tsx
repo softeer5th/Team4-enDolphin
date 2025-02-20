@@ -1,18 +1,28 @@
 import { Badge } from '@/components/Badge';
 import { Flex } from '@/components/Flex';
-import { getMinuteDiff, getTimeRangeString } from '@/utils/date';
+import { getHourDiff, getTimeRangeString, parseTime } from '@/utils/date';
 import { formatDateToString } from '@/utils/date/format';
 
 import { badgeContainerStyle } from './index.css';
 
-const BadgeContainer = (
-  { startDateTime, endDateTime, location }: 
-  {
-    startDateTime: Date; 
-    endDateTime: Date; 
-    location: string;
-  }) => 
-  (
+interface BadgeContainerProps {
+  meetingDateTimeRange: DiscussionConfirmCardProps['meetingDateTimeRange'];
+  location?: DiscussionConfirmCardProps['location'];
+}
+
+// Date, Time 일관성 있게 관리할 방법 찾아보기
+// zod에서 Time 객체같은 거 안 주나..
+const BadgeContainer = ({ 
+  meetingDateTimeRange, 
+  location,
+}: BadgeContainerProps) => {
+  const [timeStart, timeEnd] = [meetingDateTimeRange.start, meetingDateTimeRange.end];
+  const [startTime, endTime] = [
+    parseTime(timeStart.toTimeString()),
+    parseTime(timeEnd.toTimeString()),
+  ];
+  const timeRangeString = getTimeRangeString(startTime, endTime);
+  return (
     <Flex
       align='center'
       className={badgeContainerStyle}

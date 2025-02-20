@@ -13,18 +13,13 @@ export const formatDateToTimeString = (date: Date | null): string => {
   return `${hours}:${minutes}`;
 };
 
-export const getTimeParts = (date: Date) => ({
-  hour: date.getHours(),
-  minute: date.getMinutes(),
-});
-
-export const getTimeRangeString = (startTime: Date, endTime: Date): string => {
-  const { hour: startHour, minute: startMinute } = getTimeParts(startTime);
-  const { hour: endHour, minute: endMinute } = getTimeParts(endTime);
-
+export const getTimeRangeString = (startTime: Time, endTime: Time): string => {
+  const { hour: startHour, minute: startMinute } = startTime;
+  const { hour: endHour, minute: endMinute } = endTime;
+  
   const format = (hour: number, minute: number) => 
     minute === 0 ? `${hour}시` : `${hour}시 ${minute}분`;
-
+  
   return `${format(startHour, startMinute)} ~ ${format(endHour, endMinute)}`;
 };
 

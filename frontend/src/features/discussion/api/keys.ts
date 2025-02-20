@@ -23,6 +23,8 @@ export const participantKeys = {
   detail: (id: string) => [...participantKeys.all, id],
 };
 
+export const invitationQueryKey = (discussionId: number) => ['invitation', discussionId];
+
 export const sharedEventKeys = {
   all: ['sharedEvents'],
   detail: (id: string) => [...sharedEventKeys.all, id],
