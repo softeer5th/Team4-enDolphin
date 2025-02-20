@@ -15,7 +15,7 @@ const UpcomingSchedules = () => {
     totalCards: schedules.length,
   });
 
-  if (isPending) return <div>pending...</div>;
+  if (isPending) return <Flex height={380} width='full' />;
   if (schedules.length === 0) return <UpcomingFallback />;
 
   return (
