@@ -1,4 +1,3 @@
-
 import Avatar from '@/components/Avatar';
 import { Chip } from '@/components/Chip';
 import { Flex } from '@/components/Flex';
