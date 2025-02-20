@@ -229,7 +229,11 @@ public class DiscussionService {
         }
 
         List<Long> selectedIds = request.selectedUserIdList() != null ?
-            request.selectedUserIdList() : List.of();
+            request.selectedUserIdList() : participants.stream().map(User::getId).toList();
+
+        if (request.selectedUserIdList().isEmpty()) {
+            throw new ApiException(ErrorCode.INVALID_DISCUSSION_PARTICIPANT);
+        }
 
         Map<Long, Integer> selectedUserIdMap = new HashMap<>();
         for (int i = 0; i < selectedIds.size(); i++) {
