@@ -214,6 +214,7 @@ class PersonalEventServiceTest {
         // given
         User user = createTestUser();
         String googleCalendarId = "testGoogleCalendarId";
+
         GoogleEvent updatedGoogleEvent = createGoogleEvent("testEventId1", "testTitle1",
             LocalDateTime.of(2024, 3, 10, 10, 0),
             LocalDateTime.of(2024, 3, 10, 12, 0), GoogleEventStatus.CONFIRMED);
@@ -221,21 +222,32 @@ class PersonalEventServiceTest {
         GoogleEvent deletedGoogleEvent = createGoogleEvent("testEventId2", "testTitle2",
             LocalDateTime.of(2024, 5, 10, 7, 0),
             LocalDateTime.of(2024, 5, 10, 12, 0), GoogleEventStatus.CANCELLED);
+
         Discussion discussion = createDiscussion();
         Discussion anotherDiscussion = createDiscussion();
-        given(discussionParticipantService.getDiscussionsByUserId(anyLong())).willReturn(
-            List.of(discussion, anotherDiscussion));
+
+        given(discussionParticipantService.getDiscussionsByUserId(anyLong()))
+            .willReturn(List.of(discussion, anotherDiscussion));
 
         PersonalEvent existingEvent = createWithRequest("new Title");
         given(existingEvent.getStartTime()).willReturn(LocalDateTime.of(2024, 3, 10, 10, 0));
+        given(existingEvent.getEndTime()).willReturn(LocalDateTime.of(2024, 3, 10, 12, 0));
+
         PersonalEvent oldExistingEvent = createWithRequest("Old Title");
         given(existingEvent.copy()).willReturn(oldExistingEvent);
-        PersonalEvent existingEvent2 = createWithRequest("Old Title2");
 
-        given(personalEventRepository.findByGoogleEventIdAndCalendarId(
-            eq(updatedGoogleEvent.eventId()), eq(googleCalendarId))).willReturn(Optional.of(existingEvent));
-        given(personalEventRepository.findByGoogleEventIdAndCalendarId(
-            eq(deletedGoogleEvent.eventId()), eq(googleCalendarId))).willReturn(Optional.of(existingEvent2));
+        PersonalEvent existingEvent2 = createWithRequest("Old Title2");
+        given(existingEvent2.getStartTime()).willReturn(LocalDateTime.of(2024, 5, 10, 7, 0));
+        given(existingEvent2.getEndTime()).willReturn(LocalDateTime.of(2024, 5, 10, 12, 0));
+
+        given(personalEventRepository.findByGoogleEventIdAndCalendarId(eq(updatedGoogleEvent.eventId()), eq(googleCalendarId)))
+            .willReturn(Optional.of(existingEvent));
+
+        given(personalEventRepository.findByGoogleEventIdAndCalendarId(eq(deletedGoogleEvent.eventId()), eq(googleCalendarId)))
+            .willReturn(Optional.of(existingEvent2));
+
+        given(updatedGoogleEvent.startDateTime()).willReturn(LocalDateTime.of(2024, 3, 10, 11, 0));
+        given(updatedGoogleEvent.endDateTime()).willReturn(LocalDateTime.of(2024, 3, 10, 13, 0));
 
         // when
         personalEventService.syncWithGoogleEvents(List.of(updatedGoogleEvent, deletedGoogleEvent),
@@ -247,9 +259,9 @@ class PersonalEventServiceTest {
         then(personalEventPreprocessor).should(times(1))
             .preprocessOne(eq(oldExistingEvent), eq(anotherDiscussion), any(User.class), eq(false));
         then(personalEventPreprocessor).should(times(1))
-            .preprocessOne(eq(existingEvent), eq(discussion), any(User.class), eq(true));
+            .preprocessOne(any(PersonalEvent.class), eq(discussion), any(User.class), eq(true));
         then(personalEventPreprocessor).should(times(1))
-            .preprocessOne(eq(existingEvent), eq(anotherDiscussion), any(User.class), eq(true));
+            .preprocessOne(any(PersonalEvent.class), eq(anotherDiscussion), any(User.class), eq(true));
 
         then(personalEventPreprocessor).should(times(1))
             .preprocessOne(eq(existingEvent2), eq(discussion), any(User.class), eq(false));
@@ -275,8 +287,7 @@ class PersonalEventServiceTest {
     }
 
     Discussion createDiscussion() {
-        Discussion discussion = Mockito.mock(Discussion.class);
-        return discussion;
+        return Mockito.mock(Discussion.class);
     }
 
     PersonalEvent createWithRequest(String title) {

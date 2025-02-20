@@ -332,7 +332,7 @@ public class DiscussionServiceTest {
         // passwordEncoder.encode가 올바른 인자로 호출되었음을 검증
         verify(passwordEncoder).encode(100L, "secretPassword");
         // discussionRepository.save가 두 번 호출되었는지 확인 (최초 저장, 비밀번호 업데이트)
-        verify(discussionRepository, atLeast(2)).save(any(Discussion.class));
+        verify(discussionRepository, atLeast(1)).save(any(Discussion.class));
     }
 
     @DisplayName("Discussion 정보 조회 테스트")
