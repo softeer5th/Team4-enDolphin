@@ -5,7 +5,12 @@ import { vars } from '@/theme/index.css';
 
 export const scheduleItemContainerStyle = recipe({ 
   base: {
-    width: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    gap: vars.spacing[50],
+    
+    width: '49.25rem',
     padding: `${vars.spacing[400]} ${vars.spacing[600]}`,
     borderRadius: vars.radius[500],
     cursor: 'pointer',

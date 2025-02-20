@@ -1,24 +1,24 @@
-import { useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
-import type { 
-  DiscussionCalendarRequest, 
+import type {
+  DiscussionCalendarRequest,
   DiscussionCalendarResponse,
   DiscussionConfirmResponse,
   DiscussionParticipantResponse,
   DiscussionRankRequest,
   DiscussionRankResponse,
-  DiscussionResponse, 
+  DiscussionResponse,
 } from '../model';
 import type { InviteResponse } from '../model/invitation';
 import { candidateApi, discussionApi } from '.';
-import { 
+import {
   candidateKeys,
   discussionKeys,
   hostKeys,
-  participantKeys, 
-  sharedEventKeys, 
+  participantKeys,
+  sharedEventKeys,
 } from './keys';
-import { invitationQueryOption } from './queryOptions';
+import { discussionCalenderQueryOptions, invitationQueryOption } from './queryOptions';
 
 export const discussionQuery = (discussionId: string) => ({
   queryKey: discussionKeys.detail(discussionId), 
@@ -26,11 +26,12 @@ export const discussionQuery = (discussionId: string) => ({
 });
 
 export const discussionCalendarQuery = (
-  discussionId: string, body: DiscussionCalendarRequest,
+  discussionId: string, body: DiscussionCalendarRequest, gcTime: number = 0,
 ) => ({
   queryKey: candidateKeys.calendar(discussionId, body),
   queryFn: () => candidateApi.postCalendarCandidate(discussionId, body),
-  gcTime: 0,
+  gcTime: gcTime,
+  placeholderData: keepPreviousData,
 });
 
 export const discussionRankQuery = (
@@ -45,6 +46,7 @@ export const discussionParticipantQuery = (discussionId: string) => ({
   queryKey: participantKeys.detail(discussionId),
   queryFn: () => candidateApi.getCandidateParticipants(discussionId),
   gcTime: 0,
+  placeholderData: keepPreviousData,
 });
 
 export const discussionConfirmQuery = (discussionId: string) => ({
@@ -65,10 +67,10 @@ export const useDiscussionQuery = (discussionId: string) => {
 };
 
 export const useDiscussionCalendarQuery = (
-  discussionId: string, body: DiscussionCalendarRequest,
+  discussionId: string, body: DiscussionCalendarRequest, gcTime: number = 0,
 ) => {  
   const { data: calendar, refetch, isPending } = useQuery<DiscussionCalendarResponse['events']>(
-    discussionCalendarQuery(discussionId, body),
+    discussionCalenderQueryOptions(discussionId, body, gcTime),
   );
 
   return { calendar, isPending, refetch };

@@ -1,3 +1,4 @@
+import { MINUTE_IN_MILLISECONDS } from '@/utils/date';
 import { request } from '@/utils/fetch';
 
 import type {
@@ -13,6 +14,7 @@ import {
 import type { FinishedSchedulesResponse } from '../model/finishedSchedules';
 
 const ENDPOINT_PREFIX = '/api/v1/schedules';
+export const ONGOING_SCHEDULE_DETAIL_GC_TIME = 1 * MINUTE_IN_MILLISECONDS;
 
 export const schedulesApi = {
   getUpcomingSchedules: async (): Promise<UpcomingSchedulesResponse> => {
