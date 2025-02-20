@@ -40,7 +40,10 @@ export const usePersonalEventDeleteMutation = () => {
   const queryClient = useQueryClient();
 
   const { mutate } = useMutation({
-    mutationFn: (id: number) => personalEventApi.deletePersonalEvent(id),
+    mutationFn: (
+      { id, syncWithGoogleCalendar }: { id: number; syncWithGoogleCalendar: boolean },
+    ) => 
+      personalEventApi.deletePersonalEvent(id, syncWithGoogleCalendar),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: personalEventKeys.all,
