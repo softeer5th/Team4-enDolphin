@@ -3,8 +3,6 @@ package endolphin.backend.domain.personal_event;
 import static endolphin.backend.global.util.TimeUtil.convertToMinute;
 import static endolphin.backend.global.util.TimeUtil.getCurrentDateTime;
 import static endolphin.backend.global.util.TimeUtil.getUntilDateTime;
-import static endolphin.backend.global.util.TimeUtil.roundDownToNearestHalfHour;
-import static endolphin.backend.global.util.TimeUtil.roundUpToNearestHalfHour;
 
 import endolphin.backend.domain.discussion.DiscussionParticipantService;
 import endolphin.backend.domain.discussion.entity.Discussion;
@@ -13,7 +11,6 @@ import endolphin.backend.domain.personal_event.entity.PersonalEvent;
 import endolphin.backend.domain.user.entity.User;
 import endolphin.backend.global.redis.DiscussionBitmapService;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
@@ -77,21 +74,17 @@ public class PersonalEventPreprocessor {
         long MINUTE_PER_DAY = 1440;
 
         Long discussionId = discussion.getId();
-        LocalDateTime personalEventStartTime = roundDownToNearestHalfHour(
-            personalEvent.getStartTime());
-        LocalDateTime personalEventEndTime = roundUpToNearestHalfHour(
-            personalEvent.getEndTime());
 
         LocalDate discussionStartDate = discussion.getDateRangeStart();
         LocalDate discussionEndDate = discussion.getDateRangeEnd();
         LocalTime discussionStartTime = discussion.getTimeRangeStart();
         LocalTime discussionEndTime = discussion.getTimeRangeEnd();
 
-        long currentDateTime = getCurrentDateTime(personalEventStartTime,
-            discussionStartDate, discussionStartTime, discussionEndTime);
+        long currentDateTime = getCurrentDateTime(personalEvent.getStartTime(),
+            discussionStartDate, discussionStartTime);
 
-        long untilDateTime = getUntilDateTime(personalEventEndTime,
-            discussionEndDate, discussionEndTime, discussionStartTime);
+        long untilDateTime = getUntilDateTime(personalEvent.getEndTime(),
+            discussionEndDate, discussionEndTime);
 
         long currentDate = currentDateTime / MINUTE_PER_DAY;
         long minTime = convertToMinute(discussionStartTime);

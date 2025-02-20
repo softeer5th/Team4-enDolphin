@@ -8,6 +8,8 @@ import java.time.ZoneOffset;
 
 public class TimeUtil {
 
+    private static final long MINUTE_PER_DAY = 24 * 60;
+
     public static long calculateTimeLeft(LocalDate deadline) {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime deadlineDateTime = deadline.atTime(23, 59, 59);
@@ -46,44 +48,43 @@ public class TimeUtil {
     }
 
     public static Long getCurrentDateTime(LocalDateTime personalEventStartTime,
-        LocalDate discussionStartDate, LocalTime discussionStartTime, LocalTime discussionEndTime) {
+        LocalDate discussionStartDate, LocalTime discussionStartTime) {
 
-        LocalDate currentDate = personalEventStartTime.toLocalDate();
-        if (currentDate.isBefore(discussionStartDate)) {
-            return convertToMinute(discussionStartDate.atTime(discussionStartTime));
+        long currentDateTime = convertToMinute(roundDownToNearestHalfHour(personalEventStartTime));
+        long startDateTime = convertToMinute(discussionStartDate.atTime(discussionStartTime));
+        long currentTime = currentDateTime % MINUTE_PER_DAY;
+        long minTime = startDateTime % MINUTE_PER_DAY;
+
+        if (currentDateTime < startDateTime) {
+            return startDateTime;
+        } else if (currentTime < minTime) {
+            return currentDateTime - currentTime + minTime;
         }
-
-        LocalTime currentTime = personalEventStartTime.toLocalTime();
-        if (currentTime.isBefore(discussionStartTime)) {
-            currentTime = discussionStartTime;
-        } else if (currentTime.isAfter(discussionEndTime)) {
-            currentTime = discussionStartTime;
-            currentDate = currentDate.plusDays(1);
-        }
-
-        return convertToMinute(currentDate.atTime(currentTime));
+        return currentDateTime;
     }
 
     public static Long getUntilDateTime(LocalDateTime personalEventEndTime,
-        LocalDate discussionEndDate, LocalTime discussionEndTime, LocalTime discussionStartTime) {
-        LocalDate untilDate = personalEventEndTime.toLocalDate();
-        if (untilDate.isAfter(discussionEndDate)) {
-            return convertToMinute(discussionEndDate.atTime(discussionEndTime));
-        }
+        LocalDate discussionEndDate, LocalTime discussionEndTime) {
 
-        LocalTime untilTime = personalEventEndTime.toLocalTime();
-        if (untilTime.isAfter(discussionEndTime)) {
-            untilTime = discussionEndTime;
-        } else if (untilTime.isBefore(discussionStartTime)) {
-            untilTime = discussionEndTime;
-            untilDate = untilDate.minusDays(1);
-        }
+        long untilDateTime = convertToMinute(roundUpToNearestHalfHour(personalEventEndTime));
+        long endDateTime = convertToMinute(discussionEndDate.atTime(discussionEndTime));
+        long untilTime = untilDateTime % MINUTE_PER_DAY;
+        long maxTime = endDateTime % MINUTE_PER_DAY;
 
-        return convertToMinute(untilDate.atTime(untilTime));
+        if (untilDateTime > endDateTime) {
+            return endDateTime;
+        } else if (untilTime > maxTime) {
+            return untilDateTime - untilTime + maxTime;
+        }
+        return untilDateTime;
     }
 
     public static Long convertToMinute(LocalDateTime dateTime) {
         return dateTime.toEpochSecond(ZoneOffset.UTC) / 60;
+    }
+
+    public static Long convertToMinute(LocalDate date) {
+        return convertToMinute(date.atStartOfDay());
     }
 
     public static Long convertToMinute(LocalTime time) {
