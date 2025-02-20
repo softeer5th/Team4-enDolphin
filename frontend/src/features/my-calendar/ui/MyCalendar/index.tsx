@@ -42,7 +42,7 @@ export const MyCalendar = () => {
   const calendar = useSharedCalendarContext();
   const { startDate, endDate } = formatDateToWeekRange(calendar.selectedDate);
 
-  const { personalEvents, isLoading } = usePersonalEventsQuery({ 
+  const { personalEvents, isPending } = usePersonalEventsQuery({ 
     startDate: formatDateToBarString(startDate), 
     endDate: formatDateToBarString(endDate),
   });
@@ -51,12 +51,12 @@ export const MyCalendar = () => {
     <Calendar {...calendar} className={calendarStyle}>
       <Calendar.Core />
       {
-        !isLoading && 
+        !isPending && 
         personalEvents?.filter((event) => isAllday(event.startDateTime, event.endDateTime))
           .map((event) => <AlldayCard key={event.id} {...event} />)
       }
       <Calendar.Header />
-      {<CalendarTable personalEvents={isLoading ? [] : personalEvents} />}
+      {<CalendarTable personalEvents={isPending ? [] : personalEvents} />}
     </Calendar>
   );
 };
