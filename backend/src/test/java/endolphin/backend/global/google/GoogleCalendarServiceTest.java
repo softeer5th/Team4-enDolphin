@@ -90,7 +90,7 @@ class GoogleCalendarServiceTest {
         given(calendarService.isExistingCalendar(user.getId())).willReturn(false);
 
         // 내부 메서드 getPrimaryCalendar() 를 stub 처리하여 더미 GoogleCalendarDto 리턴
-        GoogleCalendarDto googleCalendarDto = new GoogleCalendarDto("primary", "title", "test", "Asia/Seoul");
+        GoogleCalendarDto googleCalendarDto = new GoogleCalendarDto("primary", "title", "test");
 
         doReturn(googleCalendarDto).when(googleCalendarService).getPrimaryCalendar(user);
 

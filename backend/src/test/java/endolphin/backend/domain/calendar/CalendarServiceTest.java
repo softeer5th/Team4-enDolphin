@@ -46,7 +46,7 @@ class CalendarServiceTest {
     @Test
     @DisplayName("캘린더 생성 테스트")
     void createCalendar_ShouldSaveCalendar() {
-        GoogleCalendarDto googleCalendarDto = new GoogleCalendarDto("calendar-123", "Test Calendar", "Asia/Seoul", "owner");
+        GoogleCalendarDto googleCalendarDto = new GoogleCalendarDto("calendar-123", "Test Calendar", "owner");
 
         calendarService.createCalendar(googleCalendarDto, mockUser);
 
