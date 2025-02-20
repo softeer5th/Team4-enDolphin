@@ -26,8 +26,10 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -192,10 +194,11 @@ public class PersonalEventService {
         personalEventPreprocessor.preprocess(personalEvents, discussion, user);
     }
 
-    public void syncWithGoogleEvents(List<GoogleEvent> googleEvents, User user,
+    public Set<LocalDate> syncWithGoogleEvents(List<GoogleEvent> googleEvents, User user,
         String googleCalendarId) {
         List<Discussion> discussions = discussionParticipantService.getDiscussionsByUserId(
             user.getId());
+        Set<LocalDate> changedDates = new HashSet<>();
         for (GoogleEvent googleEvent : googleEvents) {
             if (googleEvent.status().equals(GoogleEventStatus.CONFIRMED)) {
                 upsertPersonalEventByGoogleEvent(googleEvent, discussions, user, googleCalendarId);
@@ -203,6 +206,7 @@ public class PersonalEventService {
                 deletePersonalEventByGoogleEvent(googleEvent, discussions, user, googleCalendarId);
             }
         }
+        return changedDates;
     }
 
     private void validatePersonalEventUser(PersonalEvent personalEvent, User user) {
