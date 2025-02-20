@@ -2,6 +2,7 @@ package endolphin.backend.global.redis;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import endolphin.backend.global.util.TimeUtil;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.BitSet;
@@ -25,7 +26,7 @@ public class DiscussionBitmapServiceTest {
     @Test
     public void testInitializeAndBitOperations() {
         Long discussionId = 100L;
-        LocalDateTime dateTime = LocalDateTime.now();
+        Long dateTime = TimeUtil.convertToMinute(LocalDateTime.now());
 
         // 1. 초기화: 해당 논의 및 시각에 대해 16비트 크기의 비트맵을 생성하여 Redis에 저장
         bitmapService.initializeBitmap(discussionId, dateTime);
@@ -52,7 +53,7 @@ public class DiscussionBitmapServiceTest {
     @Test
     public void testDeleteDiscussionBitmapsUsingScan() throws Exception {
         Long discussionId = 200L;
-        LocalDateTime dateTime = LocalDateTime.now();
+        Long dateTime = TimeUtil.convertToMinute(LocalDateTime.now());
 
         // 1. 초기화 및 데이터 삽입
         bitmapService.initializeBitmap(discussionId, dateTime);
@@ -78,7 +79,7 @@ public class DiscussionBitmapServiceTest {
     @DisplayName("비트 설정 테스트 (16비트 빅 엔디안 데이터)")
     public void testSetPersonalEventBitToBitmap_16Bit_BigEndian() {
         Long discussionId = 100L;
-        LocalDateTime dateTime = LocalDateTime.now();
+        Long dateTime = TimeUtil.convertToMinute(LocalDateTime.now());
 
         byte[] bitmapData = bitmapService.getBitmapData(discussionId, dateTime);
         assertThat(bitmapData).isNull();
@@ -105,9 +106,7 @@ public class DiscussionBitmapServiceTest {
         // given
         Long discussionId = 300L;
         // 특정 날짜 및 시각을 기준으로 테스트 (예: 2025-03-10 09:00)
-        LocalDateTime dateTime = LocalDateTime.of(2025, 3, 10, 9, 0);
-        // minute 단위로 변환
-        long minuteKey = dateTime.toEpochSecond(ZoneOffset.UTC) / 60;
+        Long dateTime = TimeUtil.convertToMinute(LocalDateTime.of(2025, 3, 10, 9, 0));
 
         // 해당 시각에 대해 비트맵 초기화 및 특정 비트 설정
         bitmapService.initializeBitmap(discussionId, dateTime);
@@ -115,8 +114,8 @@ public class DiscussionBitmapServiceTest {
         bitmapService.setBitValue(discussionId, dateTime, 2, true);
 
         // 테스트할 시간 범위: minuteKey를 중심으로 ±10분
-        long startRange = minuteKey - 10;
-        long endRange = minuteKey + 10;
+        long startRange = dateTime - 10;
+        long endRange = dateTime + 10;
 
         // when: getDataOfDiscussionId 호출
         Map<Long, byte[]> dataMap = bitmapService.getDataOfDiscussionId(discussionId, startRange, endRange);
@@ -125,9 +124,9 @@ public class DiscussionBitmapServiceTest {
         assertThat(dataMap)
             .as("데이터 맵은 비어있지 않아야 합니다")
             .isNotEmpty();
-        assertThat(dataMap).containsKey(minuteKey);
+        assertThat(dataMap).containsKey(dateTime);
 
-        byte[] data = dataMap.get(minuteKey);
+        byte[] data = dataMap.get(dateTime);
         assertThat(data).isNotNull();
 
         // 비트 데이터에서 offset 5의 비트가 true인지 검증 (구현에 따라 인덱스 매핑이 달라질 수 있음)
@@ -135,7 +134,7 @@ public class DiscussionBitmapServiceTest {
         assertThat(bs.get(5)).as("Offset 5의 비트는 true여야 합니다").isTrue();
 
         // 범위 밖으로 호출 시 해당 key가 조회되지 않아야 함
-        Map<Long, byte[]> dataMapOut = bitmapService.getDataOfDiscussionId(discussionId, minuteKey + 1, minuteKey + 100);
-        assertThat(dataMapOut).doesNotContainKey(minuteKey);
+        Map<Long, byte[]> dataMapOut = bitmapService.getDataOfDiscussionId(discussionId, dateTime + 1, dateTime + 100);
+        assertThat(dataMapOut).doesNotContainKey(dateTime);
     }
 }

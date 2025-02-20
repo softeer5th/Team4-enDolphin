@@ -1,5 +1,8 @@
 package endolphin.backend.domain.candidate_event;
 
+import static endolphin.backend.global.util.TimeUtil.convertToLocalDateTime;
+import static endolphin.backend.global.util.TimeUtil.convertToMinute;
+
 import endolphin.backend.domain.candidate_event.dto.CalendarViewResponse;
 import endolphin.backend.domain.candidate_event.dto.CandidateEvent;
 import endolphin.backend.domain.candidate_event.dto.CalendarViewRequest;
@@ -197,11 +200,8 @@ public class CandidateEventService {
         return ((data[0] & 0xFF) << 8) | (data[1] & 0xFF);
     }
 
-    private Long convertToMinute(LocalDateTime dateTime) {
-        return dateTime.toEpochSecond(ZoneOffset.UTC) / 60;
-    }
-
-    private CalendarViewResponse convertToResponse(List<CandidateEvent> events, Map<Long, UserIdNameDto> usersMap) {
+    private CalendarViewResponse convertToResponse(List<CandidateEvent> events,
+        Map<Long, UserIdNameDto> usersMap) {
         List<CandidateEventResponse> responses = events.stream()
             .map(event -> new CandidateEventResponse(
                 convertToLocalDateTime(event.startDateTime()),
@@ -210,10 +210,5 @@ public class CandidateEventService {
             ))
             .collect(Collectors.toList());
         return new CalendarViewResponse(responses);
-    }
-
-    private LocalDateTime convertToLocalDateTime(long minuteKey) {
-        long epochSeconds = minuteKey * 60;
-        return LocalDateTime.ofEpochSecond(epochSeconds, 0, ZoneOffset.UTC);
     }
 }

@@ -9,18 +9,16 @@ import endolphin.backend.domain.discussion.entity.DiscussionParticipant;
 import endolphin.backend.domain.shared_event.SharedEventService;
 import endolphin.backend.domain.shared_event.dto.SharedEventDto;
 import endolphin.backend.domain.shared_event.dto.SharedEventWithDiscussionInfoResponse;
-import endolphin.backend.domain.shared_event.entity.SharedEvent;
 import endolphin.backend.domain.user.UserService;
 import endolphin.backend.domain.user.dto.UserIdNameDto;
 import endolphin.backend.domain.user.entity.User;
 import endolphin.backend.global.dto.ListResponse;
 import endolphin.backend.global.error.exception.ApiException;
 import endolphin.backend.global.error.exception.ErrorCode;
-import endolphin.backend.global.util.TimeCalculator;
+import endolphin.backend.global.util.TimeUtil;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -167,7 +165,7 @@ public class DiscussionParticipantService {
                 discussion.getTitle(),
                 discussion.getDateRangeStart(),
                 discussion.getDateRangeEnd(),
-                TimeCalculator.calculateTimeLeft(discussion.getDeadline()),
+                TimeUtil.calculateTimeLeft(discussion.getDeadline()),
                 discussionPicturesMap.getOrDefault(discussion.getId(), Collections.emptyList())
             ))
             .collect(Collectors.toList());
