@@ -203,11 +203,11 @@ export const getYearMonthDay = (date: Date) => {
   return { year, month, day };
 };
 
-export const isAllday = (startDate: Date | null, endDate: Date | null): boolean => {
+export const isAllday = (startDate: string, endDate: string): boolean => {
   const ALL_DAY = 24 * 60 * 60 * 1000;
 
   if (!startDate || !endDate) return false;
-  return endDate.getTime() - startDate.getTime() >= ALL_DAY;
+  return new Date(endDate).getTime() - new Date(startDate).getTime() >= ALL_DAY;
 };
 
 export const getDateRangeString = (startDate: Date, endDate: Date): string => {
