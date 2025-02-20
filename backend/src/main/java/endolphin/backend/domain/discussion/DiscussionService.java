@@ -76,7 +76,6 @@ public class DiscussionService {
 
         if (request.password() != null) {
             discussion.setPassword(passwordEncoder.encode(discussion.getId(), request.password()));
-            discussion = discussionRepository.save(discussion);
         }
 
         discussionParticipantService.addDiscussionParticipant(discussion, currentUser);
