@@ -15,16 +15,11 @@ import {
 
 interface UpcomingScheduleListItemProps {
   schedule: UpcomingSchedule;
-  participantImageUrls: string[];
-  meetingPlace?: string;
-  startDate: Date;
-  endDate: Date;
   onClick?: () => void;
 }
 
 const UpcomingScheduleListItem = ({
   schedule,
-  participantImageUrls,
 }: UpcomingScheduleListItemProps) => {
   const [startDate, endDate] = [
     new Date(schedule.sharedEventDto.startDateTime),
@@ -46,7 +41,6 @@ const UpcomingScheduleListItem = ({
     >
       <Content
         endDate={endDate}
-        participantImageUrls={participantImageUrls}
         schedule={schedule}
         startDate={startDate}
       />
@@ -58,14 +52,12 @@ interface ContentProps {
   schedule: UpcomingScheduleListItemProps['schedule'];
   startDate: Date;
   endDate: Date;
-  participantImageUrls: string[];
 }
 
 const Content = ({
   schedule,
   startDate,
   endDate,
-  participantImageUrls,
 }: ContentProps) => (
   <>
     <Flex
@@ -88,7 +80,7 @@ const Content = ({
         <MeetDate endDate={endDate} startDate={startDate} />
         <MeetingPlace meetingPlace={schedule.meetingMethodOrLocation} />
       </Flex>
-      <Avatar imageUrls={participantImageUrls} size='sm' />
+      <Avatar imageUrls={schedule.participantPictureUrls} size='sm' />
     </Flex>
   </>
 );

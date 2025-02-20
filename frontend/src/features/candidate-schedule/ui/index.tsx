@@ -17,7 +17,7 @@ interface CandidateScheduleDetailProps {
   discussionId: number;
   startDateTime: string;
   endDateTime: string;
-  selectedParticipantIds: number[];
+  selectedParticipantIds?: number[];
 }
 
 const CandidateScheduleDetail = ({ 

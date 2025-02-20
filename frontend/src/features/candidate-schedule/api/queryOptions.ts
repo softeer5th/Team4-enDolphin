@@ -7,7 +7,7 @@ export const candidateDetailQueryOption = (
   discussionId: number,
   startDateTime: string,
   endDateTime: string,
-  selectedUserIdList: number[],
+  selectedUserIdList?: number[],
 ) => ({
   queryKey: candidateDetailQueryKey.detail(
     discussionId, startDateTime, endDateTime, selectedUserIdList,

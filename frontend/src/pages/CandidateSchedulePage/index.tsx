@@ -8,7 +8,7 @@ const CandidateSchedulePage = (candidate: {
   adjustCount: number;
   startDateTime: string;
   endDateTime: string;
-  selectedParticipantIds: number[];
+  selectedParticipantIds?: number[];
 }) => {
   const { id } = useParams({ from: '/_main/discussion/candidate/$id' });
   return (

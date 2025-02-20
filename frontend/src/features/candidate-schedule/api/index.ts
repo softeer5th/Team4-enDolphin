@@ -8,7 +8,7 @@ export const candidateDetailApi = {
     discussionId: number,
     startDateTime: string,
     endDateTime: string,
-    selectedUserIdList: number[], 
+    selectedUserIdList?: number[], 
   ) => {
     const response = await request.post(
       `/api/v1/discussion/${discussionId}/candidate-event/details`,

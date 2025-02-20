@@ -11,8 +11,12 @@ const PIXELS_PER_MINUTE = GRID_COLUMN_WIDTH / MINUTES_PER_GRID;
 // ########## Helpers for Processing Data ##########
 
 export const splitParticipantsBySelection = (
-  participants: Participant[], selectedParticipantIds: number[],
+  participants: Participant[], selectedParticipantIds?: number[],
 ) => {
+  if (!selectedParticipantIds) {
+    return { selectedParticipants: participants, ignoredParticipants: [] };
+  }
+
   const ignoredParticipants: Participant[] = [];
   const selectedParticipants: Participant[] = [];
   participants.forEach(participant => {
