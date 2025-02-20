@@ -31,7 +31,7 @@ export const RankTable = ({ data }: { data: DiscussionDTO[] }) => (
       {data.map((discussion, rank) => (
         <RankTableRow
           discussion={discussion}
-          key={discussion.startDateTime}
+          key={`${discussion.endDateTime}-${rank}`}
           rank={rank}
         />
       ))}
