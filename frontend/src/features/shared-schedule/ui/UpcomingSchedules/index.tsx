@@ -23,7 +23,7 @@ const UpcomingSchedules = () => {
     <Flex
       direction='column'
       gap={700}
-      height={358}
+      height={380}
       justify='flex-end'
       width='full'
     > 

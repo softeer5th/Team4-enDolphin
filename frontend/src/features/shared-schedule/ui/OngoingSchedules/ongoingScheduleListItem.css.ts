@@ -10,7 +10,7 @@ export const scheduleItemContainerStyle = recipe({
     alignItems: 'flex-start',
     gap: vars.spacing[50],
     
-    width: '49.25rem',
+    width: '100%',
     padding: `${vars.spacing[400]} ${vars.spacing[600]}`,
     borderRadius: vars.radius[500],
     cursor: 'pointer',
