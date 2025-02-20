@@ -23,7 +23,7 @@ export const useCarouselControl = ({
 
   const offsetX = -currentCardIndex * (cardWidth + cardGap);
 
-  const maxIndex = totalCards - 1;
+  const maxIndex = totalCards - cardsPerMove;
 
   const translateCarousel = (direction: 'left' | 'right') => {
     if (direction === 'left') {
@@ -38,7 +38,7 @@ export const useCarouselControl = ({
   };
 
   const canTranslateLeft = currentCardIndex > 0;
-  const canTranslateRight = currentCardIndex + cardsPerMove  < maxIndex;
+  const canTranslateRight = currentCardIndex < maxIndex;
 
   return {
     offsetX,
