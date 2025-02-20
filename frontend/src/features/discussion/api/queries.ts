@@ -3,13 +3,21 @@ import { useQuery } from '@tanstack/react-query';
 import type { 
   DiscussionCalendarRequest, 
   DiscussionCalendarResponse,
+  DiscussionConfirmResponse,
   DiscussionParticipantResponse,
   DiscussionRankRequest,
   DiscussionRankResponse,
   DiscussionResponse, 
 } from '../model';
 import { candidateApi, discussionApi } from '.';
-import { calendarKeys, discussionKeys, participantKeys, rankKeys } from './keys';
+import { 
+  calendarKeys, 
+  discussionKeys,
+  hostKeys, 
+  participantKeys, 
+  rankKeys, 
+  sharedEventKeys, 
+} from './keys';
 
 export const discussionQuery = (discussionId: string) => ({
   queryKey: discussionKeys.detail(discussionId), 
@@ -35,6 +43,16 @@ export const discussionRankQuery = (
 export const discussionParticipantQuery = (discussionId: string) => ({
   queryKey: participantKeys.detail(discussionId),
   queryFn: () => candidateApi.getCandidateParticipants(discussionId),
+});
+
+export const discussionConfirmQuery = (discussionId: string) => ({
+  queryKey: sharedEventKeys.detail(discussionId),
+  queryFn: () => candidateApi.getDiscussionConfirm(discussionId),
+});
+
+export const discussionHostQuery = (discussionId: string) => ({
+  queryKey: hostKeys.detail(discussionId),
+  queryFn: () => discussionApi.getIsHost(discussionId),
 });
 
 export const useDiscussionQuery = (discussionId: string) => {
@@ -72,4 +90,18 @@ export const useDiscussionParticipantsQuery = (discussionId: string) => {
         );
     
   return { participants, isLoading };
+};
+
+export const useDiscussionConfirmQuery = (discussionId: string) => {
+  const { data: sharedEvent, isPending } 
+    = useQuery<DiscussionConfirmResponse>(discussionConfirmQuery(discussionId));
+
+  return { sharedEvent, isPending };
+};
+
+export const useDiscussionHostQuery = (discussionId: string) => {
+  const { data: isHost, isPending }
+    = useQuery<boolean>(discussionHostQuery(discussionId));
+
+  return { isHost, isPending };
 };
