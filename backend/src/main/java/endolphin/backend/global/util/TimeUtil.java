@@ -4,6 +4,7 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneOffset;
 
 public class TimeUtil {
 
@@ -36,8 +37,7 @@ public class TimeUtil {
         int minute = time.getMinute();
         if (minute == 0) {
             time = time.plusMinutes(minute);
-        }
-        else if (minute < 30) {
+        } else if (minute < 30) {
             time = time.plusMinutes(30 - minute);
         } else {
             time = time.plusMinutes(60 - minute);
@@ -61,5 +61,14 @@ public class TimeUtil {
         }
 
         return untilDate.atTime(untilTime);
+    }
+
+    public static Long convertToMinute(LocalDateTime dateTime) {
+        return dateTime.toEpochSecond(ZoneOffset.UTC) / 60;
+    }
+
+    public static LocalDateTime convertToLocalDateTime(long minuteKey) {
+        long epochSeconds = minuteKey * 60;
+        return LocalDateTime.ofEpochSecond(epochSeconds, 0, ZoneOffset.UTC);
     }
 }
