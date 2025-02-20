@@ -1,17 +1,19 @@
 import { Flex } from '@/components/Flex';
 import { WEEK } from '@/constants/date';
+import { isSameDate } from '@/utils/date';
 
 import type { DiscussionDTO } from '../../model';
 import DiscussionCard from '../DiscussionCard';
 import { dayStyle } from './index.css';
 
 export const CalendarDate = (
-  { date, groupMap }: { date: Date; groupMap: Map<string, DiscussionDTO[]> },
+  { date, groupMap, selected }: 
+  { date: Date; groupMap: Map<string, DiscussionDTO[]>; selected: Date },
 ) => {
   const day = WEEK[date.getDay()];
   return (
     <Flex
-      className={dayStyle}
+      className={dayStyle({ selected: isSameDate(date, selected) })}
       direction='column'
       gap={400}
       height='100%'

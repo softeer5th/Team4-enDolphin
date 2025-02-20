@@ -25,7 +25,7 @@ export const SelectedWeek = () => {
           day={day}
           isToday={isSameDate(dates[i], today)}
           key={day}
-          selected={isSameDate(dates[i], selected)}
+          selected={selected}
         />)}
     </div>
   );

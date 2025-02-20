@@ -45,6 +45,7 @@ export const CalendarTable = () => {
           date={date}
           groupMap={groupByDayOfWeek(calendar || [])}
           key={date.getTime()}
+          selected={selected}
         />,
       )}
     </Flex>

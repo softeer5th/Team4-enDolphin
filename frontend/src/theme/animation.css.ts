@@ -46,6 +46,21 @@ export const fadeHighlight = keyframes({
   },
 });
 
+export const fadeHighlightGray = keyframes({
+  '0%': { backgroundColor: vars.color.Ref.Netural[50] },
+  '5%': { 
+    backgroundColor: vars.color.Ref.Primary[50],         
+    boxShadow: `inset 0 0 0 0.5px ${vars.color.Ref.Primary[100]}`, 
+  },
+  '50%': { 
+    backgroundColor: vars.color.Ref.Primary[50],
+    boxShadow: `inset 0 0 0 0.5px ${vars.color.Ref.Primary[100]}`,
+  },
+  '100%': { 
+    backgroundColor: vars.color.Ref.Netural[50],
+  },
+});
+
 export const fadeTimeBar = keyframes({
   '0%': { opacity: 0 },
   '5%': { opacity: 1 },
@@ -64,6 +79,12 @@ export const fadeHighlightProps: CSSProperties = {
 
 export const fadeTimeBarProps: CSSProperties = {
   animationName: fadeTimeBar,
+  animationDuration: '2s',
+  animationFillMode: 'forwards',
+};
+
+export const fadeHighlightGrayProps: CSSProperties = {
+  animationName: fadeHighlightGray,
   animationDuration: '2s',
   animationFillMode: 'forwards',
 };
