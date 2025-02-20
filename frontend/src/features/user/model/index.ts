@@ -7,4 +7,10 @@ export const UserDTO = z.object({
   picture: z.string().url(),
 });
 
+export const UserInfoSchema = z.object({
+  name: z.string(),
+  picture: z.string().url(),
+});
+
 export type UserDTO = z.infer<typeof UserDTO>;
+export type UserInfo = z.infer<typeof UserInfoSchema>;

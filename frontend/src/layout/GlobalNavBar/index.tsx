@@ -5,6 +5,8 @@ import type { PropsWithChildren } from 'react';
 import Avatar from '@/components/Avatar';
 import { Flex } from '@/components/Flex';
 import { Logo } from '@/components/Icon/component/Logo';
+import { useUserInfoQuery } from '@/features/user/api/queries';
+import { isLogin } from '@/utils/auth';
 
 import { LoginLink, MyCalendarLink, NewDiscussionLink } from './buttons';
 import { containerStyle } from './index.css';
@@ -15,6 +17,9 @@ interface GlobalNavBarProps extends PropsWithChildren {
 
 const GlobalNavBar = ({ background = 'white', children }: GlobalNavBarProps) => {
   const navigate = useNavigate();
+  const { data, isPending } = useUserInfoQuery();
+  if (isPending) return <div>pending ...</div>;
+  if (!data) return <div>user data is undefined or null</div>;
 
   const onClickLogo = () => {
     navigate({ to: '/', replace: true });
@@ -29,7 +34,17 @@ const GlobalNavBar = ({ background = 'white', children }: GlobalNavBarProps) => 
         width={80}
       />
       <Flex direction='row'>
-        {children}
+        {isLogin() ? 
+          <Flex
+            align='center'
+            direction='row'
+            gap={300}
+          >
+            {children}
+            <Avatar imageUrls={[data.picture]} size='lg' />
+          </Flex>
+          :
+          <LoginLink />}
       </Flex>
     </header>
   );
