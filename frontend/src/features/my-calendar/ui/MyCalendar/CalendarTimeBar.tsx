@@ -1,7 +1,7 @@
 import { Flex } from '@/components/Flex';
 import { Text } from '@/components/Text';
 import { vars } from '@/theme/index.css';
-import { formatDateToTimeString } from '@/utils/date';
+import { formatDateToTimeString } from '@/utils/date/format';
 
 import { timeBarStyle, timeBarWrapperStyle } from './index.css';
 
