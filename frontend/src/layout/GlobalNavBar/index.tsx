@@ -9,7 +9,7 @@ import { useUserInfoQuery } from '@/features/user/api/queries';
 import { isLogin } from '@/utils/auth';
 
 import { LoginLink, MyCalendarLink, NewDiscussionLink } from './buttons';
-import { containerStyle } from './index.css';
+import { avatarContainerStyle, containerStyle } from './index.css';
 
 interface GlobalNavBarProps extends PropsWithChildren {
   background?: 'white' | 'transparent';
@@ -35,7 +35,6 @@ const GlobalNavBar = ({ background = 'white', children }: GlobalNavBarProps) => 
           <Flex
             align='center'
             direction='row'
-            gap={300}
           >
             {children}
             <UserAvatar />
@@ -52,7 +51,11 @@ const UserAvatar = () => {
   if (isPending) return <div>pending ...</div>;
   if (!data) return <div>user data is undefined or null</div>;
   return (
-    <Avatar imageUrls={[data.picture]} size='lg' />
+    <Avatar
+      className={avatarContainerStyle}
+      imageUrls={[data.picture]}
+      size='lg'
+    />
   );
 };
 
