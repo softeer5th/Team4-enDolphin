@@ -80,12 +80,12 @@ export const useDiscussionRankQuery = (
 };
 
 export const useDiscussionParticipantsQuery = (discussionId: string) => {
-  const { data: participants, isLoading } 
+  const { data: participants, isPending } 
         = useQuery<DiscussionParticipantResponse['participants']>(
           discussionParticipantQuery(discussionId),
         );
     
-  return { participants, isLoading };
+  return { participants, isPending };
 };
 
 export const useDiscussionConfirmQuery = (discussionId: string) => {
