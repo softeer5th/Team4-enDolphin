@@ -11,15 +11,14 @@ import type {
 } from '../model';
 import type { InviteResponse } from '../model/invitation';
 import { candidateApi, discussionApi } from '.';
-import { calendarKeys, discussionKeys, participantKeys, rankKeys } from './keys';
-import { invitationQueryOption } from './queryOptions';
 import { 
-  candidateKeys, 
+  candidateKeys,
   discussionKeys,
-  hostKeys, 
-  participantKeys,
+  hostKeys,
+  participantKeys, 
   sharedEventKeys, 
 } from './keys';
+import { invitationQueryOption } from './queryOptions';
 
 export const discussionQuery = (discussionId: string) => ({
   queryKey: discussionKeys.detail(discussionId), 
