@@ -436,18 +436,19 @@ public class GoogleCalendarService {
             LocalDateTime endDateTime = null;
             if (status == GoogleEventStatus.CONFIRMED) {
                 summary = item.summary() == null ? "제목 없음" : item.summary();
-
                 startDateTime = convertLocalDateTime(item.start());
-
                 endDateTime = convertLocalDateTime(item.end());
             }
-            
+
             events.add(new GoogleEvent(eventId, summary, startDateTime, endDateTime, status));
         }
         return events;
     }
 
     private LocalDateTime convertLocalDateTime(EventTime eventTime) {
+        if (eventTime == null) {
+            return null;
+        }
         if (eventTime.date() == null) {
             return LocalDateTime.parse(eventTime.dateTime(), DateTimeFormatter.ISO_DATE_TIME);
         }

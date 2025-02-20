@@ -1,5 +1,6 @@
 package endolphin.backend.domain.personal_event;
 
+import endolphin.backend.domain.calendar.CalendarService;
 import endolphin.backend.domain.discussion.DiscussionParticipantService;
 import endolphin.backend.domain.discussion.entity.Discussion;
 import endolphin.backend.domain.personal_event.dto.PersonalEventRequest;
@@ -47,8 +48,7 @@ public class PersonalEventService {
     private final PersonalEventPreprocessor personalEventPreprocessor;
     private final DiscussionParticipantService discussionParticipantService;
     private final ApplicationEventPublisher eventPublisher;
-
-    private final String PRIMARY = "primary";
+    private final CalendarService calendarService;
 
     @Transactional(readOnly = true)
     public ListResponse<PersonalEventResponse> listPersonalEvents(LocalDate startDate,
@@ -79,8 +79,9 @@ public class PersonalEventService {
         PersonalEvent result = personalEventRepository.save(personalEvent);
 
         if (request.syncWithGoogleCalendar()) {
+            String calendarId = calendarService.getCalendarIdByUser(user);
             personalEvent.setGoogleEventId(IdGenerator.generateId(user.getId()));
-            personalEvent.setCalendarId(PRIMARY);
+            personalEvent.setCalendarId(calendarId);
             eventPublisher.publishEvent(new InsertPersonalEvent(List.of(personalEvent)));
         }
 
@@ -98,6 +99,8 @@ public class PersonalEventService {
     public void createPersonalEventsForParticipants(List<User> participants,
         Discussion discussion,
         SharedEventDto sharedEvent) {
+        List<Long> userIds = participants.stream().map(User::getId).toList();
+        Map<Long, String> calendarIdMap = calendarService.getCalendarIdByUsers(userIds);
         List<PersonalEvent> events = participants.stream()
             .map(participant -> {
                 String googleEventId = IdGenerator.generateId(participant.getId());
@@ -108,7 +111,7 @@ public class PersonalEventService {
                     .user(participant)
                     .isAdjustable(false)
                     .googleEventId(googleEventId)
-                    .calendarId(PRIMARY)
+                    .calendarId(calendarIdMap.get(participant.getId()))
                     .build();
             })
             .toList();
@@ -134,10 +137,13 @@ public class PersonalEventService {
 
         if (request.syncWithGoogleCalendar()) {
             if (result.getGoogleEventId() == null && result.getCalendarId() == null) {
-                result.update(IdGenerator.generateId(user.getId()), PRIMARY);
+                String calendarId = calendarService.getCalendarIdByUser(user);
+                result.update(IdGenerator.generateId(user.getId()), calendarId);
                 eventPublisher.publishEvent(new InsertPersonalEvent(List.of(result)));
             } else {
-                eventPublisher.publishEvent(new UpdatePersonalEvent(result));
+                if (haveToSync(personalEvent, request)) {
+                    eventPublisher.publishEvent(new UpdatePersonalEvent(result));
+                }
             }
         }
 
@@ -268,6 +274,10 @@ public class PersonalEventService {
     private boolean isChanged(PersonalEvent personalEvent, PersonalEventRequest newEvent) {
         return !personalEvent.getStartTime().equals(newEvent.startDateTime())
             || !personalEvent.getEndTime().equals(newEvent.endDateTime());
+    }
+
+    private boolean haveToSync(PersonalEvent personalEvent, PersonalEventRequest newEvent) {
+        return isChanged(personalEvent, newEvent) || !personalEvent.getTitle().equals(newEvent.title());
     }
 
     @Transactional(readOnly = true)
