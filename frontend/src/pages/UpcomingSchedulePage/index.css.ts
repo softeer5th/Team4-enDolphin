@@ -11,7 +11,7 @@ export const containerStyle = style({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  gap: 32,
+  gap: 382,
 });
 
 export const controlButtonStyle = recipe({

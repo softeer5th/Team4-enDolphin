@@ -1,3 +1,5 @@
+import { Link } from '@tanstack/react-router';
+
 import Avatar from '@/components/Avatar';
 import { Chip } from '@/components/Chip';
 import { Flex } from '@/components/Flex';
@@ -40,13 +42,7 @@ const ScheduleCard = ({ schedule, latest }: ScheduleCardProps) => (
       width='full'
     >
       <Avatar imageUrls={schedule.participantPictureUrls} size='lg' />
-      <button className={chevronButtonStyle({ latest })}>
-        <ChevronRight
-          clickable
-          fill={vars.color.Ref.Netural[800]}
-          width={28}
-        />
-      </button>
+      <NavigateButton latest={latest} schedule={schedule} />
     </Flex>
   </Flex>
 );
@@ -75,3 +71,23 @@ const MeetingDateTimeInfo = ({ startDateTime, endDateTime }: {
 );
 
 export default ScheduleCard;
+
+const NavigateButton = ({ latest, schedule }: {
+  latest: boolean; 
+  schedule: UpcomingSchedule;
+}) => {
+  const payload = {
+    discussionId: schedule.discussionId,
+    startDateTime: schedule.sharedEventDto.startDateTime,
+    endDateTime: schedule.sharedEventDto.endDateTime,
+  };
+  return (
+    <button className={chevronButtonStyle({ latest })}>
+      <ChevronRight
+        clickable
+        fill={vars.color.Ref.Netural[800]}
+        width={28}
+      />
+    </button>
+  ); 
+};
