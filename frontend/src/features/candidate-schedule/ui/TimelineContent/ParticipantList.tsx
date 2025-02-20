@@ -56,16 +56,9 @@ const ParticipantItem = ({ participant, isIgnoredParticipant }: {
 };
 
 const getChipStatus = (participant: Participant): ScheduleEventStatus => {
-  let isOutOfRange = true;
-  for (const event of participant.events) {
-    if (event.status === 'FIXED') {
-      return 'FIXED';
-    }
-    if (event.status === 'ADJUSTABLE') {
-      isOutOfRange =  false;
-    }
-  }
-  return isOutOfRange ? 'OUT_OF_RANGE' : 'ADJUSTABLE';
+  if (participant.events.some(event => event.status === 'FIXED')) return 'FIXED';
+  return participant.events.some(event => event.status === 'ADJUSTABLE') 
+    ? 'ADJUSTABLE' : 'OUT_OF_RANGE';
 };
 
 export default ParticipantList;
