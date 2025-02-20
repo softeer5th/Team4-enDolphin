@@ -6,7 +6,7 @@ import Pagination from '@/components/Pagination';
 
 import { useFinishedQuery } from '../../api/queries';
 import FinishedFallback from '../Fallbacks/FinishedFallback';
-import { paginationStyle } from './finishedScheduleList.css';
+import { paginationStyle, scheduleListStyle } from './finishedScheduleList.css';
 import FinishedScheduleListItem from './FinishedScheduleListItem';
 
 export const FINISHED_PAGE_SIZE = 7;
@@ -18,17 +18,11 @@ interface FinishedScheduleListProps {
 const FinishedScheduleList = ({ baseYear }: FinishedScheduleListProps) => {
   const [currentPage, setCurrentPage] = useState(1);
   const { data, isPending } = useFinishedQuery(currentPage, FINISHED_PAGE_SIZE, baseYear);
-  if (isPending) return <div>pending...</div>;
-  if (!data) return <div>data is undefined or null</div>;
+  if (isPending || !data) return <div className={scheduleListStyle} />;
   if (data.finishedDiscussions.length === 0) return <FinishedFallback />;
 
   return (
-    <Flex
-      direction='column'
-      gap={600}
-      justify='space-between'
-      width='full'
-    >
+    <div className={scheduleListStyle} >
       <Flex
         direction='column'
         justify='flex-start'
@@ -49,7 +43,7 @@ const FinishedScheduleList = ({ baseYear }: FinishedScheduleListProps) => {
         onPageChange={(page) => setCurrentPage(page)}
         totalPages={data.totalPages}
       />
-    </Flex>
+    </div>
   ); 
 };
 

@@ -1,4 +1,6 @@
 
+import { keepPreviousData } from '@tanstack/react-query';
+
 import type { AttendType } from '../model';
 import { schedulesApi } from '.';
 import { finishedQueryKey, ongoingQueryKey, upcomingQueryKey } from './keys';
@@ -15,5 +17,6 @@ export const sharedSchedulesQueryOptions = {
   finished: (page: number, size: number, year: number) => ({
     queryKey: finishedQueryKey.detail(page, size, year),
     queryFn: () => schedulesApi.getFinishedSchedules(page, size, year),
+    placeholderData: keepPreviousData,
   }),
 };
