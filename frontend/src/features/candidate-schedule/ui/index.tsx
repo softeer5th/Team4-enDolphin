@@ -35,10 +35,12 @@ const CandidateScheduleDetail = ({
     <Flex className={containerStyle} direction='column'>
       <TopBar />
       <Content
+        {...data}
         adjustCount={adjustCount}
+        endDateTime={endDateTime}
         ignoredParticipants={ignoredParticipants}
         selectedParticipants={selectedParticipants}
-        {...data}
+        startDateTime={startDateTime}
       />
     </Flex>
   );

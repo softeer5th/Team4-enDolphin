@@ -8,7 +8,6 @@ const CandidateSchedulePage = () => {
   const { id } = useParams({ from: '/_main/discussion/candidate/$id' });
   const { state } = useLocation();
   const { candidate } = state ?? {};
-
   // TODO: candidate가 없을 경우에 대한 예외 처리
   return (
     <>
