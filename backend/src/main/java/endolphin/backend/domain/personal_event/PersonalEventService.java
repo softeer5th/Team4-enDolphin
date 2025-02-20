@@ -277,7 +277,7 @@ public class PersonalEventService {
     }
 
     private boolean haveToSync(PersonalEvent personalEvent, PersonalEventRequest newEvent) {
-        return isChanged(personalEvent, newEvent) || personalEvent.getTitle() != newEvent.title();
+        return isChanged(personalEvent, newEvent) || !personalEvent.getTitle().equals(newEvent.title());
     }
 
     @Transactional(readOnly = true)
