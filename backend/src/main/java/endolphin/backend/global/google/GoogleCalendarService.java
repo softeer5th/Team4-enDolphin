@@ -251,7 +251,7 @@ public class GoogleCalendarService {
                         throw new CalendarException((HttpStatus) response.getStatusCode(),
                             response.bodyTo(String.class));
                     });
-                log.info("[syncWithCalendar] after restClient");
+                log.info("[syncWithCalendar] result: {}", result);
                 List<GoogleEvent> events = extractEventList(result);
                 log.info("[syncWithCalendar] before publish event, calId: {}, userId: {}", calendarId, user.getId());
                 eventPublisher.publishEvent(new GoogleEventChanged(events, user, calendarId));
@@ -416,6 +416,18 @@ public class GoogleCalendarService {
 
         List<GoogleEvent> events = new ArrayList<>();
         for (EventItem item : result.items()) {
+            log.debug("[extractEventList] {}", item);
+            if (item != null) {
+                log.debug("[id]: {}", item.id());
+                log.debug("[start]: {}", item.start());
+                log.debug("[end]: {}", item.end());
+                if (item.start() != null) {
+                    log.debug("[start time]: {}", item.start().dateTime());
+                }
+                if (item.end() != null) {
+                    log.debug("[end time]: {}", item.end().dateTime());
+                }
+            }
             String eventId = item.id();
             String summary = item.summary() == null ? "제목 없음" : item.summary();
 
