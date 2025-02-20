@@ -11,8 +11,6 @@ const CandidateSchedulePage = (candidate: {
   selectedParticipantIds: number[];
 }) => {
   const { id } = useParams({ from: '/_main/discussion/candidate/$id' });
-  // TODO: candidate가 없을 경우에 대한 예외 처리
-
   return (
     <>
       <div className={backdropStyle} />

@@ -39,8 +39,10 @@ const CandidateScheduleDetail = ({
       <Content
         {...data}
         adjustCount={adjustCount}
+        endDateTime={new Date(endDateTime)}
         ignoredParticipants={ignoredParticipants}
         selectedParticipants={selectedParticipants}
+        startDateTime={new Date(startDateTime)}
       />
     </Flex>
   );
