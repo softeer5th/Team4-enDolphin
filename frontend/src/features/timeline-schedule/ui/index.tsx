@@ -15,39 +15,41 @@ import {
   topBarStyle,
 } from './index.css';
 import TimelineContent from './TimelineContent';
+import { TimelineContext } from './TimelineContext';
 import { splitParticipantsBySelection } from './timelineHelper';
 
-// TODO: 라우팅 param 정의 위치 옮기기
+// TODO: context로 옮길 수 있는 prop들 찾아서 옮기기
 interface TimelineScheduleModalProps extends PropsWithChildren {
   discussionId: number;
   startDateTime: string;
   endDateTime: string;
   selectedParticipantIds?: number[];
+  isConfirmedSchedule: boolean;
 }
 
 const TimelineScheduleModal = ({ 
-  discussionId, startDateTime, endDateTime, selectedParticipantIds, children,
+  discussionId, startDateTime, endDateTime, selectedParticipantIds, children, isConfirmedSchedule,
 }: TimelineScheduleModalProps) => {
   const { data, isPending } = useCandidateDetailQuery(
     discussionId, startDateTime, endDateTime, selectedParticipantIds,
   );
   if (isPending || !data) return <div className={containerStyle} />;
-  const { selectedParticipants, ignoredParticipants } = splitParticipantsBySelection(
+  const { checkedParticipants, uncheckedParticipants } = splitParticipantsBySelection(
     data.participants, 
     selectedParticipantIds,
   );
 
   return (
-    <Flex className={containerStyle} direction='column'>
-      {children}
-      <Content
-        {...data}
-        endDateTime={new Date(endDateTime)}
-        ignoredParticipants={ignoredParticipants}
-        selectedParticipants={selectedParticipants}
-        startDateTime={new Date(startDateTime)}
-      />
-    </Flex>
+    <TimelineContext.Provider value={{ isConfirmedSchedule }}>
+      <Flex className={containerStyle} direction='column'>
+        {children}
+        <Content
+          {...data}
+          checkedParticipants={checkedParticipants}
+          uncheckedParticipants={uncheckedParticipants}
+        />
+      </Flex>
+    </TimelineContext.Provider>
   );
 };
 
@@ -75,13 +77,13 @@ const TopBar = ({ children }: PropsWithChildren) => {
 };
 
 interface ContentProps extends CandidateDetailResponse {
-  selectedParticipants: Participant[];
-  ignoredParticipants: Participant[];
+  checkedParticipants: Participant[];
+  uncheckedParticipants: Participant[];
 }
 
 const Content = ({ 
-  selectedParticipants,
-  ignoredParticipants,
+  checkedParticipants,
+  uncheckedParticipants,
   ...props 
 }: ContentProps) => (
   <Flex
@@ -91,10 +93,10 @@ const Content = ({
     width='full'
   >
     <TimelineContent
-      conflictEnd={props.endDateTime}
-      conflictStart={props.startDateTime} 
-      ignoredParticipants={ignoredParticipants}
-      selectedParticipants={selectedParticipants}
+      checkedParticipants={checkedParticipants}
+      conflictEnd={props.endDateTime} 
+      conflictStart={props.startDateTime}
+      uncheckedParticipants={uncheckedParticipants}
     />
   </Flex>
 );

@@ -31,14 +31,13 @@ const UpcomingScheduleListItem = ({
     <Link
       className={scheduleItemContainerStyle}
       params={{ id: schedule.discussionId.toString() }}
-      state={{
-        candidate: {
-          adjustCount: 0,
+      state={{ 
+        upcomingScheduleDetail: {
           startDateTime: schedule.sharedEventDto.startDateTime,
           endDateTime: schedule.sharedEventDto.endDateTime,
         },
       }}
-      to='/discussion/candidate/$id'
+      to='/upcoming-schedule/$id'
     >
       <Content
         endDate={endDate}

@@ -3,30 +3,34 @@ import { Flex } from '@/components/Flex';
 import { Text } from '@/components/Text';
 
 import type { Participant, ScheduleEventStatus } from '../../model';
+import { useTimelineContext } from '../TimelineContext';
 import ChipAble from './ChipAble';
 import { participantItemStyle, participantsContainerStyle } from './participantList.css';
 
 interface ParticipantListProps {
-  selectedParticipants: Participant[];
-  ignoredParticipants: Participant[];
+  checkedParticipants: Participant[];
+  uncheckedParticipants: Participant[];
 }
 
-const ParticipantList  = ({ selectedParticipants, ignoredParticipants }: ParticipantListProps) => (
+const ParticipantList  = ({ 
+  checkedParticipants,
+  uncheckedParticipants, 
+}: ParticipantListProps) => (
   <Flex
     className={participantsContainerStyle}
     direction='column'
     gap={200}
   >
-    {selectedParticipants.map((participant) => (
+    {checkedParticipants.map((participant) => (
       <ParticipantItem
-        isIgnoredParticipant={false}
+        isUncheckedParticipant={false}
         key={participant.id}
         participant={participant}
       />
     ))}
-    {ignoredParticipants.map((participant) => (
+    {uncheckedParticipants.map((participant) => (
       <ParticipantItem
-        isIgnoredParticipant={true}
+        isUncheckedParticipant={true}
         key={participant.id}
         participant={participant}
       />
@@ -34,10 +38,11 @@ const ParticipantList  = ({ selectedParticipants, ignoredParticipants }: Partici
   </Flex>
 );
 
-const ParticipantItem = ({ participant, isIgnoredParticipant }: { 
+const ParticipantItem = ({ participant, isUncheckedParticipant }: { 
   participant: Participant;
-  isIgnoredParticipant: boolean;
+  isUncheckedParticipant: boolean;
 }) => {
+  const { isConfirmedSchedule } = useTimelineContext();
   const chipStatus = getChipStatus(participant);
   return (
     <Flex
@@ -49,7 +54,7 @@ const ParticipantItem = ({ participant, isIgnoredParticipant }: {
         <Avatar imageUrls={[participant.picture]} size='lg' />
         <Text typo='b2M'>{participant.name}</Text>
       </Flex>
-      {!isIgnoredParticipant && chipStatus !== 'OUT_OF_RANGE' &&
+      {!isConfirmedSchedule && !isUncheckedParticipant && chipStatus !== 'OUT_OF_RANGE' &&
         <ChipAble isAdjustable={chipStatus === 'ADJUSTABLE'} />}
     </Flex>
   );

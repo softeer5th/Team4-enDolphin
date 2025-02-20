@@ -81,11 +81,21 @@ export const timelineBlockStyle = recipe({
   },
 });
 
-export const conflictRangeTimeBlockStyle = style({
-  position: 'fixed',
-  height: '23.25rem',
-  // maxWidth: '100%',
-  borderRadius: vars.radius[400],
-  border: `1px solid ${vars.color.Ref.Primary[400]}`,
-  pointerEvents: 'none',
+export const conflictRangeTimeBlockStyle = recipe({
+  base: {
+    position: 'fixed',
+    height: '23.25rem',
+    // maxWidth: '100%',
+    borderRadius: vars.radius[300],
+    border: `1px solid ${vars.color.Ref.Primary[400]}`,
+    pointerEvents: 'none',
+  },
+  variants: {
+    isConfirmedSchedule: {
+      true: {
+        backgroundColor: vars.color.Ref.Primary[50],
+      },
+      false: {},
+    },
+  },
 });

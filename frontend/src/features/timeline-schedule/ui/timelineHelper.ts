@@ -14,20 +14,20 @@ export const splitParticipantsBySelection = (
   participants: Participant[], selectedParticipantIds?: number[],
 ) => {
   if (!selectedParticipantIds) {
-    return { selectedParticipants: participants, ignoredParticipants: [] };
+    return { checkedParticipants: participants, uncheckedParticipants: [] };
   }
 
-  const ignoredParticipants: Participant[] = [];
-  const selectedParticipants: Participant[] = [];
+  const uncheckedParticipants: Participant[] = [];
+  const checkedParticipants: Participant[] = [];
   participants.forEach(participant => {
     if (selectedParticipantIds.includes(participant.id)) {
-      selectedParticipants.push(participant);
+      checkedParticipants.push(participant);
     } else {
-      ignoredParticipants.push(participant);
+      uncheckedParticipants.push(participant);
     }
   });
   
-  return { selectedParticipants, ignoredParticipants };
+  return { checkedParticipants, uncheckedParticipants };
 };
 
 export const calculateMiddleTime = (startTime: Date, endTime: Date): Date => {

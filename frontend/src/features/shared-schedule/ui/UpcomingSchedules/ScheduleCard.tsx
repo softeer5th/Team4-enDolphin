@@ -80,13 +80,12 @@ const NavigateButton = ({ latest, schedule }: {
     className={chevronButtonStyle({ latest })}
     params={{ id: schedule.discussionId.toString() }}
     state={{ 
-      candidate: {
-        adjustCount: 0,
+      upcomingScheduleDetail: {
         startDateTime: schedule.sharedEventDto.startDateTime,
         endDateTime: schedule.sharedEventDto.endDateTime,
       },
     }}
-    to='/discussion/candidate/$id'
+    to='/upcoming-schedule/$id'
   >
     <ChevronRight
       clickable

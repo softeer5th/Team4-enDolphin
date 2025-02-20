@@ -22,8 +22,8 @@ import ParticipantList from './ParticipantList';
 interface TimelineContentProps {
   conflictStart: Date;
   conflictEnd: Date;
-  selectedParticipants: Participant[];
-  ignoredParticipants: Participant[];
+  checkedParticipants: Participant[];
+  uncheckedParticipants: Participant[];
 }
 
 const TimelineContent = (props: TimelineContentProps) => {
@@ -51,16 +51,16 @@ const TimelineContent = (props: TimelineContentProps) => {
           {...props}
           gridStartOffset={gridStartOffset}
           gridTimes={gridTimes}
-          participants={[...props.selectedParticipants, ...props.ignoredParticipants]}
+          participants={[...props.checkedParticipants, ...props.uncheckedParticipants]}
         />
       </div>
-      {props.ignoredParticipants.length > 0 && 
+      {props.uncheckedParticipants.length > 0 && 
       <div
         className={overlayStyle}
         ref={overlayRef}
         style={{ 
-          top: getRowTopOffset(props.selectedParticipants.length) + 72,
-          height: getRowTopOffset(props.ignoredParticipants.length) + 60, 
+          top: getRowTopOffset(props.checkedParticipants.length) + 72,
+          height: getRowTopOffset(props.uncheckedParticipants.length) + 60, 
         }}
       />}
     </div>
