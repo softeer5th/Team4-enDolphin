@@ -1,9 +1,8 @@
-import { Link } from '@tanstack/react-router';
+import { Link, useParams } from '@tanstack/react-router';
 
-import { useSafeContext } from '@/hooks/useSafeContext';
+import { useMemberContext } from '@/pages/DiscussionPage/MemberContext';
 
 import type { DiscussionDTO } from '../../model';
-import { DiscussionContext } from '../DiscussionTitle/DiscussionContext';
 import { DiscussionLarge } from './DiscussionLarge';
 import { DiscussionSmall } from './DiscussionSmall';
 
@@ -14,16 +13,17 @@ interface DiscussionCardProps {
 }
 
 const DiscussionCard = ({ size, discussion, rank }: DiscussionCardProps) => {
-  const { discussionId } = useSafeContext(DiscussionContext);
+  const { id } = useParams({ from: '/_main/discussion/$id' });
+  const memberContext = useMemberContext();
   return (
     <Link
-      params={{ id: discussionId.toString() }}
+      params={{ id: id }}
       state={{ candidate: {
         adjustCount: discussion.usersForAdjust.length,
         startDateTime: discussion.startDateTime,
         endDateTime: discussion.endDateTime,
-        // TODO: selectedParticipantIds를 외부에서 주입 (현재는 모든 참여자가 선택된 것으로 간주됨)
-        selectedParticipantIds: discussion.usersForAdjust.map((user) => user.id),
+        selectedParticipantIds: memberContext?.formState.checkedList ?? []
+        ,
       } }}
       to={'/discussion/candidate/$id'}
     >
