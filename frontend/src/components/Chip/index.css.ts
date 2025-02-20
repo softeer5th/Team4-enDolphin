@@ -18,35 +18,15 @@ export const chipStyle = recipe({
     color: {
       blue: { 
         backgroundColor: vars.color.Ref.Primary[500],
-        ':hover': {
-          backgroundColor: vars.color.Ref.Primary[100],
-          color: vars.color.Ref.Primary[500],
-          cursor: 'pointer',
-        }, 
       },
       green: { 
         backgroundColor: vars.color.Ref.Green[500],
-        ':hover': {
-          backgroundColor: vars.color.Ref.Green[100],
-          color: vars.color.Ref.Green[500],
-          cursor: 'pointer',
-        }, 
       },
       red: { 
         backgroundColor: vars.color.Ref.Red[500],
-        ':hover': {
-          backgroundColor: vars.color.Ref.Red[100],
-          color: vars.color.Ref.Red[500],
-          cursor: 'pointer',
-        }, 
       },
       black: {
         backgroundColor: vars.color.Ref.Netural[800],
-        ':hover': {
-          backgroundColor: vars.color.Ref.Netural[200],
-          color: vars.color.Ref.Netural[800],
-          cursor: 'pointer',
-        }, 
       },
       coolGray: { 
         backgroundColor: vars.color.Ref.CoolGrey[100],
@@ -57,11 +37,6 @@ export const chipStyle = recipe({
       borderless: { 
         backgroundColor: 'transparent', 
         color: vars.color.Ref.Netural[600],
-        ':hover': {
-          backgroundColor: vars.color.Ref.Netural[200],
-          color: vars.color.Ref.Netural[800],
-          cursor: 'pointer',
-        }, 
       },
       weak: {},
       filled: {},
