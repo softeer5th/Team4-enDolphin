@@ -11,11 +11,10 @@ import type {
 } from '../model';
 import { candidateApi, discussionApi } from '.';
 import { 
-  calendarKeys, 
+  candidateKeys, 
   discussionKeys,
   hostKeys, 
-  participantKeys, 
-  rankKeys, 
+  participantKeys,
   sharedEventKeys, 
 } from './keys';
 
@@ -27,22 +26,23 @@ export const discussionQuery = (discussionId: string) => ({
 export const discussionCalendarQuery = (
   discussionId: string, body: DiscussionCalendarRequest,
 ) => ({
-  queryKey: calendarKeys.detail(discussionId, body),
+  queryKey: candidateKeys.calendar(discussionId, body),
   queryFn: () => candidateApi.postCalendarCandidate(discussionId, body),
-  cacheTime: 0,
+  gcTime: 0,
 });
 
 export const discussionRankQuery = (
   discussionId: string, body: DiscussionRankRequest,
 ) => ({
-  queryKey: rankKeys.detail(discussionId, body),
+  queryKey: candidateKeys.rank(discussionId, body),
   queryFn: () => candidateApi.postRankCandidate(discussionId, body),
-  cacheTime: 0,
+  gcTime: 0,
 });
 
 export const discussionParticipantQuery = (discussionId: string) => ({
   queryKey: participantKeys.detail(discussionId),
   queryFn: () => candidateApi.getCandidateParticipants(discussionId),
+  gcTime: 0,
 });
 
 export const discussionConfirmQuery = (discussionId: string) => ({
@@ -65,12 +65,11 @@ export const useDiscussionQuery = (discussionId: string) => {
 export const useDiscussionCalendarQuery = (
   discussionId: string, body: DiscussionCalendarRequest,
 ) => {  
-  const { data: calendar, isLoading } = useQuery<DiscussionCalendarResponse['events']>(
+  const { data: calendar, refetch, isPending } = useQuery<DiscussionCalendarResponse['events']>(
     discussionCalendarQuery(discussionId, body),
-    
   );
 
-  return { calendar, isLoading };
+  return { calendar, isPending, refetch };
 };
 
 export const useDiscussionRankQuery = (
@@ -84,12 +83,12 @@ export const useDiscussionRankQuery = (
 };
 
 export const useDiscussionParticipantsQuery = (discussionId: string) => {
-  const { data: participants, isLoading } 
+  const { data: participants, isPending } 
         = useQuery<DiscussionParticipantResponse['participants']>(
           discussionParticipantQuery(discussionId),
         );
     
-  return { participants, isLoading };
+  return { participants, isPending };
 };
 
 export const useDiscussionConfirmQuery = (discussionId: string) => {
