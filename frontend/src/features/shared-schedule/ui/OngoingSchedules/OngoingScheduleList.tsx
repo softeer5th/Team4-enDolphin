@@ -1,5 +1,5 @@
 import { useQueryClient } from '@tanstack/react-query';
-import { useEffect } from 'react';
+import { useState } from 'react';
 
 import { Flex } from '@/components/Flex';
 import Pagination from '@/components/Pagination';
@@ -8,56 +8,52 @@ import { usePagination } from '@/hooks/usePagination';
 import { prefetchOngoingSchedules } from '../../api/prefetch';
 import { useOngoingQuery } from '../../api/queries';
 import type { OngoingSegmentOption } from '.';
+import { mainContainerStyle } from './index.css';
 import { paginationStyle } from './ongoingScheduleList.css';
 import OngoingScheduleListItem from './OngoingScheduleListItem';
+import ScheduleContents from './ScheduleDetails';
 
 export const PAGE_SIZE = 6;
 
 interface OngoingScheduleListProps {
   segmentOption: OngoingSegmentOption;
-  selectedId: number;
-  onSelect: (discussionId: number) => void;
 }
 
 // TODO: useEffect 뺄 수 있으면 다른 걸로 대체
-const OngoingScheduleList = ({ segmentOption, selectedId, onSelect }: OngoingScheduleListProps) => {
+const OngoingScheduleList = ({ segmentOption }: OngoingScheduleListProps) => {
   const queryClient = useQueryClient();
   const { currentPage, onPageChange } = usePagination(1);
   const { data, isPending } = useOngoingQuery(currentPage, PAGE_SIZE, segmentOption.value );
-  useEffect(() => {
-    if (data && data.ongoingDiscussions.length > 0) {
-      const exists = data.ongoingDiscussions.some(
-        (schedule) => schedule.discussionId === selectedId,
-      );
-      if (!exists) onSelect(data.ongoingDiscussions[0].discussionId);
-    }
-  }, [data, selectedId, onSelect]);
-  
+  const [selectedIndex, setSelectedIndex] = useState(0);
   if (isPending) return <div>pending...</div>;
   if (!data || data.ongoingDiscussions.length === 0) return <div>no data available</div>;
+
   return (
-    <Flex
-      direction='column'
-      gap={600}
-      justify='space-between'
-      width='full'
-    >
-      <ScheduleItems
-        onSelect={onSelect}
-        schedules={data.ongoingDiscussions}
-        selectedId={selectedId}
-      />
-      {data.totalPages > 1 && (
-        <Pagination
-          className={paginationStyle}
-          currentPage={currentPage}
-          onPageButtonHover={(page) =>
-            prefetchOngoingSchedules(queryClient, page, PAGE_SIZE, segmentOption.value )}
-          onPageChange={onPageChange}
-          totalPages={data.totalPages}
+    <div className={mainContainerStyle}>
+      <Flex
+        direction='column'
+        gap={600}
+        justify='space-between'
+        width='full'
+      >
+        <ScheduleItems
+          schedules={data.ongoingDiscussions}
+          selectedIndex={selectedIndex}
+          setSelectedIndex={setSelectedIndex}
         />
-      )}
-    </Flex>
+        {data.totalPages > 1 && (
+          <Pagination
+            className={paginationStyle}
+            currentPage={currentPage}
+            onPageButtonHover={(page) =>
+              prefetchOngoingSchedules(queryClient, page, PAGE_SIZE, segmentOption.value )}
+            onPageChange={onPageChange}
+            totalPages={data.totalPages}
+          />
+        )}
+      </Flex>
+      <ScheduleContents discussionId={data.ongoingDiscussions[selectedIndex].discussionId} />
+    </div>
   );
 };
 
@@ -65,11 +61,11 @@ interface ScheduleItemsProps {
   schedules: NonNullable<
     ReturnType<typeof useOngoingQuery>['data']
   >['ongoingDiscussions'];
-  selectedId: number;
-  onSelect: (discussionId: number) => void;
+  selectedIndex: number;
+  setSelectedIndex: (index: number) => void;
 }
 
-const ScheduleItems = ({ schedules, selectedId, onSelect }: ScheduleItemsProps) => (
+const ScheduleItems = ({ schedules, selectedIndex, setSelectedIndex }: ScheduleItemsProps) => (
   <Flex
     direction='column'
     height='30rem'
@@ -79,9 +75,9 @@ const ScheduleItems = ({ schedules, selectedId, onSelect }: ScheduleItemsProps) 
     {schedules.map((schedule, index) => (
       <OngoingScheduleListItem
         key={index}
-        onSelect={onSelect}
+        onClick={() => setSelectedIndex(index)}
         schedule={schedule}
-        selected={selectedId === schedule.discussionId}
+        selected={selectedIndex === index}
       />
     ))}
   </Flex>

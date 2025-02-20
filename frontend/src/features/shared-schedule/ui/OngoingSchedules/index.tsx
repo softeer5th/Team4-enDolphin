@@ -39,7 +39,6 @@ const OngoingSchedules = () => (
 
 const Content = () => {
   const queryClient = useQueryClient();
-  const [selectedDiscussionId, setSelectedDiscussionId] = useState(1);
   
   if (queryClient.getQueryData<OngoingSchedulesResponse>(
     ongoingQueryKey.detail(1, 6, 'ALL'),
@@ -60,11 +59,8 @@ const Content = () => {
         <SegmentControl.Content key={`${option.value}-${idx}`} value={option.value}>
           <div className={mainContainerStyle} >
             <OngoingScheduleList 
-              onSelect={(id) => setSelectedDiscussionId(id)}
               segmentOption={option} 
-              selectedId={selectedDiscussionId}
             />
-            <ScheduleContents discussionId={selectedDiscussionId} />
           </div>
         </SegmentControl.Content>
       ))}

@@ -16,16 +16,16 @@ interface OngoingScheduleListItemProps {
   schedule: OngoingSchedule;
   selected: boolean;
   isUpdated?: boolean;
-  onSelect: (id: number) => void;
+  onClick: () => void;
 }
 
 // TODO: prefetching 구현
 const OngoingScheduleListItem = ({
-  schedule, selected, isUpdated = false, onSelect, 
+  schedule, selected, isUpdated = false, onClick, 
 }: OngoingScheduleListItemProps) => (
   <div
     className={scheduleItemContainerStyle({ selected })}
-    onClick={() => onSelect(schedule.discussionId)}
+    onClick={onClick}
   >
     <Flex
       align='center'
