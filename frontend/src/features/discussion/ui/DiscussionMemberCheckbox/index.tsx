@@ -1,5 +1,4 @@
 import { useParams } from '@tanstack/react-router';
-import { useEffect } from 'react';
 
 import Button from '@/components/Button';
 import { Checkbox } from '@/components/Checkbox';
