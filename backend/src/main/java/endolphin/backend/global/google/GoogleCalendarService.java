@@ -365,8 +365,14 @@ public class GoogleCalendarService {
             // 성공 응답 (구글의 재시도를 방지하기 위해 204 반환)
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
-        } catch (Exception e) {
+        } catch (CalendarException e) {
+            log.error("[processWebhookNotification], {}", e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        catch (Exception e) {
             // 5xx 에러 응답 시 구글 API가 재시도 (Exponential Backoff)
+            log.error("[processWebhookNotification], {}", e.getMessage());
+
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
