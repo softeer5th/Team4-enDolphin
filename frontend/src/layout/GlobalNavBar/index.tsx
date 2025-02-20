@@ -5,9 +5,11 @@ import type { PropsWithChildren } from 'react';
 import Avatar from '@/components/Avatar';
 import { Flex } from '@/components/Flex';
 import { Logo } from '@/components/Icon/component/Logo';
+import { useUserInfoQuery } from '@/features/user/api/queries';
+import { isLogin } from '@/utils/auth';
 
 import { LoginLink, MyCalendarLink, NewDiscussionLink } from './buttons';
-import { containerStyle } from './index.css';
+import { avatarContainerStyle, containerStyle } from './index.css';
 
 interface GlobalNavBarProps extends PropsWithChildren {
   background?: 'white' | 'transparent';
@@ -29,16 +31,35 @@ const GlobalNavBar = ({ background = 'white', children }: GlobalNavBarProps) => 
         width={80}
       />
       <Flex direction='row'>
-        {children}
+        {isLogin() ? 
+          <Flex
+            align='center'
+            direction='row'
+          >
+            {children}
+            <UserAvatar />
+          </Flex>
+          :
+          <LoginLink />}
       </Flex>
     </header>
   );
 };
 
-// TODO: 로그인 상태에 따라 로그인 버튼 | 다른 버튼들 + 아바타 표시
-GlobalNavBar.LoginLink = LoginLink;
+const UserAvatar = () => {
+  const { data, isPending } = useUserInfoQuery();
+  if (isPending) return <div>pending ...</div>;
+  if (!data) return <div>user data is undefined or null</div>;
+  return (
+    <Avatar
+      className={avatarContainerStyle}
+      imageUrls={[data.picture]}
+      size='lg'
+    />
+  );
+};
+
 GlobalNavBar.MyCalendarLink = MyCalendarLink;
 GlobalNavBar.NewDiscussionLink = NewDiscussionLink;
-GlobalNavBar.Avatar = Avatar;
 
 export default GlobalNavBar;

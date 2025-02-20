@@ -3,6 +3,10 @@ import { recipe } from '@vanilla-extract/recipes';
 
 import { vars } from '@/theme/index.css';
 
+export const avatarContainerStyle = style({
+  marginLeft: vars.spacing[300],
+});
+
 export const containerStyle = recipe({
   base: {
     width: '100vw',
