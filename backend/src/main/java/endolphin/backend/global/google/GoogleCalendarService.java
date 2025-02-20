@@ -228,6 +228,7 @@ public class GoogleCalendarService {
         StringBuilder sb = new StringBuilder(eventsUrl);
         sb.append("?syncToken=").append(syncToken);
         sb.append("&timeZone=").append(googleCalendarProperties.timeZone());
+        log.info("[syncWithCalendar] syncing user {} with token: {}",user.getName(), syncToken);
 
         retryExecutor.executeCalendarApiWithRetry(
             () -> {
@@ -252,7 +253,7 @@ public class GoogleCalendarService {
                     });
 
                 List<GoogleEvent> events = extractEventList(result);
-
+                log.info("[syncWithCalendar] start: {}, calendar: {}",user.getName(), calendarId);
                 eventPublisher.publishEvent(new GoogleEventChanged(events, user, calendarId));
                 return true;
             }, user, calendarId
