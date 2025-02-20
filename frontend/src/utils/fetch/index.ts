@@ -2,6 +2,9 @@
 
 import { serviceENV } from '@/envconfig';
 
+import type { HTTPErrorProps } from '../error';
+import { HTTPError } from '../error';
+
 type Method = 'GET' | 'POST' | 'PUT' | 'DELETE';
 
 export type RequestOptions = {
@@ -51,7 +54,14 @@ export const executeFetch = async (
     });
 
     if (!response.ok) {
-      throw new Error(`HTTP Error: ${response.status}`);
+      const error: HTTPErrorProps = await response.json();
+
+      // 개발자 디버깅용 콘솔 출력
+      // eslint-disable-next-line no-console
+      console.error(`HTTP ERROR ${response.status}\nCODE: [${error.code}] ${error.message}`);
+
+      // 서비스 에러 핸들링을 위한 커스텀 에러 객체 생성
+      throw new HTTPError({ status: response.status, ...error });
     }
 
     const text = await response.clone().text();
