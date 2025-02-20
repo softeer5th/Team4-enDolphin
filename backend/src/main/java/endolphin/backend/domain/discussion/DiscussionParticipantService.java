@@ -20,6 +20,7 @@ import endolphin.backend.global.util.TimeCalculator;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -292,5 +293,18 @@ public class DiscussionParticipantService {
             .ifPresent(offset -> {
                 throw new ApiException(ErrorCode.ALREADY_PARTICIPATED);
             });
+    }
+
+    @Transactional(readOnly = true)
+    public Map<Long, Map<Discussion, Long>> getOngoingDiscussionOffsetsByUserIds(List<Long> userIds) {
+       List<Object[]> response = discussionParticipantRepository.findOffsetsByUserIds(userIds);
+        return response.stream().collect(Collectors.groupingBy(
+            o -> (Long) o[0],
+                Collectors.toMap(
+                    o -> (Discussion) o[1],
+                    o -> (Long) o[2]
+                )
+            )
+        );
     }
 }
