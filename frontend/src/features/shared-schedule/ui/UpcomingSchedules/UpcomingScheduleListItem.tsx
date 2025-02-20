@@ -1,3 +1,5 @@
+import { Link } from '@tanstack/react-router';
+
 import Avatar from '@/components/Avatar';
 import { Chip } from '@/components/Chip';
 import { Flex } from '@/components/Flex';
@@ -5,13 +7,14 @@ import { Text } from '@/components/Text';
 import { vars } from '@/theme/index.css';
 import { isSameDate } from '@/utils/date';
 
+import type { UpcomingSchedule } from '../../model';
 import {
   dotStyle,
   scheduleItemContainerStyle,
 } from './upcomingScheduleListItem.css';
 
 interface UpcomingScheduleListItemProps {
-  scheduleTitle: string;
+  schedule: UpcomingSchedule;
   participantImageUrls: string[];
   meetingPlace?: string;
   startDate: Date;
@@ -19,26 +22,62 @@ interface UpcomingScheduleListItemProps {
   onClick?: () => void;
 }
 
-const UpcomingScheduleListItem = ({ 
-  scheduleTitle,
+const UpcomingScheduleListItem = ({
+  schedule,
   participantImageUrls,
-  meetingPlace,
+}: UpcomingScheduleListItemProps) => {
+  const [startDate, endDate] = [
+    new Date(schedule.sharedEventDto.startDateTime),
+    new Date(schedule.sharedEventDto.endDateTime),
+  ];
+
+  return (
+    <Link
+      className={scheduleItemContainerStyle}
+      params={{ id: schedule.discussionId.toString() }}
+      state={{
+        candidate: {
+          adjustCount: 0,
+          startDateTime: schedule.sharedEventDto.startDateTime,
+          endDateTime: schedule.sharedEventDto.endDateTime,
+        },
+      }}
+      to='/discussion/candidate/$id'
+    >
+      <Content
+        endDate={endDate}
+        participantImageUrls={participantImageUrls}
+        schedule={schedule}
+        startDate={startDate}
+      />
+    </Link>
+  );
+};
+
+interface ContentProps {
+  schedule: UpcomingScheduleListItemProps['schedule'];
+  startDate: Date;
+  endDate: Date;
+  participantImageUrls: string[];
+}
+
+const Content = ({
+  schedule,
   startDate,
   endDate,
-}: UpcomingScheduleListItemProps) => (
-  <Flex
-    className={scheduleItemContainerStyle}
-    direction='column'
-    gap={50}
-  >
+  participantImageUrls,
+}: ContentProps) => (
+  <>
     <Flex
       align='center'
       gap={200}
       height={24}
       justify='flex-start'
     >
-      <Text typo='t2'>{scheduleTitle}</Text>
-      <Chip color='black' style='weak'>{getDDay(startDate)}</Chip>
+      <Text typo='t2'>{schedule.title}</Text>
+      <Chip color='black' style='weak'>
+        {getDDay(startDate)}
+      </Chip>
     </Flex>
     <Flex
       align='center'
@@ -47,11 +86,11 @@ const UpcomingScheduleListItem = ({
     >
       <Flex gap={200}>
         <MeetDate endDate={endDate} startDate={startDate} />
-        <MeetingPlace meetingPlace={meetingPlace} />
+        <MeetingPlace meetingPlace={schedule.meetingMethodOrLocation} />
       </Flex>
       <Avatar imageUrls={participantImageUrls} size='sm' />
     </Flex>
-  </Flex>
+  </>
 );
 
 const MeetingPlace = ({ meetingPlace }: { meetingPlace?: string }) => (

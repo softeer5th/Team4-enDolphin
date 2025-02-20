@@ -13,7 +13,7 @@ const CandidateSchedule = () => {
       <GlobalNavBar></GlobalNavBar>
       <CandidateSchedulePage {...candidate} />
     </>
-  ); 
+  );
 };
 
 export const Route = createLazyFileRoute('/_main/discussion/candidate/$id')({

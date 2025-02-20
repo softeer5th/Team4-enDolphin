@@ -11,7 +11,6 @@ import type {
   DiscussionDTO,
   DiscussionResponse,
 } from '@/features/discussion/model';
-import type { UserDTO } from '@/features/user/model';
 import { vars } from '@/theme/index.css';
 import { getHourDiff, getTimeParts, getTimeRangeString, getYearMonthDay } from '@/utils/date';
 import { getDowString } from '@/utils/date/format';
@@ -45,7 +44,6 @@ const RecommendedSchedules = ({ discussion }: {
           discussionId={discussion.id}
           endDTStr={candidate.endDateTime}
           key={`${JSON.stringify(candidate)}-${idx}`}
-          participants={participants} 
           startDTStr={candidate.startDateTime}
         />
       ))}
@@ -54,14 +52,13 @@ const RecommendedSchedules = ({ discussion }: {
 };
 
 const RecommendedScheduleItem = ({ 
-  candidate, discussionId, startDTStr, endDTStr, adjustCount, participants,
+  candidate, discussionId, startDTStr, endDTStr, adjustCount,
 }: {
   candidate: DiscussionDTO;
   discussionId: number;
   startDTStr: string;
   endDTStr: string;
   adjustCount: number;
-  participants: UserDTO[];
 }) => {
   const [startDT, endDT] = [new Date(startDTStr), new Date(endDTStr)];
   const [startTime, endTime] = [getTimeParts(startDT), getTimeParts(endDT)];
@@ -75,7 +72,6 @@ const RecommendedScheduleItem = ({
         adjustCount: candidate.usersForAdjust.length,
         startDateTime: startDTStr,
         endDateTime: endDTStr,
-        selectedParticipantIds: participants.map(v => v.id),
       } }}
       to={'/discussion/candidate/$id'}
     >

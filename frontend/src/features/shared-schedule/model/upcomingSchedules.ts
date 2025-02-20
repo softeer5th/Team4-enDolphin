@@ -1,11 +1,9 @@
 import { z } from 'zod';
 
-import { zCoerceToDate } from '@/utils/zod';
-
 const SharedEventDtoSchema = z.object({
   id: z.number(),
-  startDateTime: zCoerceToDate,
-  endDateTime: zCoerceToDate,
+  startDateTime: z.string(),
+  endDateTime: z.string(),
 });
 
 export const UpcomingScheduleSchema = z.object({
