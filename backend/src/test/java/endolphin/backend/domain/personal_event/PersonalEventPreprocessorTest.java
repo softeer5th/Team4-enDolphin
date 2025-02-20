@@ -54,7 +54,7 @@ class PersonalEventPreprocessorTest {
         preprocessor.preprocess(List.of(personalEvent), discussion, user);
 
         // then
-        then(discussionBitmapService).should(times(2)).setBitValue(anyLong(), any(LocalDateTime.class), anyLong(), anyBoolean());
+        then(discussionBitmapService).should(times(2)).setBitValue(anyLong(), any(Long.class), anyLong(), anyBoolean());
     }
 
     @Test
@@ -83,7 +83,7 @@ class PersonalEventPreprocessorTest {
         preprocessor.preprocessOne(personalEvent, discussion, user, true);
 
         // then
-        then(discussionBitmapService).should(times(0)).setBitValue(anyLong(), any(LocalDateTime.class), anyLong(), anyBoolean());
+        then(discussionBitmapService).should(times(0)).setBitValue(anyLong(), any(Long.class), anyLong(), anyBoolean());
     }
 
     @Test
@@ -109,7 +109,7 @@ class PersonalEventPreprocessorTest {
         preprocessor.preprocess(List.of(personalEvent), discussion, user);
 
         // then
-        then(discussionBitmapService).should(times(14)).setBitValue(anyLong(), any(LocalDateTime.class), anyLong(), anyBoolean());
+        then(discussionBitmapService).should(times(14)).setBitValue(anyLong(), any(Long.class), anyLong(), anyBoolean());
     }
 
     @Test
@@ -135,7 +135,7 @@ class PersonalEventPreprocessorTest {
         preprocessor.preprocess(List.of(personalEvent), discussion, user);
 
         // then
-        then(discussionBitmapService).should(times(66)).setBitValue(anyLong(), any(LocalDateTime.class), anyLong(), anyBoolean());
+        then(discussionBitmapService).should(times(66)).setBitValue(anyLong(), any(Long.class), anyLong(), anyBoolean());
     }
 
     @Test
@@ -161,7 +161,7 @@ class PersonalEventPreprocessorTest {
         preprocessor.preprocess(List.of(personalEvent), discussion, user);
 
         // then
-        then(discussionBitmapService).should(times(33)).setBitValue(anyLong(), any(LocalDateTime.class), anyLong(), anyBoolean());
+        then(discussionBitmapService).should(times(33)).setBitValue(anyLong(), any(Long.class), anyLong(), anyBoolean());
     }
 
     @Test
@@ -188,7 +188,7 @@ class PersonalEventPreprocessorTest {
         preprocessor.preprocess(List.of(personalEvent), discussion, user);
 
         // then
-        then(discussionBitmapService).should(times(1 + 6)).setBitValue(anyLong(), any(LocalDateTime.class), anyLong(), anyBoolean());
+        then(discussionBitmapService).should(times(1 + 6)).setBitValue(anyLong(), any(Long.class), anyLong(), anyBoolean());
     }
 
     @Test
@@ -215,7 +215,7 @@ class PersonalEventPreprocessorTest {
         preprocessor.preprocess(List.of(personalEvent), discussion, user);
 
         // then
-        then(discussionBitmapService).should(times(6)).setBitValue(anyLong(), any(LocalDateTime.class), anyLong(), anyBoolean());
+        then(discussionBitmapService).should(times(6)).setBitValue(anyLong(), any(Long.class), anyLong(), anyBoolean());
     }
 
     private Discussion getDiscussion() {
