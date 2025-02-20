@@ -37,9 +37,6 @@ class GoogleCalendarServiceTest {
     private CalendarService calendarService;
 
     @Mock
-    private GoogleCalendarUrl googleCalendarUrl;
-
-    @Mock
     private ApplicationEventPublisher eventPublisher;
 
     @Mock
@@ -96,13 +93,10 @@ class GoogleCalendarServiceTest {
 
         // 캘린더 생성시 stub 처리
         Calendar calendar = Mockito.mock(Calendar.class);
-        given(calendar.getCalendarId()).willReturn("primary");
         given(calendarService.createCalendar(googleCalendarDto, user)).willReturn(calendar);
 
-        // 내부 메서드 getCalendarEvents()도 stub 처리
-        List<GoogleEvent> events = new ArrayList<>();
         // (필요하다면 더미 이벤트를 추가)
-        doReturn(events).when(googleCalendarService).getCalendarEvents(googleCalendarDto.id(), user);
+        doNothing().when(googleCalendarService).getCalendarEvents(googleCalendarDto.id(), user);
         doNothing().when(googleCalendarService).subscribeToCalendar(calendar, user);
         // When
         googleCalendarService.upsertGoogleCalendar(user);
