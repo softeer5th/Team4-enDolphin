@@ -1,6 +1,6 @@
 
 import { useQueryClient } from '@tanstack/react-query';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import { Flex } from '@/components/Flex';
 import SegmentControl from '@/components/SegmentControl';
