@@ -19,6 +19,7 @@ const CalendarTable = (
   const { tableRef, height } = useScrollToCurrentTime();
   
   const handleMouseUpAddSchedule = () => {
+    if (!time.selectedStartTime && !time.selectedEndTime) return;
     setOpen(true);
   };
   
