@@ -251,7 +251,7 @@ public class GoogleCalendarService {
                         throw new CalendarException((HttpStatus) response.getStatusCode(),
                             response.bodyTo(String.class));
                     });
-                log.info("[syncWithCalendar] after restClient");
+                log.info("[syncWithCalendar] result: {}", result);
                 List<GoogleEvent> events = extractEventList(result);
                 log.info("[syncWithCalendar] before publish event, calId: {}, userId: {}", calendarId, user.getId());
                 eventPublisher.publishEvent(new GoogleEventChanged(events, user, calendarId));
