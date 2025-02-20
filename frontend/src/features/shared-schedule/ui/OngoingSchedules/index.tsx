@@ -1,6 +1,6 @@
 
 import { useQueryClient } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { Flex } from '@/components/Flex';
 import SegmentControl from '@/components/SegmentControl';
@@ -11,7 +11,7 @@ import { prefetchOngoingSchedules } from '../../api/prefetch';
 import type { AttendType, OngoingSchedulesResponse } from '../../model/';
 import OngoingFallback from '../Fallbacks/OngoingFallback';
 import { containerStyle, mainContainerStyle, segmentControlStyle, titleStyle } from './index.css';
-import OngoingScheduleList, { ONGOING_PAGE_SIZE } from './OngoingScheduleList';
+import OngoingScheduleList, { PAGE_SIZE } from './OngoingScheduleList';
 import ScheduleContents from './ScheduleDetails';
 
 export interface OngoingSegmentOption {
@@ -38,12 +38,15 @@ const OngoingSchedules = () => (
 );
 
 const Content = () => {
-  const [selectedDiscussionId, setSelectedDiscussionId] = useState<number>(1);
   const queryClient = useQueryClient();
+  const [selectedDiscussionId, setSelectedDiscussionId] = useState(-1);
+  
   if (queryClient.getQueryData<OngoingSchedulesResponse>(
     ongoingQueryKey.detail(1, 6, 'ALL'),
   )?.totalPages === 0)
     return <OngoingFallback />;
+  
+  // TODO: useEffect 뺄 수 있으면 다른 걸로 대체
 
   return (
     <SegmentControl
@@ -51,7 +54,7 @@ const Content = () => {
       defaultValue='ALL'
       onButtonHover={(value) => prefetchOngoingSchedules(
         // TODO: segmentOption value의 타입을 제네릭으로 지정할 수 있게 구현 (as 변환 리팩토룅)
-        queryClient, 1, ONGOING_PAGE_SIZE, value as AttendType,
+        queryClient, 1, PAGE_SIZE, value as AttendType,
       )}
       segmentOptions={segmentOptions}
     >
