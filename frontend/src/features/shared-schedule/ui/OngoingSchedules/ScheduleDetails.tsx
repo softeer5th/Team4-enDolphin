@@ -1,4 +1,6 @@
 
+import { Link } from '@tanstack/react-router';
+
 import Button from '@/components/Button';
 import { Flex } from '@/components/Flex';
 import { Text } from '@/components/Text';
@@ -42,7 +44,11 @@ const ScheduleContents = ({ discussionId }: ScheduleDetailsProps) => {
         width='full'
       >
         <Button size='xl' style='borderless'>링크 복사</Button>
-        <Button size='xl'>자세히 보기</Button>
+        <Link params={{ id: discussionId.toString() }} to='/discussion/$id'>
+          <Button size='xl'>
+            자세히 보기
+          </Button>
+        </Link>
       </Flex>
     </Flex>
   ); 
