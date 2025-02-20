@@ -3,6 +3,7 @@ import { Link, useParams } from '@tanstack/react-router';
 import { useMemberContext } from '@/pages/DiscussionPage/MemberContext';
 
 import type { DiscussionDTO } from '../../model';
+import { linkStyle } from './card.css';
 import { DiscussionLarge } from './DiscussionLarge';
 import { DiscussionSmall } from './DiscussionSmall';
 
@@ -17,6 +18,7 @@ const DiscussionCard = ({ size, discussion, rank }: DiscussionCardProps) => {
   const memberContext = useMemberContext();
   return (
     <Link
+      className={linkStyle}
       params={{ id: id }}
       state={{ candidate: {
         adjustCount: discussion.usersForAdjust.length,
@@ -25,7 +27,7 @@ const DiscussionCard = ({ size, discussion, rank }: DiscussionCardProps) => {
         selectedParticipantIds: memberContext?.formState.checkedList ?? []
         ,
       } }}
-      to={'/discussion/candidate/$id'}
+      to='/discussion/candidate/$id'
     >
       {size === 'lg' ? 
         <DiscussionLarge discussion={discussion} rank={rank as number} /> 
