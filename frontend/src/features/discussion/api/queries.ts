@@ -28,6 +28,7 @@ export const discussionCalendarQuery = (
 ) => ({
   queryKey: candidateKeys.calendar(discussionId, body),
   queryFn: () => candidateApi.postCalendarCandidate(discussionId, body),
+  gcTime: 0,
 });
 
 export const discussionRankQuery = (
@@ -35,11 +36,13 @@ export const discussionRankQuery = (
 ) => ({
   queryKey: candidateKeys.rank(discussionId, body),
   queryFn: () => candidateApi.postRankCandidate(discussionId, body),
+  gcTime: 0,
 });
 
 export const discussionParticipantQuery = (discussionId: string) => ({
   queryKey: participantKeys.detail(discussionId),
   queryFn: () => candidateApi.getCandidateParticipants(discussionId),
+  gcTime: 0,
 });
 
 export const discussionConfirmQuery = (discussionId: string) => ({
