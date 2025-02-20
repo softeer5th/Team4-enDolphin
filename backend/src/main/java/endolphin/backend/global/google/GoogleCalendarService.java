@@ -185,7 +185,7 @@ public class GoogleCalendarService {
 
         StringBuilder sb = new StringBuilder(eventsUrl);
         sb.append("?timeMin=").append(timeMin);
-        sb.append("&timeZone").append(googleCalendarProperties.timeZone());
+        sb.append("&timeZone=").append(googleCalendarProperties.timeZone());
 
         retryExecutor.executeCalendarApiWithRetry(
             () -> {
