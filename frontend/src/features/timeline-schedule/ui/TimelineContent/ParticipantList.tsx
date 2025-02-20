@@ -54,8 +54,8 @@ const ParticipantItem = ({ participant, isUncheckedParticipant }: {
         <Avatar imageUrls={[participant.picture]} size='lg' />
         <Text typo='b2M'>{participant.name}</Text>
       </Flex>
-      {!isConfirmedSchedule && !isUncheckedParticipant && chipStatus !== 'OUT_OF_RANGE' &&
-        <ChipAble isAdjustable={chipStatus === 'ADJUSTABLE'} />}
+      {!isConfirmedSchedule && !isUncheckedParticipant &&
+        <ChipAble chipStatus={chipStatus} />}
     </Flex>
   );
 };

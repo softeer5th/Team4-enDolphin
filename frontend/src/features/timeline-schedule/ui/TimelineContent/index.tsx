@@ -30,7 +30,6 @@ const TimelineContent = (props: TimelineContentProps) => {
   const { gridTimes, gridStartOffset } = getGridTimes(props.conflictStart, props.conflictEnd);
   const scrollRef = useRef<HTMLDivElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
-
   // overlay의 posY를 스크롤과 동기화
   const handleScroll = () => {
     if (scrollRef.current && overlayRef.current) {
@@ -59,8 +58,9 @@ const TimelineContent = (props: TimelineContentProps) => {
         className={overlayStyle}
         ref={overlayRef}
         style={{ 
-          top: getRowTopOffset(props.checkedParticipants.length) + 72,
-          height: getRowTopOffset(props.uncheckedParticipants.length) + 60, 
+          top: getRowTopOffset(props.checkedParticipants.length) + 77,
+          // TODO: overlay height 정확히 계산하도록 리팩터링
+          height: getRowTopOffset(props.uncheckedParticipants.length) + 360, 
         }}
       />}
     </div>
