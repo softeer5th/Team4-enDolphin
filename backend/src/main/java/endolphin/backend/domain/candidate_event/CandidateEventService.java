@@ -12,7 +12,10 @@ import endolphin.backend.domain.candidate_event.dto.RankViewResponse;
 import endolphin.backend.domain.discussion.DiscussionParticipantService;
 import endolphin.backend.domain.discussion.DiscussionService;
 import endolphin.backend.domain.discussion.entity.Discussion;
+import endolphin.backend.domain.discussion.enums.DiscussionStatus;
 import endolphin.backend.domain.user.dto.UserIdNameDto;
+import endolphin.backend.global.error.exception.ApiException;
+import endolphin.backend.global.error.exception.ErrorCode;
 import endolphin.backend.global.redis.DiscussionBitmapService;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -41,6 +44,10 @@ public class CandidateEventService {
         discussionParticipantService.validateDiscussionParticipant(discussionId);
 
         Discussion discussion = discussionService.getDiscussionById(discussionId);
+
+        if(discussion.getDiscussionStatus() != DiscussionStatus.ONGOING) {
+            throw new ApiException(ErrorCode.DISCUSSION_NOT_ONGOING);
+        }
 
         Map<Long, UserIdNameDto> usersMap = discussionParticipantService.getUserOffsetsMap(
             discussionId);
@@ -73,6 +80,10 @@ public class CandidateEventService {
     public RankViewResponse getEventsOnRankView(Long discussionId, RankViewRequest request) {
         discussionParticipantService.validateDiscussionParticipant(discussionId);
         Discussion discussion = discussionService.getDiscussionById(discussionId);
+
+        if(discussion.getDiscussionStatus() != DiscussionStatus.ONGOING) {
+            throw new ApiException(ErrorCode.DISCUSSION_NOT_ONGOING);
+        }
 
         Map<Long, UserIdNameDto> usersMap = discussionParticipantService.getUserOffsetsMap(
             discussionId);
