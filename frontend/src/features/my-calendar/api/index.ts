@@ -21,7 +21,9 @@ export const personalEventApi = {
     const response = await request.put(`/api/v1/personal-event/${id}`, { body });
     return response;
   },
-  deletePersonalEvent: async (id: number): Promise<void> => {
-    await request.delete(`/api/v1/personal-event/${id}`);
+  deletePersonalEvent: async (id: number, syncWithGoogleCalendar: boolean): Promise<void> => {
+    await request.delete(`/api/v1/personal-event/${id}`, { 
+      params: { syncWithGoogleCalendar: syncWithGoogleCalendar.toString() },
+    });
   },
 };

@@ -1,4 +1,4 @@
-import type { InputHTMLAttributes, SetStateAction }  from 'react';
+import type { ChangeEvent, InputHTMLAttributes, SetStateAction  }  from 'react';
 import { useId } from 'react';
 
 import { useCheckbox } from '@/hooks/useCheckbox';
@@ -30,32 +30,36 @@ export const Toggle = ({
   onToggleCheck,
   type = 'single', 
   defaultChecked, 
-  inputProps, 
+  inputProps = {},
 }: ToggleProps) => {
   const defaultId = `checkbox-${useId()}`;
   const id = inputProps?.id ?? defaultId;
 
   const { handleClickCheck, checked } = 
     useCheckbox({ value, defaultChecked, type, isChecked, onToggleCheck });
-  const checkStyleName = checked ? 'selected' : 'rest';
+  const { onChange, checked: inputChecked, ...restInputProps } = inputProps;
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    handleClickCheck();
+    onChange?.(e);
+  };
 
   return(
-    <div
-      aria-checked={checked} 
-      className={containerStyle({ style: checkStyleName })}  
-      onClick={handleClickCheck}
+    <label
+      aria-checked={checked}
+      className={containerStyle({ style: checked ? 'selected' : 'rest' })} 
+      htmlFor={id}
       role='switch'
     >
-      <span className={checkboxStyle({ style: checkStyleName })} />
+      <span className={checkboxStyle({ style: checked ? 'selected' : 'rest' })} />
       <input 
         aria-hidden='true'
-        checked={checked}
+        checked={inputChecked ?? checked}
         className={inputStyle}
         id={id}
         type='checkbox'
-        {...inputProps}
-        onChange={handleClickCheck}
+        {...restInputProps}
+        onChange={handleChange}
       />
-    </div>
+    </label>
   ); 
 };

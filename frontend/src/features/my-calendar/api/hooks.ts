@@ -35,7 +35,10 @@ export const useSchedulePopover = ({
   };
   
   const handleClickDelete = () => {
-    if (scheduleId) deleteMutate(scheduleId);
+    if (scheduleId) deleteMutate({
+      id: scheduleId,
+      syncWithGoogleCalendar: valuesRef.current.syncWithGoogleCalendar,
+    });
     reset?.();
     setIsOpen(false);
   };
