@@ -1,51 +1,55 @@
-import { Link } from '@tanstack/react-router';
-
 import Button from '@/components/Button';
 import { Flex } from '@/components/Flex';
 import { Text } from '@/components/Text';
+import { useDiscussionConfirmMutation } from '@/features/discussion/api/mutations';
 import { vars } from '@/theme/index.css';
-import { formatTimeToColonString } from '@/utils/date/format';
+import { formatDateToDateTimeString, formatTimeToColonString } from '@/utils/date/format';
 
-const Header = ({ adjustCount, discussionId, startDateTime, endDateTime }: {
+interface HeaderProps {
   adjustCount: number;
   discussionId: number;
   startDateTime: Date;
   endDateTime: Date;
-}) => (
-  <Flex
-    align='center'
-    justify='space-between'
-    width='full'
-  >
-    <HeaderTextInfo
-      adjustCount={adjustCount}
-      endTime={endDateTime}
-      startTime={startDateTime}
-    />
+}
+
+const Header = ({ adjustCount, discussionId, startDateTime, endDateTime }: HeaderProps) => {
+  const { mutate } = useDiscussionConfirmMutation();
+  return(
     <Flex
       align='center'
-      gap={200}
+      justify='space-between'
+      width='full'
     >
-      {/* <Button
+      <HeaderTextInfo
+        adjustCount={adjustCount}
+        endTime={endDateTime}
+        startTime={startDateTime}
+      />
+      <Flex align='center' gap={200}>
+        {/* <Button
         size='lg'
         style='weak'
         variant='secondary'
       >
         링크 복사
       </Button> */}
-      <Link
-        params={{ id: discussionId.toString() }}
-        to='/discussion/confirm/$id'
-      >
+        {/* TODO: date 관리 방식 통합 (string OR Date) */}
         <Button
+          onClick={() => mutate({
+            id: discussionId.toString(), 
+            body: { 
+              startDateTime: formatDateToDateTimeString(startDateTime),
+              endDateTime: formatDateToDateTimeString(endDateTime),
+            }, 
+          })}
           size='lg'
         >
           일정 확정하기
         </Button>
-      </Link>
+      </Flex>
     </Flex>
-  </Flex>
-);
+  ); 
+};
 
 const HeaderTextInfo = ({ adjustCount, startTime, endTime }: {
   adjustCount: number;
