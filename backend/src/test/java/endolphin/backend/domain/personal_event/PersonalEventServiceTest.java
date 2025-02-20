@@ -12,11 +12,9 @@ import endolphin.backend.global.dto.ListResponse;
 import java.time.LocalDate;
 import endolphin.backend.global.google.dto.GoogleEvent;
 import endolphin.backend.global.google.enums.GoogleEventStatus;
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -178,7 +176,7 @@ class PersonalEventServiceTest {
 
     @Test
     @DisplayName("개인 일정 삭제 사용자 매칭 에러")
-    void testDeletePersonalEvent() {
+    void testDeleteWithRequest() {
         User anotherUser = User.builder().name("anotherUser").email("another@email.com")
             .picture("another_picture").build();
 
@@ -186,7 +184,7 @@ class PersonalEventServiceTest {
         given(personalEventRepository.findById(anyLong())).willReturn(Optional.of(existingEvent));
         given(userService.getCurrentUser()).willReturn(testUser);
 
-        assertThatThrownBy(() -> personalEventService.deletePersonalEvent(anyLong(), false))
+        assertThatThrownBy(() -> personalEventService.deleteWithRequest(anyLong(), false))
             .isInstanceOf(RuntimeException.class);
 
         then(personalEventRepository).should(times(1)).findById(anyLong());
@@ -196,7 +194,7 @@ class PersonalEventServiceTest {
 
     @Test
     @DisplayName("개인 일정 삭제 성공")
-    void testDeletePersonalEvent_Success() {
+    void testDeleteWithRequest_Success() {
         // given
         PersonalEvent event = createWithRequest("test Title", 0, testUser);
 
@@ -204,7 +202,7 @@ class PersonalEventServiceTest {
         given(userService.getCurrentUser()).willReturn(testUser);
 
         // when
-        personalEventService.deletePersonalEvent(anyLong(), false);
+        personalEventService.deleteWithRequest(anyLong(), false);
 
         // then
         then(personalEventRepository).should(times(1)).delete(any(PersonalEvent.class));

@@ -161,7 +161,7 @@ public class PersonalEventService {
         return personalEventRepository.save(personalEvent);
     }
 
-    public void deletePersonalEvent(Long personalEventId, Boolean syncWithGoogleCalendar) {
+    public void deleteWithRequest(Long personalEventId, Boolean syncWithGoogleCalendar) {
         PersonalEvent personalEvent = getPersonalEvent(personalEventId);
         User user = userService.getCurrentUser();
         validatePersonalEventUser(personalEvent, user);
