@@ -52,5 +52,5 @@ export const notificationsStyle = style({
   gap: vars.spacing[200],
 
   position: 'fixed',
-  top: '3rem',
+  top: 'calc(56px + 3rem)',
 });

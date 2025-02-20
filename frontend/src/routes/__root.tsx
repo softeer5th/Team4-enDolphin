@@ -5,7 +5,6 @@ import {
 } from '@tanstack/react-router';
 import { lazy } from 'react';
 
-import { NotificationProvider } from '@/components/Notification/NotificationProvider';
 import { defaultENV } from '@/envconfig';
 import GlobalNavBar from '@/layout/GlobalNavBar';
 import ErrorPage from '@/pages/ErrorPage';
@@ -25,10 +24,10 @@ const TanStackRouterDevtools =
 
 export const Route = createRootRouteWithContext<QueryClientContext>()({
   component: () => (
-    <NotificationProvider>
+    <>
       <Outlet />
       <TanStackRouterDevtools />
-    </NotificationProvider>
+    </>
   ),
   notFoundComponent: () => (
     <>

@@ -4,9 +4,8 @@ import { useState } from 'react';
 import Button from '@/components/Button';
 import { Flex } from '@/components/Flex';
 import { Modal } from '@/components/Modal';
-import { NotificationContext } from '@/components/Notification/NotificationContext';
 import { Text } from '@/components/Text';
-import { useSafeContext } from '@/hooks/useSafeContext';
+import { addNoti } from '@/store/global/notification';
 import { vars } from '@/theme/index.css';
 import type { Time } from '@/utils/date';
 
@@ -41,7 +40,6 @@ const DiscussionInviteCard = ({
   const navigate = useNavigate();
   const { mutate } = useInvitationJoinMutation();
   const [password, setPassword] = useState('');
-  const { addNoti } = useSafeContext(NotificationContext);
   const handleJoinClick = () => {
     mutate(
       { body: { discussionId, password: password === '' ? undefined : password } },

@@ -1,11 +1,7 @@
-import { NotificationContext } from '@/components/Notification/NotificationContext';
-
-import { useSafeContext } from './useSafeContext';
+import { addNoti } from '@/store/global/notification';
 
 export const useClipboard = () => {
-  const { addNoti } = useSafeContext(NotificationContext);
   const handleCopyToClipboard = async (text: string) => {
-    // TODO: 노티피케이션 다루는 공통 로직
     try {
       await navigator.clipboard.writeText(text);
       addNoti({
