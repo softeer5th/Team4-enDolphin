@@ -27,5 +27,7 @@ export const errorMessages = {
   GC001: '동기화 토큰이 만료되었어요',
 } as const;
 
+export const DEFAULT_ERROR_MESSAGE = '알 수 없는 오류가 발생했습니다.';
+
 export type ErrorMessages = typeof errorMessages;
 export type ErrorCode = keyof ErrorMessages;
