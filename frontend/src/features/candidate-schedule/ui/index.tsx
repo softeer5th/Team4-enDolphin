@@ -1,3 +1,5 @@
+import { useCanGoBack, useLocation, useRouter } from '@tanstack/react-router';
+
 import { Flex } from '@/components/Flex';
 import { Close } from '@/components/Icon';
 import { vars } from '@/theme/index.css';
@@ -44,19 +46,26 @@ const CandidateScheduleDetail = ({
   );
 };
 
-const TopBar = () => (
-  <Flex
-    align='center'
-    className={topBarStyle}
-    justify='flex-end'
-  >
-    <Close
-      clickable
-      fill={vars.color.Ref.Netural[500]}
-      width={24}
-    />
-  </Flex>
-);
+const TopBar = () => {
+  const router = useRouter();
+  const canGoBack = useCanGoBack();
+  const handleGoBack = () => canGoBack && router.history.back();
+
+  return (
+    <Flex
+      align='center'
+      className={topBarStyle}
+      justify='flex-end'
+    >
+      <Close
+        clickable
+        fill={vars.color.Ref.Netural[500]}
+        onClick={handleGoBack}
+        width={24}
+      />
+    </Flex>
+  ); 
+};
 
 interface ContentProps extends CandidateDetailResponse {
   adjustCount: number;
