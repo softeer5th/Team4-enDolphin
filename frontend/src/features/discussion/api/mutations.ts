@@ -1,12 +1,11 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
 
-import type { DiscussionRequest } from '../model';
-import { invitationApi } from './invitationApi';
 import { personalEventKeys } from '@/features/my-calendar/api/keys';
 
 import type { DiscussionConfirmRequest, DiscussionRequest } from '../model';
 import { candidateApi, discussionApi } from '.';
+import { invitationApi } from './invitationApi';
 import { discussionKeys } from './keys';
 
 export const useDiscussionMutation = () => {
@@ -34,6 +33,8 @@ export const useInvitationJoinMutation = () => {
       body: { discussionId: number; password?: string };
     }) => invitationApi.postInviatationJoin(body.discussionId, body.password),
   });
+  return { mutate };
+};
 
 export const useDiscussionConfirmMutation = () => {
   const queryClient = useQueryClient();

@@ -49,6 +49,13 @@ export const getHourDiff = (startTime: Date, endTime: Date, ignoreDateDiff = tru
   return Math.floor(diffMilliseconds / HOUR_IN_MILLISECONDS);
 };
 
+export const getTimeParts = (date: Date): Time => {
+  const hour = date.getHours();
+  const minute = date.getMinutes();
+  const second = date.getSeconds();
+  return { hour, minute, second };
+};
+
 export interface Time {
   hour: number;
   minute: number;
