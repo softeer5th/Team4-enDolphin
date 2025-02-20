@@ -80,7 +80,7 @@ public class PersonalEventPreprocessor {
         LocalTime discussionStartTime = discussion.getTimeRangeStart();
         LocalTime discussionEndTime = discussion.getTimeRangeEnd();
 
-        LocalDateTime currentDateTime = getCurrentDateTime(personalEventStartTime,
+        LocalDateTime currentDateTime = TimeUtil.getCurrentDateTime(personalEventStartTime,
             discussionStartDate, discussionStartTime, discussionEndTime);
 
         LocalDateTime untilDateTime = TimeUtil.getUntilDateTime(personalEventEndTime,
@@ -98,25 +98,6 @@ public class PersonalEventPreprocessor {
             currentDateTime = currentDateTime.plusDays(1);
             currentDateTime = currentDateTime.toLocalDate().atTime(discussionStartTime);
         }
-    }
-
-    private LocalDateTime getCurrentDateTime(LocalDateTime personalEventStartTime,
-        LocalDate discussionStartDate, LocalTime discussionStartTime, LocalTime discussionEndTime) {
-
-        LocalDate currentDate = personalEventStartTime.toLocalDate();
-        if (currentDate.isBefore(discussionStartDate)) {
-            return discussionStartDate.atTime(discussionStartTime);
-        }
-
-        LocalTime currentTime = personalEventStartTime.toLocalTime();
-        if (currentTime.isBefore(discussionStartTime)) {
-            currentTime = discussionStartTime;
-        } else if (currentTime.isAfter(discussionEndTime)) {
-            currentTime = discussionStartTime;
-            currentDate = currentDate.plusDays(1);
-        }
-
-        return currentDate.atTime(currentTime);
     }
 
     private boolean isTimeRangeOverlapping(

@@ -45,6 +45,25 @@ public class TimeUtil {
         return time;
     }
 
+    public static LocalDateTime getCurrentDateTime(LocalDateTime personalEventStartTime,
+        LocalDate discussionStartDate, LocalTime discussionStartTime, LocalTime discussionEndTime) {
+
+        LocalDate currentDate = personalEventStartTime.toLocalDate();
+        if (currentDate.isBefore(discussionStartDate)) {
+            return discussionStartDate.atTime(discussionStartTime);
+        }
+
+        LocalTime currentTime = personalEventStartTime.toLocalTime();
+        if (currentTime.isBefore(discussionStartTime)) {
+            currentTime = discussionStartTime;
+        } else if (currentTime.isAfter(discussionEndTime)) {
+            currentTime = discussionStartTime;
+            currentDate = currentDate.plusDays(1);
+        }
+
+        return currentDate.atTime(currentTime);
+    }
+
     public static LocalDateTime getUntilDateTime(LocalDateTime personalEventEndTime,
         LocalDate discussionEndDate, LocalTime discussionEndTime, LocalTime discussionStartTime) {
         LocalDate untilDate = personalEventEndTime.toLocalDate();
