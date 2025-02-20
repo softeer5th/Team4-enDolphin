@@ -37,13 +37,17 @@ public class RetryExecutor {
                     userService.updateAccessToken(user, newAccessToken);
                 }
             } catch (CalendarException e) {
-                switch (e.getErrorCode()) {
+                if (switch (e.getErrorCode()) {
                     case GC_EXPIRED_SYNC_TOKEN -> {
                         if (calendarId != null) {
                             calendarService.clearSyncToken(calendarId);
                         }
+                        yield false;
                     }
-                    case GC_BAD_REQUEST_ERROR, GC_CONFLICT_ERROR -> throw e;
+                    case GC_BAD_REQUEST_ERROR, GC_CONFLICT_ERROR, GC_GONE_ERROR -> true;
+                    default -> false;
+                }) {
+                    throw e;
                 }
             }
             attempts++;
@@ -63,6 +67,7 @@ public class RetryExecutor {
                 throw new CalendarException(HttpStatus.INTERNAL_SERVER_ERROR, "Retry exceeded maximum number of retries");
             }
         }
+
     }
 
 }

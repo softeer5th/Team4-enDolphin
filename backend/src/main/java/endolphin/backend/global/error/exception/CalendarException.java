@@ -16,13 +16,17 @@ public class CalendarException extends RuntimeException {
             case BAD_REQUEST -> ErrorCode.GC_BAD_REQUEST_ERROR;
             case NOT_FOUND -> ErrorCode.GC_NOT_FOUND_ERROR;
             case CONFLICT -> ErrorCode.GC_CONFLICT_ERROR;
-            case GONE -> ErrorCode.GC_EXPIRED_SYNC_TOKEN;
             default -> ErrorCode.GC_INTERNAL_SERVER_ERROR;
         };
     }
 
     public CalendarException(ErrorCode errorCode) {
         super(errorCode.getMessage());
+        this.errorCode = errorCode;
+    }
+
+    public CalendarException(ErrorCode errorCode, String message) {
+        super(message);
         this.errorCode = errorCode;
     }
 }

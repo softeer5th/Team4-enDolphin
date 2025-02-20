@@ -93,7 +93,7 @@ class RetryExecutorTest {
         AtomicInteger counter = new AtomicInteger(0);
         Supplier<String> supplier = () -> {
             if (counter.getAndIncrement() == 0) {
-                throw new CalendarException(HttpStatus.GONE, "expired sync token");
+                throw new CalendarException(ErrorCode.GC_EXPIRED_SYNC_TOKEN, "expired sync token");
             }
             return "success";
         };
@@ -105,6 +105,22 @@ class RetryExecutorTest {
         assertThat(result).isEqualTo("success");
         assertThat(counter.get()).isEqualTo(2);
         then(calendarService).should().clearSyncToken("calendarId1");
+    }
+
+    @Test
+    @DisplayName("GC_EXPIRED_SYNC_TOKEN 발생 후 재시도하여 성공하는 경우 (calendarId가 null이 아닌 경우)")
+    public void testExecuteCalendarApiWithRetry_calendarAlreadyDeletedThenThrowException() {
+        // Given: 첫 호출에서 GC_EXPIRED_SYNC_TOKEN 오류 발생, 이후 성공
+
+        Supplier<String> supplier = () -> {
+            throw new CalendarException(ErrorCode.GC_GONE_ERROR, "deleted event");
+        };
+
+        // When & Then
+        thenThrownBy(() -> retryExecutor.executeCalendarApiWithRetry(supplier, user, "calendarId1"))
+            .isInstanceOf(CalendarException.class)
+            .extracting("errorCode")
+            .isEqualTo(ErrorCode.GC_GONE_ERROR);
     }
 
     @Test

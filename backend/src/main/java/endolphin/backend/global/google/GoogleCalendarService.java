@@ -166,6 +166,10 @@ public class GoogleCalendarService {
                         if (response.getStatusCode().isSameCodeAs(HttpStatus.UNAUTHORIZED)) {
                             throw new OAuthException(ErrorCode.OAUTH_UNAUTHORIZED_ERROR);
                         }
+                        if (response.getStatusCode().isSameCodeAs(HttpStatus.GONE)) {
+                            throw new CalendarException(ErrorCode.GC_GONE_ERROR,
+                                response.bodyTo(String.class));
+                        }
 
                         throw new CalendarException((HttpStatus) response.getStatusCode(),
                             response.bodyTo(String.class));
@@ -237,6 +241,10 @@ public class GoogleCalendarService {
                         log.error("Invalid request: {}", response.bodyTo(String.class));
                         if (response.getStatusCode().isSameCodeAs(HttpStatus.UNAUTHORIZED)) {
                             throw new OAuthException(ErrorCode.OAUTH_UNAUTHORIZED_ERROR);
+                        }
+                        if (response.getStatusCode().isSameCodeAs(HttpStatus.GONE)) {
+                            throw new CalendarException(ErrorCode.GC_EXPIRED_SYNC_TOKEN,
+                                response.bodyTo(String.class));
                         }
 
                         throw new CalendarException((HttpStatus) response.getStatusCode(),
