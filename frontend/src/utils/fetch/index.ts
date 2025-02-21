@@ -13,9 +13,10 @@ export type RequestOptions = {
 };
 
 const buildFetchOptions = (options?: RequestInit): RequestInit => {
+  const accessToken = getAccessToken();
   const defaultHeaders = {
     'Content-Type': 'application/json',
-    Authorization: `Bearer ${getAccessToken()}`,
+    ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
   };
 
   const headers = { ...defaultHeaders, ...options?.headers };
