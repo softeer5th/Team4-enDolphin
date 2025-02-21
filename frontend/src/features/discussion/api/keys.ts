@@ -7,15 +7,16 @@ export const discussionKeys = {
 
 export const candidateKeys = {
   all: ['candidates'],
+  detail: (id: string) => [...candidateKeys.all, id],
   calendar: (
     id: string, {
       startDate,
       endDate,
       selectedUserIdList,
     }: DiscussionCalendarRequest) => 
-    [...candidateKeys.all, id, 'calendar', startDate, endDate, selectedUserIdList?.join(',')],
+    [...candidateKeys.detail(id), 'calendar', startDate, endDate, selectedUserIdList?.join(',')],
   rank: (id: string, { selectedUserIdList }: DiscussionRankRequest) => 
-    [...candidateKeys.all, id, 'rank', selectedUserIdList?.join(',')],
+    [...candidateKeys.detail(id), 'rank', selectedUserIdList?.join(',')],
 };
 
 export const participantKeys = {

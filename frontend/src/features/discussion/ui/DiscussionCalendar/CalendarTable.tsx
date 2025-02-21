@@ -37,7 +37,7 @@ export const CalendarTable = () => {
   return (
     <Flex
       className={calendarTableStyle}
-      height='36.5rem'
+      height='34rem'
       width='100%'
     >
       {dates.map((date) => 
@@ -45,6 +45,7 @@ export const CalendarTable = () => {
           date={date}
           groupMap={groupByDayOfWeek(calendar || [])}
           key={date.getTime()}
+          selected={selected}
         />,
       )}
     </Flex>

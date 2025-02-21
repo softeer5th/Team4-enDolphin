@@ -33,7 +33,7 @@ export const Card = ({
         status={status}
         title={title}
       />
-      {calendarId && <CardBottom />}
+      {calendarId && size !== 'sm' && <CardBottom />}
     </Flex>
   </div>
 );

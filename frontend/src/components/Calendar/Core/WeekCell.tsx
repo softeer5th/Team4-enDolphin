@@ -1,4 +1,5 @@
 import type { WEEKDAY } from '@/constants/date';
+import { isSameDate } from '@/utils/date';
 
 import { Text } from '../../Text';
 import { weekCellBoxStyle, weekCellStyle } from './index.css';
@@ -7,7 +8,7 @@ interface WeekCellProps {
   day: WEEKDAY;
   date: Date;
   isToday: boolean;
-  selected: boolean;
+  selected: Date;
 }
 
 export const WeekCell = ({ day, date, isToday, selected }: WeekCellProps) => {
@@ -26,9 +27,9 @@ export const WeekCell = ({ day, date, isToday, selected }: WeekCellProps) => {
     <div
       className={weekCellStyle({ 
         day: dayStyleName(day), 
-        state: selected ? 'selected' : 'default', 
+        state: isSameDate(date, selected) ? 'selected' : 'default', 
       })}
-      key={selected ? Date.now() : ''}
+      key={`${selected.getTime()} ${day}`}
     >
       <Text typo='b3M'>{day}</Text>
       <div className={weekCellBoxStyle({ day: isToday ? 'today' : dayStyleName(day) })}>
