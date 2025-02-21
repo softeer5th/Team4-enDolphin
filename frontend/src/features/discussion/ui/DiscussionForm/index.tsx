@@ -23,7 +23,7 @@ const DiscussionForm = (
   return (
     <FormProvider 
       initialValues={initialValues || {
-        title: '',
+        title: '일정 조율 제목',
         dateRangeStart: formatDateToBarString(today),
         dateRangeEnd: formatDateToBarString(new Date(today.getTime() + SEVEN_DAYS)),
         timeRangeStart: '20:00',
@@ -38,7 +38,7 @@ const DiscussionForm = (
         gap={800}
         width='27.875rem'
       >
-        <MeetingTitle name='title' />
+        <MeetingTitle />
         <MeetingDateDropdowns />
         <MeetingTimeDropdowns />
         <MeetingDurationDropdown name='duration' />

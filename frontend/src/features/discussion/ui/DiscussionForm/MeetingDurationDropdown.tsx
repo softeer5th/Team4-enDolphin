@@ -9,12 +9,12 @@ import type { DiscussionRequest } from '../../model';
 import { useFormContext } from './FormContext';
 
 const MeetingDurationDropdown = ({ name }: { name: keyof DiscussionRequest }) => {
-  const { formState, validationRef, setValidation, handleUpdateField } = useFormContext();
-
+  const { formState, errors, setValidation, isValid, handleUpdateField } = useFormContext();
   const validateDuration = () => {
     const startTime = formatTimeStringToNumber(formState.timeRangeStart);
     const endTime = formatTimeStringToNumber(formState.timeRangeEnd);
-    return endTime - startTime >= formState.duration;
+    if (endTime - startTime < formState.duration) return '회의 소요시간은 논의 범위를 초과할 수 없습니다.';
+    return '';
   };
   setValidation(name, validateDuration);
 
@@ -25,13 +25,13 @@ const MeetingDurationDropdown = ({ name }: { name: keyof DiscussionRequest }) =>
       selectedValue={formState[name]?.toString() || ''}
       trigger={
         <Input.Single
-          error='회의 소요시간은 논의 범위를 초과할 수 없습니다.'
+          error={errors(name)}
           inputProps={{
             name,
             value: `${formState[name]}분`,
             onChange: (e: ChangeEvent<HTMLInputElement>) => handleUpdateField(name, e.target.value),
           }}
-          isValid={validationRef.current[name]?.(formState[name])}
+          isValid={isValid(name)}
           label='미팅 시간'
           required
           type='select'

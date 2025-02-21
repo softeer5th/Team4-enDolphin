@@ -7,17 +7,17 @@ import { formatDateToBarString } from '@/utils/date/format';
 import { useFormContext } from './FormContext';
 
 const MeetingDateDropdowns = () => {
-  const { formState, validationRef, setValidation, handleUpdateField } = useFormContext();
+  const { formState, errors, setValidation, isValid, handleUpdateField } = useFormContext();
   const navigation = useMonthNavigation();
 
   const validateDateRange = () => {
     const today = new Date();
+    if (!formState.dateRangeStart || !formState.dateRangeEnd) return '날짜 범위는 필수에요';
     const dateRangeStart = new Date(formState.dateRangeStart);
-    if (!formState.dateRangeStart || !formState.dateRangeEnd) return false;
-    if (isSameDate(today, dateRangeStart)) return true;
-    return today < dateRangeStart;
+    if (isSameDate(today, dateRangeStart)) return '';
+    if (today > dateRangeStart) return '과거의 날짜는 포함할 수 없습니다.';
+    return '';
   };
-
   setValidation('dateRangeStart', validateDateRange);
 
   return (
@@ -31,9 +31,9 @@ const MeetingDateDropdowns = () => {
       setHighlightStart={(date) => handleUpdateField('dateRangeStart', formatDateToBarString(date))}
       trigger={
         <Input.Multi
-          error='과거의 날짜는 포함할 수 없습니다.'
+          error={errors('dateRangeStart')}
           hint='일정을 잡을 날짜 범위를 입력해주세요'
-          isValid={validationRef.current.dateRangeStart?.(formState.dateRangeStart)}
+          isValid={isValid('dateRangeStart')}
           label='기간 설정'
           required={true}
           separator='~'
