@@ -119,7 +119,7 @@ export default tseslint.config(
       'prefer-arrow-callback': ['error', { allowNamedFunctions: false }],
       'no-restricted-syntax': [
         'error',
-        'FunctionExpression',
+        'FunctionExpression:not(MethodDefinition > FunctionExpression)',
         'FunctionDeclaration',
       ],
 
