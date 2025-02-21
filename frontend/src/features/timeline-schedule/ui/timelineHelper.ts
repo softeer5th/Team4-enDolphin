@@ -1,4 +1,4 @@
-import { getMinuteDiff } from '@/utils/date';
+import { getMinuteDiff, MINUTE_IN_MILLISECONDS } from '@/utils/date';
 
 import type { Participant } from '../model';
 
@@ -65,9 +65,15 @@ export const calculateBlockStyle = (
   blockStart: Date,
   blockEnd: Date,
 ) => {
-  const durationMinutes = getMinuteDiff(blockStart, blockEnd);
+  // Clamp block start and end within the grid's boundaries
+  const clampedBlockStart = new Date(Math.max(blockStart.getTime(), gridStart.getTime()));
+  const gridEndTime = 
+    gridStart.getTime() + GRID_HORIZONTAL_COUNT * MINUTES_PER_GRID * MINUTE_IN_MILLISECONDS;
+  const clampedBlockEnd = new Date(Math.min(blockEnd.getTime(), gridEndTime));
+
+  const durationMinutes = getMinuteDiff(clampedBlockStart, clampedBlockEnd);
   const width = durationMinutes * PIXELS_PER_MINUTE;
-  const left = Math.max(getMinuteDiff(gridStart, blockStart) * PIXELS_PER_MINUTE, 0);
+  const left = getMinuteDiff(gridStart, clampedBlockStart) * PIXELS_PER_MINUTE;
   
   return { left, width };
 };
