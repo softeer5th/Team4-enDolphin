@@ -226,7 +226,6 @@ public class DiscussionService {
             throw new ApiException(ErrorCode.NOT_ALLOWED_USER);
         }
 
-        System.out.println(request.selectedUserIdList());
         List<Long> selectedIds = request.selectedUserIdList() != null ?
             request.selectedUserIdList() : participants.stream().map(User::getId).toList();
 
