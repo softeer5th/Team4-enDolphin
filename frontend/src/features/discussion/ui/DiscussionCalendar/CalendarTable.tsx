@@ -37,7 +37,7 @@ export const CalendarTable = () => {
   return (
     <Flex
       className={calendarTableStyle}
-      height='34rem'
+      height='calc(100vh - (134px * 2) - (56px * 2) - 34px)'
       width='100%'
     >
       {dates.map((date) => 
