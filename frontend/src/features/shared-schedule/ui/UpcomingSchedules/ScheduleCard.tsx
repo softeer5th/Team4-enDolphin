@@ -22,12 +22,12 @@ const ScheduleCard = ({ schedule, latest }: ScheduleCardProps) => (
     justify='space-between'
   >
     <Flex direction='column' gap={300}>
-      <DdayChip endDateTime={schedule.endDateTime} latest={latest} />
+      <DdayChip endDateTime={schedule.sharedEventDto.endDateTime} latest={latest} />
       <Text typo='h3'>{schedule.title}</Text>
       <Flex direction='column'>
         <MeetingDateTimeInfo 
-          endDateTime={schedule.endDateTime}
-          startDateTime={schedule.startDateTime}
+          endDateTime={schedule.sharedEventDto.endDateTime}
+          startDateTime={schedule.sharedEventDto.startDateTime}
         />
         <Text color={vars.color.Ref.Netural[600]} typo='b2R'>
           {schedule.meetingMethodOrLocation}
@@ -40,13 +40,7 @@ const ScheduleCard = ({ schedule, latest }: ScheduleCardProps) => (
       width='full'
     >
       <Avatar imageUrls={schedule.participantPictureUrls} size='lg' />
-      <button className={chevronButtonStyle({ latest })}>
-        <ChevronRight
-          clickable
-          fill={vars.color.Ref.Netural[800]}
-          width={28}
-        />
-      </button>
+      <NavigateButton latest={latest} schedule={schedule} />
     </Flex>
   </Flex>
 );
@@ -75,3 +69,16 @@ const MeetingDateTimeInfo = ({ startDateTime, endDateTime }: {
 );
 
 export default ScheduleCard;
+
+const NavigateButton = ({ latest }: {
+  latest: boolean; 
+  schedule: UpcomingSchedule;
+}) => (
+  <button className={chevronButtonStyle({ latest })}>
+    <ChevronRight
+      clickable
+      fill={vars.color.Ref.Netural[800]}
+      width={28}
+    />
+  </button>
+);

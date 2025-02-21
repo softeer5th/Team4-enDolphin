@@ -2,10 +2,10 @@ import { Flex } from '@/components/Flex';
 
 import type { Participant, ScheduleEvent } from '../../model';
 import { calculateBlockStyle } from '../timelineHelper';
-import { 
+import {
   timelineBlockContainerStyle,
-  timelineBlockRowStyle, 
-  timelineBlockStyle, 
+  timelineBlockRowStyle,
+  timelineBlockStyle,
 } from './index.css';
 
 const TimelineBlocks = ({ participants, gridStart }: {
@@ -15,6 +15,7 @@ const TimelineBlocks = ({ participants, gridStart }: {
   <Flex
     className={timelineBlockContainerStyle}
     direction='column'
+    justify='flex-start'
   >
     {participants.map((participant) => (
       <div

@@ -31,7 +31,7 @@ export const CalendarTable = () => {
   const { calendar } = useDiscussionCalendarQuery(params.id, {
     startDate: formatDateToBarString(startDate),
     endDate: formatDateToBarString(endDate),
-    selectedUserIdList: members?.formState.checkedList || null,
+    selectedUserIdList: members?.formState.checkedList ?? undefined,
   });
 
   return (

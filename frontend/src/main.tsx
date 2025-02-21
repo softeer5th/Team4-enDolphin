@@ -28,6 +28,14 @@ declare module '@tanstack/react-router' {
   interface Register {
     router: typeof router;
   }
+  interface HistoryState {
+    candidate?: {
+      adjustCount: number;
+      startDateTime: string;
+      endDateTime: string;
+      selectedParticipantIds: number[];
+    };
+  }
 }
 
 createRoot(document.getElementById('root')!).render(

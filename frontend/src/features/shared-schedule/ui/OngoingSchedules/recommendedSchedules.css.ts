@@ -18,5 +18,9 @@ export const recommendContainerStyle = style({
 });
 
 export const recommendItemStyle = style({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  width: '100%',
   padding: `${vars.spacing[400]} 0`,
 });

@@ -3,10 +3,11 @@ import type { PropsWithChildren } from 'react';
 
 import { Flex } from '@/components/Flex';
 
+import type { UpcomingSchedule } from '../../model';
 import UpcomingScheduleListItem from './UpcomingScheduleListItem';
 
 interface ScheduleListProps extends PropsWithChildren {
-  schedules: object[];
+  schedules: UpcomingSchedule[];
 }
 
 // TODO: 무한 스크롤로 구현
@@ -22,13 +23,13 @@ const UpcomingScheduleList = ({ schedules }: ScheduleListProps) => (
       justify='flex-start'
       width='full'
     >
-      {schedules.map((_, index) => (
+      {schedules.map((schedule, index) => (
         <UpcomingScheduleListItem
-          endDate={new Date()}
-          key={index}
-          participantImageUrls={['https://picsum.photos/200']}
-          scheduleTitle='제목'
-          startDate={new Date()}
+          endDate={schedule.sharedEventDto.endDateTime}
+          key={`${schedule.discussionId}-${index}`}
+          participantImageUrls={schedule.participantPictureUrls}
+          scheduleTitle={schedule.title}
+          startDate={schedule.sharedEventDto.startDateTime}
         />))}
     </Flex>
   </Flex>

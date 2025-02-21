@@ -1,65 +1,82 @@
+import { useQueryClient } from '@tanstack/react-query';
+
 import Button from '@/components/Button';
 import { Flex } from '@/components/Flex';
 import { Text } from '@/components/Text';
+import { useDiscussionConfirmMutation } from '@/features/discussion/api/mutations';
+import { ongoingQueryKey, upcomingQueryKey } from '@/features/shared-schedule/api/keys';
 import { vars } from '@/theme/index.css';
-import { formatTimeToColonString } from '@/utils/date/format';
+import { formatDateToDateTimeString, formatTimeToColonString } from '@/utils/date/format';
 
-const Header = ({ adjustCount, startTime, endTime }: {
+interface HeaderProps {
   adjustCount: number;
-  startTime: Date;
-  endTime: Date;
-}) => (
-  <Flex
-    align='center'
-    justify='space-between'
-    width='full'
-  >
-    <HeaderTextInfo
-      adjustCount={adjustCount}
-      endTime={endTime}
-      startTime={startTime}
-    />
+  discussionId: number;
+  startDateTime: Date;
+  endDateTime: Date;
+}
+
+const Header = ({ adjustCount, discussionId, startDateTime, endDateTime }: HeaderProps) => {
+  const { mutate } = useDiscussionConfirmMutation();
+  const queryClient = useQueryClient();
+
+  return(
     <Flex
       align='center'
-      gap={200}
+      justify='space-between'
+      width='full'
     >
-      {/* <Button
-        size='lg'
-        style='weak'
-        variant='secondary'
-      >
-        링크 복사
-      </Button> */}
-      <Button
-        size='lg'
-      >
-        일정 확정하기
-      </Button>
+      <HeaderTextInfo
+        adjustCount={adjustCount}
+        endTime={endDateTime}
+        startTime={startDateTime}
+      />
+      <Flex align='center' gap={200}>
+        {/* TODO: date 관리 방식 통합 (string OR Date) */}
+        <Button
+          onClick={() => {
+            mutate({
+              id: discussionId.toString(), 
+              body: { 
+                startDateTime: formatDateToDateTimeString(startDateTime),
+                endDateTime: formatDateToDateTimeString(endDateTime),
+              },
+            });
+            queryClient.invalidateQueries({ queryKey: upcomingQueryKey });
+            queryClient.invalidateQueries({ queryKey: ongoingQueryKey.all });
+          }}
+          size='lg'
+        >
+          일정 확정하기
+        </Button>
+      </Flex>
     </Flex>
-  </Flex>
-);
+  ); 
+};
 
 const HeaderTextInfo = ({ adjustCount, startTime, endTime }: {
   adjustCount: number;
   startTime: Date;
   endTime: Date;
-}) => (
-  <Flex
-    direction='column'
-    gap={100}
-  >
-    <span>
-      <Text color={vars.color.Ref.Primary[500]} typo='h3'>
-        {`${adjustCount}명`}
+}) => {
+  const needsAdjust = adjustCount > 0;
+  return (
+    <Flex
+      direction='column'
+      gap={100}
+    >
+      <span>
+        <Text color={vars.color.Ref.Primary[500]} typo='h3'>
+          {needsAdjust ? `${adjustCount}명` : '모두 '}
+        </Text>
+        <Text typo='h3'>
+          {needsAdjust ? '만 조율하면 돼요' : '가능해요'}
+        </Text>
+      </span>
+      <Text typo='h2'>
+        {`${formatTimeToColonString(startTime)} ~ ${formatTimeToColonString(endTime)}`}
       </Text>
-      <Text typo='h3'>
-        만 조율하면 돼요
-      </Text>
-    </span>
-    <Text typo='h2'>
-      {`${formatTimeToColonString(startTime)} ~ ${formatTimeToColonString(endTime)}`}
-    </Text>
-  </Flex>
-);
+    </Flex>
+  ); 
+};
 
 export default Header;

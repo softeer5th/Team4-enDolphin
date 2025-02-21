@@ -1,7 +1,12 @@
+
 import Button from '@/components/Button';
 import { Flex } from '@/components/Flex';
 import { Text } from '@/components/Text';
-import { useDiscussionQuery } from '@/features/discussion/api/queries';
+import {
+  useDiscussionCalendarQuery,
+  useDiscussionParticipantsQuery,
+  useDiscussionQuery,
+} from '@/features/discussion/api/queries';
 import type { DiscussionResponse } from '@/features/discussion/model';
 import { vars } from '@/theme/index.css';
 
@@ -17,10 +22,18 @@ interface ScheduleDetailsProps {
 
 // TODO: Date 타입 변환 후 변경사항 적용
 const ScheduleContents = ({ discussionId }: ScheduleDetailsProps) => {
-  const { discussion, isLoading } = useDiscussionQuery(discussionId.toString());
-  if (isLoading) return <div>pending ...</div>;
-  if (!discussion) return <div>No data available</div>;
-
+  const { discussion, isLoading: isDiscussionLoading } = useDiscussionQuery(
+    discussionId.toString(),
+  );
+  const { participants, isPending: isParticipantsLoading } = 
+    useDiscussionParticipantsQuery(discussionId.toString());
+  const { calendar: candidates, isPending: isCandidateLoading } = useDiscussionCalendarQuery(
+    discussionId.toString(),
+    { size: 3 },
+  );
+  if (isDiscussionLoading || isCandidateLoading || isParticipantsLoading)
+    return <div>pending ...</div>;
+  if (!discussion || !candidates || !participants) return <div>No data available</div>;
   return (
     <Flex
       className={containerStyle}
@@ -29,7 +42,12 @@ const ScheduleContents = ({ discussionId }: ScheduleDetailsProps) => {
       justify='flex-start'
     >
       <ScheduleInfo discussion={discussion} />
-      <RecommendedSchedules />
+      {/* TODO: candidate 가 undefined일 경우의 예외 처리 */}
+      <RecommendedSchedules 
+        candidates={candidates!}
+        discussion={discussion}
+        participants={participants}
+      />
       <Flex
         gap={200}
         justify='flex-end'

@@ -102,3 +102,6 @@ export const formatDateToDdayString = (date: Date): string => {
   if (diffDays > 0) return `D-${diffDays}`;
   return `D+${Math.abs(diffDays)}`;
 };
+
+export const getDowString = (date: Date): string => 
+  date.toLocaleString('ko-KR', { weekday: 'short' });

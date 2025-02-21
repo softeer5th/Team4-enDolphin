@@ -14,16 +14,22 @@ const HomePage = () => {
 
   return (
     <div className={containerStyle}>
-      <Flex direction='column' gap={700}>
-        <Text typo='h2'>다가오는 일정</Text>
-        <UpcomingSchedules>
+      <Flex
+        direction='column'
+        gap={700}
+        justify='space-between'
+        width='full'
+      >
+        <Flex justify='space-between' width='full'>
+          <Text typo='h2'>다가오는 일정</Text>
           <Button
             onClick={() => navigate({ to: '/upcoming-schedule' })}
             style='borderless'
           >
             모두보기
           </Button>
-        </UpcomingSchedules>
+        </Flex>
+        <UpcomingSchedules />
       </Flex>
       <OngoingSchedules />
       <FinishedSchedules />
