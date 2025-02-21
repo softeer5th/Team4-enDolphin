@@ -2,6 +2,7 @@ package endolphin.backend.domain.candidate_event;
 
 import static endolphin.backend.global.util.TimeUtil.convertToLocalDateTime;
 import static endolphin.backend.global.util.TimeUtil.convertToMinute;
+import static endolphin.backend.global.util.TimeUtil.getSearchingStartTime;
 import static endolphin.backend.global.util.TimeUtil.roundUpToNearestHalfHour;
 
 import endolphin.backend.domain.candidate_event.dto.CalendarViewResponse;
@@ -20,6 +21,7 @@ import endolphin.backend.global.error.exception.ErrorCode;
 import endolphin.backend.global.redis.DiscussionBitmapService;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -28,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -38,6 +41,8 @@ public class CandidateEventService {
     private final DiscussionService discussionService;
     private final DiscussionParticipantService discussionParticipantService;
     private final static long MINUTE_PER_DAY = 1440;
+    @Value("${google.calendar.api.time-zone}")
+    private String timeZone;
 
     public CalendarViewResponse getEventsOnCalendarView(Long discussionId,
         CalendarViewRequest request) {
@@ -45,7 +50,7 @@ public class CandidateEventService {
 
         Discussion discussion = discussionService.getDiscussionById(discussionId);
 
-        if(discussion.getDiscussionStatus() != DiscussionStatus.ONGOING) {
+        if (discussion.getDiscussionStatus() != DiscussionStatus.ONGOING) {
             throw new ApiException(ErrorCode.DISCUSSION_NOT_ONGOING);
         }
 
@@ -81,7 +86,7 @@ public class CandidateEventService {
         discussionParticipantService.validateDiscussionParticipant(discussionId);
         Discussion discussion = discussionService.getDiscussionById(discussionId);
 
-        if(discussion.getDiscussionStatus() != DiscussionStatus.ONGOING) {
+        if (discussion.getDiscussionStatus() != DiscussionStatus.ONGOING) {
             throw new ApiException(ErrorCode.DISCUSSION_NOT_ONGOING);
         }
 
@@ -110,22 +115,17 @@ public class CandidateEventService {
     }
 
     public List<CandidateEvent> searchCandidateEvents(Discussion discussion, int filter) {
-        long searchingNow = convertToMinute(discussion.getDateRangeStart()
-            .atTime(discussion.getTimeRangeStart()));
+        long searchingNow = getSearchingStartTime(
+            convertToMinute(roundUpToNearestHalfHour(LocalDateTime.now(ZoneId.of(timeZone)))),
+            discussion.getDateRangeStart(), discussion.getTimeRangeStart());
 
         long endDateTime = convertToMinute(discussion.getDateRangeEnd()
             .atTime(discussion.getTimeRangeEnd()));
 
-        long now = convertToMinute(roundUpToNearestHalfHour(LocalDateTime.now()));
-
         int duration = discussion.getDuration();
 
-        if (now >= endDateTime) {
+        if (searchingNow >= endDateTime) {
             return Collections.emptyList();
-        }
-
-        if (now >= searchingNow) {
-            searchingNow = now;
         }
 
         Map<Long, byte[]> dataBlocks = discussionBitmapService.getDataOfDiscussionId(

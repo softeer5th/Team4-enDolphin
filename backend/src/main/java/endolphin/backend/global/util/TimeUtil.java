@@ -79,6 +79,21 @@ public class TimeUtil {
         return untilDateTime;
     }
 
+    public static Long getSearchingStartTime(long dateTime,
+        LocalDate discussionStartDate, LocalTime discussionStartTime) {
+
+        long startDateTime = convertToMinute(discussionStartDate.atTime(discussionStartTime));
+        long currentTime = dateTime % MINUTE_PER_DAY;
+        long minTime = startDateTime % MINUTE_PER_DAY;
+
+        if (dateTime < startDateTime) {
+            return startDateTime;
+        } else if (currentTime < minTime) {
+            return dateTime - currentTime + minTime;
+        }
+        return dateTime;
+    }
+
     public static Long convertToMinute(LocalDateTime dateTime) {
         return dateTime.toEpochSecond(ZoneOffset.UTC) / 60;
     }
