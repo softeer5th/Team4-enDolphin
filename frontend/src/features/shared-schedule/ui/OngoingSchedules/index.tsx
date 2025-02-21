@@ -7,7 +7,10 @@ import { Text } from '@/components/Text';
 
 import { ongoingQueryKey } from '../../api/keys';
 import { prefetchOngoingSchedules } from '../../api/prefetch';
+import { useOngoingQuery } from '../../api/queries';
+import { sharedSchedulesQueryOptions } from '../../api/queryOptions';
 import type { AttendType, OngoingSchedulesResponse } from '../../model/';
+import { ongoingFallbackContainerStyle } from '../Fallbacks/index.css';
 import OngoingFallback from '../Fallbacks/OngoingFallback';
 import { containerStyle, segmentControlStyle, titleStyle } from './index.css';
 import OngoingScheduleList, { PAGE_SIZE } from './OngoingScheduleList';
@@ -37,11 +40,12 @@ const OngoingSchedules = () => (
 
 const Content = () => {
   const queryClient = useQueryClient();
-  const ongoingData = queryClient.getQueryData<OngoingSchedulesResponse>(
-    ongoingQueryKey.detail(1, 6, 'ALL'),
-  );
-  if (!ongoingData || ongoingData.totalPages === 0)
+  const { data, isPending } = useOngoingQuery(1, 6, 'ALL');
+  if (!data || isPending) return <div className={ongoingFallbackContainerStyle} />;
+  if (data.totalPages === 0) {
+    queryClient.fetchQuery(sharedSchedulesQueryOptions.ongoing(1, 6, 'ALL'));
     return <OngoingFallback />;
+  }
   
   return (
     <SegmentControl
