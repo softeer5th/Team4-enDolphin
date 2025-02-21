@@ -11,7 +11,7 @@ import type { DiscussionDTO } from '../../model';
 const DiscussionConfirmButton = (
   { startDateTime, endDateTime }: Omit<DiscussionDTO, 'usersForAdjust'>,
 ) => {
-  const param: { id: string } = useParams({ from: '/_main/discussion/$id' });
+  const param: { id: string } = useParams({ from: '/_main/discussion/candidate/$id' });
   const { isHost, isPending } = useDiscussionHostQuery(param.id);
   const { mutate } = useDiscussionConfirmMutation();
   const queryClient = useQueryClient();
