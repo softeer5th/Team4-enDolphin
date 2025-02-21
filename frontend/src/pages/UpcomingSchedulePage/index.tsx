@@ -17,6 +17,7 @@ const UpcomingSchedulePage = () => {
     <Flex
       className={containerStyle}
       direction='column'
+      justify='space-between'
     > 
       <Flex
         direction='column'
