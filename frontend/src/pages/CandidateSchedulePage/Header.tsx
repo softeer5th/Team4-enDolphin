@@ -1,57 +1,34 @@
-import { useQueryClient } from '@tanstack/react-query';
 
-import Button from '@/components/Button';
 import { Flex } from '@/components/Flex';
 import { Text } from '@/components/Text';
-import { useDiscussionConfirmMutation } from '@/features/discussion/api/mutations';
-import { ongoingQueryKey, upcomingQueryKey } from '@/features/shared-schedule/api/keys';
+import DiscussionConfirmButton from '@/features/discussion/ui/DiscussionConfirmButton';
 import { vars } from '@/theme/index.css';
-import { formatDateToDateTimeString, formatTimeToColonString } from '@/utils/date/format';
+import { formatTimeToColonString } from '@/utils/date/format';
 
 interface HeaderProps {
   adjustCount: number;
   discussionId: number;
-  startDateTime: Date;
-  endDateTime: Date;
+  startDateTime: string;
+  endDateTime: string;
 }
 
-const Header = ({ adjustCount, discussionId, startDateTime, endDateTime }: HeaderProps) => {
-  const { mutate } = useDiscussionConfirmMutation();
-  const queryClient = useQueryClient();
-
-  return(
-    <Flex
-      align='center'
-      justify='space-between'
-      width='full'
-    >
-      <HeaderTextInfo
-        adjustCount={adjustCount}
-        endTime={endDateTime}
-        startTime={startDateTime}
-      />
-      <Flex align='center' gap={200}>
-        {/* TODO: date 관리 방식 통합 (string OR Date) */}
-        <Button
-          onClick={() => {
-            mutate({
-              id: discussionId.toString(), 
-              body: { 
-                startDateTime: formatDateToDateTimeString(startDateTime),
-                endDateTime: formatDateToDateTimeString(endDateTime),
-              },
-            });
-            queryClient.invalidateQueries({ queryKey: upcomingQueryKey });
-            queryClient.invalidateQueries({ queryKey: ongoingQueryKey.all });
-          }}
-          size='lg'
-        >
-          일정 확정하기
-        </Button>
-      </Flex>
+const Header = ({ adjustCount, startDateTime, endDateTime }: HeaderProps) => (
+  <Flex
+    align='center'
+    justify='space-between'
+    width='full'
+  >
+    <HeaderTextInfo
+      adjustCount={adjustCount}
+      endTime={new Date(endDateTime)}
+      startTime={new Date(startDateTime)}
+    />
+    <Flex align='center' gap={200}>
+      {/* TODO: date 관리 방식 통합 (string OR Date) */}
+      <DiscussionConfirmButton endDateTime={endDateTime} startDateTime={startDateTime} />
     </Flex>
-  ); 
-};
+  </Flex>
+);
 
 const HeaderTextInfo = ({ adjustCount, startTime, endTime }: {
   adjustCount: number;

@@ -105,3 +105,13 @@ export const formatDateToDdayString = (date: Date): string => {
 
 export const getDowString = (date: Date): string => 
   date.toLocaleString('ko-KR', { weekday: 'short' });
+
+export const formatTimeToDeadlineString = ({ days, hours, minutes }: {
+  days: number;
+  hours: number;
+  minutes: number;
+}): string => {
+  if (days !== 0) return `${days}일`;
+  if (hours !== 0) return `${hours}시간`;
+  return `${minutes}분`;
+};

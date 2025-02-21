@@ -39,6 +39,7 @@ const HeaderTextInfo = ({ startDateTime, endDateTime }: {
   startDateTime: Date;
   endDateTime: Date;
 }) => {
+// TODO: format 메서드 통합하기
   const { month, day } = getDateParts(startDateTime);
   return (
     <Flex
@@ -47,7 +48,7 @@ const HeaderTextInfo = ({ startDateTime, endDateTime }: {
     >
       <span>
         <Text color={vars.color.Ref.Primary[500]} typo='t1'>
-          {`${month}월 ${day}일`}
+          {`${month + 1}월 ${day}일`}
         </Text>
       </span>
       <Text typo='h2'>

@@ -1,6 +1,6 @@
 import { WEEK_MAP } from '@/constants/date';
 
-import { getTimeParts } from './time';
+import { getTimeParts, HOUR_IN_MILLISECONDS, MINUTE_IN_MILLISECONDS } from './time';
 
 export const DAY_IN_MILLISECONDS = 24 * 60 * 60 * 1000;
 
@@ -246,4 +246,15 @@ export const getDday = (date: Date): number => {
   const today = new Date();
   const diff = date.getTime() - today.getTime();
   return Math.floor(diff / DAY_IN_MILLISECONDS);
+};
+
+export const getTimeLeftInfoFromMilliseconds = (milliseconds: number) => {
+  const days = Math.floor(milliseconds / DAY_IN_MILLISECONDS);
+  const remainingAfterDays = milliseconds % DAY_IN_MILLISECONDS;
+
+  const hours = Math.floor(remainingAfterDays / HOUR_IN_MILLISECONDS);
+  const remainingAfterHours = remainingAfterDays % HOUR_IN_MILLISECONDS;
+  const minutes = Math.floor(remainingAfterHours / MINUTE_IN_MILLISECONDS);
+
+  return { days, hours, minutes };
 };

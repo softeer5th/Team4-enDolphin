@@ -1,5 +1,5 @@
 export const HOUR = 60;
-const HOUR_IN_MILLISECONDS = 1000 * 60 * 60;
+export const HOUR_IN_MILLISECONDS = 1000 * 60 * 60;
 export const MINUTE_IN_MILLISECONDS = 60000;
 
 export const formatDateToTimeString = (date: Date | null): string => {

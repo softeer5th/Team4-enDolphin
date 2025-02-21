@@ -12,7 +12,6 @@ const CandidateSchedulePage = (candidate: {
   selectedParticipantIds?: number[];
 }) => {
   const { id } = useParams({ from: '/_main/discussion/candidate/$id' });
-  const [start, end] = [new Date(candidate.startDateTime), new Date(candidate.endDateTime)];
 
   return (
     <>
@@ -27,8 +26,8 @@ const CandidateSchedulePage = (candidate: {
           <Header
             adjustCount={candidate.adjustCount}
             discussionId={Number(id)}
-            endDateTime={end}
-            startDateTime={start}
+            endDateTime={candidate.endDateTime}
+            startDateTime={candidate.startDateTime}
           />
         </TimelineScheduleModal.Header>
       </TimelineScheduleModal>

@@ -11,8 +11,11 @@ import {
 import type { DiscussionResponse } from '@/features/discussion/model';
 import { useClipboard } from '@/hooks/useClipboard';
 import { vars } from '@/theme/index.css';
-import { getDateRangeString, getDday } from '@/utils/date';
-import { formatMinutesToTimeDuration } from '@/utils/date/format';
+import { 
+  getDateRangeString,
+  getTimeLeftInfoFromMilliseconds, 
+} from '@/utils/date';
+import { formatMinutesToTimeDuration, formatTimeToDeadlineString } from '@/utils/date/format';
 
 import RecommendedSchedules from './RecommendedSchedules';
 import {
@@ -78,9 +81,7 @@ const ScheduleInfo = ({ discussion }: {
       justify='flex-start'
       width='full'
     >
-      <Text color={vars.color.Ref.Red[500]} typo='b3M'>
-        {`마감까지 ${getDday(new Date(rangeEnd))}일`}
-      </Text>
+      <Deadline timeLeft={discussion.timeLeft} />
       <Text typo='h3'>{title}</Text>
       <Flex
         className={subTextContainerStyle}
@@ -96,6 +97,19 @@ const ScheduleInfo = ({ discussion }: {
         </Text>
       </Flex>
     </Flex>
+  );
+};
+
+const Deadline = ({ timeLeft }: { timeLeft: number }) => {
+  const timeLeftInfo = getTimeLeftInfoFromMilliseconds(timeLeft);
+  const isExpired = timeLeft < 0;
+  return (
+    <Text color={vars.color.Ref.Red[500]} typo='b3M'>
+      {isExpired ? 
+        `마감일로부터 ${formatTimeToDeadlineString(timeLeftInfo)} 지났어요`
+        : 
+        `마감까지 ${formatTimeToDeadlineString(timeLeftInfo)}`}
+    </Text>
   );
 };
 
