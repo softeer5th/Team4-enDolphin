@@ -65,3 +65,9 @@ export const textStyle = style({
 
   gap: vars.spacing[300],
 });
+
+export const chipContainerStyle = style({
+  display: 'flex',
+  flexWrap: 'wrap',
+  gap: vars.spacing[200],
+});

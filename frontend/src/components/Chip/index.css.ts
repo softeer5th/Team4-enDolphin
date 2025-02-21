@@ -42,9 +42,9 @@ export const chipStyle = recipe({
       filled: {},
     },
     size: {
-      sm: { height: 24 },
-      md: { height: 28 },
-      lg: { height: 32 },
+      sm: { minHeight: 24 },
+      md: { minHeight: 28 },
+      lg: { minHeight: 32 },
     },
     radius: {
       round: { borderRadius: vars.radius[200] },
