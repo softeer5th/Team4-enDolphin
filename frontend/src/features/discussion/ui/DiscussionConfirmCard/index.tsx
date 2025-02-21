@@ -18,32 +18,30 @@ import {
 const DiscussionConfirmCard = (
   { title, participantPictureUrls, ...badgeProps }: DiscussionConfirmResponse,
 ) => (
-  <>
-    <Modal
-      className={modalContainerStyle}
-      isOpen
-      subTitle={'확정된 일정'}
-      title={title}
-    >
-      <Modal.Contents className={modalContentsStyle}>
-        <BadgeContainer
-          endDateTime={new Date(badgeProps.sharedEventDto.endDateTime)}
-          location={badgeProps.meetingMethodOrLocation}
-          startDateTime={new Date(badgeProps.sharedEventDto.startDateTime)}
-        />
-        <Flex
-          align='center'
-          className={avatarWrapperStyle}
-          justify='flex-start'
-        >
-          <Avatar imageUrls={participantPictureUrls} size='lg' />
-        </Flex>
-      </Modal.Contents>
-      <Modal.Footer className={modalFooterStyle}>
-        <Buttons />
-      </Modal.Footer>
-    </Modal>
-  </>
+  <Modal
+    className={modalContainerStyle}
+    isOpen
+    subTitle={'확정된 일정'}
+    title={title}
+  >
+    <Modal.Contents className={modalContentsStyle}>
+      <BadgeContainer
+        endDateTime={new Date(badgeProps.sharedEventDto.endDateTime)}
+        location={badgeProps.meetingMethodOrLocation}
+        startDateTime={new Date(badgeProps.sharedEventDto.startDateTime)}
+      />
+      <Flex
+        align='center'
+        className={avatarWrapperStyle}
+        justify='flex-start'
+      >
+        <Avatar imageUrls={participantPictureUrls} size='lg' />
+      </Flex>
+    </Modal.Contents>
+    <Modal.Footer className={modalFooterStyle}>
+      <Buttons />
+    </Modal.Footer>
+  </Modal>
 );
 
 const Buttons = () => (

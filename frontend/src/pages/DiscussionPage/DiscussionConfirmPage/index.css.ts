@@ -2,20 +2,13 @@ import { style } from '@vanilla-extract/css';
 
 import { vars } from '@/theme/index.css';
 
-export const backdropStyle = style({
-  position: 'absolute',
+export const containerStyle = style({
+  position: 'fixed',
   top: 0,
   left: 0,
   bottom: 0,
   right: 0,
   backgroundColor: vars.color.Ref.Netural[50], 
-});
-
-export const containerStyle = style({
-  position: 'fixed',
-  transform: 'translate(-50%, -58%)',
-  top: '50%',
-  left: '50%',
 });
 
 export const titleStyle = style({

@@ -3,7 +3,9 @@ import { style } from '@vanilla-extract/css';
 import { vars } from '@/theme/index.css';
 
 export const modalContainerStyle = style({
-  height: '20rem',
+  position: 'static',
+  transform: 'translate(0, 0)',
+  zIndex: 0,
 });
 
 export const modalContentsStyle = style({
