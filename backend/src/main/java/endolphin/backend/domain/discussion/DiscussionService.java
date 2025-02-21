@@ -229,7 +229,7 @@ public class DiscussionService {
         List<Long> selectedIds = request.selectedUserIdList() != null ?
             request.selectedUserIdList() : participants.stream().map(User::getId).toList();
 
-        if (request.selectedUserIdList().isEmpty()) {
+        if (selectedIds.isEmpty()) {
             throw new ApiException(ErrorCode.INVALID_DISCUSSION_PARTICIPANT);
         }
 
