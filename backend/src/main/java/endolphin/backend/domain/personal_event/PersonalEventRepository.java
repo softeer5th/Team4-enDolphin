@@ -45,7 +45,7 @@ public interface PersonalEventRepository extends JpaRepository<PersonalEvent, Lo
         + "AND p.startTime <= :endDateTime "
         + "AND p.endTime >= :startDateTime")
     Long countByUserIdAndDateTimeRange(
-        @Param("userIds") Long userId,
+        @Param("userId") Long userId,
         @Param("startDateTime") LocalDateTime start,
         @Param("endDateTime") LocalDateTime end);
 }
