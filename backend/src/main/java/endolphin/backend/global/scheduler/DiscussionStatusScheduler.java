@@ -5,6 +5,7 @@ import endolphin.backend.domain.discussion.entity.Discussion;
 import endolphin.backend.domain.discussion.enums.DiscussionStatus;
 import endolphin.backend.domain.shared_event.SharedEventService;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -22,9 +23,9 @@ public class DiscussionStatusScheduler {
     private final SharedEventService sharedEventService;
 
     @Transactional
-    @Scheduled(cron = "0 0 0 * * *")
+    @Scheduled(cron = "0 0 0 * * *", zone = "Asia/Seoul")
     public void updateDiscussionStatusAtMidnight() {
-        LocalDate today = LocalDate.now();
+        LocalDate today = LocalDate.now(ZoneId.of("Asia/Seoul"));
         log.info("Scheduler 실행: {}. 논의 상태 업데이트 시작", today);
 
         List<Discussion> discussions = discussionRepository.findByDiscussionStatusNot(
