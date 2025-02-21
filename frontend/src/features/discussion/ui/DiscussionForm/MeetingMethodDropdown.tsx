@@ -17,14 +17,15 @@ const MeetingMethodDropdown = ({ name }: { name: keyof DiscussionRequest }) => {
   return (
     <Dropdown
       height='auto'
-      onChange={(value) => handleUpdateField(name, value)}
+      onChange={(value) => handleUpdateField(name, value || null)}
       selectedValue={formState[name] as string}
       trigger={
         <Input.Single
           inputProps={{
             name,
-            value: methodMap[formState[name] as MeetingMethodENUM] || '',
-            onChange: (e: ChangeEvent<HTMLInputElement>) => handleUpdateField(name, e.target.value),
+            value: methodMap[formState[name] as MeetingMethodENUM] ?? '선택안함',
+            onChange: (e: ChangeEvent<HTMLInputElement>) => 
+              handleUpdateField(name, e.target.value || null),
           }}
           label='미팅 방법'
           type='select'
@@ -32,8 +33,8 @@ const MeetingMethodDropdown = ({ name }: { name: keyof DiscussionRequest }) => {
       }
       width='100%'
     >
-      <Dropdown.Item value='OFFLINE'>{methodMap.OFFLINE}</Dropdown.Item>
-      <Dropdown.Item value='ONLINE'>{methodMap.ONLINE}</Dropdown.Item>
+      <Dropdown.Item value='OFFLINE'>{methodMap['OFFLINE']}</Dropdown.Item>
+      <Dropdown.Item value='ONLINE'>{methodMap['ONLINE']}</Dropdown.Item>
       <Dropdown.Item value=''>{methodMap['']}</Dropdown.Item>
     </Dropdown>
   );
