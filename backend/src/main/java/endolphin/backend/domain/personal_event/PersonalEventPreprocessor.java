@@ -99,9 +99,7 @@ public class PersonalEventPreprocessor {
 
         while (currentDateTime < untilDateTime) {
             while (currentDateTime % MINUTE_PER_DAY < maxTime && currentDateTime < untilDateTime) {
-                LocalDateTime start = TimeUtil.convertToLocalDateTime(currentDateTime);
-                LocalDateTime end = start.plusMinutes(30L);
-                if (value || !isDuplicateEvents(start, end, userId)) {
+                if (value || !isDuplicateEvents(currentDateTime, currentDateTime + 30, userId)) {
                     discussionBitmapService.setBitValue(discussionId, currentDateTime, offset, value);
                 }
                 currentDateTime += 30;
@@ -118,8 +116,10 @@ public class PersonalEventPreprocessor {
             && !eventEnd.isBefore(discussion.getDateRangeStart());
     }
 
-    private boolean isDuplicateEvents(LocalDateTime start, LocalDateTime end, Long userId) {
+    private boolean isDuplicateEvents(long start, long end, Long userId) {
         return personalEventRepository.countByUserIdAndDateTimeRange(
-            userId, start, end) > 1;
+            userId,
+            TimeUtil.convertToLocalDateTime(start),
+            TimeUtil.convertToLocalDateTime(end)) > 1;
     }
 }
