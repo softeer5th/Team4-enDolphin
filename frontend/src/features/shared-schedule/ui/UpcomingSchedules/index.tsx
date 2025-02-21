@@ -2,21 +2,16 @@
 import { Flex } from '@/components/Flex';
 import { useCarouselControl } from '@/hooks/useCarousel';
 
-import { useUpcomingQuery } from '../../api/queries';
-import UpcomingFallback from '../Fallbacks/UpcomingFallback';
+import type { UpcomingSchedule } from '../../model';
 import ControlButtons from './ControlButton';
 import UpcomingCarousel from './UpcomingCarousel';
 
-const UpcomingSchedules = () => {
-  const { data, isPending } = useUpcomingQuery();
-  const schedules = data?.data ?? [];
-  
+const UpcomingSchedules = ({ schedules }: {
+  schedules: UpcomingSchedule[];
+}) => {
   const { offsetX, translateCarousel, canTranslateLeft, canTranslateRight } = useCarouselControl({ 
     totalCards: schedules.length,
   });
-
-  if (isPending) return <Flex height={380} width='full' />;
-  if (schedules.length === 0) return <UpcomingFallback />;
 
   return (
     // 최상단 Flex에 relative 주면 안 됨! (overflow hidden 때문에 뷰포트가 부모여야 함)
