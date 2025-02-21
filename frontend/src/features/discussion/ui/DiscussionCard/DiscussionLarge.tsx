@@ -11,8 +11,11 @@ const formatUserListToString = (users: DiscussionDTO['usersForAdjust']) => {
   const ADJUSTMENT_LENGTH = users.length;
   if (ADJUSTMENT_LENGTH === 0) return '조율이 필요하지 않아요';
 
-  const userNames = users.map((user) => user.name).join(' · ');
-  return `${userNames} 외 ${ADJUSTMENT_LENGTH}명`;
+  const userNameList = users.map((user) => user.name).slice(0, 3);
+  const userNames = userNameList.join(', ');
+
+  if (ADJUSTMENT_LENGTH <= 3) return userNames;
+  return `${userNames} 외 ${ADJUSTMENT_LENGTH - userNameList.length}명`;
 };
 
 const DiscussionContents = (

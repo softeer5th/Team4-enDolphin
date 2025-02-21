@@ -53,4 +53,5 @@ export const notificationsStyle = style({
 
   position: 'fixed',
   top: 'calc(56px + 3rem)',
+  zIndex: 9999,
 });
