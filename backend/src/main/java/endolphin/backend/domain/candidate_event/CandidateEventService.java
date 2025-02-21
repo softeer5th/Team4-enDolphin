@@ -2,6 +2,7 @@ package endolphin.backend.domain.candidate_event;
 
 import static endolphin.backend.global.util.TimeUtil.convertToLocalDateTime;
 import static endolphin.backend.global.util.TimeUtil.convertToMinute;
+import static endolphin.backend.global.util.TimeUtil.roundUpToNearestHalfHour;
 
 import endolphin.backend.domain.candidate_event.dto.CalendarViewResponse;
 import endolphin.backend.domain.candidate_event.dto.CandidateEvent;
@@ -19,7 +20,6 @@ import endolphin.backend.global.error.exception.ErrorCode;
 import endolphin.backend.global.redis.DiscussionBitmapService;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -110,55 +110,45 @@ public class CandidateEventService {
     }
 
     public List<CandidateEvent> searchCandidateEvents(Discussion discussion, int filter) {
-        long startDateTime = convertToMinute(discussion.getDateRangeStart()
+        long searchingNow = convertToMinute(discussion.getDateRangeStart()
             .atTime(discussion.getTimeRangeStart()));
 
         long endDateTime = convertToMinute(discussion.getDateRangeEnd()
             .atTime(discussion.getTimeRangeEnd()));
 
-        long now = convertToMinute(LocalDateTime.now());
-
-        long minuteKey = startDateTime;
+        long now = convertToMinute(roundUpToNearestHalfHour(LocalDateTime.now()));
 
         int duration = discussion.getDuration();
 
-        if (now > endDateTime) {
+        if (now >= endDateTime) {
             return Collections.emptyList();
         }
 
-        if (now >= startDateTime) {
-            minuteKey = convertToMinute(LocalDate.now().atTime(discussion.getTimeRangeStart()));
+        if (now >= searchingNow) {
+            searchingNow = now;
         }
 
-        long maxTime = endDateTime % MINUTE_PER_DAY - duration;
-
         Map<Long, byte[]> dataBlocks = discussionBitmapService.getDataOfDiscussionId(
-            discussion.getId(), minuteKey, endDateTime);
-        long day = 0;
+            discussion.getId(), searchingNow, endDateTime);
+
+        long searchingDay = searchingNow / MINUTE_PER_DAY;
+        long maxTime = endDateTime % MINUTE_PER_DAY - duration;
+        long minTime = convertToMinute(discussion.getTimeRangeStart());
 
         List<CandidateEvent> events = new ArrayList<>();
 
-        while (minuteKey < endDateTime) {
-            if (minuteKey % MINUTE_PER_DAY > maxTime) {
-                minuteKey = ++day * MINUTE_PER_DAY + startDateTime;
+        while (searchingNow < endDateTime) {
+            if (searchingNow % MINUTE_PER_DAY > maxTime) {
+                searchingNow = ++searchingDay * MINUTE_PER_DAY + minTime;
                 continue;
             }
 
-            int data;
-            int totalTime;
+            int data = 0;
+            int totalTime = 0;
 
-            if (!dataBlocks.containsKey(minuteKey)) {
-                data = 0;
-                totalTime = 0;
-            } else {
-                data = toInt(dataBlocks.get(minuteKey)) & filter;
-                totalTime = Integer.bitCount(data);
-            }
+            long end = searchingNow + duration;
 
-            long nextMinuteKey = minuteKey + 30;
-            long endKey = minuteKey + duration;
-
-            for (long i = nextMinuteKey; i < endKey; i += 30) {
+            for (long i = searchingNow; i < end; i += 30) {
                 if (dataBlocks.containsKey(i)) {
                     int nextData = toInt(dataBlocks.get(i)) & filter;
                     data |= nextData;
@@ -167,9 +157,9 @@ public class CandidateEventService {
             }
 
             events.add(
-                new CandidateEvent(minuteKey, endKey, Integer.bitCount(data), totalTime, data));
+                new CandidateEvent(searchingNow, end, Integer.bitCount(data), totalTime, data));
 
-            minuteKey = nextMinuteKey;
+            searchingNow += 30;
         }
 
         return events;
