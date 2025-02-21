@@ -91,7 +91,7 @@ const MeetDate = ({ startDate, endDate }: { startDate: Date; endDate: Date }) =>
   </Text>
 );
 
-const MeetingPlace = ({ meetingPlace }: { meetingPlace?: string }) => (
+const MeetingPlace = ({ meetingPlace }: { meetingPlace?: string | null }) => (
   meetingPlace && 
   <>
     <div className={dotStyle} />
