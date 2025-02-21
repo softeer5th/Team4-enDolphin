@@ -25,7 +25,7 @@ const MeetingTimeDropdowns = () => {
 
   return (
     <Input.Multi
-      error={errors['timeRangeStart']}
+      error={errors('timeRangeStart')}
       hint='일정을 잡고 싶은 시간 범위를 입력해주세요'
       isValid={isValid('timeRangeStart')}
       label='시간 설정'
