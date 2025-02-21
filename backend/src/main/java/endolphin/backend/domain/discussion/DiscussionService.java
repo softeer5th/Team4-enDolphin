@@ -226,6 +226,7 @@ public class DiscussionService {
             throw new ApiException(ErrorCode.NOT_ALLOWED_USER);
         }
 
+        System.out.println(request.selectedUserIdList());
         List<Long> selectedIds = request.selectedUserIdList() != null ?
             request.selectedUserIdList() : participants.stream().map(User::getId).toList();
 
@@ -235,7 +236,7 @@ public class DiscussionService {
 
         Map<Long, Integer> selectedUserIdMap = new HashMap<>();
         for (int i = 0; i < selectedIds.size(); i++) {
-            selectedUserIdMap.put(request.selectedUserIdList().get(i), i);
+            selectedUserIdMap.put(selectedIds.get(i), i);
         }
 
         List<UserInfoWithPersonalEvents> result0 =
