@@ -12,9 +12,9 @@ import { getGridTimes, getRowTopOffset } from '../timelineHelper';
 import {
   bodyContainerStyle,
   containerStyle,
+  dimStyle,
   gridTimeContainerStyle,
   gridTimeTextStyle,
-  overlayStyle,
   timelineHeaderStyle,
 } from './index.css';
 import ParticipantList from './ParticipantList';
@@ -29,20 +29,14 @@ interface TimelineContentProps {
 const TimelineContent = (props: TimelineContentProps) => {
   const { gridTimes, gridStartOffset } = getGridTimes(props.conflictStart, props.conflictEnd);
   const scrollRef = useRef<HTMLDivElement>(null);
-  const overlayRef = useRef<HTMLDivElement>(null);
-  // overlay의 posY를 스크롤과 동기화
-  const handleScroll = () => {
-    if (scrollRef.current && overlayRef.current) {
-      overlayRef.current.style.transform = `translateY(-${scrollRef.current.scrollTop}px)`;
-    }
-  };
+  const dimRef = useRef<HTMLDivElement>(null);
 
   return (
     <div className={containerStyle}>
       <TimelineHeader gridStartOffset={gridStartOffset} gridTimes={gridTimes} />
       <div
         className={bodyContainerStyle}
-        onScroll={handleScroll}
+        // onScroll={handleScroll}
         ref={scrollRef}
       >
         <ParticipantList {...props} />
@@ -52,17 +46,16 @@ const TimelineContent = (props: TimelineContentProps) => {
           gridTimes={gridTimes}
           participants={[...props.checkedParticipants, ...props.uncheckedParticipants]}
         />
+        {props.uncheckedParticipants.length > 0 && 
+        <div
+          className={dimStyle}
+          ref={dimRef}
+          style={{ 
+            top: getRowTopOffset(props.checkedParticipants.length),
+            height: getRowTopOffset(props.uncheckedParticipants.length), 
+          }}
+        />}
       </div>
-      {props.uncheckedParticipants.length > 0 && 
-      <div
-        className={overlayStyle}
-        ref={overlayRef}
-        style={{ 
-          top: getRowTopOffset(props.checkedParticipants.length) + 77,
-          // TODO: overlay height 정확히 계산하도록 리팩터링
-          height: getRowTopOffset(props.uncheckedParticipants.length) + 360, 
-        }}
-      />}
     </div>
   );
 };
