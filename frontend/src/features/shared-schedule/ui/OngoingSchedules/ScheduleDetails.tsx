@@ -11,7 +11,7 @@ import {
 import type { DiscussionResponse } from '@/features/discussion/model';
 import { useClipboard } from '@/hooks/useClipboard';
 import { vars } from '@/theme/index.css';
-import { getDateRangeString, getDday } from '@/utils/date';
+import { getDateRangeString } from '@/utils/date';
 import { formatMinutesToTimeDuration } from '@/utils/date/format';
 
 import RecommendedSchedules from './RecommendedSchedules';
@@ -78,9 +78,7 @@ const ScheduleInfo = ({ discussion }: {
       justify='flex-start'
       width='full'
     >
-      <Text color={vars.color.Ref.Red[500]} typo='b3M'>
-        {`마감까지 ${getDday(new Date(rangeEnd))}일`}
-      </Text>
+      <Deadline timeLeft={discussion.timeLeft} />
       <Text typo='h3'>{title}</Text>
       <Flex
         className={subTextContainerStyle}
@@ -96,6 +94,17 @@ const ScheduleInfo = ({ discussion }: {
         </Text>
       </Flex>
     </Flex>
+  );
+};
+
+// TODO: 계산로직 util로 분리
+// TODO: d-day일 경우도 분기 처리 ?
+const Deadline = ({ timeLeft }: { timeLeft: number }) => {
+  const daysLeft = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+  return (
+    <Text color={vars.color.Ref.Red[500]} typo='b3M'>
+      {daysLeft >= 0 ? `마감까지 ${daysLeft}일` : `마감일로부터 ${daysLeft}일 지났어요`}
+    </Text>
   );
 };
 
