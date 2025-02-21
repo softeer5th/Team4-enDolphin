@@ -1,6 +1,7 @@
 package endolphin.backend.global.redis;
 
 import static endolphin.backend.global.util.TimeUtil.convertToMinute;
+import static endolphin.backend.global.util.TimeUtil.isBetweenTimeRange;
 
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
@@ -172,16 +173,5 @@ public class DiscussionBitmapService {
             }
             return map;
         });
-    }
-
-    private boolean isBetweenTimeRange(long minuteKey, long startDateTime, long endDateTime) {
-        if (minuteKey < startDateTime || minuteKey > endDateTime) {
-            return false;
-        }
-
-        long timeRangeStart = startDateTime % 1440;
-        long timeRangeEnd = endDateTime % 1440;
-
-        return minuteKey % 1440 >= timeRangeStart && minuteKey % 1440 <= timeRangeEnd;
     }
 }

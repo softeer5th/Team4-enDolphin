@@ -58,7 +58,6 @@ public class DiscussionStatusScheduler {
         } else if (sharedEventService.getSharedEvent(discussion.getId()).endDateTime()
             .toLocalDate().isBefore(today)) {
             discussion.setDiscussionStatus(DiscussionStatus.FINISHED);
-            discussionRepository.save(discussion);
             log.info("UPCOMING Discussion id {} FINISHED", discussion.getId());
             return discussion;
         }

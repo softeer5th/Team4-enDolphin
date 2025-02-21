@@ -12,6 +12,7 @@ import endolphin.backend.domain.candidate_event.dto.RankViewResponse;
 import endolphin.backend.domain.discussion.DiscussionParticipantService;
 import endolphin.backend.domain.discussion.DiscussionService;
 import endolphin.backend.domain.discussion.entity.Discussion;
+import endolphin.backend.domain.discussion.enums.DiscussionStatus;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -67,6 +68,7 @@ public class CandidateEventServiceTest {
             .build();
         // Discussion의 ID 주입
         ReflectionTestUtils.setField(discussion, "id", discussionId);
+        ReflectionTestUtils.setField(discussion, "discussionStatus", DiscussionStatus.ONGOING);
         when(discussionService.getDiscussionById(discussionId)).thenReturn(discussion);
 
         // 참가자 관련 스텁: 필터값과 사용자 목록 (여기서는 빈 리스트)
