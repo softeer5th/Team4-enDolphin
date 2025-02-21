@@ -5,7 +5,7 @@ import { vars } from '@/theme/index.css';
 import { formatDateToTimeString } from '@/utils/date/format';
 
 import type { DiscussionDTO } from '../../model';
-import { containerStyle } from './card.css';
+import { chipContainerStyle, containerStyle } from './card.css';
 
 // 추후 삭제할 코드가 포함되어 있습니다.
 // TODO: 일정 확정 버튼 디테일 페이지로 이동
@@ -41,11 +41,11 @@ export const DiscussionSmall = (
           </Text>}
       </Flex>
       {!isRecommend &&
-      <Flex gap={200}>
+      <div className={chipContainerStyle}>
         {discussion.usersForAdjust.map((user) => 
           <Chip color='black' key={user.id}>{user.name}</Chip>,
         )}
-      </Flex>}
+      </div>}
     </Flex>
   );
 };
