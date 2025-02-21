@@ -13,6 +13,7 @@ const Home = () => (
     <HomePage />
   </>
 );
+
 export const Route = createFileRoute('/_main/home/')({
   loader: async ({
     context: { queryClient },

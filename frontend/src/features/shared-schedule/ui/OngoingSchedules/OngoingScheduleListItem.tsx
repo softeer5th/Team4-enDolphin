@@ -3,7 +3,8 @@ import Avatar from '@/components/Avatar';
 import { Flex } from '@/components/Flex';
 import { Text } from '@/components/Text';
 import { vars } from '@/theme/index.css';
-import { getDateRangeString } from '@/utils/date';
+import { getDateRangeString, getTimeLeftInfoFromMilliseconds } from '@/utils/date';
+import { formatTimeToDeadlineString } from '@/utils/date/format';
 
 import type { OngoingSchedule } from '../../model';
 import {
@@ -35,10 +36,7 @@ const OngoingScheduleListItem = ({
     >
       <span className={updateIndicatorStyle({ isUpdated })} />
       <Text typo='t2'>{schedule.title}</Text>
-      {/* {isUpdated && 
-      <Text color={vars.color.Ref.Primary[600]} typo='b3M'>
-        일정을 업데이트한 사람이 있어요!
-      </Text>} */}
+      <Deadline timeLeft={schedule.timeLeft} />
     </Flex>
     <Flex
       align='center'
@@ -55,5 +53,19 @@ const OngoingScheduleListItem = ({
     </Flex>
   </div>
 );
+
+const Deadline = ({ timeLeft }: { timeLeft: number }) => {
+  const timeLeftInfo = getTimeLeftInfoFromMilliseconds(timeLeft);
+  if (timeLeftInfo.days > 3) return null;
+  const isExpired = timeLeft < 0;
+  return (
+    <Text color={vars.color.Ref.Red[500]} typo='b3M'>
+      {isExpired ? 
+        `마감 기한이 ${formatTimeToDeadlineString(timeLeftInfo)} 지났어요`
+        : 
+        `마감 기한까지 ${formatTimeToDeadlineString(timeLeftInfo)} 남았어요!`}
+    </Text>
+  );
+};
 
 export default OngoingScheduleListItem;

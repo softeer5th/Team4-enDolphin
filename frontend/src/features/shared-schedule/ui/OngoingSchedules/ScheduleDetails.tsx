@@ -100,7 +100,6 @@ const ScheduleInfo = ({ discussion }: {
   );
 };
 
-// TODO: d-day일 경우도 분기 처리 ?
 const Deadline = ({ timeLeft }: { timeLeft: number }) => {
   const timeLeftInfo = getTimeLeftInfoFromMilliseconds(timeLeft);
   const isExpired = timeLeft < 0;
