@@ -22,15 +22,14 @@ import ParticipantList from './ParticipantList';
 interface TimelineContentProps {
   conflictStart: Date;
   conflictEnd: Date;
-  selectedParticipants: Participant[];
-  ignoredParticipants: Participant[];
+  checkedParticipants: Participant[];
+  uncheckedParticipants: Participant[];
 }
 
 const TimelineContent = (props: TimelineContentProps) => {
   const { gridTimes, gridStartOffset } = getGridTimes(props.conflictStart, props.conflictEnd);
   const scrollRef = useRef<HTMLDivElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
-
   // overlay의 posY를 스크롤과 동기화
   const handleScroll = () => {
     if (scrollRef.current && overlayRef.current) {
@@ -51,16 +50,17 @@ const TimelineContent = (props: TimelineContentProps) => {
           {...props}
           gridStartOffset={gridStartOffset}
           gridTimes={gridTimes}
-          participants={[...props.selectedParticipants, ...props.ignoredParticipants]}
+          participants={[...props.checkedParticipants, ...props.uncheckedParticipants]}
         />
       </div>
-      {props.ignoredParticipants.length > 0 && 
+      {props.uncheckedParticipants.length > 0 && 
       <div
         className={overlayStyle}
         ref={overlayRef}
         style={{ 
-          top: getRowTopOffset(props.selectedParticipants.length) + 72,
-          height: getRowTopOffset(props.ignoredParticipants.length) + 60, 
+          top: getRowTopOffset(props.checkedParticipants.length) + 77,
+          // TODO: overlay height 정확히 계산하도록 리팩터링
+          height: getRowTopOffset(props.uncheckedParticipants.length) + 360, 
         }}
       />}
     </div>

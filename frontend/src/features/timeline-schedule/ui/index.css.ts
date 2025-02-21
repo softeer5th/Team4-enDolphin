@@ -25,7 +25,16 @@ export const topBarStyle = style({
 
 export const contentContainerStyle = style({
   flex: 1,
-  padding: `${vars.spacing[600]} ${vars.spacing[900]} ${vars.spacing[900]} ${vars.spacing[900]}`,
+  padding: `0 ${vars.spacing[900]} ${vars.spacing[900]} ${vars.spacing[900]}`,
   overflow: 'hidden',
 });
 
+export const closeButtonStyle = style({
+  marginLeft: 'auto',
+});
+
+export const headerStyle = style({
+  width: '100%',
+  alignSelf: 'center',
+  padding: `${vars.spacing[600]} ${vars.spacing[900]} 0 ${vars.spacing[900]}`,
+});

@@ -17,9 +17,9 @@ export const Route = createFileRoute('/_main/home/')({
   loader: async ({
     context: { queryClient },
   }) => {
-    queryClient.prefetchQuery(sharedSchedulesQueryOptions.upcoming);
-    queryClient.prefetchQuery(sharedSchedulesQueryOptions.ongoing(1, 6, 'ALL'));
-    queryClient.prefetchQuery(sharedSchedulesQueryOptions.finished(1, 6, new Date().getFullYear()));
+    queryClient.fetchQuery(sharedSchedulesQueryOptions.upcoming);
+    queryClient.fetchQuery(sharedSchedulesQueryOptions.ongoing(1, 6, 'ALL'));
+    queryClient.fetchQuery(sharedSchedulesQueryOptions.finished(1, 6, new Date().getFullYear()));
   },
   component: Home,
 });

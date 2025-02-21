@@ -1,3 +1,4 @@
+import { useTimelineContext } from '../TimelineContext';
 import { calculateBlockStyle } from '../timelineHelper';
 import { conflictRangeTimeBlockStyle } from './index.css';
 
@@ -9,10 +10,12 @@ const ConflictRangeBox = ({ conflictTimeStart, conflictTimeEnd, gridStart }: {
   const { width } = calculateBlockStyle(
     gridStart,
     conflictTimeStart,
-    conflictTimeEnd);
+    conflictTimeEnd,
+  );
+  const { isConfirmedSchedule } = useTimelineContext();
   return (
     <div 
-      className={conflictRangeTimeBlockStyle}
+      className={conflictRangeTimeBlockStyle({ isConfirmedSchedule })}
       style={{ width: `${width}px` }}
     />
   );

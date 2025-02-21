@@ -24,8 +24,7 @@ const DiscussionCard = ({ size, discussion, rank }: DiscussionCardProps) => {
         adjustCount: discussion.usersForAdjust.length,
         startDateTime: discussion.startDateTime,
         endDateTime: discussion.endDateTime,
-        selectedParticipantIds: memberContext?.formState.checkedList ?? []
-        ,
+        selectedParticipantIds: memberContext?.formState.checkedList ?? undefined,
       } }}
       to='/discussion/candidate/$id'
     >

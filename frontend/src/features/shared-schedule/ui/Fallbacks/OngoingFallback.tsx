@@ -3,12 +3,12 @@ import { ClockGraphic } from '@/components/Icon/component/ClockGraphic';
 import { Text } from '@/components/Text';
 import { vars } from '@/theme/index.css';
 
-import { containerStyle } from './index.css';
+import { ongoingFallbackContainerStyle } from './index.css';
 
 const OngoingFallback = () => (
   <Flex
     align='center'
-    className={containerStyle}
+    className={ongoingFallbackContainerStyle}
     direction='column'
     gap={600}
     height='35.25rem'

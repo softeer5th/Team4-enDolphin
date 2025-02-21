@@ -1,18 +1,18 @@
 
 import { useQueryClient } from '@tanstack/react-query';
-import { useState } from 'react';
 
 import { Flex } from '@/components/Flex';
 import SegmentControl from '@/components/SegmentControl';
 import { Text } from '@/components/Text';
 
-import { ongoingQueryKey } from '../../api/keys';
 import { prefetchOngoingSchedules } from '../../api/prefetch';
-import type { AttendType, OngoingSchedulesResponse } from '../../model/';
+import { useOngoingQuery } from '../../api/queries';
+import { sharedSchedulesQueryOptions } from '../../api/queryOptions';
+import type { AttendType } from '../../model/';
+import { ongoingFallbackContainerStyle } from '../Fallbacks/index.css';
 import OngoingFallback from '../Fallbacks/OngoingFallback';
-import { containerStyle, mainContainerStyle, segmentControlStyle, titleStyle } from './index.css';
+import { containerStyle, segmentControlStyle, titleStyle } from './index.css';
 import OngoingScheduleList, { PAGE_SIZE } from './OngoingScheduleList';
-import ScheduleContents from './ScheduleDetails';
 
 export interface OngoingSegmentOption {
   label: string;
@@ -39,15 +39,13 @@ const OngoingSchedules = () => (
 
 const Content = () => {
   const queryClient = useQueryClient();
-  const [selectedDiscussionId, setSelectedDiscussionId] = useState(-1);
-  
-  if (queryClient.getQueryData<OngoingSchedulesResponse>(
-    ongoingQueryKey.detail(1, 6, 'ALL'),
-  )?.totalPages === 0)
+  const { data, isPending } = useOngoingQuery(1, 6, 'ALL');
+  if (!data || isPending) return <div className={ongoingFallbackContainerStyle} />;
+  if (data.totalPages === 0) {
+    queryClient.fetchQuery(sharedSchedulesQueryOptions.ongoing(1, 6, 'ALL'));
     return <OngoingFallback />;
+  }
   
-  // TODO: useEffect 뺄 수 있으면 다른 걸로 대체
-
   return (
     <SegmentControl
       className={segmentControlStyle}
@@ -60,14 +58,9 @@ const Content = () => {
     >
       {segmentOptions.map((option, idx) => (
         <SegmentControl.Content key={`${option.value}-${idx}`} value={option.value}>
-          <div className={mainContainerStyle} >
-            <OngoingScheduleList 
-              onSelect={(id) => setSelectedDiscussionId(id)}
-              segmentOption={option} 
-              selectedId={selectedDiscussionId}
-            />
-            <ScheduleContents discussionId={selectedDiscussionId} />
-          </div>
+          <OngoingScheduleList 
+            segmentOption={option} 
+          />
         </SegmentControl.Content>
       ))}
     </SegmentControl>

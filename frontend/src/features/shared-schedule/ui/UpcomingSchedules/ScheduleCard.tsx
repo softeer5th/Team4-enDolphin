@@ -1,3 +1,5 @@
+import { Link } from '@tanstack/react-router';
+
 import Avatar from '@/components/Avatar';
 import { Chip } from '@/components/Chip';
 import { Flex } from '@/components/Flex';
@@ -22,12 +24,12 @@ const ScheduleCard = ({ schedule, latest }: ScheduleCardProps) => (
     justify='space-between'
   >
     <Flex direction='column' gap={300}>
-      <DdayChip endDateTime={schedule.sharedEventDto.endDateTime} latest={latest} />
+      <DdayChip endDateTime={new Date(schedule.sharedEventDto.endDateTime)} latest={latest} />
       <Text typo='h3'>{schedule.title}</Text>
       <Flex direction='column'>
         <MeetingDateTimeInfo 
-          endDateTime={schedule.sharedEventDto.endDateTime}
-          startDateTime={schedule.sharedEventDto.startDateTime}
+          endDateTime={new Date(schedule.sharedEventDto.endDateTime)}
+          startDateTime={new Date(schedule.sharedEventDto.startDateTime)}
         />
         <Text color={vars.color.Ref.Netural[600]} typo='b2R'>
           {schedule.meetingMethodOrLocation}
@@ -70,15 +72,25 @@ const MeetingDateTimeInfo = ({ startDateTime, endDateTime }: {
 
 export default ScheduleCard;
 
-const NavigateButton = ({ latest }: {
+const NavigateButton = ({ latest, schedule }: {
   latest: boolean; 
   schedule: UpcomingSchedule;
 }) => (
-  <button className={chevronButtonStyle({ latest })}>
+  <Link
+    className={chevronButtonStyle({ latest })}
+    params={{ id: schedule.discussionId.toString() }}
+    state={{ 
+      upcomingScheduleDetail: {
+        startDateTime: schedule.sharedEventDto.startDateTime,
+        endDateTime: schedule.sharedEventDto.endDateTime,
+      },
+    }}
+    to='/upcoming-schedule/$id'
+  >
     <ChevronRight
       clickable
       fill={vars.color.Ref.Netural[800]}
       width={28}
     />
-  </button>
+  </Link>
 );

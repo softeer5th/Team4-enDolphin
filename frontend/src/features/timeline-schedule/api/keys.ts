@@ -6,6 +6,6 @@ export const candidateDetailQueryKey = {
     discussionId: number, 
     startDateTime: string,
     endDateTime: string,
-    selectedUserIdList: number[],
+    selectedUserIdList?: number[],
   ) => [BASE_KEY, discussionId, startDateTime, endDateTime, selectedUserIdList], 
 };

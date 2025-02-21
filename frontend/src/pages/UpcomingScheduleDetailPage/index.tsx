@@ -5,13 +5,12 @@ import TimelineScheduleModal from '@/features/timeline-schedule/ui';
 import Header from './Header';
 import { backdropStyle } from './index.css';
 
-const CandidateSchedulePage = (candidate: {
-  adjustCount: number;
+const UpcomingScheduleDetailPage = (candidate: {
   startDateTime: string;
   endDateTime: string;
   selectedParticipantIds?: number[];
 }) => {
-  const { id } = useParams({ from: '/_main/discussion/candidate/$id' });
+  const { id } = useParams({ from: '/_main/upcoming-schedule/$id' });
   const [start, end] = [new Date(candidate.startDateTime), new Date(candidate.endDateTime)];
 
   return (
@@ -19,14 +18,12 @@ const CandidateSchedulePage = (candidate: {
       <div className={backdropStyle} />
       <TimelineScheduleModal
         discussionId={Number(id)}
+        isConfirmedSchedule={true}
         {...candidate}
-        isConfirmedSchedule={false}
       >
         <TimelineScheduleModal.TopBar></TimelineScheduleModal.TopBar>
         <TimelineScheduleModal.Header>
           <Header
-            adjustCount={candidate.adjustCount}
-            discussionId={Number(id)}
             endDateTime={end}
             startDateTime={start}
           />
@@ -36,4 +33,4 @@ const CandidateSchedulePage = (candidate: {
   ); 
 };
 
-export default CandidateSchedulePage;
+export default UpcomingScheduleDetailPage;

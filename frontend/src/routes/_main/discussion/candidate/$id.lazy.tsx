@@ -6,14 +6,14 @@ import CandidateSchedulePage from '@/pages/CandidateSchedulePage';
 const CandidateSchedule = () => {
   const { state } = useLocation();
   const { candidate } = state ?? {};
-  if (!candidate) return <div>candidate is undefined or null</div>;
+  if (!candidate) return <div />;
 
   return (
     <>
       <GlobalNavBar></GlobalNavBar>
       <CandidateSchedulePage {...candidate} />
     </>
-  ); 
+  );
 };
 
 export const Route = createLazyFileRoute('/_main/discussion/candidate/$id')({

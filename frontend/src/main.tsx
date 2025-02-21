@@ -33,7 +33,11 @@ declare module '@tanstack/react-router' {
       adjustCount: number;
       startDateTime: string;
       endDateTime: string;
-      selectedParticipantIds: number[];
+      selectedParticipantIds?: number[];
+    };
+    upcomingScheduleDetail?: {
+      startDateTime: string;
+      endDateTime: string;
     };
   }
 }

@@ -1,3 +1,4 @@
+
 import Avatar from '@/components/Avatar';
 import { Flex } from '@/components/Flex';
 import { Text } from '@/components/Text';
@@ -5,7 +6,7 @@ import { vars } from '@/theme/index.css';
 import { getDateRangeString } from '@/utils/date';
 
 import type { OngoingSchedule } from '../../model';
-import { 
+import {
   detailsContainerStyle,
   scheduleItemContainerStyle,
   updateIndicatorStyle,
@@ -15,20 +16,16 @@ interface OngoingScheduleListItemProps {
   schedule: OngoingSchedule;
   selected: boolean;
   isUpdated?: boolean;
-  onSelect: (id: number) => void;
+  onClick: () => void;
 }
 
-const OngoingScheduleListItem = ({ 
-  schedule,
-  selected,
-  isUpdated = false,
-  onSelect,
+// TODO: prefetching 구현
+const OngoingScheduleListItem = ({
+  schedule, selected, isUpdated = false, onClick, 
 }: OngoingScheduleListItemProps) => (
-  <Flex
+  <div
     className={scheduleItemContainerStyle({ selected })}
-    direction='column'
-    gap={50}
-    onClick={() => onSelect(schedule.discussionId)}
+    onClick={onClick}
   >
     <Flex
       align='center'
@@ -56,7 +53,7 @@ const OngoingScheduleListItem = ({
       </Flex>
       <Avatar imageUrls={schedule.participantPictureUrls} size='sm' />
     </Flex>
-  </Flex>
+  </div>
 );
 
 export default OngoingScheduleListItem;

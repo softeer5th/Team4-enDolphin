@@ -15,7 +15,7 @@ const UpcomingSchedules = () => {
     totalCards: schedules.length,
   });
 
-  if (isPending) return <div>pending...</div>;
+  if (isPending) return <Flex height={380} width='full' />;
   if (schedules.length === 0) return <UpcomingFallback />;
 
   return (
@@ -23,7 +23,7 @@ const UpcomingSchedules = () => {
     <Flex
       direction='column'
       gap={700}
-      height={358}
+      height={380}
       justify='flex-end'
       width='full'
     > 

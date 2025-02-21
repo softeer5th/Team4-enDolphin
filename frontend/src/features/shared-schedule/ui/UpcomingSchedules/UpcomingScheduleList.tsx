@@ -25,11 +25,8 @@ const UpcomingScheduleList = ({ schedules }: ScheduleListProps) => (
     >
       {schedules.map((schedule, index) => (
         <UpcomingScheduleListItem
-          endDate={schedule.sharedEventDto.endDateTime}
           key={`${schedule.discussionId}-${index}`}
-          participantImageUrls={schedule.participantPictureUrls}
-          scheduleTitle={schedule.title}
-          startDate={schedule.sharedEventDto.startDateTime}
+          schedule={schedule}
         />))}
     </Flex>
   </Flex>

@@ -11,19 +11,23 @@ const PIXELS_PER_MINUTE = GRID_COLUMN_WIDTH / MINUTES_PER_GRID;
 // ########## Helpers for Processing Data ##########
 
 export const splitParticipantsBySelection = (
-  participants: Participant[], selectedParticipantIds: number[],
+  participants: Participant[], selectedParticipantIds?: number[],
 ) => {
-  const ignoredParticipants: Participant[] = [];
-  const selectedParticipants: Participant[] = [];
+  if (!selectedParticipantIds) {
+    return { checkedParticipants: participants, uncheckedParticipants: [] };
+  }
+
+  const uncheckedParticipants: Participant[] = [];
+  const checkedParticipants: Participant[] = [];
   participants.forEach(participant => {
     if (selectedParticipantIds.includes(participant.id)) {
-      selectedParticipants.push(participant);
+      checkedParticipants.push(participant);
     } else {
-      ignoredParticipants.push(participant);
+      uncheckedParticipants.push(participant);
     }
   });
   
-  return { selectedParticipants, ignoredParticipants };
+  return { checkedParticipants, uncheckedParticipants };
 };
 
 export const calculateMiddleTime = (startTime: Date, endTime: Date): Date => {

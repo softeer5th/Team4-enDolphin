@@ -7,7 +7,7 @@ export const useCandidateDetailQuery = (
   discussionId: number,
   startDateTime: string,
   endDateTime: string,
-  selectedUserIdList: number[],
+  selectedUserIdList?: number[],
 ) => useQuery<CandidateDetailResponse>(candidateDetailQueryOption(
   discussionId, startDateTime, endDateTime, selectedUserIdList,
 ));

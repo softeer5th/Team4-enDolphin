@@ -1,17 +1,15 @@
 import { z } from 'zod';
 
-import { zCoerceToDate } from '@/utils/zod';
-
 const SharedEventDtoSchema = z.object({
   id: z.number(),
-  startDateTime: zCoerceToDate,
-  endDateTime: zCoerceToDate,
+  startDateTime: z.string(),
+  endDateTime: z.string(),
 });
 
 export const UpcomingScheduleSchema = z.object({
   discussionId: z.number(),
   title: z.string(),
-  meetingMethodOrLocation: z.string(),
+  meetingMethodOrLocation: z.union([z.string(), z.null()]),
   sharedEventDto: SharedEventDtoSchema,
   participantPictureUrls: z.array(z.string()),
 });

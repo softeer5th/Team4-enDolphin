@@ -3,12 +3,12 @@ import { CheckGraphic } from '@/components/Icon/component/CheckGraphic';
 import { Text } from '@/components/Text';
 import { vars } from '@/theme/index.css';
 
-import { containerStyle } from './index.css';
+import { ongoingFallbackContainerStyle } from './index.css';
 
 const UpcomingFallback = () => (
   <Flex
     align='center'
-    className={containerStyle}
+    className={ongoingFallbackContainerStyle}
     direction='column'
     gap={600}
     height='19.75rem'

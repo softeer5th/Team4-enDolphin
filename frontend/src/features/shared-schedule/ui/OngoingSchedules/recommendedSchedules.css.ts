@@ -14,6 +14,7 @@ export const subTextContainerStyle = style({
 });
 
 export const recommendContainerStyle = style({
+  height: 293,
   padding: `${vars.spacing[300]} 0`,
 });
 
@@ -22,5 +23,11 @@ export const recommendItemStyle = style({
   alignItems: 'center',
   justifyContent: 'space-between',
   width: '100%',
+  borderBottom: `1px solid ${vars.color.Ref.Netural[200]}`,
   padding: `${vars.spacing[400]} 0`,
+  selectors: {
+    '&:last-child': {
+      borderBottom: 'none',
+    },
+  },
 });
