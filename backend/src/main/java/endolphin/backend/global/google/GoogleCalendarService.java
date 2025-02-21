@@ -22,7 +22,6 @@ import endolphin.backend.global.google.enums.GoogleEventStatus;
 import endolphin.backend.global.google.enums.GoogleResourceState;
 import endolphin.backend.global.google.event.GoogleEventChanged;
 import endolphin.backend.global.util.RetryExecutor;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -251,7 +250,6 @@ public class GoogleCalendarService {
                         throw new CalendarException((HttpStatus) response.getStatusCode(),
                             response.bodyTo(String.class));
                     });
-                log.info("[syncWithCalendar] result: {}", result);
                 List<GoogleEvent> events = extractEventList(result);
                 log.info("[syncWithCalendar] before publish event, calId: {}, userId: {}", calendarId, user.getId());
                 eventPublisher.publishEvent(new GoogleEventChanged(events, user, calendarId));
@@ -317,13 +315,7 @@ public class GoogleCalendarService {
                             response.bodyTo(String.class));
                     });
                 log.info("[subscribeToCalendar] success: {}", result);
-                log.info("Subscribed to {}", result.resourceUri());
-                log.info("Subscribed to {}", result.resourceId());
-                log.info("Token is {}", result.token());
-                LocalDateTime expiration = LocalDateTime.ofInstant(
-                    Instant.ofEpochMilli(Long.parseLong(result.expiration())),
-                    ZoneOffset.ofHours(9));
-                log.info("Expiration time is {}", expiration);
+
                 return true;
             }, user, calendar.getCalendarId()
         );
@@ -365,11 +357,7 @@ public class GoogleCalendarService {
             // 성공 응답 (구글의 재시도를 방지하기 위해 204 반환)
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
-        } catch (CalendarException e) {
-            log.error("[processWebhookNotification], {}", e.getMessage());
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             // 5xx 에러 응답 시 구글 API가 재시도 (Exponential Backoff)
             log.error("[processWebhookNotification], {}", e.getMessage());
 
@@ -416,18 +404,6 @@ public class GoogleCalendarService {
 
         List<GoogleEvent> events = new ArrayList<>();
         for (EventItem item : result.items()) {
-            log.debug("[extractEventList] {}", item);
-            if (item != null) {
-                log.debug("[id]: {}", item.id());
-                log.debug("[start]: {}", item.start());
-                log.debug("[end]: {}", item.end());
-                if (item.start() != null) {
-                    log.debug("[start time]: {}", item.start().dateTime());
-                }
-                if (item.end() != null) {
-                    log.debug("[end time]: {}", item.end().dateTime());
-                }
-            }
 
             String eventId = item.id();
             GoogleEventStatus status = GoogleEventStatus.fromValue(item.status());

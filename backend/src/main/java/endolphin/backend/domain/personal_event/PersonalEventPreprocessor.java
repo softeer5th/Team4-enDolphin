@@ -10,7 +10,9 @@ import endolphin.backend.domain.discussion.enums.DiscussionStatus;
 import endolphin.backend.domain.personal_event.entity.PersonalEvent;
 import endolphin.backend.domain.user.entity.User;
 import endolphin.backend.global.redis.DiscussionBitmapService;
+import endolphin.backend.global.util.TimeUtil;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +29,7 @@ public class PersonalEventPreprocessor {
 
     private final DiscussionBitmapService discussionBitmapService;
     private final DiscussionParticipantService discussionParticipantService;
+    private final PersonalEventRepository personalEventRepository;
 
     public void preprocess(List<PersonalEvent> personalEvents, Discussion discussion, User user) {
         Long offset = discussionParticipantService.getDiscussionParticipantOffset(
@@ -72,8 +75,9 @@ public class PersonalEventPreprocessor {
     private void convert(PersonalEvent personalEvent, Discussion discussion, Long offset,
         boolean value) {
         long MINUTE_PER_DAY = 1440;
-
+        log.info("Convert personal eventId: {} to discussionId: {}", personalEvent.getId(), discussion.getId());
         Long discussionId = discussion.getId();
+        Long userId = personalEvent.getUser().getId();
 
         LocalDate discussionStartDate = discussion.getDateRangeStart();
         LocalDate discussionEndDate = discussion.getDateRangeEnd();
@@ -95,7 +99,9 @@ public class PersonalEventPreprocessor {
 
         while (currentDateTime < untilDateTime) {
             while (currentDateTime % MINUTE_PER_DAY < maxTime && currentDateTime < untilDateTime) {
-                discussionBitmapService.setBitValue(discussionId, currentDateTime, offset, value);
+                if (value || !isDuplicateEvents(currentDateTime, currentDateTime + 30, userId)) {
+                    discussionBitmapService.setBitValue(discussionId, currentDateTime, offset, value);
+                }
                 currentDateTime += 30;
             }
             currentDateTime = ++currentDate * MINUTE_PER_DAY + minTime;
@@ -108,5 +114,12 @@ public class PersonalEventPreprocessor {
         LocalDate eventEnd = personalEvent.getEndTime().toLocalDate();
         return !eventStart.isAfter(discussion.getDateRangeEnd())
             && !eventEnd.isBefore(discussion.getDateRangeStart());
+    }
+
+    private boolean isDuplicateEvents(long start, long end, Long userId) {
+        return personalEventRepository.countByUserIdAndDateTimeRange(
+            userId,
+            TimeUtil.convertToLocalDateTime(start),
+            TimeUtil.convertToLocalDateTime(end)) > 1;
     }
 }

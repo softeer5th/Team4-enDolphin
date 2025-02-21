@@ -32,7 +32,7 @@ public class DiscussionBitmapServiceTest {
         bitmapService.initializeBitmap(discussionId, dateTime);
 
         // 2. 오프셋 5의 비트를 true로 설정
-        Boolean previousValue = bitmapService.setBitValue(discussionId, dateTime, 5, true);
+        Boolean previousValue = bitmapService.setBitValue(discussionId, dateTime,  5, true);
         // 초기화된 비트맵은 모두 0이므로 이전 값은 false여야 함
         assertThat(previousValue).isFalse();
 
@@ -57,7 +57,7 @@ public class DiscussionBitmapServiceTest {
 
         // 1. 초기화 및 데이터 삽입
         bitmapService.initializeBitmap(discussionId, dateTime);
-        bitmapService.setBitValue(discussionId, dateTime, 3, true);
+        bitmapService.setBitValue(discussionId, dateTime,  3, true);
 
         // 2. 데이터 존재 확인
         byte[] beforeDelete = bitmapService.getBitmapData(discussionId, dateTime);
@@ -111,7 +111,7 @@ public class DiscussionBitmapServiceTest {
         // 해당 시각에 대해 비트맵 초기화 및 특정 비트 설정
         bitmapService.initializeBitmap(discussionId, dateTime);
         // 예시로 offset 2의 비트를 true로 설정
-        bitmapService.setBitValue(discussionId, dateTime, 2, true);
+        bitmapService.setBitValue(discussionId, dateTime,  2, true);
 
         // 테스트할 시간 범위: minuteKey를 중심으로 ±10분
         long startRange = dateTime - 10;
