@@ -235,7 +235,7 @@ public class DiscussionService {
 
         Map<Long, Integer> selectedUserIdMap = new HashMap<>();
         for (int i = 0; i < selectedIds.size(); i++) {
-            selectedUserIdMap.put(request.selectedUserIdList().get(i), i);
+            selectedUserIdMap.put(selectedIds.get(i), i);
         }
 
         List<UserInfoWithPersonalEvents> result0 =
