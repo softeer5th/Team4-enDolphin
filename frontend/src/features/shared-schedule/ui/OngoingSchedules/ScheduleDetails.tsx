@@ -4,10 +4,12 @@ import { Link } from '@tanstack/react-router';
 import Button from '@/components/Button';
 import { Flex } from '@/components/Flex';
 import { Text } from '@/components/Text';
+import { serviceENV } from '@/envconfig';
 import {
   useDiscussionQuery,
 } from '@/features/discussion/api/queries';
 import type { DiscussionResponse } from '@/features/discussion/model';
+import { useClipboard } from '@/hooks/useClipboard';
 import { vars } from '@/theme/index.css';
 import { getDateRangeString, getDday } from '@/utils/date';
 import { formatMinutesToTimeDuration } from '@/utils/date/format';
@@ -25,7 +27,7 @@ interface ScheduleDetailsProps {
 // TODO: Date 타입 변환 후 변경사항 적용
 const ScheduleContents = ({ discussionId }: ScheduleDetailsProps) => {
   const { discussion } = useDiscussionQuery(discussionId.toString());
-
+  const { handleCopyToClipboard } = useClipboard();
   if (!discussion) return <div className={containerStyle} />;
 
   return (
@@ -43,7 +45,14 @@ const ScheduleContents = ({ discussionId }: ScheduleDetailsProps) => {
         justify='flex-end'
         width='full'
       >
-        <Button size='xl' style='borderless'>링크 복사</Button>
+        <Button
+          onClick={() => 
+            handleCopyToClipboard(`${serviceENV.CLIENT_URL}/discussion/${discussion.id}`)}
+          size='xl'
+          style='borderless'
+        >
+          링크 복사
+        </Button>
         <Link params={{ id: discussionId.toString() }} to='/discussion/$id'>
           <Button size='xl'>
             자세히 보기
