@@ -5,11 +5,10 @@ import { Flex } from '@/components/Flex';
 import SegmentControl from '@/components/SegmentControl';
 import { Text } from '@/components/Text';
 
-import { ongoingQueryKey } from '../../api/keys';
 import { prefetchOngoingSchedules } from '../../api/prefetch';
 import { useOngoingQuery } from '../../api/queries';
 import { sharedSchedulesQueryOptions } from '../../api/queryOptions';
-import type { AttendType, OngoingSchedulesResponse } from '../../model/';
+import type { AttendType } from '../../model/';
 import { ongoingFallbackContainerStyle } from '../Fallbacks/index.css';
 import OngoingFallback from '../Fallbacks/OngoingFallback';
 import { containerStyle, segmentControlStyle, titleStyle } from './index.css';
