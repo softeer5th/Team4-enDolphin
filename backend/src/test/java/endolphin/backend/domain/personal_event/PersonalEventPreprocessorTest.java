@@ -49,6 +49,7 @@ class PersonalEventPreprocessorTest {
         given(personalEvent.getStartTime()).willReturn(LocalDateTime.of(2024, 3, 15, 13, 0));
         given(personalEvent.getEndTime()).willReturn(LocalDateTime.of(2024, 3, 15, 14, 0));
         given(personalEvent.getId()).willReturn(1L);
+        given(personalEvent.getUser()).willReturn(user);
 
         // when
         preprocessor.preprocess(List.of(personalEvent), discussion, user);
@@ -104,6 +105,7 @@ class PersonalEventPreprocessorTest {
         given(personalEvent.getStartTime()).willReturn(LocalDateTime.of(2024, 3, 8, 8, 0, 0));
         given(personalEvent.getEndTime()).willReturn(LocalDateTime.of(2024, 3, 12, 13, 0, 0));
         given(personalEvent.getId()).willReturn(3L);
+        given(personalEvent.getUser()).willReturn(user);
 
         // when
         preprocessor.preprocess(List.of(personalEvent), discussion, user);
@@ -130,6 +132,7 @@ class PersonalEventPreprocessorTest {
         given(personalEvent.getStartTime()).willReturn(LocalDateTime.of(2024, 3, 8, 20, 0, 0));
         given(personalEvent.getEndTime()).willReturn(LocalDateTime.of(2024, 3, 30, 9, 0, 0));
         given(personalEvent.getId()).willReturn(4L);
+        given(personalEvent.getUser()).willReturn(user);
 
         // when
         preprocessor.preprocess(List.of(personalEvent), discussion, user);
@@ -156,6 +159,7 @@ class PersonalEventPreprocessorTest {
         given(personalEvent.getStartTime()).willReturn(LocalDateTime.of(2024, 3, 12, 13, 50, 0));
         given(personalEvent.getEndTime()).willReturn(LocalDateTime.of(2024, 3, 18, 10, 11, 0));
         given(personalEvent.getId()).willReturn(5L);
+        given(personalEvent.getUser()).willReturn(user);
 
         // when
         preprocessor.preprocess(List.of(personalEvent), discussion, user);
@@ -183,6 +187,7 @@ class PersonalEventPreprocessorTest {
         given(personalEvent.getStartTime()).willReturn(LocalDateTime.of(2024, 3, 15, 23, 0, 0));
         given(personalEvent.getEndTime()).willReturn(LocalDateTime.of(2024, 3, 16, 23, 40, 0));
         given(personalEvent.getId()).willReturn(5L);
+        given(personalEvent.getUser()).willReturn(user);
 
         // when
         preprocessor.preprocess(List.of(personalEvent), discussion, user);
@@ -210,6 +215,7 @@ class PersonalEventPreprocessorTest {
         given(personalEvent.getStartTime()).willReturn(LocalDateTime.of(2024, 3, 15, 20, 0, 0));
         given(personalEvent.getEndTime()).willReturn(LocalDateTime.of(2024, 3, 16, 1, 0, 0));
         given(personalEvent.getId()).willReturn(5L);
+        given(personalEvent.getUser()).willReturn(user);
 
         // when
         preprocessor.preprocess(List.of(personalEvent), discussion, user);
