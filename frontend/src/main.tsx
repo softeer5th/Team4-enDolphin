@@ -30,6 +30,14 @@ const router = createRouter({
   context: {
     queryClient,
   },
+  scrollRestoration: true,
+  scrollRestorationBehavior: 'smooth',
+  getScrollRestorationKey: (location) => {
+    const paths = ['/home'];
+    return paths.includes(location.pathname)
+      ? location.pathname
+      : location.state.key!;
+  },
 });
 
 declare module '@tanstack/react-router' {
