@@ -1,13 +1,11 @@
-import { useInviteInfoQuery } from '@/features/discussion/api/queries';
+import { useParams } from '@tanstack/react-router';
+
+import type { InviteResponse } from '@/features/discussion/model/invitation';
 import DiscussionInviteCard from '@/features/discussion/ui/DiscussionInviteCard';
 
-const DiscussionInvitePage = ({ discussionId }:
-{ discussionId: number },
-) => {
-  const { data, isPending } = useInviteInfoQuery(discussionId);
+const DiscussionInvitePage = ({ invitation }: { invitation: InviteResponse }) => {
+  const { id } = useParams({ from: '/_main/discussion/invite/$id' });
 
-  if (isPending) return <div>Loading...</div>;
-  if (!data) return <div>response contains no data</div>;
   const {
     host,
     title,
@@ -18,13 +16,13 @@ const DiscussionInvitePage = ({ discussionId }:
     duration,
     isFull,
     requirePassword,
-  } = data;
+  } = invitation;
 
   return (
     <DiscussionInviteCard 
       canJoin={!isFull}
       dateRange={{ start: dateRangeStart, end: dateRangeEnd }}
-      discussionId={discussionId}
+      discussionId={+id}
       hostName={host}
       meetingDuration={duration}
       requirePassword={requirePassword}

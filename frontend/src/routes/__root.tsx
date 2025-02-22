@@ -1,8 +1,8 @@
 import type { QueryClient } from '@tanstack/react-query';
 import { 
   createRootRouteWithContext, 
-  Outlet, 
-} from '@tanstack/react-router';
+  HeadContent,
+  Outlet } from '@tanstack/react-router';
 import { lazy } from 'react';
 
 import { defaultENV } from '@/envconfig';
@@ -25,6 +25,7 @@ const TanStackRouterDevtools =
 export const Route = createRootRouteWithContext<QueryClientContext>()({
   component: () => (
     <>
+      <HeadContent />
       <Outlet />
       <TanStackRouterDevtools />
     </>
@@ -35,4 +36,15 @@ export const Route = createRootRouteWithContext<QueryClientContext>()({
       <ErrorPage />
     </>
   ),
+  head: () => ({
+    meta: [
+      {
+        title: '언제만나',
+      },
+      { 
+        name: 'description', 
+        content: '당신과 모두의 일정을 하나로 연결해 가장 완벽한 약속 시간을 찾아드려요\n당신과 모두의 시간을 위해, 지금 바로 시작하세요.', 
+      },
+    ],
+  }),
 });
