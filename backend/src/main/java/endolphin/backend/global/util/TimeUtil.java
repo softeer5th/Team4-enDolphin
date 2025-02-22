@@ -4,10 +4,13 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.time.ZoneOffset;
+import org.springframework.beans.factory.annotation.Value;
 
 public class TimeUtil {
 
+    public static final String timeZone = "Asia/Seoul";
     private static final long MINUTE_PER_DAY = 24 * 60;
 
     public static long calculateTimeLeft(LocalDate deadline) {
@@ -106,5 +109,9 @@ public class TimeUtil {
         long minuteKeyTime = minuteKey % MINUTE_PER_DAY;
 
         return minuteKeyTime >= timeRangeStart && minuteKeyTime <= timeRangeEnd;
+    }
+
+    public static LocalDateTime getNow() {
+        return LocalDateTime.now(ZoneId.of(timeZone));
     }
 }

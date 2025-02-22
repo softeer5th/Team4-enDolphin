@@ -2,6 +2,7 @@ package endolphin.backend.domain.candidate_event;
 
 import static endolphin.backend.global.util.TimeUtil.convertToLocalDateTime;
 import static endolphin.backend.global.util.TimeUtil.convertToMinute;
+import static endolphin.backend.global.util.TimeUtil.getNow;
 import static endolphin.backend.global.util.TimeUtil.getSearchingStartTime;
 import static endolphin.backend.global.util.TimeUtil.roundUpToNearestHalfHour;
 
@@ -20,8 +21,6 @@ import endolphin.backend.global.error.exception.ApiException;
 import endolphin.backend.global.error.exception.ErrorCode;
 import endolphin.backend.global.redis.DiscussionBitmapService;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -41,8 +40,6 @@ public class CandidateEventService {
     private final DiscussionService discussionService;
     private final DiscussionParticipantService discussionParticipantService;
     private final static long MINUTE_PER_DAY = 1440;
-    @Value("${google.calendar.api.time-zone}")
-    private String timeZone;
 
     public CalendarViewResponse getEventsOnCalendarView(Long discussionId,
         CalendarViewRequest request) {
@@ -116,7 +113,7 @@ public class CandidateEventService {
 
     public List<CandidateEvent> searchCandidateEvents(Discussion discussion, int filter) {
         long searchingNow = getSearchingStartTime(
-            roundUpToNearestHalfHour(LocalDateTime.now(ZoneId.of(timeZone))),
+            roundUpToNearestHalfHour(getNow()),
             discussion.getDateRangeStart(), discussion.getTimeRangeStart());
 
         long endDateTime = convertToMinute(discussion.getDateRangeEnd()
