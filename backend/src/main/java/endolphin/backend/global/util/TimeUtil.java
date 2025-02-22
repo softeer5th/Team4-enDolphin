@@ -98,18 +98,6 @@ public class TimeUtil {
         return LocalDateTime.ofEpochSecond(epochSeconds, 0, ZoneOffset.UTC);
     }
 
-    public static boolean isBetweenTimeRange(long minuteKey, long startDateTime, long endDateTime) {
-        if (minuteKey < startDateTime || minuteKey > endDateTime) {
-            return false;
-        }
-
-        long timeRangeStart = startDateTime % MINUTE_PER_DAY;
-        long timeRangeEnd = endDateTime % MINUTE_PER_DAY;
-        long minuteKeyTime = minuteKey % MINUTE_PER_DAY;
-
-        return minuteKeyTime >= timeRangeStart && minuteKeyTime <= timeRangeEnd;
-    }
-
     public static LocalDateTime getNow() {
         return LocalDateTime.now(ZoneId.of(TIME_ZONE));
     }

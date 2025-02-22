@@ -118,7 +118,7 @@ public class DiscussionBitmapServiceTest {
         long endRange = dateTime + 10;
 
         // when: getDataOfDiscussionId 호출
-        Map<Long, byte[]> dataMap = bitmapService.getDataOfDiscussionId(discussionId, startRange, endRange);
+        Map<Long, byte[]> dataMap = bitmapService.getDataOfDiscussionId(discussionId);
 
         // then
         assertThat(dataMap)
@@ -132,9 +132,5 @@ public class DiscussionBitmapServiceTest {
         // 비트 데이터에서 offset 5의 비트가 true인지 검증 (구현에 따라 인덱스 매핑이 달라질 수 있음)
         BitSet bs = BitSet.valueOf(data);
         assertThat(bs.get(5)).as("Offset 5의 비트는 true여야 합니다").isTrue();
-
-        // 범위 밖으로 호출 시 해당 key가 조회되지 않아야 함
-        Map<Long, byte[]> dataMapOut = bitmapService.getDataOfDiscussionId(discussionId, dateTime + 1, dateTime + 100);
-        assertThat(dataMapOut).doesNotContainKey(dateTime);
     }
 }
