@@ -11,6 +11,7 @@ import endolphin.backend.domain.user.entity.User;
 import endolphin.backend.global.google.GoogleOAuthService;
 import endolphin.backend.global.security.JwtProvider;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,6 +30,9 @@ public class AuthService {
     @Value("${jwt.expired}")
     private long expired;
 
+    @Value("${google.calendar.api.time-zone}")
+    private String timeZone;
+
     @Transactional(readOnly = true)
     public String oauth2Callback(String code) {
         if (code == null || code.isBlank()) {
@@ -44,7 +48,7 @@ public class AuthService {
         User user = userService.upsertUser(userInfo, tokenResponse);
 
         String accessToken = jwtProvider.createToken(user.getId(), user.getEmail());
-        LocalDateTime expiredAt = LocalDateTime.now().plus(expired, ChronoUnit.MILLIS);
+        LocalDateTime expiredAt = LocalDateTime.now(ZoneId.of(timeZone)).plus(expired, ChronoUnit.MILLIS);
 
         return new OAuthResponse(accessToken, expiredAt);
     }
