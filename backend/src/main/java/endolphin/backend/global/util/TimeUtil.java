@@ -6,11 +6,10 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
-import org.springframework.beans.factory.annotation.Value;
 
 public class TimeUtil {
 
-    public static final String timeZone = "Asia/Seoul";
+    public static final String TIME_ZONE = "Asia/Seoul";
     private static final long MINUTE_PER_DAY = 24 * 60;
 
     public static long calculateTimeLeft(LocalDate deadline) {
@@ -112,6 +111,6 @@ public class TimeUtil {
     }
 
     public static LocalDateTime getNow() {
-        return LocalDateTime.now(ZoneId.of(timeZone));
+        return LocalDateTime.now(ZoneId.of(TIME_ZONE));
     }
 }
