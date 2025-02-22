@@ -43,6 +43,15 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
+    @Operation(summary = "사용자 이름 변경", description = "현재 로그인한 유저의 이름을 변경합니다.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "성공",
+            content = @Content(schema = @Schema(implementation = CurrentUserInfo.class))),
+        @ApiResponse(responseCode = "401", description = "인증 실패",
+            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+        @ApiResponse(responseCode = "500", description = "서버 오류",
+            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    })
     @PatchMapping("/user/name")
     public ResponseEntity<CurrentUserInfo> updateUsername(
         @Valid @RequestBody UsernameRequest request) {
