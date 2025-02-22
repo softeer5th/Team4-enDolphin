@@ -130,7 +130,7 @@ public class CandidateEventService {
         }
 
         Map<Long, byte[]> dataBlocks = discussionBitmapService.getDataOfDiscussionId(
-            discussion.getId(), searchingNow, endDateTime);
+            discussion.getId());
         log.info("dataBlocks: {}", dataBlocks);
 
         long searchingDay = searchingNow / MINUTE_PER_DAY;
@@ -157,7 +157,8 @@ public class CandidateEventService {
                     totalTime += Integer.bitCount(nextData);
                 }
             }
-            log.info("searchingNow: {}, end: {}, data: {}, totalTime: {}", convertToLocalDateTime(searchingNow), end, data,
+            log.info("searchingNow: {}, end: {}, data: {}, totalTime: {}",
+                convertToLocalDateTime(searchingNow), end, data,
                 totalTime);
 
             events.add(

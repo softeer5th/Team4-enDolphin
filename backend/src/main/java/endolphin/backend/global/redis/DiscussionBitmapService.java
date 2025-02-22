@@ -1,16 +1,10 @@
 package endolphin.backend.global.redis;
 
-import static endolphin.backend.global.util.TimeUtil.convertToMinute;
-import static endolphin.backend.global.util.TimeUtil.isBetweenTimeRange;
-
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.RedisSystemException;
 import org.springframework.data.redis.connection.RedisCommandsProvider;
 import org.springframework.data.redis.connection.RedisConnection;
@@ -38,7 +32,7 @@ public class DiscussionBitmapService {
      * 해당 논의 및 시각(분)에 대해 16비트(2바이트) 크기의 비트맵을 초기화하여 Redis에 저장합니다.
      *
      * @param discussionId 논의 식별자
-     * @param minuteKey     초기화할 기준 시각 (분 단위로 변환됨)
+     * @param minuteKey    초기화할 기준 시각 (분 단위로 변환됨)
      */
     public void initializeBitmap(Long discussionId, Long minuteKey) {
         try {
@@ -57,7 +51,7 @@ public class DiscussionBitmapService {
      * 해당 논의의 특정 시각(분) 비트맵 데이터에서, 지정 오프셋의 비트를 수정합니다.
      *
      * @param discussionId 논의 식별자
-     * @param minuteKey     수정할 시각 (분 단위로 변환됨)
+     * @param minuteKey    수정할 시각 (분 단위로 변환됨)
      * @param bitOffset    수정할 비트의 오프셋 (0부터 시작, 최대 15까지 사용 가능)
      * @param value        설정할 비트 값 (true/false)
      * @return 이전 비트 값 (true/false)
@@ -75,7 +69,7 @@ public class DiscussionBitmapService {
      * 해당 논의의 특정 시각(분) 비트맵 데이터에서, 지정 오프셋의 비트 값을 조회합니다.
      *
      * @param discussionId 논의 식별자
-     * @param minuteKey     조회할 시각 (분 단위로 변환됨)
+     * @param minuteKey    조회할 시각 (분 단위로 변환됨)
      * @param bitOffset    조회할 비트 오프셋 (0부터 시작)
      * @return 조회된 비트 값 (true/false)
      */
@@ -141,8 +135,7 @@ public class DiscussionBitmapService {
         return CompletableFuture.completedFuture(null);
     }
 
-    public Map<Long, byte[]> getDataOfDiscussionId(Long discussionId, Long startDateTime,
-        Long endDateTime) {
+    public Map<Long, byte[]> getDataOfDiscussionId(Long discussionId) {
         String pattern = discussionId + ":*";
         ScanOptions scanOptions = ScanOptions.scanOptions().match(pattern).count(1000).build();
 
@@ -160,11 +153,8 @@ public class DiscussionBitmapService {
                         String minuteKeyStr = keyStr.substring(colonIndex + 1);
                         try {
                             long minuteKey = Long.parseLong(minuteKeyStr);
-
-                            if (isBetweenTimeRange(minuteKey, startDateTime, endDateTime)) {
-                                byte[] data = connection.stringCommands().get(rawKey);
-                                map.put(minuteKey, data);
-                            }
+                            byte[] data = connection.stringCommands().get(rawKey);
+                            map.put(minuteKey, data);
                         } catch (NumberFormatException e) {
                             // 예: log.warn("Invalid minuteKey: {}", minuteKeyStr, e);
                         }
