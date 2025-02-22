@@ -1,8 +1,9 @@
 package endolphin.backend.domain.personal_event;
 
 import static endolphin.backend.global.util.TimeUtil.convertToMinute;
-import static endolphin.backend.global.util.TimeUtil.getCurrentDateTime;
-import static endolphin.backend.global.util.TimeUtil.getUntilDateTime;
+import static endolphin.backend.global.util.TimeUtil.getSearchingStartTime;
+import static endolphin.backend.global.util.TimeUtil.getSearchingEndTime;
+import static endolphin.backend.global.util.TimeUtil.roundDownToNearestHalfHour;
 
 import endolphin.backend.domain.discussion.DiscussionParticipantService;
 import endolphin.backend.domain.discussion.entity.Discussion;
@@ -12,7 +13,6 @@ import endolphin.backend.domain.user.entity.User;
 import endolphin.backend.global.redis.DiscussionBitmapService;
 import endolphin.backend.global.util.TimeUtil;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
@@ -75,36 +75,37 @@ public class PersonalEventPreprocessor {
     private void convert(PersonalEvent personalEvent, Discussion discussion, Long offset,
         boolean value) {
         long MINUTE_PER_DAY = 1440;
-        log.info("Convert personal eventId: {} to discussionId: {}", personalEvent.getId(), discussion.getId());
+        log.info("Convert personal eventId: {} to discussionId: {}", personalEvent.getId(),
+            discussion.getId());
         Long discussionId = discussion.getId();
         Long userId = personalEvent.getUser().getId();
 
-        LocalDate discussionStartDate = discussion.getDateRangeStart();
-        LocalDate discussionEndDate = discussion.getDateRangeEnd();
         LocalTime discussionStartTime = discussion.getTimeRangeStart();
         LocalTime discussionEndTime = discussion.getTimeRangeEnd();
 
-        long currentDateTime = getCurrentDateTime(personalEvent.getStartTime(),
-            discussionStartDate, discussionStartTime);
+        long searchingNow = getSearchingStartTime(
+            roundDownToNearestHalfHour(personalEvent.getStartTime()),
+            discussion.getDateRangeStart(), discussionStartTime);
 
-        long untilDateTime = getUntilDateTime(personalEvent.getEndTime(),
-            discussionEndDate, discussionEndTime);
+        long searchingEnd = getSearchingEndTime(personalEvent.getEndTime(),
+            discussion.getDateRangeEnd(), discussionEndTime);
 
-        long currentDate = currentDateTime / MINUTE_PER_DAY;
+        long searchingDay = searchingNow / MINUTE_PER_DAY;
         long minTime = convertToMinute(discussionStartTime);
         long maxTime = convertToMinute(discussionEndTime);
 
-        log.info("id: {}, currentDateTime: {} untilDateTime: {}", personalEvent.getId(),
-            currentDateTime, untilDateTime);
+        log.info("id: {}, searching now: {} searching end: {}", personalEvent.getId(),
+            searchingNow, searchingEnd);
 
-        while (currentDateTime < untilDateTime) {
-            while (currentDateTime % MINUTE_PER_DAY < maxTime && currentDateTime < untilDateTime) {
-                if (value || !isDuplicateEvents(currentDateTime, currentDateTime + 30, userId)) {
-                    discussionBitmapService.setBitValue(discussionId, currentDateTime, offset, value);
+        while (searchingNow < searchingEnd) {
+            while (searchingNow % MINUTE_PER_DAY < maxTime && searchingNow < searchingEnd) {
+                if (value || !isDuplicateEvents(searchingNow, searchingNow + 30, userId)) {
+                    discussionBitmapService.setBitValue(discussionId, searchingNow, offset,
+                        value);
                 }
-                currentDateTime += 30;
+                searchingNow += 30;
             }
-            currentDateTime = ++currentDate * MINUTE_PER_DAY + minTime;
+            searchingNow = ++searchingDay * MINUTE_PER_DAY + minTime;
         }
     }
 

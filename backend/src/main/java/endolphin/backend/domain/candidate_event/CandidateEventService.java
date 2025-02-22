@@ -116,7 +116,7 @@ public class CandidateEventService {
 
     public List<CandidateEvent> searchCandidateEvents(Discussion discussion, int filter) {
         long searchingNow = getSearchingStartTime(
-            convertToMinute(roundUpToNearestHalfHour(LocalDateTime.now(ZoneId.of(timeZone)))),
+            roundUpToNearestHalfHour(LocalDateTime.now(ZoneId.of(timeZone))),
             discussion.getDateRangeStart(), discussion.getTimeRangeStart());
 
         long endDateTime = convertToMinute(discussion.getDateRangeEnd()
