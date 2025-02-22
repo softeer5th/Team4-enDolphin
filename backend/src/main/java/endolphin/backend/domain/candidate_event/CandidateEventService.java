@@ -30,9 +30,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CandidateEventService {
@@ -56,6 +58,7 @@ public class CandidateEventService {
 
         int filter = discussionParticipantService.getFilter(request.selectedUserIdList(),
             usersMap);
+        log.info("filter: {}", filter);
 
         if (filter == 0) {
             return new CalendarViewResponse(Collections.emptyList());
@@ -92,6 +95,7 @@ public class CandidateEventService {
 
         int filter = discussionParticipantService.getFilter(request.selectedUserIdList(),
             usersMap);
+        log.info("filter: {}", filter);
 
         if (filter == 0) {
             return new RankViewResponse(Collections.emptyList(), Collections.emptyList());
@@ -127,6 +131,7 @@ public class CandidateEventService {
 
         Map<Long, byte[]> dataBlocks = discussionBitmapService.getDataOfDiscussionId(
             discussion.getId(), searchingNow, endDateTime);
+        log.info("dataBlocks: {}", dataBlocks);
 
         long searchingDay = searchingNow / MINUTE_PER_DAY;
         long maxTime = endDateTime % MINUTE_PER_DAY - duration;
@@ -152,6 +157,8 @@ public class CandidateEventService {
                     totalTime += Integer.bitCount(nextData);
                 }
             }
+            log.info("searchingNow: {}, end: {}, data: {}, totalTime: {}", convertToLocalDateTime(searchingNow), end, data,
+                totalTime);
 
             events.add(
                 new CandidateEvent(searchingNow, end, Integer.bitCount(data), totalTime, data));
