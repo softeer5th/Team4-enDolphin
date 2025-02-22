@@ -37,7 +37,6 @@ const DatePickerRangeProvider = ({
       }}
     >
       {children}
-
     </DatePickerContext.Provider>
   );
 };

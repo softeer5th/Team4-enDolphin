@@ -13,6 +13,9 @@ export interface DatePickerSelectProps extends CommonDatePickerProps {
   selectedDate: Date | null;
   handleDateSelect: (date: Date) => void;
 }
+
+// TODO: 리팩터링
+// 현재 커스텀 훅 계층 구조가 복잡하게 꼬여 있음.. 설계 다시 짜봐야 할 듯
 const DatePickerSelect = ({ 
   className, selectedDate, trigger, ...props 
 }: DatePickerSelectProps) => {
@@ -20,7 +23,10 @@ const DatePickerSelect = ({
   const ref = useClickOutside<HTMLDivElement>(() => setIsOpen(false));
 
   return (
-    <DatePickerSelectProvider selectedDate={selectedDate} {...props}>
+    <DatePickerSelectProvider
+      {...props}
+      selectedDate={selectedDate}
+    >
       <div className={containerStyle} ref={trigger ? ref : undefined}>
         {
           trigger && 

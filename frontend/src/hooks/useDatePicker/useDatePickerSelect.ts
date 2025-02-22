@@ -3,7 +3,7 @@ import { formatDateToWeekDates, getDateParts } from '@/utils/date';
 import { getDaysInMonth } from '@/utils/date/calendar';
 
 interface UseDatePickerSelectProps {
-  baseDate?: Date;
+  baseDate: Date;
   selectedDate: Date | null;
   handleDateSelect: (date: Date) => void;
   gotoPrevMonth: () => void;
