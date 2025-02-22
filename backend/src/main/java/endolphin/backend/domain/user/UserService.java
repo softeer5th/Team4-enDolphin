@@ -1,6 +1,8 @@
 package endolphin.backend.domain.user;
 
+import endolphin.backend.domain.user.dto.CurrentUserInfo;
 import endolphin.backend.domain.user.dto.UserIdNameDto;
+import endolphin.backend.domain.user.dto.UsernameRequest;
 import endolphin.backend.domain.user.event.LoginEvent;
 import endolphin.backend.global.google.dto.GoogleUserInfo;
 import endolphin.backend.global.google.dto.GoogleTokens;
@@ -56,5 +58,11 @@ public class UserService {
         user = userRepository.save(user);
         eventPublisher.publishEvent(new LoginEvent(user));
         return user;
+    }
+
+    public CurrentUserInfo updateUsername(String username) {
+        User user = getCurrentUser();
+        user.setName(username);
+        return new CurrentUserInfo(user.getName(), user.getPicture());
     }
 }
