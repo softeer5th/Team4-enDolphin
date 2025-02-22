@@ -22,6 +22,7 @@ import endolphin.backend.global.google.enums.GoogleEventStatus;
 import endolphin.backend.global.google.enums.GoogleResourceState;
 import endolphin.backend.global.google.event.GoogleEventChanged;
 import endolphin.backend.global.util.RetryExecutor;
+import endolphin.backend.global.util.TimeUtil;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -285,7 +286,7 @@ public class GoogleCalendarService {
 
     public void subscribeToCalendar(Calendar calendar, User user) {
         if (calendar.getChannelExpiration() != null && !calendar.getChannelExpiration()
-            .isBefore(LocalDateTime.now())) {
+            .isBefore(TimeUtil.getNow())) {
             return;
         }
         String subscribeUrl = googleCalendarUrl.subscribeUrl()
