@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockFilterChain;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -21,6 +22,8 @@ public class JwtAuthFilterTest {
         String secretKey = "my-very-long-and-secure-secret-key-at-least-32-chars";
         jwtProvider = new JwtProvider(secretKey);
         jwtAuthFilter = new JwtAuthFilter(jwtProvider);
+        ReflectionTestUtils.setField(jwtProvider, "validityInMs", 10000);
+        ReflectionTestUtils.setField(jwtProvider, "timeZone", "Asia/Seoul");
     }
 
     @DisplayName("토큰 검증 성공 시 사용자 정보를 설정 테스트")

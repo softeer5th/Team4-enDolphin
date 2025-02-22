@@ -45,6 +45,7 @@ class AuthServiceTest {
     @BeforeEach
     public void setUp() {
         ReflectionTestUtils.setField(authService, "expired", 10000);
+        ReflectionTestUtils.setField(authService, "timeZone", "Asia/Seoul");
     }
 
     @Test

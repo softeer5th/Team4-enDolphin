@@ -18,6 +18,7 @@ public class JwtProviderTest {
         String secretKey = "my-very-long-and-secure-secret-key-which-is-at-least-32-chars";
         jwtProvider = new JwtProvider(secretKey);
         ReflectionTestUtils.setField(jwtProvider, "validityInMs", 10000);
+        ReflectionTestUtils.setField(jwtProvider, "timeZone", "Asia/Seoul");
     }
 
     @DisplayName("토큰 생성 및 검증 테스트")
