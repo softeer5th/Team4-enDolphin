@@ -23,7 +23,6 @@ public class JwtAuthFilterTest {
         jwtProvider = new JwtProvider(secretKey);
         jwtAuthFilter = new JwtAuthFilter(jwtProvider);
         ReflectionTestUtils.setField(jwtProvider, "validityInMs", 10000);
-        ReflectionTestUtils.setField(jwtProvider, "timeZone", "Asia/Seoul");
     }
 
     @DisplayName("토큰 검증 성공 시 사용자 정보를 설정 테스트")
