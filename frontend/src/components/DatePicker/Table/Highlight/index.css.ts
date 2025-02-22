@@ -53,6 +53,7 @@ export const highlightGapStyle = recipe({
         borderTopRightRadius: vars.radius[200],
         borderBottomRightRadius: vars.radius[200],
       },
+      startAndEnd: {},
     },
   }, 
 });
