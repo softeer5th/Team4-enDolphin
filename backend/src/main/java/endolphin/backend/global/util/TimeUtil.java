@@ -10,7 +10,7 @@ import java.time.ZoneOffset;
 public class TimeUtil {
 
     public static final String TIME_ZONE = "Asia/Seoul";
-    private static final long MINUTE_PER_DAY = 24 * 60;
+    public static final long MINUTE_PER_DAY = 24 * 60;
 
     public static long calculateTimeLeft(LocalDate deadline) {
         LocalDateTime now = LocalDateTime.now();

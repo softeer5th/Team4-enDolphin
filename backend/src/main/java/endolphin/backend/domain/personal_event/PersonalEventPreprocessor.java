@@ -4,6 +4,7 @@ import static endolphin.backend.global.util.TimeUtil.convertToMinute;
 import static endolphin.backend.global.util.TimeUtil.getSearchingStartTime;
 import static endolphin.backend.global.util.TimeUtil.getSearchingEndTime;
 import static endolphin.backend.global.util.TimeUtil.roundDownToNearestHalfHour;
+import static endolphin.backend.global.util.TimeUtil.MINUTE_PER_DAY;
 
 import endolphin.backend.domain.discussion.DiscussionParticipantService;
 import endolphin.backend.domain.discussion.entity.Discussion;
@@ -74,7 +75,6 @@ public class PersonalEventPreprocessor {
 
     private void convert(PersonalEvent personalEvent, Discussion discussion, Long offset,
         boolean value) {
-        long MINUTE_PER_DAY = 1440;
         log.info("Convert personal eventId: {} to discussionId: {}", personalEvent.getId(),
             discussion.getId());
         Long discussionId = discussion.getId();

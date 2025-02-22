@@ -1,5 +1,6 @@
 package endolphin.backend.domain.candidate_event;
 
+import static endolphin.backend.global.util.TimeUtil.MINUTE_PER_DAY;
 import static endolphin.backend.global.util.TimeUtil.convertToLocalDateTime;
 import static endolphin.backend.global.util.TimeUtil.convertToMinute;
 import static endolphin.backend.global.util.TimeUtil.getNow;
@@ -39,7 +40,6 @@ public class CandidateEventService {
     private final DiscussionBitmapService discussionBitmapService;
     private final DiscussionService discussionService;
     private final DiscussionParticipantService discussionParticipantService;
-    private final static long MINUTE_PER_DAY = 1440;
 
     public CalendarViewResponse getEventsOnCalendarView(Long discussionId,
         CalendarViewRequest request) {
