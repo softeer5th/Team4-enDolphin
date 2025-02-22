@@ -12,16 +12,19 @@ import endolphin.backend.domain.shared_event.SharedEventService;
 import endolphin.backend.domain.shared_event.dto.SharedEventDto;
 import endolphin.backend.global.error.exception.ApiException;
 import endolphin.backend.global.error.exception.ErrorCode;
+import endolphin.backend.global.redis.DiscussionBitmapService;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.util.ReflectionTestUtils;
 
 @ExtendWith(MockitoExtension.class)
 public class DiscussionStatusSchedulerTest {
@@ -31,6 +34,9 @@ public class DiscussionStatusSchedulerTest {
 
     @Mock
     private SharedEventService sharedEventService;
+
+    @Mock
+    private DiscussionBitmapService discussionBitmapService;
 
     @InjectMocks
     private DiscussionStatusScheduler scheduler;
@@ -51,6 +57,11 @@ public class DiscussionStatusSchedulerTest {
             .location("Room 1")
             .build();
         discussion.setDiscussionStatus(DiscussionStatus.ONGOING);
+        ReflectionTestUtils.setField(discussion, "id", 1L);
+
+        when(discussionBitmapService.deleteDiscussionBitmapsUsingScan(any(Long.class)))
+            .thenReturn(CompletableFuture.completedFuture(null));
+
 
         discussion = scheduler.updateStatus(discussion, today);
 
@@ -124,6 +135,7 @@ public class DiscussionStatusSchedulerTest {
             .location("Room 1")
             .build();
         discussion1.setDiscussionStatus(DiscussionStatus.UPCOMING);
+        ReflectionTestUtils.setField(discussion1, "id", 1L);
 
         Discussion discussion2 = Discussion.builder()
             .title("Discussion 2")
@@ -137,6 +149,10 @@ public class DiscussionStatusSchedulerTest {
             .location("Room 2")
             .build();
         discussion2.setDiscussionStatus(DiscussionStatus.ONGOING);
+        ReflectionTestUtils.setField(discussion2, "id", 2L);
+
+        when(discussionBitmapService.deleteDiscussionBitmapsUsingScan(any(Long.class)))
+            .thenReturn(CompletableFuture.completedFuture(null));
 
         when(discussionRepository.findByDiscussionStatusNot(DiscussionStatus.FINISHED)).thenReturn(List.of(discussion1, discussion2));
 

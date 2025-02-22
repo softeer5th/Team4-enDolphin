@@ -4,6 +4,7 @@ import endolphin.backend.domain.discussion.DiscussionRepository;
 import endolphin.backend.domain.discussion.entity.Discussion;
 import endolphin.backend.domain.discussion.enums.DiscussionStatus;
 import endolphin.backend.domain.shared_event.SharedEventService;
+import endolphin.backend.global.redis.DiscussionBitmapService;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -21,6 +22,7 @@ public class DiscussionStatusScheduler {
 
     private final DiscussionRepository discussionRepository;
     private final SharedEventService sharedEventService;
+    private final DiscussionBitmapService discussionBitmapService;
 
     @Transactional
     @Scheduled(cron = "0 0 0 * * *", zone = "Asia/Seoul")
@@ -37,7 +39,7 @@ public class DiscussionStatusScheduler {
             try {
                 Discussion updated = updateStatus(discussion, today);
 
-                if(updated != null) {
+                if (updated != null) {
                     updatedDiscussions.add(updated);
                 }
             } catch (Exception e) {
@@ -54,6 +56,16 @@ public class DiscussionStatusScheduler {
                 discussion.setDiscussionStatus(DiscussionStatus.FINISHED);
                 discussion.setFixedDate(discussion.getDateRangeEnd());
                 log.info("ONGOING Discussion id {} FINISHED", discussion.getId());
+
+                discussionBitmapService.deleteDiscussionBitmapsUsingScan(discussion.getId())
+                    .thenRun(
+                        () -> log.info("Redis keys deleted successfully for discussionId : {}",
+                            discussion.getId()))
+                    .exceptionally(ex -> {
+                        log.error("Failed to delete Redis keys for three times", ex);
+                        return null;
+                    });
+
                 return discussion;
             }
         } else if (sharedEventService.getSharedEvent(discussion.getId()).endDateTime()
