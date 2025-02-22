@@ -29,7 +29,7 @@ export const Route = createFileRoute('/_main/discussion/invite/$id')({
         title: `언제만나 - ${loaderData.invitation.host}님의 초대장`,
       },
       {
-        name: 'og:title',
+        property: 'og:title',
         content: `언제만나 - ${loaderData.invitation.host}님의 초대장`,
       },
       { 
@@ -38,12 +38,12 @@ export const Route = createFileRoute('/_main/discussion/invite/$id')({
         `${loaderData.invitation.title} 일정에 ${loaderData.invitation.host}님이 초대했어요.\n지금 참여해 보세요!🗓️`, 
       },
       { 
-        name: 'og:description', 
+        property: 'og:description', 
         content: 
         `${loaderData.invitation.title} 일정에 ${loaderData.invitation.host}님이 초대했어요.\n지금 참여해 보세요!🗓️`, 
       },
       {
-        name: 'og:image',
+        property: 'og:image',
         content: '/images/assets/calendar.webp',
       },
     ],
