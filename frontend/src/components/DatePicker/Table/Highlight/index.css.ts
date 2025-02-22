@@ -24,6 +24,10 @@ export const highlightBoxStyle = recipe({
         borderTopRightRadius: vars.radius[200],
         borderBottomRightRadius: vars.radius[200],        
       },
+      startAndEnd: {
+        backgroundColor: vars.color.Ref.Primary[50],
+        borderRadius: vars.radius[200],
+      },
     },
   },
 });
