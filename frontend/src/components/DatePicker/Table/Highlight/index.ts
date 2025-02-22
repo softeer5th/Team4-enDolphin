@@ -3,7 +3,7 @@ import type { PropsWithChildren } from 'react';
 export * from './HighlightBox';
 export * from './HighlightGap';
 
-export type HighlightState = 'none' | 'startOfRange' | 'inRange' | 'endOfRange';
+export type HighlightState = 'none' | 'startOfRange' | 'inRange' | 'endOfRange' | 'startAndEnd';
 
 export interface HighlightRange {
   start: Date | null;

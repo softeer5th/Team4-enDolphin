@@ -52,6 +52,7 @@ export const InjectedContainerStyle = () => {
 export const Range = () => {
   const { setBaseDate, ...monthNavigation } = useMonthNavigation();
   const highlightProps = useHighlightRange();
+
   return (
     <DatePicker.Range
       {...monthNavigation}

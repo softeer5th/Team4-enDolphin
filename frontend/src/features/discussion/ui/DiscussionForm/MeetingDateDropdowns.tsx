@@ -1,24 +1,18 @@
+
 import DatePicker from '@/components/DatePicker';
 import Input from '@/components/Input';
 import { useMonthNavigation } from '@/hooks/useDatePicker/useMonthNavigation';
 import { isSameDate } from '@/utils/date';
 import { formatDateToBarString } from '@/utils/date/format';
 
+import type { DiscussionRequest } from '../../model';
 import { useFormContext } from './FormContext';
 
 const MeetingDateDropdowns = () => {
   const { formState, validationRef, setValidation, handleUpdateField } = useFormContext();
   const navigation = useMonthNavigation();
 
-  const validateDateRange = () => {
-    const today = new Date();
-    const dateRangeStart = new Date(formState.dateRangeStart);
-    if (!formState.dateRangeStart || !formState.dateRangeEnd) return false;
-    if (isSameDate(today, dateRangeStart)) return true;
-    return today < dateRangeStart;
-  };
-
-  setValidation('dateRangeStart', validateDateRange);
+  setValidation('dateRangeStart', () => validateDateRange(formState));
 
   return (
     <DatePicker.Range
@@ -45,6 +39,14 @@ const MeetingDateDropdowns = () => {
       }
     />
   );
+};
+
+const validateDateRange = (formState: DiscussionRequest) => {
+  const today = new Date();
+  const dateRangeStart = new Date(formState.dateRangeStart);
+  if (!formState.dateRangeStart || !formState.dateRangeEnd) return false;
+  if (isSameDate(today, dateRangeStart)) return true;
+  return today < dateRangeStart;
 };
 
 export default MeetingDateDropdowns;
