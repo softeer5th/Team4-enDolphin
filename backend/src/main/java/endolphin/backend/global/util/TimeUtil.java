@@ -4,11 +4,13 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.time.ZoneOffset;
 
 public class TimeUtil {
 
-    private static final long MINUTE_PER_DAY = 24 * 60;
+    public static final String TIME_ZONE = "Asia/Seoul";
+    public static final long MINUTE_PER_DAY = 24 * 60;
 
     public static long calculateTimeLeft(LocalDate deadline) {
         LocalDateTime now = LocalDateTime.now();
@@ -47,51 +49,36 @@ public class TimeUtil {
         return time;
     }
 
-    public static Long getCurrentDateTime(LocalDateTime personalEventStartTime,
-        LocalDate discussionStartDate, LocalTime discussionStartTime) {
-
-        long currentDateTime = convertToMinute(roundDownToNearestHalfHour(personalEventStartTime));
-        long startDateTime = convertToMinute(discussionStartDate.atTime(discussionStartTime));
-        long currentTime = currentDateTime % MINUTE_PER_DAY;
-        long minTime = startDateTime % MINUTE_PER_DAY;
-
-        if (currentDateTime < startDateTime) {
-            return startDateTime;
-        } else if (currentTime < minTime) {
-            return currentDateTime - currentTime + minTime;
-        }
-        return currentDateTime;
-    }
-
-    public static Long getUntilDateTime(LocalDateTime personalEventEndTime,
+    public static Long getSearchingEndTime(LocalDateTime personalEventEndTime,
         LocalDate discussionEndDate, LocalTime discussionEndTime) {
 
-        long untilDateTime = convertToMinute(roundUpToNearestHalfHour(personalEventEndTime));
-        long endDateTime = convertToMinute(discussionEndDate.atTime(discussionEndTime));
+        long untilDateTime = convertToMinute(personalEventEndTime);
+        long rangeDateTime = convertToMinute(discussionEndDate.atTime(discussionEndTime));
         long untilTime = untilDateTime % MINUTE_PER_DAY;
-        long maxTime = endDateTime % MINUTE_PER_DAY;
+        long rangeTime = rangeDateTime % MINUTE_PER_DAY;
 
-        if (untilDateTime > endDateTime) {
-            return endDateTime;
-        } else if (untilTime > maxTime) {
-            return untilDateTime - untilTime + maxTime;
+        if (untilDateTime > rangeDateTime) {
+            return rangeDateTime;
+        } else if (untilTime > rangeTime) {
+            return untilDateTime - untilTime + rangeTime;
         }
         return untilDateTime;
     }
 
-    public static Long getSearchingStartTime(long dateTime,
+    public static Long getSearchingStartTime(LocalDateTime dateTime,
         LocalDate discussionStartDate, LocalTime discussionStartTime) {
 
-        long startDateTime = convertToMinute(discussionStartDate.atTime(discussionStartTime));
-        long currentTime = dateTime % MINUTE_PER_DAY;
-        long minTime = startDateTime % MINUTE_PER_DAY;
+        long startDateTime = convertToMinute(dateTime);
+        long rangeDateTime = convertToMinute(discussionStartDate.atTime(discussionStartTime));
+        long startTime = startDateTime % MINUTE_PER_DAY;
+        long rangeTime = rangeDateTime % MINUTE_PER_DAY;
 
-        if (dateTime < startDateTime) {
-            return startDateTime;
-        } else if (currentTime < minTime) {
-            return dateTime - currentTime + minTime;
+        if (startDateTime < rangeDateTime) {
+            return rangeDateTime;
+        } else if (startTime < rangeTime) {
+            return startDateTime - startTime + rangeTime;
         }
-        return dateTime;
+        return startDateTime;
     }
 
     public static Long convertToMinute(LocalDateTime dateTime) {
@@ -121,5 +108,9 @@ public class TimeUtil {
         long minuteKeyTime = minuteKey % MINUTE_PER_DAY;
 
         return minuteKeyTime >= timeRangeStart && minuteKeyTime <= timeRangeEnd;
+    }
+
+    public static LocalDateTime getNow() {
+        return LocalDateTime.now(ZoneId.of(TIME_ZONE));
     }
 }

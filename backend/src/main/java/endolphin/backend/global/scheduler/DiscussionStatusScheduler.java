@@ -1,5 +1,7 @@
 package endolphin.backend.global.scheduler;
 
+import static endolphin.backend.global.util.TimeUtil.TIME_ZONE;
+
 import endolphin.backend.domain.discussion.DiscussionRepository;
 import endolphin.backend.domain.discussion.entity.Discussion;
 import endolphin.backend.domain.discussion.enums.DiscussionStatus;
@@ -25,9 +27,9 @@ public class DiscussionStatusScheduler {
     private final DiscussionBitmapService discussionBitmapService;
 
     @Transactional
-    @Scheduled(cron = "0 0 0 * * *", zone = "Asia/Seoul")
+    @Scheduled(cron = "0 0 0 * * *", zone = TIME_ZONE)
     public void updateDiscussionStatusAtMidnight() {
-        LocalDate today = LocalDate.now(ZoneId.of("Asia/Seoul"));
+        LocalDate today = LocalDate.now(ZoneId.of(TIME_ZONE));
         log.info("Scheduler 실행: {}. 논의 상태 업데이트 시작", today);
 
         List<Discussion> discussions = discussionRepository.findByDiscussionStatusNot(

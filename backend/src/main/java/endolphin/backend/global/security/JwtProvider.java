@@ -1,7 +1,10 @@
 package endolphin.backend.global.security;
 
+import endolphin.backend.global.util.TimeUtil;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import javax.crypto.SecretKey;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -21,13 +24,14 @@ public class JwtProvider {
 
     // 토큰 발행
     public String createToken(Long userId, String email) {
-        Date now = new Date();
-        Date expiry = new Date(now.getTime() + validityInMs);
+        LocalDateTime now = TimeUtil.getNow();
+        Date nowDate = Date.from(now.atZone(ZoneId.of(TimeUtil.TIME_ZONE)).toInstant());
+        Date expiry = new Date(nowDate.getTime() + validityInMs);
 
         return Jwts.builder()
             .claim("userId", userId)
             .claim("email", email)
-            .issuedAt(now)
+            .issuedAt(nowDate)
             .expiration(expiry)
             .signWith(key)
             .compact();
