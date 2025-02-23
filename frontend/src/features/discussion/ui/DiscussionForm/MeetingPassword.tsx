@@ -27,6 +27,7 @@ const MeetingPassword = ({ name }: { name: keyof DiscussionRequest }) => {
         name,
         value: formState[name] || '',
         onChange: (e) => handleUpdateField(name, e.target.value),
+        type: 'password',
       }}
       isValid={isValid(name)}
       label='비밀번호'
