@@ -57,16 +57,14 @@ const OngoingScheduleList = ({ segmentOption }: OngoingScheduleListProps) => {
           selectedIndex={selectedIndex}
           setSelectedIndex={setSelectedIndex}
         />
-        {data.totalPages > 1 && (
-          <Pagination
-            className={paginationStyle}
-            currentPage={currentPage}
-            onPageButtonHover={(page) =>
-              prefetchOngoingSchedules(queryClient, page, PAGE_SIZE, segmentOption.value )}
-            onPageChange={onPageChange}
-            totalPages={data.totalPages}
-          />
-        )}
+        <Pagination
+          className={paginationStyle}
+          currentPage={currentPage}
+          onPageButtonHover={(page) =>
+            prefetchOngoingSchedules(queryClient, page, PAGE_SIZE, segmentOption.value )}
+          onPageChange={onPageChange}
+          totalPages={data.totalPages}
+        />
       </Flex>
       <ScheduleContents discussionId={data.ongoingDiscussions[selectedIndex].discussionId} />
     </div>

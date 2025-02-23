@@ -113,7 +113,7 @@ export const formatTimeToDeadlineString = ({ days, hours, minutes }: {
   hours: number;
   minutes: number;
 }): string => {
-  if (days !== 0) return `${days}일`;
-  if (hours !== 0) return `${hours}시간`;
-  return `${minutes}분`;
+  if (days !== 0) return `${Math.abs(days)}일`;
+  if (hours !== 0) return `${Math.abs(hours)}시간`;
+  return `${Math.abs(minutes)}분`;
 };
