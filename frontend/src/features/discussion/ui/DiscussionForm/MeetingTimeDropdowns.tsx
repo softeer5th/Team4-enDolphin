@@ -13,21 +13,21 @@ import type { DiscussionRequest } from '../../model';
 import { useFormContext } from './FormContext';
 
 const MeetingTimeDropdowns = () => {
-  const { formState, validationRef, setValidation } = useFormContext();
+  const { formState, errors, setValidation, isValid } = useFormContext();
 
-  const validateDateRange = () => {
+  const validateTimeRange = () => {
     const start = formatTimeStringToNumber(formState.timeRangeStart);
     const end = formatTimeStringToNumber(formState.timeRangeEnd);
-    return start < end;
+    if (start >= end) return '종료 시간은 시작 시간보다 빠를 수 없습니다.';
+    return '';
   };
-
-  setValidation('timeRangeStart', validateDateRange);
+  setValidation('timeRangeStart', validateTimeRange);
 
   return (
     <Input.Multi
-      error='시작 시간이 종료 시간보다 빠를 수 없습니다.'
+      error={errors('timeRangeStart')}
       hint='일정을 잡고 싶은 시간 범위를 입력해주세요'
-      isValid={validationRef.current.timeRangeStart?.(formState.timeRangeStart)}
+      isValid={isValid('timeRangeStart')}
       label='시간 설정'
       required
       separator='~'

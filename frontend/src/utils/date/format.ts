@@ -47,7 +47,9 @@ export const formatMinutesToTimeString = (minutes: number): string => {
   const minutesString = restMinutes ? ` ${restMinutes.toString().padStart(2, '0')}분` : '';
   const amOrPm = hours >= 12 ? '오후' : '오전';
 
-  return `${amOrPm} ${hours}시${minutesString}`;
+  const singleDigitHours = hours > 12 ? hours % 12 : hours;
+
+  return `${amOrPm} ${singleDigitHours}시${minutesString}`;
 };
 
 export const formatNumberToTimeString = (number: number): string => {

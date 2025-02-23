@@ -40,7 +40,7 @@ const FormButton = ({ type }: { type: FormType }) => {
 
 const EnrollButton = ({ type }: { type: FormType }) => {
   const queryClient = useQueryClient();
-  const { name, formState, onSubmit, isValid } = useFormContext();
+  const { name, formState, isValidForm } = useFormContext();
   const navigate = useNavigate();
   const { mutate } = useDiscussionMutation();
 
@@ -58,7 +58,6 @@ const EnrollButton = ({ type }: { type: FormType }) => {
   const handleClickEnrollButton = () => {
     const callback = (id: string) => {
       invalidateScheduleCaches(queryClient);
-      onSubmit();
       navigate({
         to: typeMap[type].navigate,
         params: { id },
@@ -70,7 +69,7 @@ const EnrollButton = ({ type }: { type: FormType }) => {
   return (
     <Button
       className={clsx(name, buttonStyle)}
-      disabled={!isValid()}
+      disabled={!isValidForm()}
       onClick={handleClickEnrollButton}
       size='xl'
     >
