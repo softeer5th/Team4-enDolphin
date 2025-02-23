@@ -6,7 +6,6 @@ export const chipAbleContainerStyle = recipe({
   base: {
     padding: `${vars.spacing[200]} ${vars.spacing[300]}`,
     borderRadius: vars.spacing[250],
-    gap: '0.375rem',
     flexShrink: 0,
   },
   variants: {
