@@ -1,9 +1,9 @@
 import { createContext } from 'react';
 
-interface TabContextProps {
+export interface TabContextProps<T extends string = string> {
   controlId: string;
-  selectedValue: string;
-  onChange: ((value: string) => void);
+  selectedValue: T;
+  onChange: ((value: T) => void);
 }
 
 /**
@@ -13,4 +13,4 @@ interface TabContextProps {
  * @param selectedValue - Tab 컴포넌트의 선택된 값.
  * @param onChange - Tab 컴포넌트의 값 변경 함수.
  */
-export const TabContext = createContext<TabContextProps | null>(null);
+export const TabContext = createContext<TabContextProps<string> | null>(null);
