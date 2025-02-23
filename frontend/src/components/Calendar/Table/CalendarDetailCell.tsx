@@ -32,7 +32,7 @@ export const CalendarDetailCell = ({ date }: { date: Date }) => {
       className={cellDetailStyle({ state: stateStyle })}
       key={date.getTime()}
       onMouseDown={()=>handleMouseDown(date)}
-      onMouseEnter={()=>handleMouseEnter(date)}
+      onMouseOver={()=>handleMouseEnter(date)}
       onMouseUp={()=>handleMouseUp()}
     />
   );

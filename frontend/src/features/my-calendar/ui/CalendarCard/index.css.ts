@@ -7,6 +7,9 @@ export const cardContainerStyle = recipe({
   base: {
     padding: vars.spacing[200],
     cursor: 'pointer',
+
+    userSelect: 'none',
+    WebkitUserSelect: 'none',
   },
   variants: {
     status: {
