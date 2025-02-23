@@ -1,5 +1,5 @@
 import { getDday, getYearMonthDay } from './date';
-import { HOUR } from './time';
+import { HOUR_IN_MINUTES } from './time';
 
 /**
  * 날짜 객체를 YY-MM-DD 형식의 문자열로 변환합니다.
@@ -42,8 +42,8 @@ export const formatDateToTimeString = (date: Date | null): string => {
 };
 
 export const formatMinutesToTimeString = (minutes: number): string => {
-  const hours = Math.floor(minutes / HOUR);
-  const restMinutes = (minutes % HOUR);
+  const hours = Math.floor(minutes / HOUR_IN_MINUTES);
+  const restMinutes = (minutes % HOUR_IN_MINUTES);
   const minutesString = restMinutes ? ` ${restMinutes.toString().padStart(2, '0')}분` : '';
   const amOrPm = hours >= 12 ? '오후' : '오전';
 
@@ -53,16 +53,16 @@ export const formatMinutesToTimeString = (minutes: number): string => {
 };
 
 export const formatNumberToTimeString = (number: number): string => {
-  const hours = Math.floor(number / HOUR).toString()
+  const hours = Math.floor(number / HOUR_IN_MINUTES).toString()
     .padStart(2, '0');
-  const minutes = (number % HOUR).toString().padStart(2, '0');
+  const minutes = (number % HOUR_IN_MINUTES).toString().padStart(2, '0');
 
   return `${hours}:${minutes}`;
 };
 
 export const formatTimeStringToNumber = (timeString: string): number => {
   const [hours, minutes] = timeString.split(':');
-  return Number(hours) * HOUR + Number(minutes);
+  return Number(hours) * HOUR_IN_MINUTES + Number(minutes);
 };
 
 export const formatDateToString = (date: Date | null): string => {
@@ -72,8 +72,8 @@ export const formatDateToString = (date: Date | null): string => {
 };
 
 export const formatMinutesToTimeDuration = (minutes: number): string => {
-  const hours = Math.floor(minutes / HOUR);
-  const restMinutes = (minutes % HOUR);
+  const hours = Math.floor(minutes / HOUR_IN_MINUTES);
+  const restMinutes = (minutes % HOUR_IN_MINUTES);
 
   if (hours === 0) return `${restMinutes}분`;
   if (restMinutes === 0) return `${hours}시간`;

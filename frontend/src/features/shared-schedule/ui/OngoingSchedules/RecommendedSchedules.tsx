@@ -12,12 +12,12 @@ import type {
   DiscussionResponse,
 } from '@/features/discussion/model';
 import { vars } from '@/theme/index.css';
-import { getHourDiff, getTimeParts, getTimeRangeString, getYearMonthDay } from '@/utils/date';
+import { getTimeDiffString, getTimeParts, getTimeRangeString, getYearMonthDay } from '@/utils/date';
 import { getDowString } from '@/utils/date/format';
 
 import { ONGOING_SCHEDULE_DETAIL_GC_TIME } from '../../api';
-import { 
-  noRecommendationTextWrapperStyle, 
+import {
+  noRecommendationTextWrapperStyle,
   recommendContainerStyle,
   recommendItemStyle,
 } from './recommendedSchedules.css';
@@ -88,7 +88,7 @@ const RecommendedScheduleItem = ({
       <Flex direction='column' gap={100}>
         <Text typo='b2M'>{`${month}월 ${day}일 ${dow}요일`}</Text>
         <Text color={vars.color.Ref.Netural[700]} typo='b3R'>
-          {`${getTimeRangeString(startTime, endTime)} (${getHourDiff(startDT, endDT)}시간)`}
+          {`${getTimeRangeString(startTime, endTime)} (${getTimeDiffString(startDT, endDT)})`}
         </Text>
       </Flex >
       <AvailableChip adjustCount={adjustCount} />
