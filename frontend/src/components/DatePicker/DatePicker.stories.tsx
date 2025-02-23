@@ -18,7 +18,7 @@ const meta = {
 export default meta;
 
 export const Default = () => {
-  const { setBaseDate, ...monthNavigation } = useMonthNavigation();
+  const monthNavigation = useMonthNavigation();
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   
   return (
@@ -31,7 +31,7 @@ export const Default = () => {
 };
 
 export const InjectedContainerStyle = () => {
-  const { setBaseDate, ...monthNavigation } = useMonthNavigation();
+  const monthNavigation = useMonthNavigation();
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   
   // width: 228
@@ -50,8 +50,9 @@ export const InjectedContainerStyle = () => {
 };
 
 export const Range = () => {
-  const { setBaseDate, ...monthNavigation } = useMonthNavigation();
+  const monthNavigation = useMonthNavigation();
   const highlightProps = useHighlightRange();
+
   return (
     <DatePicker.Range
       {...monthNavigation}
@@ -61,7 +62,7 @@ export const Range = () => {
 };
 
 export const RangeWithTrigger = () => {
-  const { setBaseDate, ...monthNavigation } = useMonthNavigation();
+  const monthNavigation = useMonthNavigation();
   const highlightProps = useHighlightRange();
 
   return (

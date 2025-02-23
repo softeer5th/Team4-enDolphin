@@ -10,9 +10,9 @@ export const containerStyle = style({
   height: '28.125rem',
 });
 
-export const overlayStyle = style({
+export const dimStyle = style({
   position: 'absolute',
-  left: -36,
+  // left: -36,
   width: '58.5rem',
   height: 100,
   backgroundColor: vars.color.Ref.Netural[500],
@@ -26,11 +26,12 @@ export const bodyContainerStyle = style({
   gap: vars.spacing[500],
   justifyContent: 'space-between',
   alignItems: 'flex-start',
+  borderBottomLeftRadius: vars.radius[400],
+  borderBottomRightRadius: vars.radius[400],
 
   position: 'relative',
   height: '23.25rem',
   overflowX: 'hidden',
-  overflowY: 'auto',
 });
 
 export const timelineHeaderStyle = style({

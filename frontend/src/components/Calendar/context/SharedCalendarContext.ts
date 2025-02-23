@@ -7,6 +7,9 @@ export interface CalendarSharedInfo {
   selectedWeek: Date[];
   handleSelectDate: (date: Date) => void;
   today: Date;
+  baseDate: Date;
+  gotoPrevMonth: () => void;
+  gotoNextMonth: () => void;
 }
 
 export const SharedCalendarContext = createContext<CalendarSharedInfo | null>(null);
