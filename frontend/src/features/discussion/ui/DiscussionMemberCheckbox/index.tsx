@@ -1,13 +1,14 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
-import { useMemo } from 'react';
+import { useAtom } from 'jotai';
+import { useEffect, useMemo } from 'react';
 
 import Button from '@/components/Button';
 import { Checkbox } from '@/components/Checkbox';
 import { Flex } from '@/components/Flex';
 import { Group } from '@/components/Group';
 import { useGroup } from '@/hooks/useGroup';
-import { useMemberContext } from '@/pages/DiscussionPage/MemberContext';
+import { checkboxAtom } from '@/store/discussion';
 
 import { candidateKeys } from '../../api/keys';
 import { useDiscussionParticipantsQuery } from '../../api/queries';
@@ -48,16 +49,22 @@ const DiscussionMemberCheckbox = () => {
   const params: { id: string } = useParams({ from: '/_main/discussion/$id' });
   const { participants = [], isPending } = useDiscussionParticipantsQuery(params.id);
   const participantsIds = useMemo(() => participants.map(({ id }) => id), [participants]);
+  const [checkbox, setCheckbox] = useAtom(checkboxAtom);
+
+  useEffect(()=>{
+    if (!checkbox && participants.length) setCheckbox(participants.map(({ id }) => id));
+  }, [participants, checkbox, setCheckbox]);
+
   const groupInfos = useGroup({
-    defaultCheckedList: participantsIds,
+    defaultCheckedList: checkbox || participantsIds,
     itemIds: participantsIds,
   });
 
   const queryClient = useQueryClient();
-  const members = useMemberContext();
+
   const handleClickSearch = async () => {
-    if (!members) return;
-    members.handleUpdateField('checkedList', Array.from(groupInfos.checkedList));
+    if (!checkbox) return;
+    setCheckbox(Array.from(groupInfos.checkedList));
     queryClient.invalidateQueries({
       queryKey: candidateKeys.detail(params.id),
     });

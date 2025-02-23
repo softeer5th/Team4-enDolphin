@@ -1,10 +1,11 @@
 
 import { useParams } from '@tanstack/react-router';
+import { useAtomValue } from 'jotai';
 
 import { useCalendarContext } from '@/components/Calendar/context/CalendarContext';
 import { Flex } from '@/components/Flex';
 import { WEEK } from '@/constants/date';
-import { useMemberContext } from '@/pages/DiscussionPage/MemberContext';
+import { checkboxAtom } from '@/store/discussion';
 import { formatDateToWeekRange } from '@/utils/date';
 import { formatDateToBarString } from '@/utils/date/format';
 
@@ -25,13 +26,13 @@ const groupByDayOfWeek = (data: DiscussionDTO[]) =>
 
 export const CalendarTable = () => {
   const params: { id: string } = useParams({ from: '/_main/discussion/$id' });
-  const members = useMemberContext();
+  const checkedList = useAtomValue(checkboxAtom);
   const { dates, selected } = useCalendarContext();
   const { startDate, endDate } = formatDateToWeekRange(selected);
   const { calendar } = useDiscussionCalendarQuery(params.id, {
     startDate: formatDateToBarString(startDate),
     endDate: formatDateToBarString(endDate),
-    selectedUserIdList: members?.formState.checkedList ?? undefined,
+    selectedUserIdList: checkedList ?? undefined,
   });
 
   return (
