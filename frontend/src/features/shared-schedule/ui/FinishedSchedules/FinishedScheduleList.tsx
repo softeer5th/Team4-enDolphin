@@ -25,16 +25,18 @@ const FinishedScheduleList = ({ baseYear }: FinishedScheduleListProps) => {
     <div className={scheduleListStyle} >
       <Flex
         direction='column'
+        height='100%'
         justify='flex-start'
         width='full'
       >
         {data.finishedDiscussions.map((schedule) => (
           <FinishedScheduleListItem
-            endDate={schedule.sharedEventDto.endDateTime}
-            key={schedule.id}
+            endDate={new Date(schedule.sharedEventDto.endDateTime)}
+            key={schedule.discussionId}
+            meetingPlace={schedule.meetingMethodOrLocation}
             participantImageUrls={schedule.participantPictureUrls}
             scheduleTitle={schedule.title}
-            startDate={schedule.sharedEventDto.startDateTime}
+            startDate={new Date(schedule.sharedEventDto.startDateTime)}
           />))}
       </Flex>
       <Pagination

@@ -9,9 +9,9 @@ const SharedEventDtoSchema = z.object({
 });
 
 const FinishedScheduleSchema = z.object({
-  id: z.number(),
+  discussionId: z.number(),
   title: z.string(),
-  meetingMethodOrLocation: z.string(),
+  meetingMethodOrLocation: z.union([z.string(), z.null()]),
   sharedEventDto: SharedEventDtoSchema,
   participantPictureUrls: z.array(z.string()),
 });
