@@ -9,13 +9,10 @@ export const scheduleItemContainerStyle = style({
   cursor: 'pointer',
 });
 
-export const detailsContainerStyle = style({
-  paddingLeft: 14,
-});
-
 export const dotStyle = style({
-  width: 8,
-  height: 8,
+  width: 3,
+  height: 3,
+  alignSelf: 'center',
   borderRadius: vars.radius['Max'],
   backgroundColor: vars.color.Ref.Netural[400],
 });
