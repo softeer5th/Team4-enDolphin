@@ -242,9 +242,11 @@ export const getDateTimeRangeString = (start: Date, end: Date): string => {
   return `${startMonth}월 ${startDay}일 ${startTime} ~ ${endMonth}월 ${endDay}일 ${endTime}`;
 };
 
-export const getDday = (date: Date): number => {
+export const getDayDiff = (date: Date): number => {
   const today = new Date();
-  const diff = date.getTime() - today.getTime();
+  const todayDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+  const targetDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  const diff = targetDate.getTime() - todayDate.getTime();
   return Math.floor(diff / DAY_IN_MILLISECONDS);
 };
 
