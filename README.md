@@ -72,10 +72,10 @@ Google 캘린더와 연동된 경우, 캘린더에도 자동으로 반영되어 
 
 ## 🏡 아키텍쳐
 ### AWS
-<img src="https://github.com/user-attachments/assets/8e09e33d-100c-4064-a29d-d7be25d12f1d" width="400" />
+<img src="https://github.com/user-attachments/assets/8e09e33d-100c-4064-a29d-d7be25d12f1d" width="600" />
 
 ### 시스템
-<img src="https://github.com/user-attachments/assets/d2c29880-b852-4deb-ab21-40f9f3e2e433" width="400" />
+<img src="https://github.com/user-attachments/assets/d2c29880-b852-4deb-ab21-40f9f3e2e433" width="600" />
 
 <br/>
 
