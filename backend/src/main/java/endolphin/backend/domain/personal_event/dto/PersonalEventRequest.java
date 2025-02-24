@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Size;
 import java.time.LocalDateTime;
 
 public record PersonalEventRequest(
-    @NotBlank @Size(max=1024) String title,
+    @NotBlank @Size(max=200) String title,
     @NotNull LocalDateTime startDateTime,
     @NotNull LocalDateTime endDateTime,
     Boolean isAdjustable,
