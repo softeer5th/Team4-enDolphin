@@ -12,5 +12,10 @@ export const UserInfoSchema = z.object({
   picture: z.string().url(),
 });
 
+export const UserNicknameRequest = z.object({
+  name: z.string(),
+});
+
 export type UserDTO = z.infer<typeof UserDTO>;
 export type UserInfo = z.infer<typeof UserInfoSchema>;
+export type UserNicknameRequest = z.infer<typeof UserNicknameRequest>;

@@ -5,6 +5,7 @@ import Button from '@/components/Button';
 import { Dropdown } from '@/components/Dropdown';
 import { Flex } from '@/components/Flex';
 import Input from '@/components/Input';
+import { useNicknameMutation } from '@/features/user/api/mutations';
 import { useUserInfoQuery } from '@/features/user/api/queries';
 import { useFormRef } from '@/hooks/useFormRef';
 import { useGlobalModal } from '@/store/global/modal';
@@ -18,9 +19,17 @@ import {
 } from './index.css';
 
 const ModalContents = () => {
-  const { valuesRef } = useFormRef({
+  const { data } = useUserInfoQuery();
+  const { mutate } = useNicknameMutation();
+  const { onModalClose } = useGlobalModal();
+  const { valuesRef, handleChange } = useFormRef({
     nickname: '',
   });
+
+  const handleClickChangeNickname = () => {
+    mutate({ name: valuesRef.current.nickname });
+    onModalClose();
+  };
 
   return (
     <Flex
@@ -30,13 +39,14 @@ const ModalContents = () => {
     >
       <Input.Single
         inputProps={{
+          defaultValue: data?.name,
           name: 'nickname',
-          value: valuesRef.current.nickname,
+          onChange: (e) => handleChange({ name: 'nickname', value: e.target.value }),
         }}
         placeholder='닉네임을 입력해주세요'
         type='text'
       />
-      <Button size='lg'>저장하기</Button>
+      <Button onClick={handleClickChangeNickname} size='lg'>저장하기</Button>
     </Flex>
   );
 };
