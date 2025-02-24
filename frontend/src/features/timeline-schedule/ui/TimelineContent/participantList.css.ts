@@ -2,6 +2,7 @@ import { style } from '@vanilla-extract/css';
 
 export const participantsContainerStyle = style({
   width: '15rem',
+  paddingLeft: '0.25rem',
 });
 
 export const participantItemStyle = style({
