@@ -101,7 +101,13 @@ Google 캘린더와 연동된 경우, 캘린더에도 자동으로 반영되어 
     <td align="center">BE</td>
     <td align="center">BE(팀장)</td>
 </tr>
-</tbody></table>
+<tr>
+    <td align="start">✔ 개인/공유 일정 캘린더 구현<br/>✔ 디자인 토큰 & SVG & 이미지 변환 스크립트 작성<br/>✔ 전역 Modal, Notification 관리 & 에러핸들링</td>
+    <td align="start">✔ Single/Range DatePicker 구현<br/>✔  git hook & 슬랙 웹훅 세팅<br/>✔ Fetch 유틸 구현</td>
+    <td align="start" colspan="2">✔ 비트 연산 로직(후보 일정 산출) 구현 <br/>✔ 구글 캘린더 API 연동 (+OAuth) <br/>✔ Redis 세팅 (동현) <br/>✔ CI/CD (동권)</td>
+</tr>
+</tbody>
+</table>
 <br/>
 
 ---
