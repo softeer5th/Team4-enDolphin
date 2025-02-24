@@ -4,6 +4,7 @@ import { Text } from '@/components/Text';
 import { vars } from '@/theme/index.css';
 
 import { titleContainerStyle } from './index.css';
+import { OngoingCardList } from './OngoingCardList';
 
 export const OngoingDiscussion = () => (
   <Flex
@@ -21,5 +22,6 @@ export const OngoingDiscussion = () => (
       <Progress />
       <Text color={vars.color.Ref.Primary[500]} typo='b3M'>조율 중인 일정</Text>
     </Flex>
+    <OngoingCardList />
   </Flex>
 );
