@@ -1,7 +1,7 @@
 import { style } from '@vanilla-extract/css';
 import { recipe } from '@vanilla-extract/recipes';
 
-import { fadeTimeBarProps } from '@/theme/animation.css';
+import { fadeInProps, fadeTimeBarProps } from '@/theme/animation.css';
 import { vars } from '@/theme/index.css';
 
 export const containerStyle = recipe({
@@ -47,4 +47,6 @@ export const discussionBoxStyle = style({
   border: `1px solid ${vars.color.Ref.Netural[600]}`,
 
   opacity: 0.4,
+
+  ...fadeInProps,
 });
