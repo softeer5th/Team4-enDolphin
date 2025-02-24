@@ -84,3 +84,9 @@ export const getRowTopOffset = (participantCount: number) => {
   
   return HEIGHT * participantCount + GAP * participantCount;
 };
+
+export const calculateDimHeight = (checkedCount: number, uncheckedCount: number) => {
+  const checkedHeight = getRowTopOffset(checkedCount);
+  const uncheckedHeight = getRowTopOffset(uncheckedCount);
+  return Math.max(372 - checkedHeight, uncheckedHeight);
+};

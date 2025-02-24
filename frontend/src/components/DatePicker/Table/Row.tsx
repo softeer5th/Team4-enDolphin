@@ -32,8 +32,8 @@ const Row = ({ weekDates }: RowProps) => {
         // 마지막 셀 뒤에는 gap을 넣지 않음
         if (index === weekDates.length - 1) return cell;
         const gap = (
-          <HighlightGap 
-            highlightState={getGapHighlightState(highlightState)} 
+          <HighlightGap
+            highlightState={getHighlightGapState(highlightState)} 
             key={`gap-${day.getTime()}`}
           />
         );
@@ -46,7 +46,8 @@ const Row = ({ weekDates }: RowProps) => {
 const getHighlightState = (date: Date, highlightRange: HighlightRange): HighlightState => {
   const { start, end } = highlightRange;
   if (!start || !end) return 'none';
-  
+
+  if (isSameDate(start, end) && isSameDate(date, start)) return 'startAndEnd';
   if (isSameDate(date, start)) return 'startOfRange';
   if (isSameDate(date, end)) return 'endOfRange';
   if (date > start && date < end) return 'inRange';
@@ -55,7 +56,7 @@ const getHighlightState = (date: Date, highlightRange: HighlightRange): Highligh
 
 export default Row;
 
-const getGapHighlightState = (highlightState: HighlightState): HighlightState => {
+const getHighlightGapState = (highlightState: HighlightState): HighlightState => {
   if (highlightState === 'startOfRange' || highlightState === 'inRange') {
     return 'inRange';
   }

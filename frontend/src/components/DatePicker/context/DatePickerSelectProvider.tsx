@@ -13,17 +13,17 @@ const DatePickerSelectProvider = ({
   ...props
 }: DatePickerRangeProviderProps) => {
   const { highlightRange, onDateCellClick } = useDatePickerSelect(props);
-  const selectedDate = props.selectedDate;
-  const isDateSelected = (date: Date) => selectedDate ? isSameDate(date, selectedDate) : false;
+  const isDateSelected = (date: Date) => 
+    props.selectedDate ? isSameDate(date, props.selectedDate) : false;
 
   return (
     <DatePickerContext.Provider 
       value={{
+        ...props,
         calendarType: 'select',
         onDateCellClick,
         isDateSelected,
         highlightRange,
-        ...props,
       }}
     >
       {children}
