@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { createPortal } from 'react-dom';
 
 import { useClickOutside } from '@/hooks/useClickOutside';
@@ -10,6 +11,11 @@ export const GlobalModal = () => {
   const MODAL_ROOT = document.body;
   const { isOpen, onModalClose, modal } = useGlobalModal();
   const ref = useClickOutside<HTMLDialogElement>(onModalClose);
+
+  useEffect(() => {
+    if (isOpen) document.body.style.overflow = 'hidden';
+    else document.body.style.overflow = 'auto';
+  }, [isOpen]);
 
   if (!modal || !isOpen) return null;
   return createPortal(
