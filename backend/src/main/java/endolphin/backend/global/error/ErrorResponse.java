@@ -11,6 +11,7 @@ public record ErrorResponse(
     @Schema(description = "에러 코드", example = "C001")
     String code
 ) {
+
     public static ErrorResponse of(ErrorCode errorCode) {
         return new ErrorResponse(errorCode.getMessage(), errorCode.getCode());
     }

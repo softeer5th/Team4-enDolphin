@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @Slf4j
 public class UserService {
+
     private final UserRepository userRepository;
     private final ApplicationEventPublisher eventPublisher;
 

@@ -28,7 +28,7 @@ public class LogFilter extends OncePerRequestFilter {
 
         long endTime = System.nanoTime();
         log.info("Incoming Response: [{}] {}, {}, {} ms",
-            request.getMethod(), request.getRequestURI() ,
+            request.getMethod(), request.getRequestURI(),
             response.getStatus(), (endTime - startTime) / 1_000_000.0);
 
         MDC.clear();

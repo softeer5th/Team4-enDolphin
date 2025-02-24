@@ -9,6 +9,7 @@ public enum PersonalEventStatus {
     OUT_OF_RANGE("outOfRange");
 
     private final String value;
+
     PersonalEventStatus(String value) {
         this.value = value;
     }

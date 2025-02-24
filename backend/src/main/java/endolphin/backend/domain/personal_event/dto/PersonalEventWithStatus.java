@@ -18,7 +18,8 @@ public record PersonalEventWithStatus(
         if (personalEvent.getIsAdjustable()) {
             status = PersonalEventStatus.ADJUSTABLE;
         }
-        if (!personalEvent.getEndTime().isAfter(startTime) || !personalEvent.getStartTime().isBefore(endTime)) {
+        if (!personalEvent.getEndTime().isAfter(startTime) || !personalEvent.getStartTime()
+            .isBefore(endTime)) {
             status = PersonalEventStatus.OUT_OF_RANGE;
         }
         return new PersonalEventWithStatus(personalEvent.getId(), personalEvent.getStartTime(),

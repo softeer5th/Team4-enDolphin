@@ -297,10 +297,11 @@ public class DiscussionParticipantService {
     }
 
     @Transactional(readOnly = true)
-    public Map<Long, Map<Discussion, Long>> getOngoingDiscussionOffsetsByUserIds(List<Long> userIds) {
-       List<Object[]> response = discussionParticipantRepository.findOffsetsByUserIds(userIds);
+    public Map<Long, Map<Discussion, Long>> getOngoingDiscussionOffsetsByUserIds(
+        List<Long> userIds) {
+        List<Object[]> response = discussionParticipantRepository.findOffsetsByUserIds(userIds);
         return response.stream().collect(Collectors.groupingBy(
-            o -> (Long) o[0],
+                o -> (Long) o[0],
                 Collectors.toMap(
                     o -> (Discussion) o[1],
                     o -> (Long) o[2]

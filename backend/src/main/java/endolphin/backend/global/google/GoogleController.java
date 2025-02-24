@@ -32,7 +32,8 @@ public class GoogleController {
         @RequestHeader(value = "X-Goog-Channel-Expiration", required = false) String channelExpiration
     ) {
         return googleCalendarService.processWebhookNotification(
-            channelId, resourceId, resourceUri, resourceState, messageNumber, channelToken, channelExpiration
+            channelId, resourceId, resourceUri, resourceState, messageNumber, channelToken,
+            channelExpiration
         );
     }
 }

@@ -187,7 +187,8 @@ public class DiscussionController {
             content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @PostMapping("/{discussionId}/join")
-    public ResponseEntity<JoinDiscussionResponse> joinInDiscussion(@PathVariable @Min(1) Long discussionId,
+    public ResponseEntity<JoinDiscussionResponse> joinInDiscussion(
+        @PathVariable @Min(1) Long discussionId,
         @Valid @RequestBody JoinDiscussionRequest request) {
         JoinDiscussionResponse isSuccess = discussionService.joinDiscussion(discussionId, request);
         return ResponseEntity.ok(isSuccess);

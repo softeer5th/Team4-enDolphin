@@ -10,7 +10,8 @@ public record GoogleEventRequest(
 ) {
 
     public static GoogleEventRequest of(PersonalEvent personalEvent, String id) {
-        GoogleEventDateTime start = GoogleEventDateTime.fromLocalDateTime(personalEvent.getStartTime());
+        GoogleEventDateTime start = GoogleEventDateTime.fromLocalDateTime(
+            personalEvent.getStartTime());
         GoogleEventDateTime end = GoogleEventDateTime.fromLocalDateTime(personalEvent.getEndTime());
         return new GoogleEventRequest(start, end, personalEvent.getTitle(), id);
     }

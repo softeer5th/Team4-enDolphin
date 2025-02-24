@@ -16,6 +16,7 @@ import org.springframework.transaction.event.TransactionalEventListener;
 @Component
 @RequiredArgsConstructor
 public class GoogleEventHandler {
+
     private final GoogleCalendarService googleCalendarService;
 
     @Async

@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 public class CalendarException extends RuntimeException {
+
     private final ErrorCode errorCode;
 
     public CalendarException(HttpStatus status, String message) {
