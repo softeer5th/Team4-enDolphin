@@ -12,6 +12,11 @@ export const titleContainerStyle = style({
 
 export const cardStyle = recipe({
   base: {
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: vars.spacing[300],
+
     padding: vars.spacing[600],
 
     borderRadius: vars.radius[300],

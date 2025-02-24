@@ -1,4 +1,4 @@
-import { type PropsWithChildren } from 'react';
+import type { PropsWithChildren, RefObject  } from 'react';
 
 import { Divider } from '@/components/Divider';
 import { Flex } from '@/components/Flex';
@@ -13,6 +13,7 @@ import { cardStyle, cardTextStyle } from './index.css';
 interface OngoingCardItemProps extends Omit<OngoingSchedule, 'discussionId'> {
   onClick: () => void;
   isSelected: boolean;
+  ref: RefObject<HTMLDivElement>;
 }
   
 const OngoingText = ({ children }: PropsWithChildren) => (
@@ -26,14 +27,12 @@ const OngoingText = ({ children }: PropsWithChildren) => (
 );
   
 export const OngoingCardItem = (
-  { title, dateRangeStart, dateRangeEnd, timeLeft, onClick, isSelected }: OngoingCardItemProps,
+  { title, dateRangeStart, dateRangeEnd, timeLeft, onClick, isSelected, ref }: OngoingCardItemProps,
 ) => (
-  <Flex
+  <div
     className={cardStyle({ selected: isSelected })}
-    direction='column'
-    gap={300}
     onClick={onClick}
-    width='100%'
+    ref={ref}
   >
     <Text color={vars.color.Ref.Netural[800]} typo='t2'>{title}</Text>
     <Divider height={2} />
@@ -58,6 +57,6 @@ export const OngoingCardItem = (
         {/** TODO: 홈 머지 후 시간 추가 */}
       </OngoingText>
     </Flex>
-  </Flex>
+  </div>
 );
   
