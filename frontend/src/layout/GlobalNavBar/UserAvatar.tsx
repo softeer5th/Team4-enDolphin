@@ -5,6 +5,7 @@ import Button from '@/components/Button';
 import { Dropdown } from '@/components/Dropdown';
 import { Flex } from '@/components/Flex';
 import Input from '@/components/Input';
+import { Text } from '@/components/Text';
 import { useNicknameMutation } from '@/features/user/api/mutations';
 import { useUserInfoQuery } from '@/features/user/api/queries';
 import { useFormRef } from '@/hooks/useFormRef';
@@ -15,11 +16,11 @@ import {
   avatarContainerStyle,
   dropdownContentsStyle,
   nicknameModalContentsStyle, 
-  nicknameModalStyle, 
+  nicknameModalStyle,
+  nicknameTextStyle, 
 } from './index.css';
 
-const ModalContents = () => {
-  const { data } = useUserInfoQuery();
+const ModalContents = ({ name }: { name?: string }) => {
   const { mutate } = useNicknameMutation();
   const { onModalClose } = useGlobalModal();
   const { valuesRef, handleChange } = useFormRef({
@@ -39,7 +40,7 @@ const ModalContents = () => {
     >
       <Input.Single
         inputProps={{
-          defaultValue: data?.name,
+          defaultValue: name,
           name: 'nickname',
           onChange: (e) => handleChange({ name: 'nickname', value: e.target.value }),
         }}
@@ -53,6 +54,7 @@ const ModalContents = () => {
 
 const HeaderDropdown = () => {
   const { createModal } = useGlobalModal();
+  const { data } = useUserInfoQuery();
   const navigate = useNavigate();
 
   const handleClickLogout = () => {
@@ -67,7 +69,7 @@ const HeaderDropdown = () => {
       title: '닉네임 변경', 
       subTitle: '언제만나에서 사용할 닉네임을 입력해주세요!',
       className: nicknameModalStyle,
-      children: <ModalContents />,
+      children: <ModalContents name={data?.name} />,
     });
   };
       
@@ -75,8 +77,10 @@ const HeaderDropdown = () => {
     <Dropdown.Contents
       className={dropdownContentsStyle}
       height={'fit-content'}
+      style={{ top: '3.5rem' }}
       width={'10rem'}
     >
+      <Text className={nicknameTextStyle} typo='t2'>{data?.name}</Text>
       <Dropdown.Item onClick={handleClickLogout} value='logout'>
         로그아웃
       </Dropdown.Item>

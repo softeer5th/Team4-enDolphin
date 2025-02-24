@@ -44,14 +44,17 @@ export const linkStyle = style({
 });
 
 export const dropdownContentsStyle = style({
-  top: '1.5rem',
+  top: 0,
   right: 0,
-
   overflow: 'hidden',
 });
 
 export const nicknameModalStyle = style({
   height: 'fit-content',
+});
+
+export const nicknameTextStyle = style({
+  padding: vars.spacing[400],
 });
 
 export const nicknameModalContentsStyle = style({
