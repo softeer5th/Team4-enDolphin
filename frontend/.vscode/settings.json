@@ -1,0 +1,22 @@
+{
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": "explicit",
+        "source.fixAll.stylelint": "explicit"
+    },
+    "editor.formatOnSave": false,
+    "typescript.preferences.jsxAttributeCompletionStyle": "none",
+    "javascript.preferences.jsxAttributeCompletionStyle": "none",
+    "stylelint.enable": true,
+    "stylelint.validate": [
+        "css",
+        "scss",
+        "postcss",
+        "typescript",
+        "typescriptreact"
+    ],
+    "stylelint.customSyntax": "postcss-styled-syntax",
+    "css.validate": false,
+    "less.validate": false,
+    "scss.validate": false,
+    "typescript.tsdk": "node_modules/typescript/lib"
+}

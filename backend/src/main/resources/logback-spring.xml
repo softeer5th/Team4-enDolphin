@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration>
+
+  <property name="CONSOLE_LOG_PATTERN"
+    value="%d{yyyy-MM-dd HH:mm:ss}:%-4relative %highlight(%-5level) %magenta(${PID:-}) [%thread] %cyan(%logger{36}) %X{correlationId} - %msg%n" />
+  <property name="FILE_LOG_PATTERN"
+    value="%d{yyyy-MM-dd HH:mm:ss}:%-4relative %-5level ${PID:-} [%thread] %logger{36} %X{correlationId} - %msg%n" />
+  <property name="LOG_PATH" value="/var/logs/myapp"/>
+
+  <springProfile name="!prod">
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+      <encoder>
+        <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+      </encoder>
+    </appender>
+
+    <root level="info">
+      <appender-ref ref="CONSOLE" />
+    </root>
+
+    <logger name="org.springframework.web" level="info" />
+    <logger name="endolphin.backend" level="debug" />
+    <logger name="org.hibernate.SQL" level="debug" />
+  </springProfile>
+
+  <springProfile name="prod">
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+      <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+        <fileNamePattern>${LOG_PATH}/myapp-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+        <maxHistory>30</maxHistory>
+        <maxFileSize>10MB</maxFileSize>
+        <totalSizeCap>500MB</totalSizeCap>
+      </rollingPolicy>
+
+      <encoder>
+        <pattern>${FILE_LOG_PATTERN}</pattern>
+      </encoder>
+    </appender>
+
+    <appender name="ASYNC" class="ch.qos.logback.classic.AsyncAppender">
+      <appender-ref ref="FILE" />
+      <queueSize>512</queueSize>
+      <discardingThreshhold>0</discardingThreshhold>
+      <includeCallerData>false</includeCallerData>
+      <neverBlock>true</neverBlock>
+    </appender>
+
+    <root level="info">
+      <appender-ref ref="ASYNC" />
+    </root>
+
+    <logger name="org.springframework.web" level="info" />
+    <logger name="endolphin.backend" level="info" />
+    <logger name="org.hibernate.SQL" level="warn" />
+  </springProfile>
+
+</configuration>

@@ -1,0 +1,84 @@
+spring:
+  datasource:
+    driver-class-name: org.h2.Driver
+  #    url: jdbc:mysql://localhost:3306/testdb
+  #    username: localmaster
+  #    password: 1234
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create
+
+  sql:
+    init:
+      mode: never
+
+  data:
+    redis:
+      port: 6379
+      host: localhost
+
+  cors:
+    allowed-origins: "http://localhost:5173"
+    allowed-methods: GET,POST,PUT,DELETE,OPTIONS
+    allowed-headers: "*"
+    allow-credentials: true
+    max-age: 3600
+
+google:
+  oauth:
+    redirect-uri: "test"
+    scope: "test"
+    auth-url: "test"
+    token-url: "test"
+    userinfo-url: "test"
+    client-id: "test"
+    client-secret: "test"
+
+  calendar:
+    url:
+      calendar-list-url: "test"
+      subscribe-url: "test"
+      unsubscribe-url: "test"
+      webhook-url: "test"
+      primary-calendar-url: "test"
+      events-url: "test"
+      update-url: "test"
+
+
+    api:
+      subscribe-duration: 0
+      time-zone: "Asia/Seoul"
+
+jwt:
+  secret: "my-very-long-and-secure-secret-key-which-is-at-least-32-chars-test"
+  expired: 1000
+
+springdoc:
+  packages-to-scan: endolphin.backend
+  default-consumes-media-type: application/json;charset=UTF-8
+  default-produces-media-type: application/json;charset=UTF-8
+  cache:
+    disabled: true              # 캐시 사용 여부
+  api-docs:
+    path: /v3/api-docs          # API 문서 경로
+    groups:
+      enabled: true
+  swagger-ui:
+    enabled: true               # Swagger UI 사용여부
+    path: /swagger-ui           # Swagger UI 경로
+    tags-sorter: alpha          # alpha: 알파벳 순 태그 정렬, method: HTTP Method 순 정렬
+    operations-sorter: alpha    # alpha: 알파벳 순 태그 정렬, method: HTTP Method 순 정렬
+
+app:
+  frontend:
+    url: "test"
+    callback: "test"
+
+  server:
+    domain: "test"
+
+endolphin:
+  security:
+    salt: "test"

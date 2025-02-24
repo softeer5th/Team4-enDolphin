@@ -1,0 +1,37 @@
+services:
+  db:
+    image: mysql:8.0
+    container_name: backend_mysql
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=1234
+      - MYSQL_DATABASE=app_db
+      - MYSQL_USER=sa
+      - MYSQL_PASSWORD=1234
+      - TZ=Asia/Seoul
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    ports:
+      - "3307:3306"
+
+  redis:
+    image: redis:6-alpine
+    container_name: backend_redis
+    restart: always
+    ports:
+      - "6379:6379"
+
+  api:
+    depends_on:
+      - db
+    image: backend:latest
+    container_name: backend_api
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://backend_mysql:3306/app_db
+      - SPRING_DATASOURCE_USERNAME=sa
+      - SPRING_DATASOURCE_PASSWORD=1234
+      - SPRING_SQL_INIT_MODE=never
+      - TZ=Asia/Seoul
