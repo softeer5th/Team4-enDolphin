@@ -11,6 +11,7 @@ public record OngoingDiscussion(
     LocalDate dateRangeEnd,
     LocalTime timeRangeStart,
     LocalTime timeRangeEnd,
+    Integer duration,
     Long timeLeft,
     List<String> participantPictureUrls
 ) {
