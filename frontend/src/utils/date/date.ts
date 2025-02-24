@@ -260,3 +260,16 @@ export const getTimeLeftInfoFromMilliseconds = (milliseconds: number) => {
 
   return { days, hours, minutes };
 };
+
+export const isNextWeek = (start: Date, end: Date) => {
+  const { year: sy, month: sm, day: sd } = getDateParts(start);
+  const { year: ey, month: em, day: ed } = getDateParts(end);
+  const startDate = new Date(sy, sm, sd);
+  const endDate = new Date(ey, em, ed);
+
+  const timeDiff = Math.abs(startDate.getTime() - endDate.getTime());
+
+  if (timeDiff > 7 * DAY_IN_MILLISECONDS) return true;
+  if (sd > ed) return true;
+  return false;
+};

@@ -4,6 +4,7 @@ import { useOngoingQuery } from '@/features/shared-schedule/api/queries';
 import type { OngoingSchedule } from '@/features/shared-schedule/model';
 import { useClickOutside } from '@/hooks/useClickOutside';
 import { useDiscussionContext } from '@/pages/MyCalendarPage/DiscussionContext';
+import { parseTime } from '@/utils/date';
 
 import { OngoingCardItem } from './OngoingCardItem';
 
@@ -18,11 +19,17 @@ export const OngoingCardList = () => {
       reset();
       return;
     }
+    const start = new Date(discussion.dateRangeStart);
+    const end = new Date(discussion.dateRangeEnd);
+    const { hour: sh, minute: sm } = parseTime(discussion.timeRangeStart);
+    const { hour: eh, minute: em } = parseTime(discussion.timeRangeEnd);
+    start.setHours(sh);
+    start.setMinutes(sm);
+    end.setHours(eh);
+    end.setMinutes(em);
+
     setSelectedDiscussion(discussion.discussionId);
-    handleSelectDateRange(
-      new Date(discussion.dateRangeStart), 
-      new Date(discussion.dateRangeEnd),
-    );
+    handleSelectDateRange(start, end);
   };
 
   const cardRef = useClickOutside<HTMLDivElement>(()=>handleClickSelect(null));

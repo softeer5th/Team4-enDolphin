@@ -6,7 +6,8 @@ import { CalendarCheck, Clock } from '@/components/Icon';
 import { Text } from '@/components/Text';
 import type { OngoingSchedule } from '@/features/shared-schedule/model';
 import { vars } from '@/theme/index.css';
-import { getDateRangeString } from '@/utils/date';
+import { getDateRangeString, getTimeRangeString, parseTime } from '@/utils/date';
+import { formatMinutesToTimeDuration } from '@/utils/date/format';
 
 import { cardStyle, cardTextStyle } from './index.css';
 
@@ -26,9 +27,17 @@ const OngoingText = ({ children }: PropsWithChildren) => (
   </Text>
 );
   
-export const OngoingCardItem = (
-  { title, dateRangeStart, dateRangeEnd, timeLeft, onClick, isSelected, ref }: OngoingCardItemProps,
-) => (
+export const OngoingCardItem = ({ 
+  title, 
+  dateRangeStart, 
+  dateRangeEnd, 
+  timeRangeStart,
+  timeRangeEnd, 
+  duration, 
+  onClick, 
+  isSelected,
+  ref, 
+}: OngoingCardItemProps) => (
   <div
     className={cardStyle({ selected: isSelected })}
     onClick={onClick}
@@ -47,14 +56,11 @@ export const OngoingCardItem = (
       </OngoingText>
       <OngoingText>
         <Clock width={15} />
-        {/** TODO: 홈 머지 후 시간 추가 */}
+        {getTimeRangeString(parseTime(timeRangeStart), parseTime(timeRangeEnd))}
       </OngoingText>
       <OngoingText>
         <Clock width={15} />
-        마감까지 
-        {' '}
-        {timeLeft}
-        {/** TODO: 홈 머지 후 시간 추가 */}
+        {formatMinutesToTimeDuration(duration)}
       </OngoingText>
     </Flex>
   </div>
