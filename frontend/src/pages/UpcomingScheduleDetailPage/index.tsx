@@ -12,7 +12,7 @@ const UpcomingScheduleDetailPage = (candidate: {
 }) => {
   const { id } = useParams({ from: '/_main/upcoming-schedule/$id' });
   const [start, end] = [new Date(candidate.startDateTime), new Date(candidate.endDateTime)];
-
+  
   return (
     <>
       <div className={backdropStyle} />
@@ -21,7 +21,9 @@ const UpcomingScheduleDetailPage = (candidate: {
         isConfirmedSchedule={true}
         {...candidate}
       >
-        <TimelineScheduleModal.TopBar></TimelineScheduleModal.TopBar>
+        <TimelineScheduleModal.TopBar>
+
+        </TimelineScheduleModal.TopBar>
         <TimelineScheduleModal.Header>
           <Header
             endDateTime={end}
