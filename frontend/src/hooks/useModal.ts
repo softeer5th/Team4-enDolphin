@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import type { ModalProps } from '@/components/Modal';
 
-type ModalWithoutIsOpen = Omit<ModalProps, 'isOpen'>;
+export type ModalWithoutIsOpen = Omit<ModalProps, 'isOpen'>;
 
 export interface ModalInfo {
   isOpen: boolean;

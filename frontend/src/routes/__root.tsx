@@ -5,6 +5,7 @@ import {
   Outlet } from '@tanstack/react-router';
 import { lazy } from 'react';
 
+import { GlobalModal } from '@/components/Modal/GlobalModal';
 import { defaultENV } from '@/envconfig';
 import GlobalNavBar from '@/layout/GlobalNavBar';
 import ErrorPage from '@/pages/ErrorPage';
@@ -26,6 +27,7 @@ export const Route = createRootRouteWithContext<QueryClientContext>()({
   component: () => (
     <>
       <HeadContent />
+      <GlobalModal />
       <Outlet />
       <TanStackRouterDevtools />
     </>
