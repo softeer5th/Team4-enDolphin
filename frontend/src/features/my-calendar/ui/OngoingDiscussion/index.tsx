@@ -5,7 +5,7 @@ import { vars } from '@/theme/index.css';
 
 import { titleContainerStyle } from './index.css';
 
-export const ProgressDiscussion = () => (
+export const OngoingDiscussion = () => (
   <Flex
     direction='column'
     gap={250}

@@ -2,7 +2,7 @@ import { Divider } from '@/components/Divider';
 import { Flex } from '@/components/Flex';
 
 import { MyDatePicker } from '../MyDatePicker';
-import { ProgressDiscussion } from '../ProgressDiscussion';
+import { OngoingDiscussion } from '../OngoingDiscussion';
 import { sideBarStyle } from './index.css';
 
 const SideBar = () => (
@@ -15,7 +15,7 @@ const SideBar = () => (
   >
     <MyDatePicker />
     <Divider />
-    <ProgressDiscussion />
+    <OngoingDiscussion />
   </Flex>
 );
 
