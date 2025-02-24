@@ -23,7 +23,6 @@ export const Primary = () => {
   
   return (
     <Dropdown 
-      height={200}
       onChange={handleChange} 
       selectedValue={selectedValue} 
       trigger={
@@ -35,11 +34,13 @@ export const Primary = () => {
         />
       }
     >
-      <Dropdown.Item value='Item 1'>Item 1</Dropdown.Item>
-      <Dropdown.Item value='Item 2'>Item 2</Dropdown.Item>
-      <Dropdown.Item value='Item 3'>Item 3</Dropdown.Item>
-      <Dropdown.Item value='Item 4'>Item 4</Dropdown.Item>
-      <Dropdown.Item value='Item 5'>Item 5</Dropdown.Item>
+      <Dropdown.Contents height={200}>
+        <Dropdown.Item value='Item 1'>Item 1</Dropdown.Item>
+        <Dropdown.Item value='Item 2'>Item 2</Dropdown.Item>
+        <Dropdown.Item value='Item 3'>Item 3</Dropdown.Item>
+        <Dropdown.Item value='Item 4'>Item 4</Dropdown.Item>
+        <Dropdown.Item value='Item 5'>Item 5</Dropdown.Item>
+      </Dropdown.Contents>
     </Dropdown>
   );
 };

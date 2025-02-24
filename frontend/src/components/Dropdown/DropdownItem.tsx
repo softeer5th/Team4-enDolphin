@@ -1,7 +1,8 @@
-import type { PropsWithChildren } from 'react';
+import type { CSSProperties, PropsWithChildren } from 'react';
 import { useId } from 'react';
 
 import { useSafeContext } from '@/hooks/useSafeContext';
+import clsx from '@/utils/clsx';
 
 import { Text } from '../Text';
 import { DropdownContext } from './DropdownContext';
@@ -9,9 +10,11 @@ import { dropdownStyle } from './dropdownItem.css';
 
 interface DropdownItemProps extends PropsWithChildren {
   value: string;
+  style?: CSSProperties;
+  className?: string;
 }
 
-export const DropdownItem = ({ value, children }: DropdownItemProps) => {
+export const DropdownItem = ({ value, style, className, children }: DropdownItemProps) => {
   const { controlId, selectedValue, onChange, setIsOpen } = useSafeContext(DropdownContext);
   const defaultId = `${controlId}-item-${useId()}`;
 
@@ -23,10 +26,11 @@ export const DropdownItem = ({ value, children }: DropdownItemProps) => {
   const isSelected = selectedValue === value;
   
   return (
-    <li 
-      className={dropdownStyle({ state: isSelected ? 'selected' : 'rest' })} 
+    <li
+      className={clsx(className, dropdownStyle({ state: isSelected ? 'selected' : 'rest' }))}
       id={defaultId} 
-      onClick={handleClick}
+      onClick={handleClick} 
+      style={style}
     >
       <Text typo='b3R'>{children}</Text>
     </li>

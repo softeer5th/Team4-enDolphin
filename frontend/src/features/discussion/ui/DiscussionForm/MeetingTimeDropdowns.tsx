@@ -44,7 +44,6 @@ const TimeDropdown = ({ name }: { name: keyof DiscussionRequest }) => {
 
   return (
     <Dropdown
-      height={168}
       onChange={(value) => handleUpdateField(name, value)}
       selectedValue={formState[name] as string}
       trigger={ 
@@ -56,11 +55,13 @@ const TimeDropdown = ({ name }: { name: keyof DiscussionRequest }) => {
       }
       width='100%'
     >
-      {MINUTES_HALF(24, 0).map((minute) => (
-        <Dropdown.Item key={minute} value={formatNumberToTimeString(minute)}>
-          {formatMinutesToTimeString(minute)}
-        </Dropdown.Item>
-      ))}
+      <Dropdown.Contents height={168}>
+        {MINUTES_HALF(24, 0).map((minute) => (
+          <Dropdown.Item key={minute} value={formatNumberToTimeString(minute)}>
+            {formatMinutesToTimeString(minute)}
+          </Dropdown.Item>
+        ))}
+      </Dropdown.Contents>
     </Dropdown>
   );
 };
