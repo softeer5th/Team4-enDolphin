@@ -12,6 +12,7 @@ export interface CommonInputProps {
   hint?: string;
   error?: string;
   placeholder?: string;
+  className?: string;
   onClick?: () => void;
 }
 
