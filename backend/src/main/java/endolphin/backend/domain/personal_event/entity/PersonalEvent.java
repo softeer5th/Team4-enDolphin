@@ -16,7 +16,12 @@ import org.hibernate.annotations.ColumnDefault;
 @Getter
 @NoArgsConstructor
 @Entity
-@Table(name = "personal_event")
+@Table(name = "personal_event", indexes = {
+    @Index(name = "idx_personal_event_user_id", columnList = "user_id")
+}, uniqueConstraints = {
+    @UniqueConstraint(name = "uk_personal_event_google_event_id_calendar_id",
+        columnNames = {"google_event_id", "calendar_id"})
+})
 public class PersonalEvent extends BaseTimeEntity {
 
     @Id
