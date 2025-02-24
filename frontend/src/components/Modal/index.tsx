@@ -1,5 +1,5 @@
 import clsx from '@utils/clsx';
-import type { ForwardRefExoticComponent, PropsWithChildren, RefAttributes  } from 'react';
+import type { ForwardRefExoticComponent, ReactNode, RefAttributes  } from 'react';
 import { forwardRef } from 'react';
 
 import { vars } from '@/theme/index.css';
@@ -11,13 +11,14 @@ import { ModalFooter } from './ModalFooter';
 
 type ModalType = 'default' | 'error';
 
-export interface ModalProps extends PropsWithChildren {
+export interface ModalProps {
   type?: ModalType;
   subTitle: string;
   title: string;
   description?: string;
   isOpen: boolean;
   className?: string;
+  children?: ReactNode;
 }
 
 interface ModalComponent 

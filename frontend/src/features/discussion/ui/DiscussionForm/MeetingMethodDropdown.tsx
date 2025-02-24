@@ -16,7 +16,6 @@ const MeetingMethodDropdown = ({ name }: { name: keyof DiscussionRequest }) => {
 
   return (
     <Dropdown
-      height='auto'
       onChange={(value) => handleUpdateField(name, value || null)}
       selectedValue={formState[name] as string}
       trigger={
@@ -33,9 +32,11 @@ const MeetingMethodDropdown = ({ name }: { name: keyof DiscussionRequest }) => {
       }
       width='100%'
     >
-      <Dropdown.Item value='OFFLINE'>{methodMap['OFFLINE']}</Dropdown.Item>
-      <Dropdown.Item value='ONLINE'>{methodMap['ONLINE']}</Dropdown.Item>
-      <Dropdown.Item value=''>{methodMap['']}</Dropdown.Item>
+      <Dropdown.Contents>
+        <Dropdown.Item value='OFFLINE'>{methodMap['OFFLINE']}</Dropdown.Item>
+        <Dropdown.Item value='ONLINE'>{methodMap['ONLINE']}</Dropdown.Item>
+        <Dropdown.Item value=''>{methodMap['']}</Dropdown.Item>
+      </Dropdown.Contents>
     </Dropdown>
   );
 };

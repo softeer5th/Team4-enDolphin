@@ -2,8 +2,8 @@ import { createContext } from 'react';
 
 interface DropdownContextProps {
   controlId: string;
-  selectedValue: string;
-  onChange: ((value: string) => void);
+  selectedValue?: string;
+  onChange?: ((value: string) => void);
   setIsOpen: ((isOpen: boolean) => void);
 }
 

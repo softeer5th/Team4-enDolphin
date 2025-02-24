@@ -2,14 +2,13 @@
 import { useNavigate } from '@tanstack/react-router';
 import type { PropsWithChildren } from 'react';
 
-import Avatar from '@/components/Avatar';
 import { Flex } from '@/components/Flex';
 import { Logo } from '@/components/Icon/component/Logo';
-import { useUserInfoQuery } from '@/features/user/api/queries';
 import { isLogin } from '@/utils/auth';
 
 import { LoginLink, MyCalendarLink, NewDiscussionLink } from './buttons';
-import { avatarContainerStyle, containerStyle } from './index.css';
+import { containerStyle } from './index.css';
+import { UserAvatar } from './UserAvatar';
 
 interface GlobalNavBarProps extends PropsWithChildren {
   background?: 'white' | 'transparent';
@@ -43,19 +42,6 @@ const GlobalNavBar = ({ background = 'white', children }: GlobalNavBarProps) => 
           <LoginLink />}
       </Flex>
     </header>
-  );
-};
-
-const UserAvatar = () => {
-  const { data, isPending } = useUserInfoQuery();
-  if (isPending) return <div>pending ...</div>;
-  if (!data) return <div>user data is undefined or null</div>;
-  return (
-    <Avatar
-      className={avatarContainerStyle}
-      imageUrls={[data.picture]}
-      size='lg'
-    />
   );
 };
 

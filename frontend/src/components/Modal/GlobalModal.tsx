@@ -1,23 +1,29 @@
+import { useEffect } from 'react';
 import { createPortal } from 'react-dom';
 
 import { useClickOutside } from '@/hooks/useClickOutside';
+import { useGlobalModal } from '@/store/global/modal';
 
-import type { ModalProps } from '.';
 import { Modal } from '.';
 import { backdropStyle } from './index.css';
-import { useModalContext } from './ModalContext';
 
-export const GlobalModal = (props: Omit<ModalProps, 'isOpen'>) => {
+export const GlobalModal = () => {
   const MODAL_ROOT = document.body;
-  const { isOpen, onModalClose } = useModalContext();
+  const { isOpen, onModalClose, modal } = useGlobalModal();
   const ref = useClickOutside<HTMLDialogElement>(onModalClose);
 
+  useEffect(() => {
+    if (isOpen) document.body.style.overflow = 'hidden';
+    else document.body.style.overflow = 'auto';
+  }, [isOpen]);
+
+  if (!modal || !isOpen) return null;
   return createPortal(
     <>
       <Modal
         isOpen={isOpen}
         ref={ref}
-        {...props}
+        {...modal}
       />
       <div className={backdropStyle} />
     </>

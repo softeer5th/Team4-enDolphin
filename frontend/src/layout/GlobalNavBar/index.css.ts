@@ -23,6 +23,8 @@ export const containerStyle = recipe({
     borderBottom: `1px solid ${vars.color.Ref.Netural[100]}`,
   
     zIndex: 1000,
+
+    cursor: 'pointer',
   },
   variants: {
     background: {
@@ -39,4 +41,22 @@ export const containerStyle = recipe({
 export const linkStyle = style({
   color: vars.color.Ref.Primary[500],
   padding: vars.spacing[400],
+});
+
+export const dropdownContentsStyle = style({
+  top: 0,
+  right: 0,
+  overflow: 'hidden',
+});
+
+export const nicknameModalStyle = style({
+  height: 'fit-content',
+});
+
+export const nicknameTextStyle = style({
+  padding: vars.spacing[400],
+});
+
+export const nicknameModalContentsStyle = style({
+  paddingTop: vars.spacing[600],
 });

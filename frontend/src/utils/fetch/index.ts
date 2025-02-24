@@ -6,7 +6,7 @@ import { getAccessToken } from '../auth';
 import type { HTTPErrorProps } from '../error';
 import { HTTPError } from '../error';
 
-type Method = 'GET' | 'POST' | 'PUT' | 'DELETE';
+type Method = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 
 export type RequestOptions = {
   headers?: HeadersInit;
@@ -100,6 +100,8 @@ export const request = {
     executeFetch('POST', endpoint, props),
   put: (endpoint: string, props?: Pick<FetchRequest, 'body'>) => 
     executeFetch('PUT', endpoint, props),
+  patch: (endpoint: string, props?: Pick<FetchRequest, 'body'>) =>
+    executeFetch('PATCH', endpoint, props),
   delete: (endpoint: string, props?: Pick<FetchRequest, 'params'>) => 
     executeFetch('DELETE', endpoint, props),
 };

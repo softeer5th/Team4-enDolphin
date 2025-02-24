@@ -5,13 +5,14 @@ import SingleInput from './SingleInput';
 export const ICON_WIDTH = 20;
 
 export interface CommonInputProps {
-  label: string;
+  label?: string;
   type: 'text' | 'select';
   isValid?: boolean;
   required?: boolean;
   hint?: string;
   error?: string;
   placeholder?: string;
+  className?: string;
   onClick?: () => void;
 }
 

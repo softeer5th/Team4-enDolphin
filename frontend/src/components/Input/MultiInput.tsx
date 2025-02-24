@@ -31,6 +31,7 @@ export const MultiInput = ({
   hint, 
   error, 
   borderPlacement = 'inputField',
+  className,
   children,
 }: MultiInputProps) => {
   const childElements = children ? 
@@ -42,7 +43,7 @@ export const MultiInput = ({
 
   return (
     <InputContext.Provider value={{ isValid, type, borderPlacement }}>
-      <div className={containerStyle}>
+      <div className={clsx(className, containerStyle)}>
         <Label required={required}>{label}</Label>
         <div className={clsx(
           inputFieldsContainerStyle,

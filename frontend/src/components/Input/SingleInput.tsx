@@ -1,5 +1,7 @@
 import type { InputHTMLAttributes } from 'react';
 
+import clsx from '@/utils/clsx';
+
 import { type CommonInputProps } from '.';
 import HelperText from './Core/HelperText';
 import InputField from './Core/InputField';
@@ -21,10 +23,11 @@ export const SingleInput = ({
   placeholder,
   onClick,
   inputProps = {},
+  className,
 }: SingleInputProps) => (
   <InputContext.Provider value={{ isValid, type }}>
-    <div className={containerStyle}>
-      <Label required={required}>{label}</Label>
+    <div className={clsx(className, containerStyle)}>
+      {label && <Label required={required}>{label}</Label>}
       <div className={`${inputFieldsContainerStyle} ${interactableBorderStyle({ isValid })}`}>
         <InputField 
           {...inputProps}
