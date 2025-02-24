@@ -2,11 +2,14 @@ import { z } from 'zod';
 
 import { zCoerceToDate } from '@/utils/zod';
 
-const SharedEventDtoSchema = z.object({
-  id: z.number(),
-  startDateTime: zCoerceToDate,
-  endDateTime: zCoerceToDate,
-});
+const SharedEventDtoSchema = z.union([
+  z.object({
+    id: z.number(),
+    startDateTime: zCoerceToDate,
+    endDateTime: zCoerceToDate,
+  }),
+  z.null(),
+]);
 
 const FinishedScheduleSchema = z.object({
   discussionId: z.number(),

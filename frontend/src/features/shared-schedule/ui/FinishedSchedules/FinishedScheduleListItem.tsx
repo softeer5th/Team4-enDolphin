@@ -4,6 +4,7 @@ import { Text } from '@/components/Text';
 import { vars } from '@/theme/index.css';
 import { getDateTimeRangeString } from '@/utils/date';
 
+import type { SharedEventDto } from '../../model';
 import {
   dotStyle,
   scheduleItemContainerStyle,
@@ -13,8 +14,9 @@ interface FinishedScheduleListItemProps {
   scheduleTitle: string;
   participantImageUrls: string[];
   meetingPlace?: string | null;
-  startDate: Date;
-  endDate: Date;
+  sharedEventDto: SharedEventDto;
+  // startDate: Date;
+  // endDate: Date;
   onClick?: () => void;
 }
 
@@ -22,8 +24,7 @@ const FinishedScheduleListItem = ({
   scheduleTitle,
   participantImageUrls,
   meetingPlace,
-  startDate,
-  endDate,
+  sharedEventDto,
 }: FinishedScheduleListItemProps) => (
   <Flex
     className={scheduleItemContainerStyle}
@@ -44,7 +45,7 @@ const FinishedScheduleListItem = ({
       width='full'
     >
       <Flex gap={200}>
-        <MeetDate endDate={endDate} startDate={startDate} />
+        <MeetDate sharedEventDto={sharedEventDto} /> 
         <MeetingPlace meetingPlace={meetingPlace} />
       </Flex>
       <Avatar imageUrls={participantImageUrls} size='sm' />
@@ -52,9 +53,12 @@ const FinishedScheduleListItem = ({
   </Flex>
 );
 
-const MeetDate = ({ startDate, endDate }: { startDate: Date; endDate: Date }) => (
+const MeetDate = ({ sharedEventDto }: { sharedEventDto: SharedEventDto }) => (
   <Text color={vars.color.Ref.Netural[600]} typo='b3R'>
-    {getDateTimeRangeString(startDate, endDate)}
+    {sharedEventDto ? getDateTimeRangeString(
+      sharedEventDto.startDateTime, 
+      sharedEventDto.endDateTime)
+      : '조율되지 않은 일정이에요'}
   </Text>
 );
 

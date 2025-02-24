@@ -31,12 +31,11 @@ const FinishedScheduleList = ({ baseYear }: FinishedScheduleListProps) => {
       >
         {data.finishedDiscussions.map((schedule) => (
           <FinishedScheduleListItem
-            endDate={new Date(schedule.sharedEventDto.endDateTime)}
             key={schedule.discussionId}
             meetingPlace={schedule.meetingMethodOrLocation}
             participantImageUrls={schedule.participantPictureUrls}
             scheduleTitle={schedule.title}
-            startDate={new Date(schedule.sharedEventDto.startDateTime)}
+            sharedEventDto={schedule.sharedEventDto}
           />))}
       </Flex>
       <Pagination
