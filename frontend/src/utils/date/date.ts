@@ -270,6 +270,14 @@ export const isNextWeek = (start: Date, end: Date) => {
   const timeDiff = Math.abs(startDate.getTime() - endDate.getTime());
 
   if (timeDiff > 7 * DAY_IN_MILLISECONDS) return true;
-  if (sd > ed) return true;
+  if (start.getDay() > end.getDay()) return true;
   return false;
+};
+
+export const setDateOnly = (baseDate: Date, newDate: Date) => {
+  const updatedDate = new Date(baseDate);
+  updatedDate.setFullYear(newDate.getFullYear());
+  updatedDate.setMonth(newDate.getMonth());
+  updatedDate.setDate(newDate.getDate());
+  return updatedDate;
 };

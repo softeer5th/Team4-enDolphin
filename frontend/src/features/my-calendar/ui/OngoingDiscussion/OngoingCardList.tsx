@@ -1,5 +1,3 @@
-import { useState } from 'react';
-
 import { useOngoingQuery } from '@/features/shared-schedule/api/queries';
 import type { OngoingSchedule } from '@/features/shared-schedule/model';
 import { useClickOutside } from '@/hooks/useClickOutside';
@@ -10,12 +8,11 @@ import { OngoingCardItem } from './OngoingCardItem';
 
 export const OngoingCardList = () => {
   const { data, isPending } = useOngoingQuery(1, 3, 'ALL');
-  const { handleSelectDateRange, reset } = useDiscussionContext();
-  const [selectedDiscussion, setSelectedDiscussion] = useState<number | null>(null);
+  const { selectedId, setSelectedId, handleSelectDateRange, reset } = useDiscussionContext();
 
   const handleClickSelect = (discussion: OngoingSchedule | null) => {
     if (!discussion) {
-      setSelectedDiscussion(null);
+      setSelectedId(null);
       reset();
       return;
     }
@@ -28,7 +25,7 @@ export const OngoingCardList = () => {
     end.setHours(eh);
     end.setMinutes(em);
 
-    setSelectedDiscussion(discussion.discussionId);
+    setSelectedId(discussion.discussionId);
     handleSelectDateRange(start, end);
   };
 
@@ -38,7 +35,7 @@ export const OngoingCardList = () => {
 
   return data.ongoingDiscussions.map((discussion) => (
     <OngoingCardItem
-      isSelected={selectedDiscussion === discussion.discussionId}
+      isSelected={selectedId === discussion.discussionId}
       key={discussion.discussionId}
       onClick={()=>handleClickSelect(discussion)}
       ref={cardRef}

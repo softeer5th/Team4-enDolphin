@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 import { SharedCalendarContext } from '@/components/Calendar/context/SharedCalendarContext';
 import { Divider } from '@/components/Divider';
 import { Flex } from '@/components/Flex';
@@ -16,6 +18,7 @@ import {
 
 const MyCalendarPage = () => {
   const calendar = useSharedCalendar();
+  const [selectedId, setSelectedId] = useState<number | null>(null);
 
   return (
     <div className={containerStyle}>
@@ -25,7 +28,12 @@ const MyCalendarPage = () => {
       <Divider />
       <Flex className={contentStyle} width='100%'>
         <SharedCalendarContext.Provider value={calendar}>
-          <DiscussionContext.Provider value={useSelectDateRange()}>
+          <DiscussionContext.Provider value={{
+            selectedId,
+            setSelectedId,
+            ...useSelectDateRange(),
+          }}
+          >
             <SideBar />
             <MyCalendar />
           </DiscussionContext.Provider>
