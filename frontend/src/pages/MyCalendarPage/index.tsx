@@ -4,8 +4,10 @@ import { Flex } from '@/components/Flex';
 import { Text } from '@/components/Text';
 import { MyCalendar } from '@/features/my-calendar/ui/MyCalendar';
 import SideBar from '@/features/my-calendar/ui/SideBar';
+import { useSelectDateRange } from '@/hooks/useSelectDateRange';
 import { useSharedCalendar } from '@/hooks/useSharedCalendar';
 
+import { DiscussionContext } from './DiscussionContext';
 import { 
   containerStyle, 
   contentStyle, 
@@ -23,8 +25,10 @@ const MyCalendarPage = () => {
       <Divider />
       <Flex className={contentStyle} width='100%'>
         <SharedCalendarContext.Provider value={calendar}>
-          <SideBar />
-          <MyCalendar />
+          <DiscussionContext.Provider value={useSelectDateRange()}>
+            <SideBar />
+            <MyCalendar />
+          </DiscussionContext.Provider>
         </SharedCalendarContext.Provider>
       </Flex>
     </div>

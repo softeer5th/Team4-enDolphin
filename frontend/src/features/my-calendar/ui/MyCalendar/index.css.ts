@@ -39,3 +39,12 @@ export const timeBarStyle = style({
   height: 1,
   backgroundColor: vars.color.Ref.Primary[500],
 });
+
+export const discussionBoxStyle = style({
+  background: `repeating-linear-gradient(
+    -45deg, ${vars.color.Ref.Netural[400]}, ${vars.color.Ref.Netural[400]} 1px, 
+    ${vars.color.Ref.Netural[200]} 0, ${vars.color.Ref.Netural[200]} 10px)`,
+  border: `1px solid ${vars.color.Ref.Netural[600]}`,
+
+  opacity: 0.4,
+});

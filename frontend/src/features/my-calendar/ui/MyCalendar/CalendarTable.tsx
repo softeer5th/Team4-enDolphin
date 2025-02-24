@@ -7,6 +7,7 @@ import { formatDateToDateTimeString } from '@/utils/date/format';
 import type { PersonalEventResponse } from '../../model';
 import { CalendarCardList } from '../CalendarCardList';
 import { SchedulePopover } from '../SchedulePopover';
+import { CalendarDiscussionBox } from './CalendarDiscussionBox';
 import { CalendarTimeBar } from './CalendarTimeBar';
 import { containerStyle } from './index.css';
 import { useScrollToCurrentTime } from './useScrollToCurrentTime';
@@ -33,6 +34,7 @@ const CalendarTable = (
           startDateTime={formatDateToDateTimeString(time.doneStartTime)}
           type='add'
         />}
+      <CalendarDiscussionBox />
       <CalendarCardList cards={personalEvents} />
       <CalendarTimeBar height={height} />
       <Calendar.Table 
