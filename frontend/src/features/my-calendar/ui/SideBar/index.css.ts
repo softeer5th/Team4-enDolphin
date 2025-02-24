@@ -8,4 +8,11 @@ export const sideBarStyle = style({
   
   padding: vars.spacing[500],
   backgroundColor: vars.color.Ref.Netural[50],
+
+  overflowY: 'scroll',
+
+  scrollbarWidth: 'none',
+  '::-webkit-scrollbar': {
+    display: 'none',
+  },
 });

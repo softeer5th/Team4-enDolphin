@@ -31,6 +31,15 @@ export const fadeInAndOutStyle = style({
   animation: `${appear} 0.3s ease-out, ${disappear} 0.3s ease-in 2.7s`,
 });
 
+export const fadeInBlock = keyframes({
+  from: {
+    opacity: 0,
+  },
+  to: {
+    opacity: 0.4,
+  },
+});
+
 export const fadeHighlight = keyframes({
   '0%': { backgroundColor: vars.color.Ref.Netural.White },
   '5%': { 
@@ -86,5 +95,11 @@ export const fadeTimeBarProps: CSSProperties = {
 export const fadeHighlightGrayProps: CSSProperties = {
   animationName: fadeHighlightGray,
   animationDuration: '2s',
+  animationFillMode: 'forwards',
+};
+
+export const fadeInProps: CSSProperties = {
+  animationName: fadeInBlock,
+  animationDuration: '0.3s',
   animationFillMode: 'forwards',
 };

@@ -7,6 +7,9 @@ const OngoingScheduleSchema = z.object({
   title: z.string(),
   dateRangeStart: zCoerceToDate,
   dateRangeEnd: zCoerceToDate,
+  timeRangeStart: z.string(),
+  timeRangeEnd: z.string(),
+  duration: z.number(),
   timeLeft: z.number(),
   participantPictureUrls: z.array(z.string()),
 });
