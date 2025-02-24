@@ -4,8 +4,6 @@ import Button from '../Button';
 import { Chip } from '../Chip';
 import type { ModalProps } from '.';
 import { Modal } from '.';
-import { useModalContext } from './ModalContext';
-import { ModalProvider } from './ModalProvider';
 
 const meta: Meta = {
   title: 'Components/Modal',
@@ -39,13 +37,6 @@ const meta: Meta = {
       'Google 계정으로 간편하게 가입하고, 팀 프로젝트 일정 관리와 협업을 시작해보세요. ’언제만나?’는 대학생을 위한 최고의 팀플 관리 도구입니다!',
     isOpen: true,
   },
-  decorators: [
-    (Story) => (
-      <ModalProvider>
-        <Story />
-      </ModalProvider>
-    ),
-  ],
 } satisfies Meta<typeof Modal>;
 
 export default meta;
@@ -78,14 +69,4 @@ export const WithContents = () => (
   </Modal>
 );
 
-export const WithContext = () => {
-  const { createModal } = useModalContext();
-
-  const handleClickCreateModal = () => {
-    createModal({ title: '모달 테스트', subTitle: '모달 테스트' });
-  };
-
-  return (
-    <Button onClick={handleClickCreateModal}>모달 열기</Button>
-  );
-};
+// TODO: 전역 Jotai 상태를 사용하는 모달 컴포넌트 테스트
