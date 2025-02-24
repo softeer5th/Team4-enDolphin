@@ -18,7 +18,9 @@ import org.hibernate.annotations.ColumnDefault;
 @Getter
 @NoArgsConstructor
 @Entity
-@Table(name = "discussion")
+@Table(name = "discussion", indexes = {
+    @Index(name = "idx_discussion_status", columnList = "discussion_status")
+})
 public class Discussion extends BaseTimeEntity {
 
     @Id

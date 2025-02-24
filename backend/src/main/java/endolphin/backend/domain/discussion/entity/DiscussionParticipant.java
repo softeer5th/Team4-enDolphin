@@ -10,7 +10,10 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @Entity
-@Table(name = "discussion_participant", uniqueConstraints = {
+@Table(name = "discussion_participant", indexes = {
+    @Index(name = "idx_discussion_participant_discussion_id", columnList = "discussion_id"),
+    @Index(name = "idx_discussion_participant_user_id", columnList = "user_id")
+}, uniqueConstraints = {
     @UniqueConstraint(columnNames = {"discussion_id", "user_id"})
 })
 public class DiscussionParticipant extends BaseTimeEntity {

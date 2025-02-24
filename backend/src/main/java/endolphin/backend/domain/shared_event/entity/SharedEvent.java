@@ -10,7 +10,9 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor
 @Entity
-@Table(name = "shared_event")
+@Table(name = "shared_event", indexes = {
+    @Index(name = "idx_shared_event_discussion_id", columnList = "discussion_id")
+})
 public class SharedEvent {
 
     @Id
