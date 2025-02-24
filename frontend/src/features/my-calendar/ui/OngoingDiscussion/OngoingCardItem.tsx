@@ -13,7 +13,7 @@ import { cardStyle, cardTextStyle } from './index.css';
 interface OngoingCardItemProps extends Omit<OngoingSchedule, 'discussionId'> {
   onClick: () => void;
   isSelected: boolean;
-  ref: RefObject<HTMLDivElement>;
+  ref: RefObject<HTMLDivElement | null>;
 }
   
 const OngoingText = ({ children }: PropsWithChildren) => (
