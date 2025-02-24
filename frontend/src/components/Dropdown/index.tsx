@@ -12,8 +12,8 @@ interface DropdownProps extends PropsWithChildren {
   trigger: ReactNode;
   width?: number | string;
   style?: CSSProperties;
-  onChange: ((value: string) => void);
-  selectedValue: string;
+  onChange?: ((value: string) => void);
+  selectedValue?: string;
 }
 
 export const Dropdown = ({ 
