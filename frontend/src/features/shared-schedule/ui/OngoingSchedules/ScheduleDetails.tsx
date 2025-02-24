@@ -50,7 +50,7 @@ const ScheduleDetails = ({ discussionId }: ScheduleDetailsProps) => {
       >
         <Button
           onClick={() => 
-            handleCopyToClipboard(`${serviceENV.CLIENT_URL}/discussion/${discussion.id}`)}
+            handleCopyToClipboard(`${serviceENV.CLIENT_URL}/discussion/invite/${discussion.id}`)}
           size='xl'
           style='borderless'
         >
