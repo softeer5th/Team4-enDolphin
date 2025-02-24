@@ -9,6 +9,7 @@ public record GoogleEventDateTime(
     String dateTime,
     String timeZone
 ) {
+
     private final static DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ISO_DATE_TIME;
     private final static ZoneId DEFAULT_ZONE_ID = ZoneId.of("Asia/Seoul");
 

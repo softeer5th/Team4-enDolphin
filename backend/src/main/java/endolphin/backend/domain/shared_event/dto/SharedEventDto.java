@@ -8,6 +8,7 @@ public record SharedEventDto(
     LocalDateTime startDateTime,
     LocalDateTime endDateTime
 ) {
+
     public static SharedEventDto of(SharedEvent event) {
         return new SharedEventDto(
             event.getId(),

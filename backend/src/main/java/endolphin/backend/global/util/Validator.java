@@ -27,14 +27,16 @@ public class Validator {
         }
     }
 
-    public static void validateInRange(Discussion discussion, LocalDateTime eventStart, LocalDateTime eventEnd) {
+    public static void validateInRange(Discussion discussion, LocalDateTime eventStart,
+        LocalDateTime eventEnd) {
         LocalDate startDate = discussion.getDateRangeStart();
         LocalDate endDate = discussion.getDateRangeEnd();
         LocalTime startTime = discussion.getTimeRangeStart();
         LocalTime endTime = discussion.getTimeRangeEnd();
 
         if (eventStart.toLocalDate().isBefore(startDate) || eventEnd.toLocalDate().isAfter(endDate)
-            || eventStart.toLocalTime().isBefore(startTime) || eventEnd.toLocalTime().isAfter(endTime)) {
+            || eventStart.toLocalTime().isBefore(startTime) || eventEnd.toLocalTime()
+            .isAfter(endTime)) {
             throw new ApiException(ErrorCode.INVALID_DATE_TIME_REQUEST);
         }
     }

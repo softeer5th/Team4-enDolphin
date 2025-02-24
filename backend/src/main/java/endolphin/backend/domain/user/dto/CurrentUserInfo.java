@@ -4,4 +4,5 @@ public record CurrentUserInfo(
     String name,
     String picture
 ) {
+
 }

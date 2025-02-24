@@ -1,7 +1,6 @@
 package endolphin.backend.domain.discussion.dto;
 
 import endolphin.backend.domain.discussion.enums.MeetingMethod;
-import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;

@@ -11,6 +11,7 @@ public record PersonalEventResponse(
     Boolean isAdjustable,
     String calendarId
 ) {
+
     public static PersonalEventResponse fromEntity(PersonalEvent event) {
         return new PersonalEventResponse(
             event.getId(),

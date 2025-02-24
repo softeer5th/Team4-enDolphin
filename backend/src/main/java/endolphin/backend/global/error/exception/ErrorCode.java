@@ -21,15 +21,19 @@ public enum ErrorCode {
 
     // PersonalEvent
     PERSONAL_EVENT_NOT_FOUND(HttpStatus.NOT_FOUND, "P001", "Personal Event not found"),
-    INVALID_PERSONAL_EVENT_USER(HttpStatus.FORBIDDEN, "P002", "Not allowed to update this personal event"),
+    INVALID_PERSONAL_EVENT_USER(HttpStatus.FORBIDDEN, "P002",
+        "Not allowed to update this personal event"),
 
     //SharedEvent
     SHARED_EVENT_NOT_FOUND(HttpStatus.NOT_FOUND, "S001", "Shared Event not found"),
 
     // DiscussionParticipant
-    DISCUSSION_PARTICIPANT_EXCEED_LIMIT(HttpStatus.FORBIDDEN, "DP001", "Discussion participant exceed limit"),
-    DISCUSSION_PARTICIPANT_NOT_FOUND(HttpStatus.NOT_FOUND, "DP002", "Discussion participant not found"),
-    INVALID_DISCUSSION_PARTICIPANT(HttpStatus.BAD_REQUEST, "DP003", "Invalid Discussion participant"),
+    DISCUSSION_PARTICIPANT_EXCEED_LIMIT(HttpStatus.FORBIDDEN, "DP001",
+        "Discussion participant exceed limit"),
+    DISCUSSION_PARTICIPANT_NOT_FOUND(HttpStatus.NOT_FOUND, "DP002",
+        "Discussion participant not found"),
+    INVALID_DISCUSSION_PARTICIPANT(HttpStatus.BAD_REQUEST, "DP003",
+        "Invalid Discussion participant"),
     DISCUSSION_HOST_NOT_FOUND(HttpStatus.NOT_FOUND, "DP004", "Discussion host not found"),
     NOT_ALLOWED_USER(HttpStatus.FORBIDDEN, "DP005", "Not allowed user"),
     ALREADY_PARTICIPATED(HttpStatus.BAD_REQUEST, "DP006", "Already participated"),
@@ -59,6 +63,7 @@ public enum ErrorCode {
     private final HttpStatus httpStatus;
     private final String code;
     private final String message;
+
     ErrorCode(final HttpStatus httpStatus, final String code, final String message) {
         this.httpStatus = httpStatus;
         this.message = message;

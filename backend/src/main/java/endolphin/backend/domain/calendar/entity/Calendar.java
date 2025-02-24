@@ -53,7 +53,8 @@ public class Calendar extends BaseTimeEntity {
         this.calendarId = calendarId;
     }
 
-    public void setWebhookProperties(String resourceId, String channelId, LocalDateTime channelExpiration) {
+    public void setWebhookProperties(String resourceId, String channelId,
+        LocalDateTime channelExpiration) {
         this.resourceId = resourceId;
         this.channelId = channelId;
         this.channelExpiration = channelExpiration;

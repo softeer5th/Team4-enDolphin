@@ -11,6 +11,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Component
 @Slf4j
 public class SseEmitters {
+
     private final Map<Long, SseEmitter> emitters = new ConcurrentHashMap<>();
     private static final Long TIMEOUT = 1000L * 60 * 30;
 

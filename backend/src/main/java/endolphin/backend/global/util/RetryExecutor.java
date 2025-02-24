@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 @Slf4j
 public class RetryExecutor {
+
     private final GoogleOAuthService googleOAuthService;
     private final UserService userService;
     private final CalendarService calendarService;
@@ -28,13 +29,14 @@ public class RetryExecutor {
     public <T> T executeCalendarApiWithRetry(Supplier<T> action, User user, String calendarId) {
         int attempts = 0;
         long delay = INITIAL_DELAY_MS;
-        while(true) {
+        while (true) {
             try {
                 return action.get();
             } catch (OAuthException e) {
                 log.error("OAuth exception: {}", e.getMessage());
                 if (e.getErrorCode() == ErrorCode.OAUTH_UNAUTHORIZED_ERROR) {
-                    String newAccessToken = googleOAuthService.reissueAccessToken(user.getRefreshToken());
+                    String newAccessToken = googleOAuthService.reissueAccessToken(
+                        user.getRefreshToken());
                     userService.updateAccessToken(user, newAccessToken);
                 }
             } catch (CalendarException e) {
@@ -62,12 +64,13 @@ public class RetryExecutor {
                 Thread.currentThread().interrupt();
                 throw new CalendarException(HttpStatus.INTERNAL_SERVER_ERROR, "Retry interrupted");
             }
-            delay =  INITIAL_DELAY_MS * (long) Math.pow(2, attempts);
+            delay = INITIAL_DELAY_MS * (long) Math.pow(2, attempts);
             delay += ThreadLocalRandom.current().nextLong(delay);
             if (attempts >= MAX_RETRIES - 1) {
                 log.error("Retry exceeded maximum number of retries: username: {}, calendarId: {}",
                     user.getName(), calendarId);
-                throw new CalendarException(HttpStatus.INTERNAL_SERVER_ERROR, "Retry exceeded maximum number of retries");
+                throw new CalendarException(HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Retry exceeded maximum number of retries");
             }
         }
 

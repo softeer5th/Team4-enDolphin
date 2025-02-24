@@ -9,6 +9,7 @@ public enum GoogleEventStatus {
     TENTATIVE("tentative");
 
     private final String value;
+
     GoogleEventStatus(String value) {
         this.value = value;
     }
