@@ -6,7 +6,6 @@ export const scheduleItemContainerStyle = style({
   width: '100%',
   padding: `${vars.spacing[400]} ${vars.spacing[600]}`,
   borderRadius: vars.radius[500],
-  cursor: 'pointer',
 });
 
 export const dotStyle = style({

@@ -4,12 +4,12 @@ export const usePagination = (
   initialPage: number,
 ) => {
   const [currentPage, setCurrentPage] = useState(initialPage);
-  const onPageChange = (page: number) => {
+  const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
 
   return {
     currentPage,
-    onPageChange,
+    handlePageChange,
   };
 };

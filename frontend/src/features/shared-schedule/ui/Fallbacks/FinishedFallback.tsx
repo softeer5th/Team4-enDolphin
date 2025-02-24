@@ -1,5 +1,5 @@
 import { Flex } from '@/components/Flex';
-import { ClockGraphic } from '@/components/Icon/component/ClockGraphic';
+import { ClockGraphic } from '@/components/Icon/custom/ClockGraphic';
 import { Text } from '@/components/Text';
 import { vars } from '@/theme/index.css';
 

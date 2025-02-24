@@ -1,5 +1,5 @@
 import { Flex } from '@/components/Flex';
-import { CheckGraphic } from '@/components/Icon/component/CheckGraphic';
+import { CheckGraphic } from '@/components/Icon/custom/CheckGraphic';
 import { Text } from '@/components/Text';
 import { vars } from '@/theme/index.css';
 

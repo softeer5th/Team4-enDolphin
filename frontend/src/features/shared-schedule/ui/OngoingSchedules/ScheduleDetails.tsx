@@ -28,7 +28,7 @@ interface ScheduleDetailsProps {
 }
 
 // TODO: Date 타입 변환 후 변경사항 적용
-const ScheduleContents = ({ discussionId }: ScheduleDetailsProps) => {
+const ScheduleDetails = ({ discussionId }: ScheduleDetailsProps) => {
   const { discussion } = useDiscussionQuery(discussionId.toString());
   const { handleCopyToClipboard } = useClipboard();
   if (!discussion) return <div className={containerStyle} />;
@@ -50,7 +50,7 @@ const ScheduleContents = ({ discussionId }: ScheduleDetailsProps) => {
       >
         <Button
           onClick={() => 
-            handleCopyToClipboard(`${serviceENV.CLIENT_URL}/discussion/${discussion.id}`)}
+            handleCopyToClipboard(`${serviceENV.CLIENT_URL}/discussion/invite/${discussion.id}`)}
           size='xl'
           style='borderless'
         >
@@ -113,4 +113,4 @@ const Deadline = ({ timeLeft }: { timeLeft: number }) => {
   );
 };
 
-export default ScheduleContents;
+export default ScheduleDetails;

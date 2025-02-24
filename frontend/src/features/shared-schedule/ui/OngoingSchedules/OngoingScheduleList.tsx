@@ -13,7 +13,7 @@ import type { OngoingSegmentOption } from '.';
 import { mainContainerStyle } from './index.css';
 import { paginationStyle } from './ongoingScheduleList.css';
 import OngoingScheduleListItem from './OngoingScheduleListItem';
-import ScheduleContents from './ScheduleDetails';
+import ScheduleDetails from './ScheduleDetails';
 
 export const PAGE_SIZE = 6;
 
@@ -37,9 +37,9 @@ interface OngoingScheduleListProps {
 // TODO: useEffect 뺄 수 있으면 다른 걸로 대체
 const OngoingScheduleList = ({ segmentOption }: OngoingScheduleListProps) => {
   const queryClient = useQueryClient();
-  const { currentPage, onPageChange } = usePagination(1);
-  const { data, isPending } = useOngoingQuery(currentPage, PAGE_SIZE, segmentOption.value );
+  const { currentPage, handlePageChange } = usePagination(1);
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const { data, isPending } = useOngoingQuery(currentPage, PAGE_SIZE, segmentOption.value );
   if (isPending) return <div>pending...</div>;
   if (!data || data.ongoingDiscussions.length === 0) 
     return <NoDataAlt segmentValue={segmentOption.value} />;
@@ -57,16 +57,21 @@ const OngoingScheduleList = ({ segmentOption }: OngoingScheduleListProps) => {
           selectedIndex={selectedIndex}
           setSelectedIndex={setSelectedIndex}
         />
-        <Pagination
-          className={paginationStyle}
-          currentPage={currentPage}
-          onPageButtonHover={(page) =>
-            prefetchOngoingSchedules(queryClient, page, PAGE_SIZE, segmentOption.value )}
-          onPageChange={onPageChange}
-          totalPages={data.totalPages}
-        />
+        {data.totalPages > 1 && (
+          <Pagination
+            className={paginationStyle}
+            currentPage={currentPage}
+            onPageButtonHover={(page) =>
+              prefetchOngoingSchedules(queryClient, page, PAGE_SIZE, segmentOption.value )}
+            onPageChange={(page: number) => {
+              setSelectedIndex(0);
+              handlePageChange(page); 
+            }}
+            totalPages={data.totalPages}
+          />
+        )}
       </Flex>
-      <ScheduleContents discussionId={data.ongoingDiscussions[selectedIndex].discussionId} />
+      <ScheduleDetails discussionId={data.ongoingDiscussions[selectedIndex].discussionId} />
     </div>
   );
 };

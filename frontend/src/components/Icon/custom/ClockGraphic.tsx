@@ -7,11 +7,11 @@ export const ClockGraphic = ({ clickable = false, className, width = 24, height 
 <circle cx="100" cy="100" r="100" fill="url(#paint0_linear_894_208)"/>
 <circle cx="100" cy="100.5" r="75" fill="url(#paint1_radial_894_208)"/>
 <rect x="104.158" y="98.5" width="8" height="66" rx="4" transform="rotate(120 104.158 98.5)" fill="#4E5968"/>
-<rect x="99.6569" y="106.512" width="8" height="50" rx="4" transform="rotate(135 99.6569 106.512)" fill="#4E5968"/>
+<rect x="99.6569" y="106.512" width="8" height="50" rx="4" transform="rotate(-135 99.6569 106.512)" fill="#4E5968"/>
 <rect x="98" y="100" width="4" height="60" rx="2" fill="#4593FC"/>
 <circle cx="100" cy="100.5" r="10" fill="white" stroke="#E5E8EB" strokeWidth="4"/>
 <defs>
-<linearGradient id="paint0_linear_894_208" x1="1.8593e06" y1="10.0503" x2="192.95" y2="206.91" gradientUnits="userSpaceOnUse">
+<linearGradient id="paint0_linear_894_208" x1="-1.8593e-06" y1="10.0503" x2="192.95" y2="206.91" gradientUnits="userSpaceOnUse">
 <stop stopColor="#D1D6DB"/>
 <stop offset="1" stopColor="#F2F4F6"/>
 </linearGradient>
