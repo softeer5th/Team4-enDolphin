@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - dev
+      - main
     paths:
       - "backend/**"
 
@@ -24,7 +25,7 @@ jobs:
         working-directory: ./backend
         run: |
           mkdir -p src/main/resources
-          echo "${{ secrets.APPLICATION_DEV_YML }}" > src/main/resources/application-dev.yml
+          echo "${{ secrets.APPLICATION_PROD_YML }}" > src/main/resources/application-prod.yml
         shell: bash
 
       - name: Grant Execute Permission for gradlew
@@ -36,7 +37,7 @@ jobs:
       - name: Build Backend
         working-directory: ./backend
         run: |
-          ./gradlew clean build -Dspring.profiles.active=dev -x test
+          ./gradlew clean build -Dspring.profiles.active=prod -x test
 
       # EC2로 파일 전송
       - name: Copy files to EC2
