@@ -165,6 +165,8 @@ public class DiscussionParticipantService {
                 discussion.getTitle(),
                 discussion.getDateRangeStart(),
                 discussion.getDateRangeEnd(),
+                discussion.getTimeRangeStart(),
+                discussion.getTimeRangeEnd(),
                 TimeUtil.calculateTimeLeft(discussion.getDeadline()),
                 discussionPicturesMap.getOrDefault(discussion.getId(), Collections.emptyList())
             ))
