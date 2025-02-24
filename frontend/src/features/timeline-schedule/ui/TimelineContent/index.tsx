@@ -8,7 +8,7 @@ import { vars } from '@/theme/index.css';
 
 import type { Participant } from '../../model';
 import TimelineCanvas from '../TImelineCanvas';
-import { getGridTimes, getRowTopOffset } from '../timelineHelper';
+import { calculateDimHeight, getGridTimes, getRowTopOffset } from '../timelineHelper';
 import {
   bodyContainerStyle,
   containerStyle,
@@ -46,15 +46,18 @@ const TimelineContent = (props: TimelineContentProps) => {
           gridTimes={gridTimes}
           participants={[...props.checkedParticipants, ...props.uncheckedParticipants]}
         />
-        {props.uncheckedParticipants.length > 0 && 
-        <div
-          className={dimStyle}
-          ref={dimRef}
-          style={{ 
-            top: getRowTopOffset(props.checkedParticipants.length),
-            height: getRowTopOffset(props.uncheckedParticipants.length), 
-          }}
-        />}
+        {props.uncheckedParticipants.length > 0 &&
+          <div
+            className={dimStyle}
+            ref={dimRef}
+            style={{ 
+              top: getRowTopOffset(props.checkedParticipants.length),
+              height: calculateDimHeight(
+                props.checkedParticipants.length,
+                props.uncheckedParticipants.length,
+              ),
+            }}
+          />}
       </div>
     </div>
   );
