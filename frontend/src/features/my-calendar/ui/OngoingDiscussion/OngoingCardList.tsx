@@ -9,12 +9,13 @@ import { OngoingCardItem } from './OngoingCardItem';
 
 export const OngoingCardList = () => {
   const { data, isPending } = useOngoingQuery(1, 3, 'ALL');
-  const { handleSelectDateRange } = useDiscussionContext();
+  const { handleSelectDateRange, reset } = useDiscussionContext();
   const [selectedDiscussion, setSelectedDiscussion] = useState<number | null>(null);
 
   const handleClickSelect = (discussion: OngoingSchedule | null) => {
     if (!discussion) {
       setSelectedDiscussion(null);
+      reset();
       return;
     }
     setSelectedDiscussion(discussion.discussionId);

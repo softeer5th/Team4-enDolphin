@@ -8,6 +8,7 @@ interface DateRange {
 export interface DateRangeReturn {
   selectedDateRange: DateRange | null;
   handleSelectDateRange: (start: Date, end: Date) => void;
+  reset: () => void;
 }
 
 export const useSelectDateRange = (): DateRangeReturn => {
@@ -17,8 +18,13 @@ export const useSelectDateRange = (): DateRangeReturn => {
     setSelectedDateRange({ start, end });
   };
 
+  const reset = () => {
+    setSelectedDateRange(null);
+  };
+
   return {
     selectedDateRange,
     handleSelectDateRange,
+    reset,
   };
 };
