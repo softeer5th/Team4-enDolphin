@@ -24,7 +24,7 @@ export const SingleInput = ({
 }: SingleInputProps) => (
   <InputContext.Provider value={{ isValid, type }}>
     <div className={containerStyle}>
-      <Label required={required}>{label}</Label>
+      {label && <Label required={required}>{label}</Label>}
       <div className={`${inputFieldsContainerStyle} ${interactableBorderStyle({ isValid })}`}>
         <InputField 
           {...inputProps}
