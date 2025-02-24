@@ -33,6 +33,7 @@ const UpcomingScheduleListItem = ({
       params={{ id: schedule.discussionId.toString() }}
       state={{ 
         upcomingScheduleDetail: {
+          title: schedule.title,
           startDateTime: schedule.sharedEventDto.startDateTime,
           endDateTime: schedule.sharedEventDto.endDateTime,
         },
