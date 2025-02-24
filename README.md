@@ -67,12 +67,14 @@ Google 캘린더와 연동된 경우, 캘린더에도 자동으로 반영되어 
 
 ---
 
+## ERD
+<img src="https://github.com/user-attachments/assets/0fb1a75e-ed74-47f4-8cdd-7bb132fce421" width="400" />
 
 ## 🏡 아키텍쳐
 ### AWS
 <img src="https://github.com/user-attachments/assets/8e09e33d-100c-4064-a29d-d7be25d12f1d" width="400" />
 
-### 서비스
+### 시스템
 <img src="https://github.com/user-attachments/assets/d2c29880-b852-4deb-ab21-40f9f3e2e433" width="400" />
 
 <br/>
@@ -114,6 +116,9 @@ Google 캘린더와 연동된 경우, 캘린더에도 자동으로 반영되어 
 </table>
 <br/>
 
+## 📚 팀 문서
+[Team Wiki](https://github.com/softeer5th/Team4-enDolphin/wiki)
+
 ---
 
 ## 🤝 협업 전략
@@ -126,5 +131,5 @@ Google 캘린더와 연동된 경우, 캘린더에도 자동으로 반영되어 
 ### 코드리뷰
 `Pn룰`을 도입하여 리뷰의 중요도를 리뷰이가 알 수 있도록 합니다.
 
-## 📚 [Team Wiki](https://github.com/softeer5th/Team4-enDolphin/wiki)
+
 <br/>
