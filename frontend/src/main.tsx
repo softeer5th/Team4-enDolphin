@@ -31,7 +31,7 @@ const router = createRouter({
     queryClient,
   },
   scrollRestoration: true,
-  scrollRestorationBehavior: 'smooth',
+  scrollRestorationBehavior: 'instant',
   getScrollRestorationKey: (location) => {
     const paths = ['/home'];
     return paths.includes(location.pathname)
