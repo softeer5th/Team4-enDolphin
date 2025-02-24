@@ -12,14 +12,16 @@ interface DropdownItemProps extends PropsWithChildren {
   value: string;
   style?: CSSProperties;
   className?: string;
+  onClick?: () => void;
 }
 
-export const DropdownItem = ({ value, style, className, children }: DropdownItemProps) => {
+export const DropdownItem = ({ value, style, onClick, className, children }: DropdownItemProps) => {
   const { controlId, selectedValue, onChange, setIsOpen } = useSafeContext(DropdownContext);
   const defaultId = `${controlId}-item-${useId()}`;
 
   const handleClick = () => {
-    onChange(value);
+    onChange?.(value);
+    onClick?.();
     setIsOpen(false);
   };
 

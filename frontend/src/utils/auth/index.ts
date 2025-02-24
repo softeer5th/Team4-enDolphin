@@ -26,3 +26,7 @@ export const isLogin = () => {
   if (!accessToken) return false;
   return true;
 };
+
+export const logout = () => {
+  localStorage.removeItem(ACCESS_TOKEN_KEY);
+};

@@ -9,17 +9,18 @@ export type Size = 'sm' | 'lg';
 interface AvatarProps {
   size: Size;
   imageUrls: string[];
+  onClick?: () =>  void;
   className?: string;
 }
 
 const MAX_IMAGE_COUNT = 4;
 
-const Avatar = ({ size, imageUrls, className }: AvatarProps) => {
+const Avatar = ({ size, imageUrls, onClick, className }: AvatarProps) => {
   const ENTIRE_LENGTH = imageUrls.length;
   const limitedUrls = imageUrls.slice(0, MAX_IMAGE_COUNT);
 
   return (
-    <div className={clsx(avatarContainerStyle, className)}>
+    <div className={clsx(avatarContainerStyle, className)} onClick={onClick}>
       {limitedUrls.map((url, index) => (
         <AvatarItem
           key={`${index}-${url}`}
