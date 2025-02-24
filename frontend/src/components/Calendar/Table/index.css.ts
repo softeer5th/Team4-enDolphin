@@ -92,6 +92,9 @@ export const sideCellStyle = recipe({
     justifyContent: 'flex-end',
   
     backgroundColor: vars.color.Ref.Netural.White,
+
+    userSelect: 'none',
+    WebkitUserSelect: 'none',
   },
   variants: {
     time: {

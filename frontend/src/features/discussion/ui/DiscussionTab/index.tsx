@@ -1,19 +1,22 @@
-import { useState } from 'react';
+import { useAtom } from 'jotai';
 
 import { Tab } from '@/components/Tab';
+import { tabAtom } from '@/store/discussion';
 
 import DiscussionCalendar from '../DiscussionCalendar';
 import DiscussionRank from '../DiscussionRank';
 import { tabContainerStyle, tabContentStyle, tabListStyle } from './index.css';
 
+type DiscussionTab = 'calendar' | 'rank';
+
 const DiscussionTab = () => {
-  const [tab, setTab] = useState('calendar');
-  const handleChange = (value: string) => {
+  const [tab, setTab] = useAtom(tabAtom);
+  const handleChange = (value: DiscussionTab) => {
     setTab(value);
   };
 
   return (
-    <Tab
+    <Tab<DiscussionTab>
       className={tabContainerStyle}
       onChange={handleChange}
       selectedValue={tab}

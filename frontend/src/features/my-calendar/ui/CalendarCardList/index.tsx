@@ -26,7 +26,7 @@ const DefaultCard = (
       startTime={new Date(card.startDateTime)}
       status={card.isAdjustable ? 'adjustable' : 'fixed'}
       style={{
-        width: 'calc((100% - 72px) / 7)',
+        width: 'calc((100% - 72px) / 7 - 0.5rem)',
         height,
         position: 'absolute',
         left: `calc(((100% - 72px) / 7 * ${sx}) + 72px)`,

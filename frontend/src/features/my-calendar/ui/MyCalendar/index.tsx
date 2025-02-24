@@ -13,7 +13,7 @@ import { calendarStyle } from './index.css';
 const AlldayCard = (card: PersonalEventResponse) => {
   const start = new Date(card.startDateTime);
   const end = new Date(card.endDateTime);
-  const dayDiff = end.getDate() - start.getDate() + 1;
+  const dayDiff = end.getDay() - start.getDay() + 1;
   const { x: sx } = calcPositionByDate(start);
 
   return (

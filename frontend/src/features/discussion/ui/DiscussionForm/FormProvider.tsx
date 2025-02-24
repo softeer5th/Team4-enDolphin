@@ -14,7 +14,7 @@ export const FormProvider = ({ children, initialValues }: FormProviderProps) => 
 
   return(
     <FormContext.Provider value={values}>
-      <form className={values.name}>
+      <form className={values.name} onSubmit={(e)=>e.preventDefault()}>
         {children}
       </form>
     </FormContext.Provider>

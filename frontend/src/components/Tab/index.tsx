@@ -9,26 +9,26 @@ import { TabContext } from './TabContext';
 import { TabItem } from './TabItem';
 import { TabItemList } from './TabItemList';
 
-interface TabProps extends PropsWithChildren {
-  onChange: ((value: string) => void);
-  selectedValue: string;
+interface TabProps<T extends string = string> extends PropsWithChildren {
+  onChange: ((value: T) => void);
+  selectedValue: T;
   className?: string;
 }
 
-export const Tab = ({ 
+export const Tab = <T extends string, _ = null>({ 
   onChange, 
   selectedValue,
   children, 
   className,
-}: TabProps) => {
+}: TabProps<T>) => {
   const defaultId = `Tab-${useId()}`;
 
   return (
-    <TabContext.Provider 
+    <TabContext.Provider
       value={{ 
         controlId: defaultId, 
         selectedValue,
-        onChange,
+        onChange: onChange as (value: string) => void,
       }}
     >
       <div className={clsx(className, tabContainerStyle)} id={defaultId}>

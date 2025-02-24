@@ -17,6 +17,7 @@ export * from "./component/Logo.tsx";
 export * from "./component/Pencil.tsx";
 export * from "./component/PinLocation.tsx";
 export * from "./component/Plus.tsx";
+export * from "./component/Progress.tsx";
 export * from "./component/TriangleWarning.tsx";
 export * from "./component/UserTwo.tsx";
 export * from "./component/TooltipArrow";
