@@ -67,7 +67,7 @@ Google 캘린더와 연동된 경우, 캘린더에도 자동으로 반영되어 
 
 ---
 
-## ERD
+## 📋️ ERD
 <img src="https://github.com/user-attachments/assets/6a854250-f964-4b24-be0a-f948d0e48317" width="600"/>
 
 ## 🏡 아키텍쳐
