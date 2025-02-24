@@ -3,10 +3,6 @@ import { recipe } from '@vanilla-extract/recipes';
 
 import { vars } from '@/theme/index.css';
 
-export const linkStyle = style({
-  width: '100%',
-});
-
 export const containerStyle = recipe({
   base: {
     padding: `${vars.spacing[500]} ${vars.spacing[400]}`,

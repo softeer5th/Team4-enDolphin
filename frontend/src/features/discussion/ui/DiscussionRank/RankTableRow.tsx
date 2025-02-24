@@ -2,13 +2,14 @@ import { Chip } from '@/components/Chip';
 import { Flex } from '@/components/Flex';
 import { Text } from '@/components/Text';
 import { vars } from '@/theme/index.css';
-import { formatDateToString, formatDateToTimeString  } from '@/utils/date/format';
+import { formatDateToString, formatDateToTimeString } from '@/utils/date/format';
 
 import type { DiscussionDTO } from '../../model';
-import { 
+import DiscussionDetailLink from '../DiscussionDetailLink';
+import {
   tableCellStyle,
   tableCellTextStyle,
-  tableRowStyle, 
+  tableRowStyle,
 } from './index.css';
 
 const RankAdjustable = ({ users }: { users: DiscussionDTO['usersForAdjust'] }) => {
@@ -45,35 +46,37 @@ const RankAdjustable = ({ users }: { users: DiscussionDTO['usersForAdjust'] }) =
 export const RankTableRow = (
   { discussion, rank }: { discussion: DiscussionDTO; rank: number },
 ) => (
-  <Flex
-    as='tr'
-    className={tableRowStyle}
-    key={`${rank}-${discussion.startDateTime}`}
-    width='100%'
-  >
-    <td className={tableCellStyle({ width: 56 })}>
-      <Text color={vars.color.Ref.Netural[600]} typo='b3M'>
-        {rank + 4}
-        위
-      </Text>
-    </td>
-    <td className={tableCellStyle({ width: 'full' })}>
-      <RankAdjustable users={discussion.usersForAdjust} />
-    </td>
-    <td className={tableCellStyle({ width: 158 })}>
-      <Text color={vars.color.Ref.Netural[600]} typo='b2R'>
-        {formatDateToString(new Date(discussion.startDateTime))}
-      </Text>
-    </td>
-    <td className={tableCellStyle({ width: 158 })}>        
-      <Text color={vars.color.Ref.Netural[600]} typo='b2R'>
-        {formatDateToTimeString(new Date(discussion.startDateTime))}
-        {' '}
-        - 
-        {' '}
-        {formatDateToTimeString(new Date(discussion.endDateTime))}
-      </Text>
-    </td>
-  </Flex>
+  <DiscussionDetailLink discussion={discussion}>
+    <Flex
+      as='tr'
+      className={tableRowStyle}
+      key={`${rank}-${discussion.startDateTime}`}
+      width='100%'
+    >
+      <td className={tableCellStyle({ width: 56 })}>
+        <Text color={vars.color.Ref.Netural[600]} typo='b3M'>
+          {rank + 4}
+          위
+        </Text>
+      </td>
+      <td className={tableCellStyle({ width: 'full' })}>
+        <RankAdjustable users={discussion.usersForAdjust} />
+      </td>
+      <td className={tableCellStyle({ width: 158 })}>
+        <Text color={vars.color.Ref.Netural[600]} typo='b2R'>
+          {formatDateToString(new Date(discussion.startDateTime))}
+        </Text>
+      </td>
+      <td className={tableCellStyle({ width: 158 })}>        
+        <Text color={vars.color.Ref.Netural[600]} typo='b2R'>
+          {formatDateToTimeString(new Date(discussion.startDateTime))}
+          {' '}
+          - 
+          {' '}
+          {formatDateToTimeString(new Date(discussion.endDateTime))}
+        </Text>
+      </td>
+    </Flex>
+  </DiscussionDetailLink>
 );
   
