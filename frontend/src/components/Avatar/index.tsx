@@ -8,7 +8,7 @@ export type Size = 'sm' | 'lg';
 
 interface AvatarProps {
   size: Size;
-  imageUrls: string[];
+  imageUrls: (string | null)[];
   onClick?: () =>  void;
   className?: string;
 }

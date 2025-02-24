@@ -4,7 +4,7 @@ import type { Size } from '.';
 import { avatarItemStyle } from './index.css';
 
 interface AvatarItemProps {
-  src: string;
+  src: string | null;
   size?: Size;
   alt?: string;
 }
@@ -26,7 +26,7 @@ const AvatarItem = ({ src, size = 'sm', alt }: AvatarItemProps) => {
       className={avatarItemStyle({ size })}
       loading='lazy'
       onError={handleError}
-      src={imgSrc}
+      src={imgSrc || fallbackSrc}
     />
   );
 };
