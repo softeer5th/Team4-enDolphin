@@ -2,10 +2,9 @@ import Avatar from '@/components/Avatar';
 import { Flex } from '@/components/Flex';
 import { Text } from '@/components/Text';
 import { vars } from '@/theme/index.css';
-import { isSameDate } from '@/utils/date';
+import { getDateTimeRangeString } from '@/utils/date';
 
 import {
-  detailsContainerStyle,
   dotStyle,
   scheduleItemContainerStyle,
 } from './finishedScheduleListItem.css';
@@ -13,7 +12,7 @@ import {
 interface FinishedScheduleListItemProps {
   scheduleTitle: string;
   participantImageUrls: string[];
-  meetingPlace?: string;
+  meetingPlace?: string | null;
   startDate: Date;
   endDate: Date;
   onClick?: () => void;
@@ -41,7 +40,6 @@ const FinishedScheduleListItem = ({
     </Flex>
     <Flex
       align='center'
-      className={detailsContainerStyle}
       justify='space-between'
       width='full'
     >
@@ -54,22 +52,25 @@ const FinishedScheduleListItem = ({
   </Flex>
 );
 
-const MeetingPlace = ({ meetingPlace }: { meetingPlace?: string }) => (
-  meetingPlace && 
-  <>
-    <div className={dotStyle} />
-    <Text color={vars.color.Ref.Netural[600]} typo='b3R'>{meetingPlace}</Text>
-  </>
-);
-
 const MeetDate = ({ startDate, endDate }: { startDate: Date; endDate: Date }) => (
   <Text color={vars.color.Ref.Netural[600]} typo='b3R'>
-    {`${startDate.toLocaleDateString()} ~ `}
-    {isSameDate(startDate, endDate) ? 
-      endDate.toLocaleDateString()
-      :
-      endDate.toLocaleDateString().slice(5)}
+    {getDateTimeRangeString(startDate, endDate)}
   </Text>
 );
+
+const MeetingPlace = ({ meetingPlace }: { meetingPlace?: string | null }) => (
+  meetingPlace && 
+    <>
+      <div className={dotStyle} />
+      <Text color={vars.color.Ref.Netural[600]} typo='b3R'>{getMeetingPlace(meetingPlace)}</Text>
+    </>
+);
+
+const getMeetingPlace = (meetingPlace: string | null) => {
+  if (!meetingPlace) return null;
+  if (meetingPlace === 'OFFLINE') return '오프라인 모임';
+  if (meetingPlace === 'ONLINE') return '온라인 모임';
+  return meetingPlace;
+};
 
 export default FinishedScheduleListItem;

@@ -46,12 +46,14 @@ const DiscussionConfirmCard = (
 
 const Buttons = () => (
   <>
-    {/* <Button
+    <Button
+      as={Link}
       size='xl'
       style='borderless'
+      to='/home'
     >
-      다시 일정 조율하기
-    </Button> */}
+      홈으로 가기
+    </Button>
     <Button
       as={Link}
       size='xl'

@@ -30,6 +30,14 @@ const router = createRouter({
   context: {
     queryClient,
   },
+  scrollRestoration: true,
+  scrollRestorationBehavior: 'instant',
+  getScrollRestorationKey: (location) => {
+    const paths = ['/home'];
+    return paths.includes(location.pathname)
+      ? location.pathname
+      : location.state.key!;
+  },
 });
 
 declare module '@tanstack/react-router' {
@@ -44,6 +52,7 @@ declare module '@tanstack/react-router' {
       selectedParticipantIds?: number[];
     };
     upcomingScheduleDetail?: {
+      title: string;
       startDateTime: string;
       endDateTime: string;
     };

@@ -18,31 +18,42 @@ interface ScheduleCardProps {
 }
 
 const ScheduleCard = ({ schedule, latest }: ScheduleCardProps) => (
-  <Flex
-    className={containerStyle({ latest })}
-    direction='column'
-    justify='space-between'
+  <Link
+    params={{ id: schedule.discussionId.toString() }}
+    state={{ 
+      upcomingScheduleDetail: {
+        title: schedule.title,
+        startDateTime: schedule.sharedEventDto.startDateTime,
+        endDateTime: schedule.sharedEventDto.endDateTime,
+      },
+    }}
+    to='/upcoming-schedule/$id'
   >
-    <Flex direction='column' gap={300}>
-      <DdayChip endDateTime={new Date(schedule.sharedEventDto.endDateTime)} latest={latest} />
-      <Text typo='h3'>{schedule.title}</Text>
-      <Flex direction='column'>
-        <MeetingDateTimeInfo 
-          endDateTime={new Date(schedule.sharedEventDto.endDateTime)}
-          startDateTime={new Date(schedule.sharedEventDto.startDateTime)}
-        />
-        <Text color={vars.color.Ref.Netural[600]} typo='b2R'>
-          {schedule.meetingMethodOrLocation}
-        </Text>
-      </Flex>
-    </Flex>
     <Flex
-      align='center'
+      className={containerStyle({ latest })}
+      direction='column'
       justify='space-between'
-      width='full'
     >
-      <Avatar imageUrls={schedule.participantPictureUrls} size='lg' />
-      <NavigateButton latest={latest} schedule={schedule} />
+      <ScheduleCardBody latest={latest} schedule={schedule} />
+      <ScheduleCardFooter latest={latest} schedule={schedule} />
+    </Flex>
+  </Link>
+);
+
+const ScheduleCardBody = ({ schedule, latest }: {
+  schedule: ScheduleCardProps['schedule']; latest: boolean; 
+}) => (
+  <Flex direction='column' gap={300}>
+    <DdayChip endDateTime={new Date(schedule.sharedEventDto.endDateTime)} latest={latest} />
+    <Text typo='h3'>{schedule.title}</Text>
+    <Flex direction='column'>
+      <MeetingDateTimeInfo 
+        endDateTime={new Date(schedule.sharedEventDto.endDateTime)}
+        startDateTime={new Date(schedule.sharedEventDto.startDateTime)}
+      />
+      <Text color={vars.color.Ref.Netural[600]} typo='b2R'>
+        {schedule.meetingMethodOrLocation}
+      </Text>
     </Flex>
   </Flex>
 );
@@ -61,6 +72,19 @@ const DdayChip = ({ endDateTime, latest }: {
   </Chip>
 );
 
+const ScheduleCardFooter = ({ schedule, latest }: {
+  schedule: ScheduleCardProps['schedule']; latest: boolean; 
+}) => (
+  <Flex
+    align='center'
+    justify='space-between'
+    width='full'
+  >
+    <Avatar imageUrls={schedule.participantPictureUrls} size='lg' />
+    <ChevronButton latest={latest} />
+  </Flex>
+);
+
 const MeetingDateTimeInfo = ({ startDateTime, endDateTime }: {
   startDateTime: Date;
   endDateTime: Date;
@@ -70,27 +94,12 @@ const MeetingDateTimeInfo = ({ startDateTime, endDateTime }: {
   </Text>
 );
 
-export default ScheduleCard;
-
-const NavigateButton = ({ latest, schedule }: {
-  latest: boolean; 
-  schedule: UpcomingSchedule;
-}) => (
-  <Link
+const ChevronButton = ({ latest }: { latest: boolean }) => (
+  <ChevronRight
     className={chevronButtonStyle({ latest })}
-    params={{ id: schedule.discussionId.toString() }}
-    state={{ 
-      upcomingScheduleDetail: {
-        startDateTime: schedule.sharedEventDto.startDateTime,
-        endDateTime: schedule.sharedEventDto.endDateTime,
-      },
-    }}
-    to='/upcoming-schedule/$id'
-  >
-    <ChevronRight
-      clickable
-      fill={vars.color.Ref.Netural[800]}
-      width={28}
-    />
-  </Link>
+    clickable
+    fill={vars.color.Ref.Netural[800]}
+  />
 );
+
+export default ScheduleCard;

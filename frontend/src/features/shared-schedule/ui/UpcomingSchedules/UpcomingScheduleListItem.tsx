@@ -33,6 +33,7 @@ const UpcomingScheduleListItem = ({
       params={{ id: schedule.discussionId.toString() }}
       state={{ 
         upcomingScheduleDetail: {
+          title: schedule.title,
           startDateTime: schedule.sharedEventDto.startDateTime,
           endDateTime: schedule.sharedEventDto.endDateTime,
         },
@@ -67,7 +68,11 @@ const Content = ({
       justify='flex-start'
     >
       <Text typo='t2'>{schedule.title}</Text>
-      <Chip color='black' style='weak'>
+      <Chip
+        color='black'
+        radius='max'
+        style='weak'
+      >
         {formatDateToDdayString(startDate)}
       </Chip>
     </Flex>

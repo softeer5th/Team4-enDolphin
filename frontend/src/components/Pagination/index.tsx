@@ -26,6 +26,7 @@ const Pagination = ({
   const pages = getPaginationItems(currentPage, totalPages);
 
   return (
+    // totalPages > 1 &&
     <div className={clsx(paginationContainerStyle, className)}>
       {pages.map((item, index) => 
         <PaginationItem 

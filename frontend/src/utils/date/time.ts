@@ -1,4 +1,4 @@
-export const HOUR = 60;
+export const HOUR_IN_MINUTES = 60;
 export const HOUR_IN_MILLISECONDS = 1000 * 60 * 60;
 export const MINUTE_IN_MILLISECONDS = 60000;
 
@@ -13,14 +13,19 @@ export const formatDateToTimeString = (date: Date | null): string => {
   return `${hours}:${minutes}`;
 };
 
-export const getTimeRangeString = (startTime: Time, endTime: Time): string => {
-  const { hour: startHour, minute: startMinute } = startTime;
-  const { hour: endHour, minute: endMinute } = endTime;
+export const getTimeRangeString = (startDate: Time, endDate: Time): string => {
+  const convertTime = (time: Time): string => {
+    const { hour, minute } = time;
+    const period = hour >= 12 ? '오후' : '오전';
+    const hour12 = hour % 12 || 12;
+    const paddedMinutes = minute.toString().padStart(2, '0');
+    return minute === 0 ? `${period} ${hour12}시` : `${period} ${hour12}시 ${paddedMinutes}분`;
+  };
+
+  const startTime = convertTime(startDate);
+  const endTime = convertTime(endDate);
   
-  const format = (hour: number, minute: number) => 
-    minute === 0 ? `${hour}시` : `${hour}시 ${minute}분`;
-  
-  return `${format(startHour, startMinute)} ~ ${format(endHour, endMinute)}`;
+  return `${startTime} ~ ${endTime}`;
 };
 
 export const getMinuteDiff = (startTime: Date, endTime: Date): number => { 
@@ -29,12 +34,28 @@ export const getMinuteDiff = (startTime: Date, endTime: Date): number => {
   return Math.floor(diff / MINUTE_IN_MILLISECONDS);
 };
 
-export const getHourDiff = (startTime: Date, endTime: Date, ignoreDateDiff = true): number => {
-  if (ignoreDateDiff) {
-    return endTime.getHours() - startTime.getHours();
-  } 
-  const diffMilliseconds = endTime.getTime() - startTime.getTime();
-  return Math.floor(diffMilliseconds / HOUR_IN_MILLISECONDS);
+export const getTimeDiffString = (
+  startTime: Date,
+  endTime: Date,
+  ignoreDateDiff = true,
+): string => {
+  const getTotalMinutes = (date: Date): number =>
+    date.getHours() * HOUR_IN_MINUTES + date.getMinutes();
+
+  const totalMinutes = ignoreDateDiff
+    ? getTotalMinutes(endTime) - getTotalMinutes(startTime)
+    : Math.floor((endTime.getTime() - startTime.getTime()) / MINUTE_IN_MILLISECONDS);
+
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+
+  const formattedHours = hours > 0 ? `${hours}시간` : '';
+  const formattedMinutes = minutes > 0 ? `${minutes}분` : '';
+
+  // 빈 문자열 제거
+  const timeParts = [formattedHours, formattedMinutes].filter(Boolean);
+
+  return timeParts.join(' ') || '0분';
 };
 
 export const getTimeParts = (date: Date): Time => {

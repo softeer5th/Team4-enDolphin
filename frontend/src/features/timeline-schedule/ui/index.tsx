@@ -3,6 +3,7 @@ import type { PropsWithChildren } from 'react';
 
 import { Flex } from '@/components/Flex';
 import { Close } from '@/components/Icon';
+import { useClickOutside } from '@/hooks/useClickOutside';
 import { vars } from '@/theme/index.css';
 
 import { useCandidateDetailQuery } from '../api/queries';
@@ -15,7 +16,7 @@ import {
   topBarStyle,
 } from './index.css';
 import TimelineContent from './TimelineContent';
-import { TimelineContext } from './TimelineContext';
+import { TimelineContext, useTimelineContext } from './TimelineContext';
 import { splitParticipantsBySelection } from './timelineHelper';
 
 // TODO: context로 옮길 수 있는 prop들 찾아서 옮기기
@@ -30,34 +31,40 @@ interface TimelineScheduleModalProps extends PropsWithChildren {
 const TimelineScheduleModal = ({ 
   discussionId, startDateTime, endDateTime, selectedParticipantIds, children, isConfirmedSchedule,
 }: TimelineScheduleModalProps) => {
+  const router = useRouter();
+  const canGoBack = useCanGoBack();
+  const handleGoBack = () => canGoBack && router.history.back();
+  const notClickableRef = useClickOutside<HTMLDivElement>(handleGoBack);
+
   const { data, isPending } = useCandidateDetailQuery(
     discussionId, startDateTime, endDateTime, selectedParticipantIds,
   );
+
   if (isPending || !data) return <div className={containerStyle} />;
   const { checkedParticipants, uncheckedParticipants } = splitParticipantsBySelection(
-    data.participants, 
+    data.participants,
     selectedParticipantIds,
   );
 
   return (
-    <TimelineContext.Provider value={{ isConfirmedSchedule }}>
-      <Flex className={containerStyle} direction='column'>
+    <TimelineContext.Provider value={{ isConfirmedSchedule, handleGoBack }}>
+      <div
+        className={containerStyle}
+        ref={notClickableRef}
+      >
         {children}
         <Content
           {...data}
           checkedParticipants={checkedParticipants}
           uncheckedParticipants={uncheckedParticipants}
         />
-      </Flex>
+      </div>
     </TimelineContext.Provider>
   );
 };
 
-const TopBar = ({ children }: PropsWithChildren) => {
-  const router = useRouter();
-  const canGoBack = useCanGoBack();
-  const handleGoBack = () => canGoBack && router.history.back();
-
+const TopBar = ({ children }: PropsWithChildren) =>{
+  const { handleGoBack } = useTimelineContext();
   return (
     <Flex
       align='center'

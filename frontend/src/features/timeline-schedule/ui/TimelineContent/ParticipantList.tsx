@@ -55,7 +55,9 @@ const ParticipantItem = ({ participant, isUncheckedParticipant }: {
         <Text typo='b2M'>{participant.name}</Text>
       </Flex>
       {!isConfirmedSchedule && !isUncheckedParticipant &&
-        <ChipAble chipStatus={chipStatus} />}
+      <Flex width={80}>
+        <ChipAble chipStatus={chipStatus} />
+      </Flex>}
     </Flex>
   );
 };
