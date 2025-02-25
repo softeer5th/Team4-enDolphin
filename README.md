@@ -1,4 +1,5 @@
-# ⏰ 언제 만나? 바쁜 학생들을 위한 가장 완벽한 약속 시간 찾기
+# ⏰ 언제 만나? 
+### 바쁜 학생들을 위한 가장 완벽한 약속 시간 찾기
 여러 사람의 일정을 한눈에 비교하고, 효율적으로 조율할 수 있어요. 바쁜 일정 속에서도 모임을 쉽게 계획할 수 있도록 돕는 스마트한 일정 조율 플랫폼이에요!
 
 🔗 [배포 링크](https://unjemanna.site/)
@@ -8,21 +9,7 @@
 
 ---
 
-## 🛠️ 기술 스택
-| 구분            | 기술 스택 |
-|---------------|-----------------------------------------------------------------------------------------------------------------------------------|
-| **FE**      | ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=fff) ![React](https://img.shields.io/badge/React-%2361DAFB.svg?style=flat&logo=react&logoColor=white) ![Vite](https://img.shields.io/badge/Vite-%23646CFF.svg?style=flat&logo=vite&logoColor=white) ![Vanilla Extract](https://img.shields.io/badge/Vanilla_Extract-%23ff66b2.svg?style=flat&logo=vanilla&logoColor=white) ![Tanstack Query](https://img.shields.io/badge/Tanstack%20Query-FF4154?logo=reactquery&logoColor=fff) ![TanStack Router](https://img.shields.io/badge/TanStack_Router-%2320b77e.svg?style=flat&logo=reactquery&logoColor=white) ![Jotai](https://img.shields.io/badge/Jotai-%23eeeeee.svg?style=flat&logo=atom&logoColor=black) ![Storybook](https://img.shields.io/badge/Storybook-FF4785?logo=storybook&logoColor=fff) |
-| **BE**       | ![Java](https://img.shields.io/badge/Java-%23ED8B00.svg?logo=openjdk&logoColor=white) ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-%236DB33F.svg?style=flat&logo=springboot&logoColor=white) ![MySQL](https://img.shields.io/badge/MySQL-%234479A1.svg?style=flat&logo=mysql&logoColor=white) ![Redis](https://img.shields.io/badge/Redis-%23DD0031.svg?logo=redis&logoColor=white) ![JPA](https://img.shields.io/badge/JPA-%232C3E50.svg?style=flat) ![Test Container](https://img.shields.io/badge/Test%20Container-%2348c9b0.svg?style=flat&logo=testcontainers&logoColor=white) ![Google Calendar API](https://img.shields.io/badge/Google%20Calendar%20API-4285F4?logo=googleapi&logoColor=fff)|
-| **인프라**     | ![AWS](https://img.shields.io/badge/AWS-%23FF9900.svg?logo=amazon-web-services&logoColor=white) ![GitHub Actions](https://img.shields.io/badge/GitHub%20Actions-%232088FF.svg?style=flat&logo=github-actions&logoColor=white)  ![Docker](https://img.shields.io/badge/Docker-%232496ED.svg?style=flat&logo=docker&logoColor=white) ![Nginx](https://img.shields.io/badge/Nginx-%23009639.svg?style=flat&logo=nginx&logoColor=white) |
-| **소통** | ![Swagger](https://img.shields.io/badge/-Swagger-%23Clojure?style=flat&logo=swagger&logoColor=white) ![GitHub Project](https://img.shields.io/badge/GitHub%20Project-121013?logo=github&logoColor=white)|
 
----
-
-## 📚 팀 문서
-[Team Wiki](https://github.com/softeer5th/Team4-enDolphin/wiki)
-<br/>
-
----
 
 ## ✨ 주요 기능
 ### 일정 조율 생성
@@ -68,6 +55,17 @@ Google 캘린더와 연동된 경우, 캘린더에도 자동으로 반영되어 
 | 내 일정을 생성하고 관리할 수 있어요. | 다가오는 일정, 확정되지 않은 일정, 지난 일정을 확인할 수 있어요.|
 
 <br/>
+
+---
+
+## 🛠️ 기술 스택
+| 구분            | 기술 스택 |
+|---------------|-----------------------------------------------------------------------------------------------------------------------------------|
+| **FE**      | ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=fff) ![React](https://img.shields.io/badge/React-%2361DAFB.svg?style=flat&logo=react&logoColor=white) ![Vite](https://img.shields.io/badge/Vite-%23646CFF.svg?style=flat&logo=vite&logoColor=white) ![Vanilla Extract](https://img.shields.io/badge/Vanilla_Extract-%23ff66b2.svg?style=flat&logo=vanilla&logoColor=white) ![Tanstack Query](https://img.shields.io/badge/Tanstack%20Query-FF4154?logo=reactquery&logoColor=fff) ![TanStack Router](https://img.shields.io/badge/TanStack_Router-%2320b77e.svg?style=flat&logo=reactquery&logoColor=white) ![Jotai](https://img.shields.io/badge/Jotai-%23eeeeee.svg?style=flat&logo=atom&logoColor=black) ![Storybook](https://img.shields.io/badge/Storybook-FF4785?logo=storybook&logoColor=fff) |
+| **BE**       | ![Java](https://img.shields.io/badge/Java-%23ED8B00.svg?logo=openjdk&logoColor=white) ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-%236DB33F.svg?style=flat&logo=springboot&logoColor=white) ![MySQL](https://img.shields.io/badge/MySQL-%234479A1.svg?style=flat&logo=mysql&logoColor=white) ![Redis](https://img.shields.io/badge/Redis-%23DD0031.svg?logo=redis&logoColor=white) ![JPA](https://img.shields.io/badge/JPA-%232C3E50.svg?style=flat) ![Test Container](https://img.shields.io/badge/Test%20Container-%2348c9b0.svg?style=flat&logo=testcontainers&logoColor=white) ![Google Calendar API](https://img.shields.io/badge/Google%20Calendar%20API-4285F4?logo=googleapi&logoColor=fff)|
+| **인프라**     | ![AWS](https://img.shields.io/badge/AWS-%23FF9900.svg?logo=amazon-web-services&logoColor=white) ![GitHub Actions](https://img.shields.io/badge/GitHub%20Actions-%232088FF.svg?style=flat&logo=github-actions&logoColor=white)  ![Docker](https://img.shields.io/badge/Docker-%232496ED.svg?style=flat&logo=docker&logoColor=white) ![Nginx](https://img.shields.io/badge/Nginx-%23009639.svg?style=flat&logo=nginx&logoColor=white) |
+| **소통** | ![Swagger](https://img.shields.io/badge/-Swagger-%23Clojure?style=flat&logo=swagger&logoColor=white) ![GitHub Project](https://img.shields.io/badge/GitHub%20Project-121013?logo=github&logoColor=white)|
+
 
 ---
 
@@ -136,3 +134,17 @@ Google 캘린더와 연동된 경우, 캘린더에도 자동으로 반영되어 
 
 
 <br/>
+
+---
+
+## 📚 팀 문서
+- [🐬 Wiki 메인](https://github.com/softeer5th/Team4-enDolphin/wiki)
+- [🤝 팀의 그라운드 룰, 컨벤션이 궁금하다면?](https://github.com/softeer5th/Team4-enDolphin/wiki/Together)
+- [🔥 백엔드의 비밀이 궁금하다면?](https://github.com/softeer5th/Team4-enDolphin/wiki/Backend)
+- [🌈 프론트엔드의 고민을 알고싶다면?](https://github.com/softeer5th/Team4-enDolphin/wiki/Frontend)
+- [☄️ 회의록](https://bside.notion.site/efba066ebf0d47b98017b5924ce9e30d)
+- [⚡ ️Swagger API]()
+ 
+<br/>
+
+---
