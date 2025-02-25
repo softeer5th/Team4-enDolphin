@@ -5,7 +5,8 @@ import { Text } from '@/components/Text';
 import { Toggle } from '@/components/Toggle';
 import type { FormRef } from '@/hooks/useFormRef';
 import { vars } from '@/theme/index.css';
-import { formatDateToTimeString } from '@/utils/date/format';
+import { parseTime, setTimeOnly } from '@/utils/date';
+import { formatDateToDateTimeString, formatDateToTimeString } from '@/utils/date/format';
 
 import type { PersonalEventRequest } from '../../model';
 import { cardStyle, inputStyle } from './index.css';
@@ -25,6 +26,40 @@ const AdjustableCheckbox = (
     시간 조정 가능
   </Checkbox>
 );
+
+const TimeInput = ({ valuesRef, handleChange }: FormRef<PersonalEventRequest>) => {
+  const startDateTime = new Date(valuesRef.current.startDateTime);
+  const endDateTime = new Date(valuesRef.current.endDateTime);
+
+  const formatValueTimeToDateTime = (date: Date, time: string) => {
+    const newDate = setTimeOnly(date, parseTime(time));
+    return formatDateToDateTimeString(newDate);
+  };
+
+  return (
+    <Input.Multi
+      borderPlacement='container'
+      label='시간 설정'
+      separator='~'
+      type='text'
+    >
+      <Input.Multi.InputField 
+        defaultValue={formatDateToTimeString(startDateTime)}
+        onChange={(e) => handleChange({ 
+          name: 'startDateTime', 
+          value: formatValueTimeToDateTime(startDateTime, e.target.value),
+        })}
+      />
+      <Input.Multi.InputField
+        defaultValue={formatDateToTimeString(endDateTime)}
+        onChange={(e) => handleChange({ 
+          name: 'endDateTime', 
+          value: formatValueTimeToDateTime(endDateTime, e.target.value),
+        })}
+      />
+    </Input.Multi>
+  ); 
+};
 
 const GoogleCalendarToggle = (
   { valuesRef, handleChange }: FormRef<PersonalEventRequest>,
@@ -52,21 +87,7 @@ export const PopoverForm = ({ valuesRef, handleChange }: FormRef<PersonalEventRe
         onChange={(e) => handleChange({ name: 'title', value: e.target.value })}
         placeholder='새 일정'
       />
-      <Input.Multi
-        borderPlacement='container'
-        label='시간 설정'
-        separator='~'
-        type='text'
-      >
-        <Input.Multi.InputField 
-          readOnly
-          value={formatDateToTimeString(new Date(valuesRef.current.startDateTime))}
-        />
-        <Input.Multi.InputField
-          readOnly
-          value={formatDateToTimeString(new Date(valuesRef.current.endDateTime))}
-        />
-      </Input.Multi>
+      <TimeInput handleChange={handleChange} valuesRef={valuesRef} />
       <AdjustableCheckbox handleChange={handleChange} valuesRef={valuesRef} />
     </Flex>
     <Flex className={cardStyle} justify='space-between'>
