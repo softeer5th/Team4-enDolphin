@@ -7,7 +7,7 @@ import { Logo } from '@/components/Icon/component/Logo';
 import { isLogin } from '@/utils/auth';
 
 import { LoginLink, MyCalendarLink, NewDiscussionLink } from './buttons';
-import { containerStyle } from './index.css';
+import { containerStyle, logoWrapperStyle } from './index.css';
 import { UserAvatar } from './UserAvatar';
 
 interface GlobalNavBarProps extends PropsWithChildren {
@@ -23,12 +23,13 @@ const GlobalNavBar = ({ background = 'white', children }: GlobalNavBarProps) => 
 
   return (
     <header className={containerStyle({ background })}>
-      <Logo
-        clickable={true}
-        height={22}
-        onClick={onClickLogo}
-        width={80}
-      />
+      <div className={logoWrapperStyle} onClick={onClickLogo}>
+        <Logo
+          clickable={true}
+          height={22}
+          width={80}
+        />
+      </div>
       <Flex direction='row'>
         {isLogin() ? 
           <Flex

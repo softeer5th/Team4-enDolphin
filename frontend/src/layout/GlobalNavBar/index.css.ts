@@ -5,6 +5,7 @@ import { vars } from '@/theme/index.css';
 
 export const avatarContainerStyle = style({
   marginLeft: vars.spacing[300],
+  cursor: 'pointer',
 });
 
 export const containerStyle = recipe({
@@ -18,13 +19,11 @@ export const containerStyle = recipe({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    padding: '0 28px',
+    padding: '0 28px 0 16px',
     height: 56,
     borderBottom: `1px solid ${vars.color.Ref.Netural[100]}`,
   
     zIndex: 1000,
-
-    cursor: 'pointer',
   },
   variants: {
     background: {
@@ -59,4 +58,12 @@ export const nicknameTextStyle = style({
 
 export const nicknameModalContentsStyle = style({
   paddingTop: vars.spacing[600],
+});
+
+export const logoWrapperStyle = style({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  padding: `${vars.spacing[300]}`,
+  cursor: 'pointer',
 });
