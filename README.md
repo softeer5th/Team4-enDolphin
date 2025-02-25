@@ -16,6 +16,10 @@
 | **인프라**     | ![AWS](https://img.shields.io/badge/AWS-%23FF9900.svg?logo=amazon-web-services&logoColor=white) ![GitHub Actions](https://img.shields.io/badge/GitHub%20Actions-%232088FF.svg?style=flat&logo=github-actions&logoColor=white)  ![Docker](https://img.shields.io/badge/Docker-%232496ED.svg?style=flat&logo=docker&logoColor=white) ![Nginx](https://img.shields.io/badge/Nginx-%23009639.svg?style=flat&logo=nginx&logoColor=white) |
 | **소통** | ![Swagger](https://img.shields.io/badge/-Swagger-%23Clojure?style=flat&logo=swagger&logoColor=white) ![GitHub Project](https://img.shields.io/badge/GitHub%20Project-121013?logo=github&logoColor=white)|
 
+---
+
+## 📚 팀 문서
+[Team Wiki](https://github.com/softeer5th/Team4-enDolphin/wiki)
 <br/>
 
 ---
@@ -36,7 +40,7 @@
 #### 🕒 최적의 후보 일정 추천
 조율할 날짜 범위와 일정이 진행될 시간대를 설정하면, 모든 참여자의 일정을 분석해 가장 적합한 후보 일정을 추천해 줘요.
 
-| 일정 조율 초대 참여                             | 일정 조율 생성 완료                            |
+| 일정 조율 초대 참여                             | 일정 조율                            |
 |-------------------------------------------|-------------------------------------------|
 | <img src="https://github.com/user-attachments/assets/e44dacc6-4483-4a15-8cbf-a1490e7c05d7" width="1000"/> | <img src="https://github.com/user-attachments/assets/ac61c6f0-3252-48dd-bcd9-838a6f9f034e" width="1000"/> |
 | 초대 링크로 일정 조율에 참여할 수 있어요.| 필터링을 통해 원하는 사람들끼리의 일정 조율 결과를 확인할 수 있어요. |
@@ -66,9 +70,6 @@ Google 캘린더와 연동된 경우, 캘린더에도 자동으로 반영되어 
 <br/>
 
 ---
-
-## 📋️ ERD
-<img src="https://github.com/user-attachments/assets/6a854250-f964-4b24-be0a-f948d0e48317" width="600"/>
 
 ## 🏡 아키텍쳐
 ### AWS
@@ -116,8 +117,10 @@ Google 캘린더와 연동된 경우, 캘린더에도 자동으로 반영되어 
 </table>
 <br/>
 
-## 📚 팀 문서
-[Team Wiki](https://github.com/softeer5th/Team4-enDolphin/wiki)
+---
+
+## 📋️ ERD
+<img src="https://github.com/user-attachments/assets/6a854250-f964-4b24-be0a-f948d0e48317" width="600"/>
 
 ---
 
