@@ -1,4 +1,3 @@
-
 import type { HighlightRange } from '@/components/DatePicker/Table/Highlight';
 
 interface UseDatePickerRangeProps {
@@ -21,7 +20,6 @@ export const useDatePickerRange = ({
       start ? trimTime(start) : null,
       end ? trimTime(end) : null,
     ];
-    
     if (!dateStart) {
       setHighlightStart(timeTrimmedDate);
       return;
@@ -31,7 +29,14 @@ export const useDatePickerRange = ({
       else setHighlightEnd(timeTrimmedDate);
       return;
     }
-
+    if (dateStart > timeTrimmedDate) {
+      setHighlightStart(timeTrimmedDate);
+      return;
+    }
+    if (dateEnd < timeTrimmedDate) {
+      setHighlightEnd(timeTrimmedDate);
+      return;
+    }
     setHighlightStart(null);
     setHighlightEnd(null);
   };

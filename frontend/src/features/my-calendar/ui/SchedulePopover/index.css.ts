@@ -4,7 +4,7 @@ import { font } from '@/theme/font';
 import { vars } from '@/theme/index.css';
 
 export const containerStyle = style({
-  width: 262,
+  width: 360,
 
   padding: vars.spacing[300],
 
