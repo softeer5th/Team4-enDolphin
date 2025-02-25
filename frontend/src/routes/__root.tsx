@@ -7,6 +7,7 @@ import { lazy } from 'react';
 
 import { GlobalModal } from '@/components/Modal/GlobalModal';
 import { defaultENV } from '@/envconfig';
+import Footer from '@/layout/Footer';
 import GlobalNavBar from '@/layout/GlobalNavBar';
 import ErrorPage from '@/pages/ErrorPage';
 
@@ -29,6 +30,7 @@ export const Route = createRootRouteWithContext<QueryClientContext>()({
       <HeadContent />
       <GlobalModal />
       <Outlet />
+      <Footer />
       <TanStackRouterDevtools />
     </>
   ),
