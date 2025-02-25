@@ -243,7 +243,7 @@ public class PersonalEventService {
             .ifPresentOrElse(personalEvent -> {
                     changedDates.add(personalEvent.getStartTime().toLocalDate());
                     changedDates.add(personalEvent.getEndTime().toLocalDate());
-                    updatePersonalEvent(PersonalEventRequest.of(googleEvent), personalEvent, user,
+                    updatePersonalEvent(PersonalEventRequest.of(googleEvent, personalEvent), personalEvent, user,
                         discussions);
                 },
                 () -> {
