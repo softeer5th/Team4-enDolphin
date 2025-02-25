@@ -1,6 +1,6 @@
 import { TIME_HEIGHT } from '@/constants/date';
 
-import { isNextWeek, setDateOnly } from './date';
+import { setDateOnly } from './date';
 
 interface DateRange {
   start: Date;
@@ -40,7 +40,7 @@ export const calcSizeByDate = ({ start, end }: DateRange, selectedWeek: Date[]) 
   const { x: sx, y: sy } = calcPositionByDate(startDate);
   const { x: ex, y: ey } = calcPositionByDate(endDate);
 
-  const dayDiff = isNextWeek(start, end) ? 7 - sx : ex - sx;
+  const dayDiff = ex - sx;
   const height = ey - sy;
 
   return { width: dayDiff + 1, height, x: sx, y: sy };
