@@ -4,7 +4,7 @@ import { Text } from '@/components/Text';
 import { vars } from '@/theme/index.css';
 import { getDateTimeRangeString } from '@/utils/date';
 
-import type { SharedEventDto } from '../../model';
+import type { SharedEventDto } from '../../model/SharedEventDto';
 import {
   dotStyle,
   scheduleItemContainerStyle,
@@ -14,7 +14,7 @@ interface FinishedScheduleListItemProps {
   scheduleTitle: string;
   participantImageUrls: string[];
   meetingPlace?: string | null;
-  sharedEventDto: SharedEventDto;
+  sharedEventDto: SharedEventDto | null;
   // startDate: Date;
   // endDate: Date;
   onClick?: () => void;
@@ -53,11 +53,11 @@ const FinishedScheduleListItem = ({
   </Flex>
 );
 
-const MeetDate = ({ sharedEventDto }: { sharedEventDto: SharedEventDto }) => (
+const MeetDate = ({ sharedEventDto }: { sharedEventDto: SharedEventDto | null }) => (
   <Text color={vars.color.Ref.Netural[600]} typo='b3R'>
     {sharedEventDto ? getDateTimeRangeString(
-      sharedEventDto.startDateTime, 
-      sharedEventDto.endDateTime)
+      new Date(sharedEventDto.startDateTime), 
+      new Date(sharedEventDto.endDateTime))
       : '조율되지 않은 일정이에요'}
   </Text>
 );
