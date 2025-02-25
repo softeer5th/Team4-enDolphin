@@ -16,8 +16,8 @@ const CalendarTable = (
   { personalEvents = [] }: { personalEvents?: PersonalEventResponse[] },
 ) => {
   const { handleMouseUp, reset, ...time } = useSelectTime();
-  const [open, setOpen] = useState(false);
   const { tableRef, height } = useTableContext();
+  const [open, setOpen] = useState(false);
   
   const handleMouseUpAddSchedule = () => {
     if (!time.selectedStartTime && !time.selectedEndTime) return;
