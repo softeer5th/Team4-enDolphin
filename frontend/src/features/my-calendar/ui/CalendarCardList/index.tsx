@@ -16,6 +16,9 @@ const DefaultCard = (
 ) => {
   const { x: sx, y: sy } = calcPositionByDate(start);
   const { y: ey } = calcPositionByDate(end);
+  
+  if (sy === ey) return null;
+
   const height = ey - sy;
   return (
     <CalendarCard
