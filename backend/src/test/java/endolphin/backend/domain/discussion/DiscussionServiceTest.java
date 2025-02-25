@@ -10,6 +10,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.atLeast;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -20,6 +21,7 @@ import endolphin.backend.domain.discussion.dto.DiscussionInfo;
 import endolphin.backend.domain.discussion.dto.DiscussionResponse;
 import endolphin.backend.domain.discussion.dto.InvitationInfo;
 import endolphin.backend.domain.discussion.dto.JoinDiscussionRequest;
+import endolphin.backend.domain.discussion.dto.JoinDiscussionResponse;
 import endolphin.backend.domain.discussion.entity.Discussion;
 import endolphin.backend.domain.discussion.enums.DiscussionStatus;
 import endolphin.backend.domain.discussion.enums.MeetingMethod;
@@ -410,6 +412,7 @@ public class DiscussionServiceTest {
         when(discussionParticipantService.getHostNameByDiscussionId(discussionId))
             .thenReturn("HostName");
         when(discussionParticipantService.isFull(discussionId)).thenReturn(true);
+        when(userService.getCurrentUser()).thenReturn(new User());
 
         InvitationInfo invitationInfo = discussionService.getInvitationInfo(discussionId);
 
@@ -576,6 +579,7 @@ public class DiscussionServiceTest {
         // 날짜 범위 검증 단계에서 예외가 발생하므로 다른 서비스들은 호출되지 않아야 함
         then(personalEventService).shouldHaveNoInteractions();
     }
+
     @DisplayName("비밀번호가 일치할 때 논의 참여 성공")
     @Test
     public void joinDiscussion_withCorrectPassword_returnsTrue() {
@@ -588,8 +592,7 @@ public class DiscussionServiceTest {
             .title("Test Discussion")
             .build();
         ReflectionTestUtils.setField(discussion, "discussionStatus", DiscussionStatus.ONGOING);
-        ReflectionTestUtils.setField(discussion, "id", 1L);
-
+        ReflectionTestUtils.setField(discussion, "id", discussionId);
         discussion.setPassword(encodedPassword);
 
         User currentUser = new User();
@@ -597,14 +600,11 @@ public class DiscussionServiceTest {
 
         when(discussionRepository.findById(discussionId)).thenReturn(Optional.of(discussion));
         when(userService.getCurrentUser()).thenReturn(currentUser);
-        when(passwordEncoder.matches(discussionId, correctPassword, encodedPassword)).thenReturn(
-            true);
+        when(passwordCountService.tryEnter(currentUser.getId(), discussion, correctPassword)).thenReturn(0);
 
-        // When
-        boolean result = discussionService.joinDiscussion(discussionId, new JoinDiscussionRequest(correctPassword)).isSuccess();
+        JoinDiscussionResponse response = discussionService.joinDiscussion(discussionId, new JoinDiscussionRequest(correctPassword));
 
-        // Then
-        assertThat(result).isTrue();
+        assertThat(response.isSuccess()).isTrue();
         verify(discussionParticipantService).addDiscussionParticipant(discussion, currentUser);
         verify(personalEventService).preprocessPersonalEvents(currentUser, discussion);
     }
@@ -621,29 +621,23 @@ public class DiscussionServiceTest {
             .title("Test Discussion")
             .build();
         ReflectionTestUtils.setField(discussion, "discussionStatus", DiscussionStatus.ONGOING);
-
+        ReflectionTestUtils.setField(discussion, "id", discussionId);
         discussion.setPassword(encodedPassword);
-
-        ReflectionTestUtils.setField(discussion, "id", 1L);
 
         User currentUser = new User();
         ReflectionTestUtils.setField(currentUser, "id", 1L);
 
         when(discussionRepository.findById(discussionId)).thenReturn(Optional.of(discussion));
         when(userService.getCurrentUser()).thenReturn(currentUser);
-        when(passwordEncoder.matches(discussionId, incorrectPassword, encodedPassword)).thenReturn(
-            false);
+        when(passwordCountService.tryEnter(currentUser.getId(), discussion, incorrectPassword)).thenReturn(1);
 
         // When
-        boolean result = discussionService.joinDiscussion(discussionId, new JoinDiscussionRequest(incorrectPassword)).isSuccess();
+        JoinDiscussionResponse response = discussionService.joinDiscussion(discussionId, new JoinDiscussionRequest(incorrectPassword));
 
-        // Then
-        assertThat(result).isFalse();
-        verify(passwordCountService).increaseCount(currentUser.getId(), discussionId);
-        verify(discussionParticipantService, org.mockito.Mockito.never()).addDiscussionParticipant(
-            any(), any());
-        verify(personalEventService, org.mockito.Mockito.never()).preprocessPersonalEvents(any(),
-            any());
+        assertThat(response.isSuccess()).isFalse();
+        verify(passwordCountService).tryEnter(currentUser.getId(), discussion, incorrectPassword);
+        verify(discussionParticipantService, never()).addDiscussionParticipant(any(), any());
+        verify(personalEventService, never()).preprocessPersonalEvents(any(), any());
     }
 
     @DisplayName("비밀번호가 없을 때 예외 발생")
@@ -655,15 +649,22 @@ public class DiscussionServiceTest {
             .title("Test Discussion")
             .build();
         ReflectionTestUtils.setField(discussion, "discussionStatus", DiscussionStatus.ONGOING);
-
         discussion.setPassword("encodedPassword123");
 
+        User currentUser = new User();
+        ReflectionTestUtils.setField(currentUser, "id", 1L);
+
         when(discussionRepository.findById(discussionId)).thenReturn(Optional.of(discussion));
-        when(userService.getCurrentUser()).thenReturn(new User());
+        when(userService.getCurrentUser()).thenReturn(currentUser);
+
+        // 비밀번호가 null인 경우, passwordCountService.tryEnter가 예외를 던지도록 모킹
+        when(passwordCountService.tryEnter(currentUser.getId(), discussion, null))
+            .thenThrow(new ApiException(ErrorCode.PASSWORD_REQUIRED));
 
         // When & Then
-        assertThatThrownBy(() -> discussionService.joinDiscussion(discussionId, new JoinDiscussionRequest(null)))
-            .isInstanceOf(ApiException.class)
+        assertThatThrownBy(() ->
+            discussionService.joinDiscussion(discussionId, new JoinDiscussionRequest(null))
+        ).isInstanceOf(ApiException.class)
             .hasFieldOrPropertyWithValue("errorCode", ErrorCode.PASSWORD_REQUIRED);
     }
 
@@ -675,10 +676,10 @@ public class DiscussionServiceTest {
         when(discussionRepository.findById(discussionId)).thenReturn(Optional.empty());
 
         // When & Then
-        assertThatThrownBy(() -> discussionService.joinDiscussion(discussionId, new JoinDiscussionRequest("password123")))
-            .isInstanceOf(ApiException.class)
+        assertThatThrownBy(() ->
+            discussionService.joinDiscussion(discussionId, new JoinDiscussionRequest("password123"))
+        ).isInstanceOf(ApiException.class)
             .hasFieldOrPropertyWithValue("errorCode", ErrorCode.DISCUSSION_NOT_FOUND);
     }
-
 
 }
