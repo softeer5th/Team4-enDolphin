@@ -410,6 +410,7 @@ public class DiscussionServiceTest {
         when(discussionParticipantService.getHostNameByDiscussionId(discussionId))
             .thenReturn("HostName");
         when(discussionParticipantService.isFull(discussionId)).thenReturn(true);
+        when(userService.getCurrentUser()).thenReturn(new User());
 
         InvitationInfo invitationInfo = discussionService.getInvitationInfo(discussionId);
 
