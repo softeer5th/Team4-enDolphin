@@ -1,15 +1,28 @@
+import { useState } from 'react';
+
 import { Checkbox } from '@/components/Checkbox';
+import DatePicker from '@/components/DatePicker';
 import { Flex } from '@/components/Flex';
 import Input from '@/components/Input';
 import { Text } from '@/components/Text';
 import { Toggle } from '@/components/Toggle';
+import { useMonthNavigation } from '@/hooks/useDatePicker/useMonthNavigation';
 import type { FormRef } from '@/hooks/useFormRef';
 import { vars } from '@/theme/index.css';
-import { parseTime, setTimeOnly } from '@/utils/date';
-import { formatDateToDateTimeString, formatDateToTimeString } from '@/utils/date/format';
+import { parseTime, setDateOnly, setTimeOnly } from '@/utils/date';
+import { 
+  formatDateToBarString, 
+  formatDateToDateTimeString, 
+  formatDateToTimeString, 
+} from '@/utils/date/format';
 
 import type { PersonalEventRequest } from '../../model';
 import { cardStyle, inputStyle } from './index.css';
+
+interface DateRange {
+  startDateTime: Date | null;
+  endDateTime: Date | null;
+}
 
 // TODO: Form Context 관리
 const AdjustableCheckbox = (
@@ -26,6 +39,42 @@ const AdjustableCheckbox = (
     시간 조정 가능
   </Checkbox>
 );
+
+const DateInput = ({ valuesRef, handleChange }: FormRef<PersonalEventRequest>) => {
+  const startDateTime = new Date(valuesRef.current.startDateTime);
+  const endDateTime = new Date(valuesRef.current.endDateTime);
+  const [range, setRange] = useState<DateRange>({ startDateTime, endDateTime });
+  const updateDate = (date: Date, newDate: Date | null) => 
+    formatDateToDateTimeString(setDateOnly(date, newDate));
+
+  const handleClickStartDate = (date: Date | null) => {
+    handleChange({ name: 'startDateTime', value: updateDate(startDateTime, date) });
+    setRange((prev) => ({ ...prev, startDateTime: date }));
+  };
+  const handleClickEndDate = (date: Date | null) => {
+    handleChange({ name: 'endDateTime', value: updateDate(endDateTime, date) });
+    setRange((prev) => ({ ...prev, endDateTime: date }));
+  };
+  
+  return (
+    <DatePicker.Range
+      {...useMonthNavigation()}
+      highlightRange={{ start: range.startDateTime, end: range.endDateTime }}
+      setHighlightEnd={handleClickEndDate}
+      setHighlightStart={handleClickStartDate}
+      trigger={
+        <Input.Multi
+          label='기간 설정'
+          separator='~'
+          type='select'
+        >
+          <Input.Multi.InputField value={formatDateToBarString(startDateTime)} />
+          <Input.Multi.InputField value={formatDateToBarString(endDateTime)} />
+        </Input.Multi>
+      }
+    />
+  );
+};
 
 const TimeInput = ({ valuesRef, handleChange }: FormRef<PersonalEventRequest>) => {
   const startDateTime = new Date(valuesRef.current.startDateTime);
@@ -87,6 +136,7 @@ export const PopoverForm = ({ valuesRef, handleChange }: FormRef<PersonalEventRe
         onChange={(e) => handleChange({ name: 'title', value: e.target.value })}
         placeholder='새 일정'
       />
+      <DateInput handleChange={handleChange} valuesRef={valuesRef} />
       <TimeInput handleChange={handleChange} valuesRef={valuesRef} />
       <AdjustableCheckbox handleChange={handleChange} valuesRef={valuesRef} />
     </Flex>
