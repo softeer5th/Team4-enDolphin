@@ -52,8 +52,8 @@ const DiscussionMemberCheckbox = () => {
   const [checkbox, setCheckbox] = useAtom(checkboxAtom);
 
   useEffect(()=>{
-    if (!checkbox && participants.length) setCheckbox(participants.map(({ id }) => id));
-  }, [participants, checkbox, setCheckbox]);
+    if (participants.length) setCheckbox(participants.map(({ id }) => id));
+  }, [participants, setCheckbox]);
 
   const groupInfos = useGroup({
     defaultCheckedList: checkbox || participantsIds,
