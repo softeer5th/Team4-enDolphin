@@ -304,8 +304,10 @@ public class DiscussionService {
 
         discussionParticipantService.checkAlreadyParticipated(discussionId, currentUser.getId());
 
-        if (discussion.getPassword() != null && !checkPassword(discussion, request.password())) {
-            int failedCount = passwordCountService.increaseCount(currentUser.getId(), discussionId);
+        int failedCount = passwordCountService.tryEnter(currentUser.getId(), discussion,
+            request.password());
+
+        if (failedCount != 0) {
             return new JoinDiscussionResponse(false, failedCount);
         }
 
@@ -313,7 +315,7 @@ public class DiscussionService {
 
         personalEventService.preprocessPersonalEvents(currentUser, discussion);
 
-        return new JoinDiscussionResponse(true, 0);
+        return new JoinDiscussionResponse(true, failedCount);
     }
 
     private List<UserInfoWithPersonalEvents> getSortedUserInfoWithPersonalEvents(
@@ -337,13 +339,5 @@ public class DiscussionService {
         sortedResult.addAll(selectedUsersList);
         sortedResult.addAll(othersList);
         return sortedResult;
-    }
-
-    private boolean checkPassword(Discussion discussion, String password) {
-        if (password == null || password.isBlank()) {
-            throw new ApiException(ErrorCode.PASSWORD_REQUIRED);
-        }
-
-        return passwordEncoder.matches(discussion.getId(), password, discussion.getPassword());
     }
 }
