@@ -58,7 +58,7 @@ const DateInput = ({ valuesRef, handleChange }: FormRef<PersonalEventRequest>) =
   
   return (
     <DatePicker.Range
-      {...useMonthNavigation()}
+      {...useMonthNavigation(startDateTime)}
       highlightRange={{ start: range.startDateTime, end: range.endDateTime }}
       setHighlightEnd={handleClickEndDate}
       setHighlightStart={handleClickStartDate}
