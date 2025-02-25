@@ -1,21 +1,28 @@
-import { Link, useParams } from '@tanstack/react-router';
+import { createLink, useParams } from '@tanstack/react-router';
 import { useAtom } from 'jotai';
 import type { PropsWithChildren } from 'react';
 
 import { checkboxAtom } from '@/store/discussion';
 
 import type { DiscussionDTO } from '../../model';
-import { linkStyle } from './index.css';
+import { trLinkStyle } from './index.css';
 
-interface DiscussionDetailLinkProps extends PropsWithChildren {
+interface DiscussionDetailLinkProps
+  extends PropsWithChildren {
+  asTr: boolean;
   discussion: DiscussionDTO;
 }
-const DiscussionDetailLink = ({ discussion, children }: DiscussionDetailLinkProps) => {
+const DiscussionDetailLink = ({
+  asTr,
+  discussion,
+  children,
+}: DiscussionDetailLinkProps) => {
   const { id } = useParams({ from: '/_main/discussion/$id' });
   const [checkboxSelectedList] = useAtom(checkboxAtom);
+  const TrLink = createLink(asTr ? 'tr' : 'a');
   return (
-    <Link
-      className={linkStyle}
+    <TrLink
+      className={trLinkStyle}
       params={{ id: id }}
       state={{ candidate: {
         adjustCount: discussion.usersForAdjust.length,
@@ -26,8 +33,8 @@ const DiscussionDetailLink = ({ discussion, children }: DiscussionDetailLinkProp
       to='/discussion/candidate/$id'
     >
       {children}
-    </Link>
-  ); 
+    </TrLink>
+  );
 };
 
 export default DiscussionDetailLink;

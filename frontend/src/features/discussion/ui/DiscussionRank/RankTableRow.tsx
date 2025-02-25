@@ -46,7 +46,7 @@ const RankAdjustable = ({ users }: { users: DiscussionDTO['usersForAdjust'] }) =
 export const RankTableRow = (
   { discussion, rank }: { discussion: DiscussionDTO; rank: number },
 ) => (
-  <DiscussionDetailLink discussion={discussion}>
+  <DiscussionDetailLink asTr={true} discussion={discussion}>
     <Flex
       as='tr'
       className={tableRowStyle}

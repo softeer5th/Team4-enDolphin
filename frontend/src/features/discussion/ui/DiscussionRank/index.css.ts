@@ -57,6 +57,8 @@ export const tableBodyStyle = style({
 });
 
 export const tableRowStyle = style({
+  display: 'flex',
+  width: '100%',
   borderBottom: `1px solid ${vars.color.Ref.Netural[200]}`,
 });
 

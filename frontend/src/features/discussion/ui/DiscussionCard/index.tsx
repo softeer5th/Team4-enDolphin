@@ -10,7 +10,7 @@ interface DiscussionCardProps {
 }
 
 const DiscussionCard = ({ size, discussion, rank }: DiscussionCardProps) => (
-  <DiscussionDetailLink discussion={discussion}>
+  <DiscussionDetailLink asTr={false} discussion={discussion}>
     {size === 'lg' ? 
       <DiscussionLarge discussion={discussion} rank={rank as number} /> 
       : 

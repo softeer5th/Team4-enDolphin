@@ -1,5 +1,6 @@
 import { style } from '@vanilla-extract/css';
 
-export const linkStyle = style({
+export const trLinkStyle = style({
   width: '100%',
+  cursor: 'pointer',
 });
