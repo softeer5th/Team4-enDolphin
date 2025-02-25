@@ -5,7 +5,6 @@ import DiscussionInviteCard from '@/features/discussion/ui/DiscussionInviteCard'
 
 const DiscussionInvitePage = ({ invitation }: { invitation: InviteResponse }) => {
   const { id } = useParams({ from: '/_main/discussion/invite/$id' });
-
   const {
     host,
     title,
@@ -16,6 +15,7 @@ const DiscussionInvitePage = ({ invitation }: { invitation: InviteResponse }) =>
     duration,
     isFull,
     requirePassword,
+    timeUnlocked,
   } = invitation;
 
   return (
@@ -27,6 +27,7 @@ const DiscussionInvitePage = ({ invitation }: { invitation: InviteResponse }) =>
       meetingDuration={duration}
       requirePassword={requirePassword}
       timeRange={{ start: timeRangeStart, end: timeRangeEnd }}
+      timeUnlocked={timeUnlocked}
       title={title}
     />
   );

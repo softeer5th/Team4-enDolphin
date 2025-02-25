@@ -57,3 +57,8 @@ export const inputStyle = style({
     fontWeight: font['B3 (M)'].fontWeight,
   },
 });
+
+export const timerButtonStyle = style({
+  justifyContent: 'center',
+  width: 126.77,
+});
