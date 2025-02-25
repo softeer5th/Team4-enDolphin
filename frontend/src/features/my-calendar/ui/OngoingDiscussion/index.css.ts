@@ -45,3 +45,7 @@ export const cardTextStyle = style({
   alignItems: 'center',
   gap: vars.spacing[200],
 });
+
+export const emptyTextStyle = style({
+  padding: `0 ${vars.spacing[400]}`,
+});
