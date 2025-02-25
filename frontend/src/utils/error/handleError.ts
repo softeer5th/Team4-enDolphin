@@ -17,7 +17,9 @@ export const handleError = (error: unknown) => {
     addNoti({ type: 'error', title: DEFAULT_ERROR_MESSAGE });
     return;
   }
-    
-  if (error.isLoginError()) redirect({ to: '/login' });
-  else addNoti({ type: 'error', title: error.message });
+
+  addNoti({ type: 'error', title: error.message });
+
+  if (error.isLoginError()) redirect({ to: '/landing' });
+  if (error.isForbiddenError()) redirect({ to: '/landing' });
 };
