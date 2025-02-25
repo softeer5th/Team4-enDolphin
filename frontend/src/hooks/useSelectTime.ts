@@ -21,6 +21,8 @@ type Action = {
   callback?: Callback;
 };
 
+const OFFSET = 15 * 60 * 1000;
+
 const resetSelectedTime = () => ({
   startTime: null,
   endTime: null,
@@ -32,7 +34,6 @@ const resetDoneTime = () => ({
 });
 
 const calcDoneTimeRange = (selectedTime: TimeRange) => {
-  const OFFSET = 15 * 60 * 1000;
   if (selectedTime.startTime && !selectedTime.endTime) {
     return {
       startTime: selectedTime.startTime,
@@ -57,7 +58,11 @@ const selectReducer = (state: State, action: Action) => {
     case 'SELECT_PROGRESS':
       if (!state.isSelecting || !action.date) return state;
       return { 
-        ...state, selectedTime: { ...state.selectedTime, endTime: action.date }, 
+        ...state, 
+        selectedTime: { 
+          ...state.selectedTime, 
+          endTime: new Date(action.date.getTime() + OFFSET), 
+        }, 
       };
 
     case 'SELECT_END': {

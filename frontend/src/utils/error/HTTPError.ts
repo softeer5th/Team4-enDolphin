@@ -16,4 +16,6 @@ export class HTTPError extends Error {
   }
 
   isLoginError = () => this.#status === 401;
+
+  isForbiddenError = () => this.#status === 403;
 }

@@ -48,20 +48,18 @@ export const CalendarCardList = ({ cards }: { cards: PersonalEventResponse[] }) 
 
         if (sd !== ed) {
           return (
-            <>
+            <div key={card.id}>
               <DefaultCard
                 card={card}
                 end={new Date(sy, sm, sd, 23, 59)}
-                key={`${card.id}-start`}
                 start={start}
               />
               <DefaultCard
                 card={card}
                 end={end}
-                key={`${card.id}-end`}
                 start={new Date(ey, em, ed, 0, 0)}
               />
-            </>
+            </div>
           );
         }
 

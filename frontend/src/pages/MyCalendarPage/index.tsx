@@ -6,6 +6,7 @@ import { Flex } from '@/components/Flex';
 import { Text } from '@/components/Text';
 import { MyCalendar } from '@/features/my-calendar/ui/MyCalendar';
 import SideBar from '@/features/my-calendar/ui/SideBar';
+import { useScrollToTime } from '@/hooks/useScrollToTime';
 import { useSelectDateRange } from '@/hooks/useSelectDateRange';
 import { useSharedCalendar } from '@/hooks/useSharedCalendar';
 
@@ -15,6 +16,7 @@ import {
   contentStyle, 
   titleContainerStyle, 
 } from './index.css';
+import { TableContext } from './TableContext';
 
 const MyCalendarPage = () => {
   const calendar = useSharedCalendar();
@@ -34,8 +36,10 @@ const MyCalendarPage = () => {
             ...useSelectDateRange(),
           }}
           >
-            <SideBar />
-            <MyCalendar />
+            <TableContext.Provider value={useScrollToTime()}>
+              <SideBar />
+              <MyCalendar />
+            </TableContext.Provider>
           </DiscussionContext.Provider>
         </SharedCalendarContext.Provider>
       </Flex>

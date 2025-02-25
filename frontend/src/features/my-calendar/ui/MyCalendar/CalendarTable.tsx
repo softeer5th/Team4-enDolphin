@@ -2,6 +2,7 @@ import { useState } from 'react';
 
 import { Calendar } from '@/components/Calendar';
 import { useSelectTime } from '@/hooks/useSelectTime';
+import { useTableContext } from '@/pages/MyCalendarPage/TableContext';
 import { formatDateToDateTimeString } from '@/utils/date/format';
 
 import type { PersonalEventResponse } from '../../model';
@@ -10,14 +11,13 @@ import { SchedulePopover } from '../SchedulePopover';
 import { CalendarDiscussionBox } from './CalendarDiscussionBox';
 import { CalendarTimeBar } from './CalendarTimeBar';
 import { containerStyle } from './index.css';
-import { useScrollToCurrentTime } from './useScrollToCurrentTime';
 
 const CalendarTable = (
   { personalEvents = [] }: { personalEvents?: PersonalEventResponse[] },
 ) => {
   const { handleMouseUp, reset, ...time } = useSelectTime();
+  const { tableRef, height } = useTableContext();
   const [open, setOpen] = useState(false);
-  const { tableRef, height } = useScrollToCurrentTime();
   
   const handleMouseUpAddSchedule = () => {
     if (!time.selectedStartTime && !time.selectedEndTime) return;
