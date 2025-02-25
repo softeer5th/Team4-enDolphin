@@ -275,7 +275,9 @@ export const isNextWeek = (start: Date, end: Date) => {
   return false;
 };
 
-export const setDateOnly = (baseDate: Date, newDate: Date) => {
+export const setDateOnly = (baseDate: Date, newDate: Date | null) => {
+  if (!newDate) return baseDate;
+
   const updatedDate = new Date(baseDate);
   updatedDate.setFullYear(newDate.getFullYear());
   updatedDate.setMonth(newDate.getMonth());
