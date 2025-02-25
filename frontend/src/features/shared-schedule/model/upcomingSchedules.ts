@@ -1,10 +1,6 @@
 import { z } from 'zod';
 
-const SharedEventDtoSchema = z.object({
-  id: z.number(),
-  startDateTime: z.string(),
-  endDateTime: z.string(),
-});
+import { SharedEventDtoSchema } from './SharedEventDto';
 
 export const UpcomingScheduleSchema = z.object({
   discussionId: z.number(),
