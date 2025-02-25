@@ -1,6 +1,7 @@
 package endolphin.backend.domain.discussion.dto;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 public record InvitationInfo(
@@ -12,7 +13,8 @@ public record InvitationInfo(
     LocalTime timeRangeEnd,
     Integer duration,
     Boolean isFull,
-    Boolean requirePassword
+    Boolean requirePassword,
+    LocalDateTime timeUnlocked
 ) {
 
 }

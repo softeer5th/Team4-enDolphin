@@ -189,6 +189,7 @@ public class DiscussionService {
 
     public InvitationInfo getInvitationInfo(Long discussionId) {
         Discussion discussion = getDiscussionById(discussionId);
+        User currentUser = userService.getCurrentUser();
 
         return new InvitationInfo(
             discussionParticipantService.getHostNameByDiscussionId(discussionId),
@@ -199,7 +200,8 @@ public class DiscussionService {
             discussion.getTimeRangeEnd(),
             discussion.getDuration(),
             discussionParticipantService.isFull(discussionId),
-            discussion.getPassword() != null
+            discussion.getPassword() != null,
+            passwordCountService.getExpirationTime(currentUser.getId(), discussionId)
         );
     }
 
