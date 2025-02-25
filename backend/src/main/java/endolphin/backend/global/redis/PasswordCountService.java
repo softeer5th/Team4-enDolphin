@@ -2,6 +2,8 @@ package endolphin.backend.global.redis;
 
 import endolphin.backend.global.error.exception.ApiException;
 import endolphin.backend.global.error.exception.ErrorCode;
+import endolphin.backend.global.util.TimeUtil;
+import java.time.LocalDateTime;
 import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -34,5 +36,16 @@ public class PasswordCountService {
         redisStringTemplate.expire(redisKey, LOCKOUT_DURATION_MS, TimeUnit.MILLISECONDS);
 
         return updatedCount.intValue();
+    }
+
+    public LocalDateTime getExpirationTime(Long userId, Long discussionId) {
+        String redisKey = "failedAttempts:" + discussionId + ":" + userId;
+        long remainingTime = redisStringTemplate.getExpire(redisKey, TimeUnit.SECONDS);
+
+        if (remainingTime < 0) {
+            return null;
+        }
+
+        return TimeUtil.getNow().plusSeconds(remainingTime);
     }
 }
