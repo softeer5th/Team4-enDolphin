@@ -1,5 +1,6 @@
 import { WEEK_MAP } from '@/constants/date';
 
+import type { Time } from './time';
 import { getTimeParts, HOUR_IN_MILLISECONDS, MINUTE_IN_MILLISECONDS } from './time';
 
 export const DAY_IN_MILLISECONDS = 24 * 60 * 60 * 1000;
@@ -279,5 +280,12 @@ export const setDateOnly = (baseDate: Date, newDate: Date) => {
   updatedDate.setFullYear(newDate.getFullYear());
   updatedDate.setMonth(newDate.getMonth());
   updatedDate.setDate(newDate.getDate());
+  return updatedDate;
+};
+
+export const setTimeOnly = (baseDate: Date, newTime: Time) => {
+  const updatedDate = new Date(baseDate);
+  updatedDate.setHours(newTime.hour);
+  updatedDate.setMinutes(newTime.minute);
   return updatedDate;
 };
