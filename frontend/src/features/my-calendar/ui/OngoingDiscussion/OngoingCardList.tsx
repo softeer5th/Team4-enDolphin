@@ -7,7 +7,7 @@ import { parseTime } from '@/utils/date';
 import { OngoingCardItem } from './OngoingCardItem';
 
 export const OngoingCardList = () => {
-  const { data, isPending } = useOngoingQuery(1, 3, 'ALL');
+  const { data, isPending } = useOngoingQuery(1, 2, 'ALL');
   const { selectedId, setSelectedId, handleSelectDateRange, reset } = useDiscussionContext();
 
   const handleClickSelect = (discussion: OngoingSchedule | null) => {
