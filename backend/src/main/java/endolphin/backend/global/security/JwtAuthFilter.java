@@ -69,10 +69,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             "/health"
         );
 
-        Pattern invitePattern = Pattern.compile("^/api/v1/discussion/\\d+/invite$");
-
         return "OPTIONS".equalsIgnoreCase(request.getMethod()) ||
-            excludedPaths.stream().anyMatch(path::startsWith) ||
-            invitePattern.matcher(path).matches();
+            excludedPaths.stream().anyMatch(path::startsWith);
     }
 }
