@@ -15,12 +15,12 @@ public record PersonalEventRequest(
     Boolean syncWithGoogleCalendar
 ) {
 
-    public static PersonalEventRequest of(GoogleEvent googleEvent, PersonalEvent personalEvent) {
+    public static PersonalEventRequest of(GoogleEvent googleEvent, boolean isAdjustable) {
         return new PersonalEventRequest(
             googleEvent.summary(),
             googleEvent.startDateTime(),
             googleEvent.endDateTime(),
-            personalEvent.getIsAdjustable(),
+            isAdjustable,
             false
         );
     }
