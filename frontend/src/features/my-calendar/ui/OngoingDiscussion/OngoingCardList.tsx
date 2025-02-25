@@ -1,14 +1,30 @@
+import { useSharedCalendarContext } from '@/components/Calendar/context/SharedCalendarContext';
 import { useOngoingQuery } from '@/features/shared-schedule/api/queries';
 import type { OngoingSchedule } from '@/features/shared-schedule/model';
 import { useClickOutside } from '@/hooks/useClickOutside';
 import { useDiscussionContext } from '@/pages/MyCalendarPage/DiscussionContext';
+import { useTableContext } from '@/pages/MyCalendarPage/TableContext';
 import { parseTime, setTimeOnly } from '@/utils/date';
 
 import { OngoingCardItem } from './OngoingCardItem';
 
+const formatDateTimeRange = (
+  { dateRangeStart, dateRangeEnd, timeRangeStart, timeRangeEnd }: OngoingSchedule,
+) => {
+  const start = new Date(dateRangeStart);
+  const end = new Date(dateRangeEnd);
+  const { hour: sh, minute: sm } = parseTime(timeRangeStart);
+  const { hour: eh, minute: em } = parseTime(timeRangeEnd);
+
+  return { start, end, sh, sm, eh, em };
+};
+
 export const OngoingCardList = () => {
   const { data, isPending } = useOngoingQuery(1, 2, 'ALL');
+  const { selectedWeek } = useSharedCalendarContext();
   const { selectedId, setSelectedId, handleSelectDateRange, reset } = useDiscussionContext();
+  const { handleSelectDate } = useSharedCalendarContext();
+  const { handleSelectTime } = useTableContext();
 
   const handleClickSelect = (discussion: OngoingSchedule | null) => {
     if (!discussion) {
@@ -16,16 +32,16 @@ export const OngoingCardList = () => {
       reset();
       return;
     }
-    const start = new Date(discussion.dateRangeStart);
-    const end = new Date(discussion.dateRangeEnd);
-    const { hour: sh, minute: sm } = parseTime(discussion.timeRangeStart);
-    const { hour: eh, minute: em } = parseTime(discussion.timeRangeEnd);
-
+    
+    const { start, end, sh, sm, eh, em } = formatDateTimeRange(discussion);
     setSelectedId(discussion.discussionId);
     handleSelectDateRange(
       setTimeOnly(start, { hour: sh, minute: sm }), 
       setTimeOnly(end, { hour: eh, minute: em }),
     );
+    handleSelectTime({ hour: sh, minute: sm });
+
+    if (selectedWeek[6] < start || selectedWeek[0] > end) handleSelectDate(start);
   };
 
   const cardRef = useClickOutside<HTMLDivElement>(()=>handleClickSelect(null));

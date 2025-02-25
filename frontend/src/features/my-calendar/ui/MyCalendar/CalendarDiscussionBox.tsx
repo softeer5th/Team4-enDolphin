@@ -22,7 +22,7 @@ export const CalendarDiscussionBox = () => {
         position: 'absolute',
         top: 16 + y,
         left: `calc(((100% - 72px) / 7 * ${x}) + 72px)`,
-        width: `calc((100% - 72px) / 7 * ${width + 1})`,
+        width: `calc((100% - 72px) / 7 * ${width})`,
         height,
       }}
     />
