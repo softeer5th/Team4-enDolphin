@@ -60,6 +60,7 @@ export const tableRowStyle = style({
   display: 'flex',
   width: '100%',
   borderBottom: `1px solid ${vars.color.Ref.Netural[200]}`,
+  cursor: 'pointer',
 });
 
 export const tableHeaderCellStyle = recipe({

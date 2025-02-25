@@ -1,7 +1,7 @@
-import { Flex } from '@/components/Flex';
 import { useNavigateToCandidate } from '@/hooks/useNavigateToCandidate';
 
 import type { DiscussionDTO } from '../../model';
+import { cardWrapperStyle } from './card.css';
 import { DiscussionLarge } from './DiscussionLarge';
 import { DiscussionSmall } from './DiscussionSmall';
 
@@ -15,12 +15,12 @@ const DiscussionCard = ({ size, discussion, rank }: DiscussionCardProps) => {
   const { handleNavigateToCandidate } = useNavigateToCandidate(discussion);
 
   return (
-    <Flex onClick={handleNavigateToCandidate} width='full'>
+    <div className={cardWrapperStyle} onClick={handleNavigateToCandidate}>
       {size === 'lg' ? 
         <DiscussionLarge discussion={discussion} rank={rank as number} /> 
         : 
         <DiscussionSmall discussion={discussion} />}
-    </Flex>
+    </div>
   ); 
 };
 

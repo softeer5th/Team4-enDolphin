@@ -58,7 +58,6 @@ export const RankTableRow = (
       <td className={tableCellStyle({ width: 56 })}>
         <Text color={vars.color.Ref.Netural[600]} typo='b3M'>
           {rank + 4}
-          위
         </Text>
       </td>
       <td className={tableCellStyle({ width: 'full' })}>

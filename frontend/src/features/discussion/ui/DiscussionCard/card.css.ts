@@ -3,6 +3,11 @@ import { recipe } from '@vanilla-extract/recipes';
 
 import { vars } from '@/theme/index.css';
 
+export const cardWrapperStyle = style({
+  width: '100%',
+  cursor: 'pointer',
+});
+
 export const containerStyle = recipe({
   base: {
     padding: `${vars.spacing[500]} ${vars.spacing[400]}`,
