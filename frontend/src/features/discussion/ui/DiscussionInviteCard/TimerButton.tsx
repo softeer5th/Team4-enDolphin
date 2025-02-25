@@ -6,12 +6,11 @@ import { SECOND_IN_MILLISECONDS } from '@/utils/date';
 import { timerButtonStyle } from './index.css';
 
 interface TimerButtonProps {
-  targetDateTime: Date; // 목표 시간: 이 시간이 지나면 타이머가 0이 됨
+  targetDateTime: Date;
   onTimeEnd?: () => void;
 }
 
 const TimerButton = ({ targetDateTime: targetTime, onTimeEnd }: TimerButtonProps) => {
-  // 남은 시간을 밀리초 단위로 계산 (음수 방지를 위해 Math.max 사용)
   const [remainingTime, setRemainingTime] = useState<number>(
     Math.max(targetTime.getTime() - Date.now(), 0),
   );

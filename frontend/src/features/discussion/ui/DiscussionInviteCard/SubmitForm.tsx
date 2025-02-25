@@ -1,14 +1,13 @@
-import { useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
 import { useState } from 'react';
 
 import Button from '@/components/Button';
 import { Flex } from '@/components/Flex';
 import { addNoti } from '@/store/global/notification';
+import { MINUTE_IN_MILLISECONDS } from '@/utils/date';
 
-import { invitationQueryKey } from '../../api/keys';
 import { useInvitationJoinMutation } from '../../api/mutations';
-import { inputStyle, submitFormStyle } from './index.css';
+import { inputStyle } from './index.css';
 import TimerButton from './TimerButton';
 ;
 
@@ -23,6 +22,7 @@ const SubmitForm = ({ discussionId, requirePW, canJoin, unlockDateTime }: Submit
   const navigate = useNavigate();
   const { mutate } = useInvitationJoinMutation();
   const [password, setPassword] = useState('');
+  const [unlockDT, setUnlockDT] = useState<Date | null>(unlockDateTime);
   const handleJoinClick = () => {
     mutate(
       { body: { discussionId, password: password === '' ? undefined : password } },
@@ -35,55 +35,47 @@ const SubmitForm = ({ discussionId, requirePW, canJoin, unlockDateTime }: Submit
           }
         },
         onError: () => {
-          addNoti({ type: 'error', title: '에러' }); 
+          setUnlockDT(new Date(Date.now() + 5 * MINUTE_IN_MILLISECONDS)); 
         },
       },
     );
   };
   return(
     <Flex align='flex-end' gap={500}>
-      {requirePW && (
+      {requirePW && canJoin && (
         <input
           className={inputStyle}
-          disabled={!canJoin}
           onChange={(e) => setPassword(e.target.value)}
           placeholder='숫자 4~6자리 비밀번호'
         />
       )}
       <JoinButton
         canJoin={canJoin}
-        discussionId={discussionId}
-        initialUnlockDateTime={unlockDateTime}
+        initialUnlockDateTime={unlockDT}
         onClick={handleJoinClick}
+        onTimeEnd={() => setUnlockDT(null)}
       />
     </Flex>
   ); 
 };
 
-const JoinButton = ({ discussionId, canJoin, onClick, initialUnlockDateTime }: { 
-  discussionId: number;
+const JoinButton = ({ canJoin, onClick, initialUnlockDateTime, onTimeEnd }: { 
   canJoin: boolean;
   onClick: () => void;
+  onTimeEnd: () => void;
   initialUnlockDateTime: Date | null;
-}) => {
-  const queryClient = useQueryClient();
-  const onTimeEnd = () => {
-    queryClient.invalidateQueries({ queryKey: invitationQueryKey(discussionId) });
-  };
-  
-  return (
-    initialUnlockDateTime === null ?
-      <Button
-        disabled={!canJoin}
-        onClick={onClick}
-        size='xl'
-      >
-        초대 수락하기
-      </Button>
-      :
-      <TimerButton onTimeEnd={onTimeEnd} targetDateTime={initialUnlockDateTime} />
-  ); 
-};
+}) => (
+  initialUnlockDateTime === null ?
+    <Button
+      disabled={!canJoin}
+      onClick={onClick}
+      size='xl'
+    >
+      초대 수락하기
+    </Button>
+    :
+    <TimerButton onTimeEnd={onTimeEnd} targetDateTime={initialUnlockDateTime} />
+);
 
 export default SubmitForm;
 

@@ -16,7 +16,7 @@ export interface DiscussionInviteCardProps {
   hostName: string;
   title: string;
   canJoin: boolean;
-  timeUnlocked: Date;
+  timeUnlocked: Date | null;
   // Badge props
   dateRange: { start: Date; end: Date };
   timeRange: { start: Time; end: Time };
@@ -25,7 +25,6 @@ export interface DiscussionInviteCardProps {
   location?: string;
 }
 
-// TODO: 5회 실패 시 에러 Noti (지금은 500 에러 뜸)
 // TODO: Input 입력 숫자 4-6자리로 제한
 
 const DiscussionInviteCard = ({
