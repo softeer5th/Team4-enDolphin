@@ -1,5 +1,6 @@
 package endolphin.backend.domain.personal_event.dto;
 
+import endolphin.backend.domain.personal_event.entity.PersonalEvent;
 import endolphin.backend.global.google.dto.GoogleEvent;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -14,12 +15,12 @@ public record PersonalEventRequest(
     Boolean syncWithGoogleCalendar
 ) {
 
-    public static PersonalEventRequest of(GoogleEvent googleEvent) {
+    public static PersonalEventRequest of(GoogleEvent googleEvent, boolean isAdjustable) {
         return new PersonalEventRequest(
             googleEvent.summary(),
             googleEvent.startDateTime(),
             googleEvent.endDateTime(),
-            false,
+            isAdjustable,
             false
         );
     }

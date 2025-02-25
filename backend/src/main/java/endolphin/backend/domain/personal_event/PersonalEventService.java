@@ -243,8 +243,9 @@ public class PersonalEventService {
             .ifPresentOrElse(personalEvent -> {
                     changedDates.add(personalEvent.getStartTime().toLocalDate());
                     changedDates.add(personalEvent.getEndTime().toLocalDate());
-                    updatePersonalEvent(PersonalEventRequest.of(googleEvent), personalEvent, user,
-                        discussions);
+                    updatePersonalEvent(
+                        PersonalEventRequest.of(googleEvent, personalEvent.getIsAdjustable()),
+                        personalEvent, user, discussions);
                 },
                 () -> {
                     PersonalEvent personalEvent =
