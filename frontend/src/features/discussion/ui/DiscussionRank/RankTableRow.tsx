@@ -1,11 +1,11 @@
 import { Chip } from '@/components/Chip';
 import { Flex } from '@/components/Flex';
 import { Text } from '@/components/Text';
+import { useNavigateToCandidate } from '@/hooks/useNavigateToCandidate';
 import { vars } from '@/theme/index.css';
 import { formatDateToString, formatDateToTimeString } from '@/utils/date/format';
 
 import type { DiscussionDTO } from '../../model';
-import DiscussionDetailLink from '../DiscussionDetailLink';
 import {
   tableCellStyle,
   tableCellTextStyle,
@@ -45,12 +45,14 @@ const RankAdjustable = ({ users }: { users: DiscussionDTO['usersForAdjust'] }) =
   
 export const RankTableRow = (
   { discussion, rank }: { discussion: DiscussionDTO; rank: number },
-) => (
-  <DiscussionDetailLink asTr={true} discussion={discussion}>
+) => { 
+  const { handleNavigateToCandidate } = useNavigateToCandidate(discussion);
+  return(
     <Flex
       as='tr'
       className={tableRowStyle}
       key={`${rank}-${discussion.startDateTime}`}
+      onClick={handleNavigateToCandidate}
       width='100%'
     >
       <td className={tableCellStyle({ width: 56 })}>
@@ -77,6 +79,6 @@ export const RankTableRow = (
         </Text>
       </td>
     </Flex>
-  </DiscussionDetailLink>
-);
+  ); 
+};
   
