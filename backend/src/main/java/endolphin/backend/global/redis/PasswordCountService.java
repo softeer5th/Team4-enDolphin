@@ -40,11 +40,14 @@ public class PasswordCountService {
 
     public LocalDateTime getExpirationTime(Long userId, Long discussionId) {
         String redisKey = "failedAttempts:" + discussionId + ":" + userId;
-        long remainingTime = redisStringTemplate.getExpire(redisKey, TimeUnit.SECONDS);
+        String countStr = redisStringTemplate.opsForValue().get(redisKey);
+        int failedAttemptsCount = countStr != null ? Integer.parseInt(countStr) : 0;
 
-        if (remainingTime < 0) {
+        if (failedAttemptsCount < MAX_FAILED_ATTEMPTS) {
             return null;
         }
+
+        long remainingTime = redisStringTemplate.getExpire(redisKey, TimeUnit.SECONDS);
 
         return TimeUtil.getNow().plusSeconds(remainingTime);
     }
