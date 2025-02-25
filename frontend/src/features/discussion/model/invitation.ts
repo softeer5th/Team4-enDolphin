@@ -12,7 +12,7 @@ export const InvitationResponseSchema = z.object({
   duration: z.number(),
   isFull: z.boolean(),
   requirePassword: z.boolean(),
-  timeUnlocked: zCoerceToDate,
+  timeUnlocked: z.union([zCoerceToDate, z.null()]),
 });
 
 export const InvitationJoinRequestSchema = z.object({
