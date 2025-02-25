@@ -7,6 +7,11 @@ import { vars } from '@/theme/index.css';
 export const containerStyle = recipe({
   base: {
     position: 'relative',
+
+    scrollbarWidth: 'none',
+    '::-webkit-scrollbar': {
+      display: 'none',
+    },
   },
   variants: {
     open: {
@@ -14,7 +19,7 @@ export const containerStyle = recipe({
         overflow: 'hidden',
       },
       false: {
-        overflow: 'scroll',
+        overflowY: 'scroll',
       },
     },
   },
