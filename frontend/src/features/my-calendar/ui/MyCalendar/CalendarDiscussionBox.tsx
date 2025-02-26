@@ -9,8 +9,7 @@ export const CalendarDiscussionBox = () => {
   const { selectedWeek } = useSharedCalendarContext();
   if (!selectedDateRange) return null;
  
-  const { start, end } = selectedDateRange;
-  const sizePosition = calcSizeByDate({ start, end }, selectedWeek);
+  const sizePosition = calcSizeByDate(selectedDateRange, selectedWeek);
 
   if (!sizePosition) return null;
   const { x, y, width, height } = sizePosition;
