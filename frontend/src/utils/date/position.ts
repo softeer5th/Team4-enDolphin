@@ -32,8 +32,6 @@ export const calcSizeByDate = ({ start, end }: DateRange, selectedWeek: Date[]) 
   const firstDayOfWeek = selectedWeek[0];
   const lastDayOfWeek = selectedWeek[6];
 
-  if (start > lastDayOfWeek || end < firstDayOfWeek) return null;
-
   const startDate = start > firstDayOfWeek ? start : setDateOnly(start, firstDayOfWeek);
   const endDate = end < lastDayOfWeek ? end : setDateOnly(end, lastDayOfWeek);
 
