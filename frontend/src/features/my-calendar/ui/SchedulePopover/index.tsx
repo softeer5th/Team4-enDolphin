@@ -46,8 +46,8 @@ export const SchedulePopover = (
         className={containerStyle}
         style={{
           position: 'fixed',
-          left: `calc((100vw - 72px - 17.75rem) / 7 * ${sx + 1})`,
-          top: '50vh',
+          left: `calc((100vw - 72px - 17.75rem) / 7 * ${sx + 1} - 3rem)`,
+          top: '30vh',
         }}
       >
         <Title type={type} />
