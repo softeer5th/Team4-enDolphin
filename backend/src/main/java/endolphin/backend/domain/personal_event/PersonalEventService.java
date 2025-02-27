@@ -33,6 +33,7 @@ import java.util.Map;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -130,24 +131,35 @@ public class PersonalEventService {
 
         validatePersonalEventUser(personalEvent, user);
 
+        boolean syncInsert = syncInsert(personalEvent, request);
+        boolean syncUpdate = syncUpdate(personalEvent, request);
+
         List<Discussion> discussions = discussionParticipantService.getDiscussionsByUserId(
             user.getId());
 
         PersonalEvent result = updatePersonalEvent(request, personalEvent, user, discussions);
 
-        if (request.syncWithGoogleCalendar()) {
-            if (result.getGoogleEventId() == null && result.getCalendarId() == null) {
-                String calendarId = calendarService.getCalendarIdByUser(user);
-                result.update(IdGenerator.generateId(user.getId()), calendarId);
-                eventPublisher.publishEvent(new InsertPersonalEvent(List.of(result)));
-            } else {
-                if (haveToSync(personalEvent, request)) {
-                    eventPublisher.publishEvent(new UpdatePersonalEvent(result));
-                }
-            }
+        if (syncInsert) {
+            String calendarId = calendarService.getCalendarIdByUser(user);
+            result.update(IdGenerator.generateId(user.getId()), calendarId);
+            eventPublisher.publishEvent(new InsertPersonalEvent(List.of(result)));
+        } else if (syncUpdate) {
+            eventPublisher.publishEvent(new UpdatePersonalEvent(result));
         }
 
         return PersonalEventResponse.fromEntity(result);
+    }
+
+    private boolean syncUpdate(PersonalEvent personalEvent, PersonalEventRequest request) {
+        return request.syncWithGoogleCalendar()
+            && (isDateTimeChanged(personalEvent, request)
+            || !StringUtils.equals(personalEvent.getTitle(), request.title()));
+    }
+
+    private boolean syncInsert(PersonalEvent personalEvent, PersonalEventRequest request) {
+        return request.syncWithGoogleCalendar()
+            && personalEvent.getGoogleEventId() == null
+            && personalEvent.getCalendarId() == null;
     }
 
     private PersonalEvent updatePersonalEvent(PersonalEventRequest request,
@@ -158,7 +170,7 @@ public class PersonalEventService {
 
         personalEvent.update(request);
 
-        if (isChanged(personalEvent, request)) {
+        if (isDateTimeChanged(personalEvent, request)) {
             discussions.forEach(discussion -> {
                 personalEventPreprocessor.
                     preprocessOne(oldEvent, discussion, user, false);
@@ -272,14 +284,9 @@ public class PersonalEventService {
             });
     }
 
-    private boolean isChanged(PersonalEvent personalEvent, PersonalEventRequest newEvent) {
+    private boolean isDateTimeChanged(PersonalEvent personalEvent, PersonalEventRequest newEvent) {
         return !personalEvent.getStartTime().equals(newEvent.startDateTime())
             || !personalEvent.getEndTime().equals(newEvent.endDateTime());
-    }
-
-    private boolean haveToSync(PersonalEvent personalEvent, PersonalEventRequest newEvent) {
-        return isChanged(personalEvent, newEvent) || !personalEvent.getTitle()
-            .equals(newEvent.title());
     }
 
     @Transactional(readOnly = true)
