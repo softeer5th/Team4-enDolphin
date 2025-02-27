@@ -21,7 +21,9 @@ import endolphin.backend.domain.user.dto.UserIdNameDto;
 import endolphin.backend.global.error.exception.ApiException;
 import endolphin.backend.global.error.exception.ErrorCode;
 import endolphin.backend.global.redis.DiscussionBitmapService;
+import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -30,10 +32,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j(topic = "searchingSpeed")
 public class CandidateEventService {
 
     private final DiscussionBitmapService discussionBitmapService;
@@ -111,8 +115,9 @@ public class CandidateEventService {
     }
 
     public List<CandidateEvent> searchCandidateEvents(Discussion discussion, int filter) {
+        LocalDateTime now = getNow();
         long searchingNow = getSearchingStartTime(
-            roundUpToNearestHalfHour(getNow()),
+            roundUpToNearestHalfHour(now),
             discussion.getDateRangeStart(), discussion.getTimeRangeStart());
 
         long endDateTime = convertToMinute(discussion.getDateRangeEnd()
@@ -156,6 +161,10 @@ public class CandidateEventService {
 
             searchingNow += 30;
         }
+
+        Duration d = Duration.between(now, getNow());
+
+        log.info("searching speed: {} ms", d.toMillis());
 
         return events;
     }
