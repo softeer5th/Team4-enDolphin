@@ -139,11 +139,10 @@ Google 캘린더와 연동된 경우, 캘린더에도 자동으로 반영되어 
 
 ## 📚 팀 문서
 - [🐬 Wiki 메인](https://github.com/softeer5th/Team4-enDolphin/wiki)
-- [🤝 팀의 그라운드 룰, 컨벤션이 궁금하다면?](https://github.com/softeer5th/Team4-enDolphin/wiki/Together)
+- [🤝 팀의 협업 과정이 궁금하다면?](https://github.com/softeer5th/Team4-enDolphin/wiki/Together)
 - [🔥 백엔드의 비밀이 궁금하다면?](https://github.com/softeer5th/Team4-enDolphin/wiki/Backend)
-- [🌈 프론트엔드의 고민을 알고싶다면?](https://github.com/softeer5th/Team4-enDolphin/wiki/Frontend)
-- [☄️ 회의록](https://bside.notion.site/efba066ebf0d47b98017b5924ce9e30d)
-- [⚡ ️Swagger API]()
+- [💧 프론트엔드의 고민을 알고싶다면?](https://github.com/softeer5th/Team4-enDolphin/wiki/Frontend)
+- [🍭 회의록](https://bside.notion.site/efba066ebf0d47b98017b5924ce9e30d)
  
 <br/>
 
