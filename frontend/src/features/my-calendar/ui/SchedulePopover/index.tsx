@@ -1,10 +1,12 @@
 import { Flex } from '@/components/Flex';
 import { useFormRef } from '@/hooks/useFormRef';
+import { formatDateToTimeString } from '@/utils/date';
+import { formatDateToBarString } from '@/utils/date/format';
 import { calcPositionByDate } from '@/utils/date/position';
 
-import type { PersonalEventRequest } from '../../model';
 import { backgroundStyle, containerStyle } from './index.css';
 import { PopoverButton } from './PopoverButton';
+import type { PersonalEventWithDateAndTime } from './PopoverContext';
 import { PopoverFormContext } from './PopoverContext';
 import { PopoverForm } from './PopoverForm';
 import { Title } from './Title';
@@ -33,12 +35,15 @@ export const SchedulePopover = (
   { setIsOpen, reset, scheduleId, type, values, ...event }: SchedulePopoverProps,
 ) => {
   const startDate = new Date(event.startDateTime);
+  const endDate = new Date(event.endDateTime);
   const { x: sx } = calcPositionByDate(startDate);
 
   return(
-    <PopoverFormContext.Provider value={useFormRef<PersonalEventRequest>({
-      startDateTime: event.startDateTime,
-      endDateTime: event.endDateTime,
+    <PopoverFormContext.Provider value={useFormRef<PersonalEventWithDateAndTime>({
+      startTime: formatDateToTimeString(startDate),
+      endTime: formatDateToTimeString(endDate),
+      startDate: formatDateToBarString(startDate),
+      endDate: formatDateToBarString(endDate),
       ...initEvent(values),
     })}
     >

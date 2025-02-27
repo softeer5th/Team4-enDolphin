@@ -1,4 +1,5 @@
 import { getDayDiff, getYearMonthDay } from './date';
+import type { Time } from './time';
 import { HOUR_IN_MINUTES } from './time';
 
 /**
@@ -116,4 +117,14 @@ export const formatTimeToDeadlineString = ({ days, hours, minutes }: {
   if (days !== 0) return `${Math.abs(days)}일`;
   if (hours !== 0) return `${Math.abs(hours)}시간`;
   return `${Math.abs(minutes)}분`;
+};
+
+export const formatTimeToString = (time: Time): string => {
+  const { hour, minute } = time;
+  return `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+};
+
+export const formatTimeToNumber = (time: Time): number => {
+  const { hour, minute } = time;
+  return hour * HOUR_IN_MINUTES + minute;
 };
