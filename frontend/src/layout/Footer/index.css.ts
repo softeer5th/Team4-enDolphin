@@ -5,4 +5,6 @@ export const footerContainerStyle = style({
   position: 'fixed',
   bottom: 0,
   left: 0,
+
+  pointerEvents: 'none',
 });
