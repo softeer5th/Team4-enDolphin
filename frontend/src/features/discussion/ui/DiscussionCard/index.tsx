@@ -1,10 +1,7 @@
-import { Link, useParams } from '@tanstack/react-router';
-import { useAtomValue } from 'jotai';
-
-import { checkboxAtom } from '@/store/discussion';
+import { useNavigateToCandidate } from '@/hooks/useNavigateToCandidate';
 
 import type { DiscussionDTO } from '../../model';
-import { linkStyle } from './card.css';
+import { cardWrapperStyle } from './card.css';
 import { DiscussionLarge } from './DiscussionLarge';
 import { DiscussionSmall } from './DiscussionSmall';
 
@@ -15,25 +12,15 @@ interface DiscussionCardProps {
 }
 
 const DiscussionCard = ({ size, discussion, rank }: DiscussionCardProps) => {
-  const { id } = useParams({ from: '/_main/discussion/$id' });
-  const checkedList = useAtomValue(checkboxAtom);
+  const { handleNavigateToCandidate } = useNavigateToCandidate(discussion);
+
   return (
-    <Link
-      className={linkStyle}
-      params={{ id: id }}
-      state={{ candidate: {
-        adjustCount: discussion.usersForAdjust.length,
-        startDateTime: discussion.startDateTime,
-        endDateTime: discussion.endDateTime,
-        selectedParticipantIds: checkedList ?? undefined,
-      } }}
-      to='/discussion/candidate/$id'
-    >
+    <div className={cardWrapperStyle} onClick={handleNavigateToCandidate}>
       {size === 'lg' ? 
         <DiscussionLarge discussion={discussion} rank={rank as number} /> 
         : 
         <DiscussionSmall discussion={discussion} />}
-    </Link>
+    </div>
   ); 
 };
 

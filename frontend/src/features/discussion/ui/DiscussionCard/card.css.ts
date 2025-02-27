@@ -3,8 +3,9 @@ import { recipe } from '@vanilla-extract/recipes';
 
 import { vars } from '@/theme/index.css';
 
-export const linkStyle = style({
+export const cardWrapperStyle = style({
   width: '100%',
+  cursor: 'pointer',
 });
 
 export const containerStyle = recipe({
