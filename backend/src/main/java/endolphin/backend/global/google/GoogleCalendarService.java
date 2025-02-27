@@ -116,7 +116,6 @@ public class GoogleCalendarService {
         String eventUrl = String.format(googleCalendarUrl.updateUrl(),
             personalEvent.getCalendarId(), personalEvent.getGoogleEventId());
         User user = personalEvent.getUser();
-        String token = user.getAccessToken();
 
         GoogleEventRequest body = GoogleEventRequest.of(personalEvent,
             personalEvent.getGoogleEventId());
@@ -125,7 +124,7 @@ public class GoogleCalendarService {
             () -> {
                 restClient.put()
                     .uri(eventUrl)
-                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + user.getAccessToken())
                     .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                     .body(body)
                     .exchange((request, response) -> {
@@ -151,13 +150,12 @@ public class GoogleCalendarService {
         String eventUrl = String.format(googleCalendarUrl.updateUrl(),
             personalEvent.getCalendarId(), personalEvent.getGoogleEventId());
         User user = personalEvent.getUser();
-        String token = user.getAccessToken();
 
         retryExecutor.executeCalendarApiWithRetry(
             () -> {
                 restClient.delete()
                     .uri(eventUrl)
-                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + user.getAccessToken())
                     .exchange((request, response) -> {
                         if (response.getStatusCode().is2xxSuccessful()) {
                             return Optional.empty();
@@ -261,13 +259,12 @@ public class GoogleCalendarService {
     }
 
     public GoogleCalendarDto getPrimaryCalendar(User user) {
-        String accessToken = user.getAccessToken();
 
         return retryExecutor.executeCalendarApiWithRetry(
             () -> {
                 GoogleCalendarDto result = restClient.get()
                     .uri(googleCalendarUrl.primaryCalendarUrl())
-                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + user.getAccessToken())
                     .exchange((request, response) -> {
                         if (response.getStatusCode().is2xxSuccessful()) {
                             return response.bodyTo(GoogleCalendarDto.class);
