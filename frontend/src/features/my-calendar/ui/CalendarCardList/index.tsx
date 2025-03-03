@@ -4,11 +4,14 @@ import { getDateParts, isAllday } from '@/utils/date';
 import type { PersonalEventResponse } from '../../model';
 import { DefaultCard } from './DefaultCard';
 
-const sortCards = (e1: PersonalEventResponse, e2: PersonalEventResponse) => {
-  const start1 = new Date(e1.startDateTime);
-  const end1 = new Date(e1.endDateTime);
-  const start2 = new Date(e2.startDateTime);
-  const end2 = new Date(e2.endDateTime);
+type CardItem = { card: PersonalEventResponse; start: Date; end: Date };
+type OverlapCardItem = CardItem & { idx: number };
+
+const sortCards = (e1: CardItem, e2: CardItem) => {
+  const start1 = new Date(e1.start);
+  const end1 = new Date(e1.end);
+  const start2 = new Date(e2.start);
+  const end2 = new Date(e2.end);
 
   if (start1 < start2) return -1;
   if (start1 > start2) return 1;
@@ -16,16 +19,6 @@ const sortCards = (e1: PersonalEventResponse, e2: PersonalEventResponse) => {
   if (end1 > end2) return 1;
 
   return 0;
-};
-
-const groupByDate = (cards: PersonalEventResponse[]) => {
-  const grouped: Record<string, PersonalEventResponse[]> = {};
-  cards.filter((card)=>!isAllday(card.startDateTime, card.endDateTime)).forEach((card) => {
-    const key = new Date(card.startDateTime).getDay();
-    if (!grouped[key]) grouped[key] = [];
-    grouped[key].push(card);
-  });
-  return Object.entries(grouped);
 };
 
 const createCardInfo = (card: PersonalEventResponse) => {
@@ -41,53 +34,48 @@ const createCardInfo = (card: PersonalEventResponse) => {
   };
 };
 
-const calcOverlapIndex = (
-  start: Date,
-  group: PersonalEventResponse[],
-) => {
-  const overlapCount = group.filter((other) => {
-    const otherEnd = new Date(other.endDateTime);
-    return start < otherEnd;
-  }).length;
+const groupByDate = (cards: PersonalEventResponse[]) => {
+  const grouped: Record<string, CardItem[]> = {};
 
-  return overlapCount - 1;
+  const addCard = (key: number, content: CardItem) => {
+    if (!grouped[key]) grouped[key] = [];
+    grouped[key].push(content);
+  };
+
+  cards.filter((card)=>!isAllday(card.startDateTime, card.endDateTime)).forEach((card) => {
+    const startDay = new Date(card.startDateTime).getDay();
+    const endDay = new Date(card.endDateTime).getDay();
+    const { start, end, sy, sm, sd, ey, em, ed } = createCardInfo(card);
+    if (sd !== ed) {
+      addCard(startDay, { card, start, end: new Date(sy, sm, sd, 23, 59) });
+      addCard(endDay, { card, start: new Date(ey, em, ed, 0, 0), end });
+    } else addCard(startDay, { card, start, end });
+  });
+  return Object.entries(grouped);
 };
 
+const groupByOverlap = (dayCards: CardItem[]) => dayCards.reduce((acc, cur, i, arr) => {
+  if (i === 0 || arr[i - 1].end <= cur.start) return [...acc, [{ ...cur, idx: 0 }]];
+  return [
+    ...acc.slice(0, -1), 
+    [...acc[acc.length - 1], { ...cur, idx: acc[acc.length - 1].length }],
+  ];
+}, [] as OverlapCardItem[][]).flat();
+
 export const CalendarCardList = ({ cards }: { cards: PersonalEventResponse[] }) => (
-  <>
+  <div>
     {groupByDate(cards).map(([_, dayCards]) =>
-      dayCards.sort(sortCards)
-        .map((card, idx) => {
-          const { start, end, sy, sm, sd, ey, em, ed } = createCardInfo(card);
-          const overlapIdx = calcOverlapIndex(start, dayCards.slice(0, idx + 1));
-          if (sd !== ed) {
-            return (
-              <div key={card.id}>
-                <DefaultCard
-                  card={card}
-                  end={new Date(sy, sm, sd, 23, 59)}
-                  idx={overlapIdx}
-                  start={start}
-                />
-                <DefaultCard
-                  card={card}
-                  end={end}
-                  idx={0}
-                  start={new Date(ey, em, ed, 0, 0)}
-                />
-              </div>
-            );
-          }
-          return (
-            <DefaultCard
-              card={card}
-              end={end}
-              idx={overlapIdx}
-              key={card.id}
-              start={start}
-            />
-          );
-        }),
+      groupByOverlap(dayCards.sort(sortCards))
+        .map(({ card, start, end, idx }) => (
+          <DefaultCard
+            card={card}
+            end={end}
+            idx={idx}
+            key={card.id}
+            start={start}
+          />
+        ),
+        ),
     )}
-  </>
+  </div>
 );
