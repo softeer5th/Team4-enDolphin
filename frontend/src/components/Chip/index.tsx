@@ -1,4 +1,5 @@
 import type { DefaultProps } from '@/types/defaultProps';
+import clsx from '@/utils/clsx';
 
 import type { Typo } from '../Text';
 import { Text } from '../Text';
@@ -25,7 +26,9 @@ export const Chip = ({
   variant = 'weak',
   radius = 'round',
   size = 'sm',
+  className,
   children, 
+  ...rest
 }: ChipProps) => {
   const fontMap: Record<typeof size, Typo> = {
     sm: 'b3M',
@@ -34,7 +37,7 @@ export const Chip = ({
   };
 
   return (
-    <div className={chipStyle({ color, variant, radius, size })}>
+    <div className={clsx(chipStyle({ color, variant, radius, size }), className)} {...rest}>
       <Text typo={fontMap[size]}>{children}</Text>
     </div>
   );

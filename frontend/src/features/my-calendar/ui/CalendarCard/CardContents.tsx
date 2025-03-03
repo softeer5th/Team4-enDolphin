@@ -12,7 +12,7 @@ const CalendarCardChip = ({ status, size }: Pick<CalendarCardProps, 'status' | '
   if (size === 'sm' || size === 'md') return null;
   
   return (
-    <Chip color={adjustmentStatusMap[status].color}>
+    <Chip color={adjustmentStatusMap[status].color} style={{ whiteSpace: 'nowrap' }}>
       {adjustmentStatusMap[status].label}
     </Chip>
   );
