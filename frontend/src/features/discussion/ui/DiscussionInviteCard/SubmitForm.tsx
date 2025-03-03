@@ -34,12 +34,12 @@ const SubmitForm = ({ discussionId, requirePW, canJoin, unlockDateTime }: Submit
         } else if (data.failedCount < 5) {
           addNoti({ type: 'error', title: `비밀번호가 일치하지 않습니다 - ${data.failedCount}회 시도` });
         } else {
-          setUnlockDT(new Date(Date.now() + 5 * LOCK_TIME_IN_MILLISECONDS)); 
+          setUnlockDT(new Date(Date.now() + LOCK_TIME_IN_MILLISECONDS)); 
         }
       },
       onError: (error: Error) => {
         if (error instanceof HTTPError && error.isTooManyRequestsError()) {
-          setUnlockDT(new Date(Date.now() + 5 * LOCK_TIME_IN_MILLISECONDS)); 
+          setUnlockDT(new Date(Date.now() + LOCK_TIME_IN_MILLISECONDS)); 
         }
       } });
   };
