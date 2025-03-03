@@ -33,7 +33,7 @@ export const chipStyle = recipe({
         color: vars.color.Ref.Netural[600],
       },
     },
-    style: {
+    variant: {
       borderless: { 
         backgroundColor: 'transparent', 
         color: vars.color.Ref.Netural[600],
@@ -56,7 +56,7 @@ export const chipStyle = recipe({
     {
       variants: {
         color: 'blue',
-        style: 'weak',
+        variant: 'weak',
       },
       style: {
         backgroundColor: vars.color.Ref.Primary[50],
@@ -66,7 +66,7 @@ export const chipStyle = recipe({
     {
       variants: {
         color: 'red',
-        style: 'weak',
+        variant: 'weak',
       },
       style: {
         backgroundColor: vars.color.Ref.Red[50],
@@ -76,7 +76,7 @@ export const chipStyle = recipe({
     {
       variants: {
         color: 'green',
-        style: 'weak',
+        variant: 'weak',
       },
       style: {
         backgroundColor: vars.color.Ref.Green[50],
@@ -86,7 +86,7 @@ export const chipStyle = recipe({
     {
       variants: {
         color: 'black',
-        style: 'weak',
+        variant: 'weak',
       },
       style: {
         backgroundColor: vars.color.Ref.Netural[100],
@@ -106,7 +106,7 @@ export const chipStyle = recipe({
 
   defaultVariants: {
     color: 'blue',
-    style: 'filled',
+    variant: 'filled',
     radius: 'round',
     size: 'md',
   },

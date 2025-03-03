@@ -66,7 +66,7 @@ const DdayChip = ({ endDateTime, latest }: {
     color={latest ? 'black' : 'coolGray'}
     radius='max'
     size='md'
-    style={latest ? 'filled' : 'weak'}
+    variant={latest ? 'filled' : 'weak'}
   >
     {formatDateToDdayString(endDateTime)}
   </Chip>

@@ -71,7 +71,7 @@ const Content = ({
       <Chip
         color='black'
         radius='max'
-        style='weak'
+        variant='weak'
       >
         {formatDateToDdayString(startDate)}
       </Chip>
