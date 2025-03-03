@@ -46,7 +46,7 @@ const TopBarContent = ({ scheduleInfo, end }: { scheduleInfo: ScheduleInfo; end:
       color='coolGray'
       radius='max'
       size='md'
-      style='weak'
+      variant='weak'
     >
       {formatDateToDdayString(end)}
     </Chip>

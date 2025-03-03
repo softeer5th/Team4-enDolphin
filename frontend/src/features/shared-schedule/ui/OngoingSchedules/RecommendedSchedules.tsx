@@ -101,7 +101,7 @@ const AvailableChip = ({ adjustCount }: { adjustCount: number }) => (
     color={adjustCount > 0 ? 'red' : 'blue'}
     radius='max'
     size='md'
-    style='weak'
+    variant='weak'
   >
     {adjustCount > 0 ? `조율 필요 ${adjustCount}` : '모두 가능'}
   </Chip>

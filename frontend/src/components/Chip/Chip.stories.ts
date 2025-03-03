@@ -10,7 +10,7 @@ const meta: Meta = {
       options: ['blue', 'green', 'red', 'black'],
       control: { type: 'radio' },
     },
-    style: {
+    variant: {
       options: ['borderless', 'weak', 'filled'],
       control: { type: 'radio' },
     },
@@ -36,7 +36,7 @@ export const Primary: Story = {
   args: {
     children: '라벨',
     color: 'blue',
-    style: 'weak',
+    variant: 'weak',
     radius: 'round',
     size: 'md',
   },
@@ -46,7 +46,7 @@ export const Borderness: Story = {
   args: {
     children: '라벨',
     color: 'blue',
-    style: 'borderless',
+    variant: 'borderless',
     radius: 'round',
     size: 'md',
   },
