@@ -18,7 +18,9 @@ interface SubmitFormProps {
   unlockDateTime: Date | null;
 }
 
-const LOCK_TIME_IN_MILLISECONDS = 5 * MINUTE_IN_MILLISECONDS;
+const LOCK_TIME_IN_MINUTES = 5;
+const MAX_FAILED_ATTEMPTS = 5;
+const LOCK_TIME_IN_MILLISECONDS = LOCK_TIME_IN_MINUTES * MINUTE_IN_MILLISECONDS;
 
 const SubmitForm = ({ discussionId, requirePW, canJoin, unlockDateTime }: SubmitFormProps) => {
   const navigate = useNavigate();
@@ -32,9 +34,10 @@ const SubmitForm = ({ discussionId, requirePW, canJoin, unlockDateTime }: Submit
         if (data.isSuccess) {
           navigate({ to: '/discussion/$id', params: { id: discussionId.toString() } });
         } else if (data.failedCount < 5) {
-          addNoti({ type: 'error', title: `비밀번호가 일치하지 않습니다 - ${data.failedCount}회 시도` });
+          addNoti(passwordIncorrectNotiProps(data.failedCount));
         } else {
-          setUnlockDT(new Date(Date.now() + LOCK_TIME_IN_MILLISECONDS)); 
+          setUnlockDT(new Date(Date.now() + LOCK_TIME_IN_MILLISECONDS));
+          addNoti(passwordLockNotiProps);
         }
       },
       onError: (error: Error) => {
@@ -54,6 +57,18 @@ const SubmitForm = ({ discussionId, requirePW, canJoin, unlockDateTime }: Submit
       />
     </Flex>
   ); 
+};
+
+const passwordIncorrectNotiProps = (failedCount: number) => ({
+  type: 'error' as const,
+  title: `비밀번호가 일치하지 않습니다 - ${MAX_FAILED_ATTEMPTS - failedCount}회 남음`,
+  description: 
+  `비밀번호를 ${MAX_FAILED_ATTEMPTS}회 틀릴 시 ${LOCK_TIME_IN_MINUTES}분간 초대를 수락할 수 없게 되니 주의해주세요!`,
+});
+
+const passwordLockNotiProps = {
+  type: 'error' as const,
+  title: `비밀번호를 ${MAX_FAILED_ATTEMPTS}회 틀려 ${LOCK_TIME_IN_MINUTES}분간 잠금됩니다.`,
 };
 
 const PasswordInput = ({ onChange }: { onChange: (password: string) => void }) => (
